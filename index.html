@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>MCQ → Custom PPTX Exporter</title>
+<title>MCQ → PPTX Exporter</title>
 
 <!-- Kalam Font -->
 <link href="https://fonts.googleapis.com/css2?family=Kalam&display=swap" rel="stylesheet">
@@ -37,19 +37,34 @@
   .btn-blue{background:#0b74ff;color:#fff}
   .btn-grey{background:#333;color:#ccd}
   .btn-red{background:#e11d48;color:#fff}
-  .row{display:flex;gap:12px;flex-wrap:wrap}
-  .col{flex:1;min-width:300px}
-  .preview{background:#0d1526;padding:10px;border-radius:8px;margin-top:10px;border:1px solid #333;max-height:400px;overflow:auto}
-  .slide-preview{background:#000;padding:10px;border-radius:6px;margin-bottom:12px;color:#fff}
+
+  .preview{
+    background:#0d1526;padding:10px;border-radius:8px;margin-top:10px;
+    border:1px solid #333;max-height:400px;overflow:auto;
+    font-family:'Kalam', cursive;
+  }
+
+  .slide-preview{
+    background:#000;padding:10px;border-radius:6px;margin-bottom:12px;color:#fff;
+    font-family:'Kalam', cursive;
+  }
+
   .slide-q{
     font-size:20px;font-weight:800;
-    margin-top:4px;       /* top margin कम कर दिया */
-    margin-bottom:4px;
-    white-space:pre-line; /* \n पर line break */
+    margin-top:6px;   /* top margin set */
+    margin-bottom:0;
+    white-space:pre-line;
   }
   .slide-opt{
     font-size:18px;margin-left:8px;margin-bottom:0;
-    white-space:pre-line; /* \n पर line break */
+    white-space:pre-line;
+  }
+
+  /* Editable preview */
+  [contenteditable="true"]{
+    outline:1px dashed #555;
+    padding:4px;
+    border-radius:4px;
   }
 </style>
 </head>
@@ -58,10 +73,10 @@
 <div class="wrap">
 <div class="card">
 
-<h2 style="color:#fff">MCQ → PPTX Exporter (Kalam Font + Compact Layout)</h2>
+<h2 style="color:#fff">MCQ → PPTX Exporter (Kalam Font + No Gaps)</h2>
 
-<div class="row">
-  <div class="col">
+<div class="row" style="display:flex;gap:12px;flex-wrap:wrap">
+  <div class="col" style="flex:1;min-width:300px">
 
     <label>JSON Input</label>
     <textarea id="jsonArea" rows="12" placeholder='[{"question":"...", "option":["","","",""]}]'></textarea>
@@ -101,10 +116,11 @@
         <i class="fa fa-trash"></i> Clear
       </button>
     </div>
+
   </div>
 
-  <div class="col">
-    <label>Preview</label>
+  <div class="col" style="flex:1;min-width:300px">
+    <label>Preview (Editable)</label>
     <div id="preview" class="preview">
       <div style="color:#7aa">Preview दिखाई देगा यहाँ…</div>
     </div>
@@ -120,6 +136,7 @@ const $ = id => document.getElementById(id);
 let DATA = [];
 let BG_DATAURL = null;
 
+/* Convert image → Base64 */
 function fileToDataURL(file){
   return new Promise(res=>{
     const r = new FileReader();
@@ -128,48 +145,56 @@ function fileToDataURL(file){
   });
 }
 
+/* Preview Renderer */
 function renderPreview(){
   const box = $('preview');
   box.innerHTML = '';
+
   if(DATA.length === 0){
     box.innerHTML = '<div style="color:#7aa">No questions.</div>';
     return;
   }
+
   DATA.forEach((q,i)=>{
     const div = document.createElement('div');
     div.className = 'slide-preview';
+
     div.innerHTML = `
-      <div class="slide-q">Q${i+1}. ${q.question}</div>
-      <div class="slide-opt">1. ${q.option[0]}</div>
-      <div class="slide-opt">2. ${q.option[1]}</div>
-      <div class="slide-opt">3. ${q.option[2]}</div>
-      <div class="slide-opt">4. ${q.option[3]}</div>
+      <div class="slide-q" contenteditable="true">Q${i+1}. ${q.question}</div>
+      <div class="slide-opt" contenteditable="true">1. ${q.option[0]}</div>
+      <div class="slide-opt" contenteditable="true">2. ${q.option[1]}</div>
+      <div class="slide-opt" contenteditable="true">3. ${q.option[2]}</div>
+      <div class="slide-opt" contenteditable="true">4. ${q.option[3]}</div>
     `;
     box.appendChild(div);
   });
 }
 
+/* Import JSON */
 $('importBtn').addEventListener('click', ()=>{
   try{
     let j = JSON.parse($('jsonArea').value);
     if(!Array.isArray(j)) j = [j];
+
     DATA = j.map(q=>({
-      question: (q.question||"").replace(/\\n/g,"\n"),
-      option: (q.option||["","","",""]).map(o=>o.replace(/\\n/g,"\n"))
+      question:(q.question||"").replace(/\\n/g,"\n"),
+      option:(q.option||["","","",""]).map(o=>o.replace(/\\n/g,"\n"))
     }));
+
     renderPreview();
   }catch(e){
     alert("Invalid JSON");
   }
 });
 
+/* Manual Add */
 $('addManual').addEventListener('click', ()=>{
   const q = $('manualQ').value.trim();
   if(!q){ alert("Question खाली है"); return; }
 
   DATA.push({
-    question: q,
-    option: [
+    question:q,
+    option:[
       $('opt1').value.trim(),
       $('opt2').value.trim(),
       $('opt3').value.trim(),
@@ -177,11 +202,8 @@ $('addManual').addEventListener('click', ()=>{
     ]
   });
 
-  $('manualQ').value = "";
-  $('opt1').value = "";
-  $('opt2').value = "";
-  $('opt3').value = "";
-  $('opt4').value = "";
+  $('manualQ').value = $('opt1').value = $('opt2').value =
+  $('opt3').value = $('opt4').value = "";
 
   renderPreview();
 });
@@ -192,51 +214,47 @@ $('bgImg').addEventListener('change', async ev=>{
   BG_DATAURL = await fileToDataURL(f);
 });
 
+/* Generate PPTX */
 $('generateBtn').addEventListener('click', async ()=>{
-  if(DATA.length === 0){
-    alert("No questions");
-    return;
-  }
+  if(DATA.length === 0){ alert("No questions"); return; }
 
   let pptx = new PptxGenJS();
   const qColor = $('qColor').value;
   const optColor = $('optColor').value;
 
-  DATA.forEach((q, i)=>{
+  DATA.forEach((q,i)=>{
     const slide = pptx.addSlide();
+    slide.background = BG_DATAURL ? {data:BG_DATAURL} : {color:"000000"};
 
-    if(BG_DATAURL)
-      slide.background = { data: BG_DATAURL };
-    else
-      slide.background = { color: "000000" };
-
-    slide.addText(`Q${i+1}. ${q.question}`, {
+    slide.addText(`Q${i+1}. ${q.question}`,{
       x:0.5, y:0.4, w:9,
-      fontSize:28, bold:true, color:qColor,
+      fontSize:28, bold:true,
       fontFace:"Kalam",
-      align:"left"
+      color:qColor
     });
 
-    let y = 1.2;
+    let y = 1.05; /* question के थोड़ा नीचे */
 
-    q.option.forEach((opt, j)=>{
-      slide.addText(`${j+1}. ${opt}`, {
+    q.option.forEach((opt,j)=>{
+      slide.addText(`${j+1}. ${opt}`,{
         x:0.7, y:y, w:9,
-        fontSize:22, color:optColor,
+        fontSize:22,
         fontFace:"Kalam",
-        align:"left"
+        color:optColor
       });
-      y += 0.42;
+
+      y += 0.01;  /* ZERO GAP (लगभग चिपका हुआ) */
     });
 
   });
 
-  await pptx.writeFile({ fileName:"mcq_custom_slides.pptx" });
+  await pptx.writeFile({ fileName:"MCQ-Kalam-NoGap.pptx" });
 });
 
+/* Clear */
 $('clearBtn').addEventListener('click', ()=>{
   DATA = [];
-  $('jsonArea').value="";
+  $('jsonArea').value = "";
   renderPreview();
 });
 
