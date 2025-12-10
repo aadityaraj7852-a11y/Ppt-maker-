@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MCQ → Custom PPTX Exporter</title>
+
+<!-- Kalam Font -->
+<link href="https://fonts.googleapis.com/css2?family=Kalam&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<!-- PPTX Generator -->
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
+
+<style>
+  body{
+    font-family:'Kalam', cursive;
+    background:#101826;
+    color:#eee;
+    margin:16px
+  }
+  .wrap{max-width:1200px;margin:auto}
+  .card{background:#192234;border-radius:10px;padding:16px;border:1px solid #223}
+  label{font-weight:700;color:#99b3ff;margin-top:6px;display:block}
+  textarea,input{
+    width:100%;padding:8px;border-radius:6px;
+    border:1px solid #334;background:#0d1526;color:#fff;
+    font-family:'Kalam', cursive;
+  }
+  .btn{
+    padding:8px 12px;border:none;border-radius:8px;cursor:pointer;
+    font-weight:700;display:inline-flex;align-items:center;gap:6px;
+    font-family:'Kalam', cursive;
+  }
+  .btn-blue{background:#0b74ff;color:#fff}
+  .btn-grey{background:#333;color:#ccd}
+  .btn-red{background:#e11d48;color:#fff}
+  .row{display:flex;gap:12px;flex-wrap:wrap}
+  .col{flex:1;min-width:300px}
+  .preview{background:#0d1526;padding:10px;border-radius:8px;margin-top:10px;border:1px solid #333;max-height:400px;overflow:auto}
+  .slide-preview{background:#000;padding:10px;border-radius:6px;margin-bottom:12px;color:#fff}
+  .slide-q{
+    font-size:20px;font-weight:800;
+    margin-top:4px;       /* top margin कम कर दिया */
+    margin-bottom:4px;
+    white-space:pre-line; /* \n पर line break */
+  }
+  .slide-opt{
+    font-size:18px;margin-left:8px;margin-bottom:0;
+    white-space:pre-line; /* \n पर line break */
+  }
+</style>
+</head>
+
+<body>
+<div class="wrap">
+<div class="card">
+
+<h2 style="color:#fff">MCQ → PPTX Exporter (Kalam Font + Compact Layout)</h2>
+
+<div class="row">
+  <div class="col">
+
+    <label>JSON Input</label>
+    <textarea id="jsonArea" rows="12" placeholder='[{"question":"...", "option":["","","",""]}]'></textarea>
+
+    <h3 style="color:#fff;margin-top:10px">या Manual Entry</h3>
+
+    <label>Question</label>
+    <textarea id="manualQ" rows="2"></textarea>
+
+    <label>Options (4)</label>
+    <input id="opt1" placeholder="Option 1" />
+    <input id="opt2" placeholder="Option 2" />
+    <input id="opt3" placeholder="Option 3" />
+    <input id="opt4" placeholder="Option 4" />
+
+    <button id="addManual" class="btn btn-grey" style="margin-top:6px">
+      <i class="fa fa-plus"></i> Add to List
+    </button>
+
+    <label style="margin-top:12px">Background Image (Optional)</label>
+    <input type="file" id="bgImg" accept="image/*">
+
+    <label>Question Text Color</label>
+    <input type="color" id="qColor" value="#ffffff">
+
+    <label>Option Text Color</label>
+    <input type="color" id="optColor" value="#ffffff">
+
+    <div style="margin-top:12px">
+      <button id="importBtn" class="btn btn-grey">
+        <i class="fa fa-check"></i> Import JSON
+      </button>
+      <button id="generateBtn" class="btn btn-blue">
+        <i class="fa fa-file-powerpoint"></i> Generate PPTX
+      </button>
+      <button id="clearBtn" class="btn btn-red">
+        <i class="fa fa-trash"></i> Clear
+      </button>
+    </div>
+  </div>
+
+  <div class="col">
+    <label>Preview</label>
+    <div id="preview" class="preview">
+      <div style="color:#7aa">Preview दिखाई देगा यहाँ…</div>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<script>
+
+const $ = id => document.getElementById(id);
+let DATA = [];
+let BG_DATAURL = null;
+
+function fileToDataURL(file){
+  return new Promise(res=>{
+    const r = new FileReader();
+    r.onload = ()=>res(r.result);
+    r.readAsDataURL(file);
+  });
+}
+
+function renderPreview(){
+  const box = $('preview');
+  box.innerHTML = '';
+  if(DATA.length === 0){
+    box.innerHTML = '<div style="color:#7aa">No questions.</div>';
+    return;
+  }
+  DATA.forEach((q,i)=>{
+    const div = document.createElement('div');
+    div.className = 'slide-preview';
+    div.innerHTML = `
+      <div class="slide-q">Q${i+1}. ${q.question}</div>
+      <div class="slide-opt">1. ${q.option[0]}</div>
+      <div class="slide-opt">2. ${q.option[1]}</div>
+      <div class="slide-opt">3. ${q.option[2]}</div>
+      <div class="slide-opt">4. ${q.option[3]}</div>
+    `;
+    box.appendChild(div);
+  });
+}
+
+$('importBtn').addEventListener('click', ()=>{
+  try{
+    let j = JSON.parse($('jsonArea').value);
+    if(!Array.isArray(j)) j = [j];
+    DATA = j.map(q=>({
+      question: (q.question||"").replace(/\\n/g,"\n"),
+      option: (q.option||["","","",""]).map(o=>o.replace(/\\n/g,"\n"))
+    }));
+    renderPreview();
+  }catch(e){
+    alert("Invalid JSON");
+  }
+});
+
+$('addManual').addEventListener('click', ()=>{
+  const q = $('manualQ').value.trim();
+  if(!q){ alert("Question खाली है"); return; }
+
+  DATA.push({
+    question: q,
+    option: [
+      $('opt1').value.trim(),
+      $('opt2').value.trim(),
+      $('opt3').value.trim(),
+      $('opt4').value.trim()
+    ]
+  });
+
+  $('manualQ').value = "";
+  $('opt1').value = "";
+  $('opt2').value = "";
+  $('opt3').value = "";
+  $('opt4').value = "";
+
+  renderPreview();
+});
+
+$('bgImg').addEventListener('change', async ev=>{
+  const f = ev.target.files[0];
+  if(!f) return;
+  BG_DATAURL = await fileToDataURL(f);
+});
+
+$('generateBtn').addEventListener('click', async ()=>{
+  if(DATA.length === 0){
+    alert("No questions");
+    return;
+  }
+
+  let pptx = new PptxGenJS();
+  const qColor = $('qColor').value;
+  const optColor = $('optColor').value;
+
+  DATA.forEach((q, i)=>{
+    const slide = pptx.addSlide();
+
+    if(BG_DATAURL)
+      slide.background = { data: BG_DATAURL };
+    else
+      slide.background = { color: "000000" };
+
+    slide.addText(`Q${i+1}. ${q.question}`, {
+      x:0.5, y:0.4, w:9,
+      fontSize:28, bold:true, color:qColor,
+      fontFace:"Kalam",
+      align:"left"
+    });
+
+    let y = 1.2;
+
+    q.option.forEach((opt, j)=>{
+      slide.addText(`${j+1}. ${opt}`, {
+        x:0.7, y:y, w:9,
+        fontSize:22, color:optColor,
+        fontFace:"Kalam",
+        align:"left"
+      });
+      y += 0.42;
+    });
+
+  });
+
+  await pptx.writeFile({ fileName:"mcq_custom_slides.pptx" });
+});
+
+$('clearBtn').addEventListener('click', ()=>{
+  DATA = [];
+  $('jsonArea').value="";
+  renderPreview();
+});
+
+</script>
+</body>
+</html>
