@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>MCQ → PPTX Exporter</title>
+<title>MCQ → PPTX (Kalam, No Extra Gaps, Editable Preview)</title>
 
 <!-- Kalam Font -->
 <link href="https://fonts.googleapis.com/css2?family=Kalam&display=swap" rel="stylesheet">
@@ -17,16 +17,16 @@
 <style>
   body{
     font-family:'Kalam', cursive;
-    background:#101826;
+    background:#0f1720;
     color:#eee;
-    margin:16px
+    margin:16px;
   }
-  .wrap{max-width:1200px;margin:auto}
-  .card{background:#192234;border-radius:10px;padding:16px;border:1px solid #223}
-  label{font-weight:700;color:#99b3ff;margin-top:6px;display:block}
+  .wrap{max-width:1100px;margin:auto}
+  .card{background:#121926;border-radius:10px;padding:16px;border:1px solid #223}
+  label{font-weight:700;color:#9fb7ff;margin-top:6px;display:block}
   textarea,input{
     width:100%;padding:8px;border-radius:6px;
-    border:1px solid #334;background:#0d1526;color:#fff;
+    border:1px solid #334;background:#0b1220;color:#fff;
     font-family:'Kalam', cursive;
   }
   .btn{
@@ -38,105 +38,93 @@
   .btn-grey{background:#333;color:#ccd}
   .btn-red{background:#e11d48;color:#fff}
 
+  .row{display:flex;gap:12px;flex-wrap:wrap}
+  .col{flex:1;min-width:320px}
+
   .preview{
-    background:#0d1526;padding:10px;border-radius:8px;margin-top:10px;
-    border:1px solid #333;max-height:400px;overflow:auto;
+    background:#071019;padding:12px;border-radius:8px;margin-top:10px;
+    border:1px solid #203040;max-height:520px;overflow:auto;
     font-family:'Kalam', cursive;
   }
 
   .slide-preview{
-    background:#000;padding:10px;border-radius:6px;margin-bottom:12px;color:#fff;
+    background:linear-gradient(180deg,#031018,#001216);padding:8px;border-radius:6px;margin-bottom:10px;color:#fff;
     font-family:'Kalam', cursive;
+    line-height:1.02; /* compact lines */
   }
 
-  .slide-q{
-    font-size:20px;font-weight:800;
-    margin-top:6px;   /* top margin set */
-    margin-bottom:0;
-    white-space:pre-line;
-  }
-  .slide-opt{
-    font-size:18px;margin-left:8px;margin-bottom:0;
-    white-space:pre-line;
+  .slide-block{
+    font-size:18px;
+    white-space:pre-line; /* \n पर ब्रेक */
+    margin-top:6px;       /* top margin हल्का रखा */
   }
 
-  /* Editable preview */
-  [contenteditable="true"]{
-    outline:1px dashed #555;
-    padding:4px;
-    border-radius:4px;
+  .slide-block[contenteditable="true"]{
+    outline:1px dashed rgba(120,140,180,0.14);
+    padding:6px;border-radius:4px;
   }
+
+  .hint{color:#7aa;font-size:13px;margin-bottom:6px}
 </style>
 </head>
 
 <body>
 <div class="wrap">
 <div class="card">
+  <h2 style="color:#fff">MCQ → PPTX (Kalam फ़ॉन्ट • Compact • Editable Preview)</h2>
 
-<h2 style="color:#fff">MCQ → PPTX Exporter (Kalam Font + No Gaps)</h2>
+  <div class="row">
+    <div class="col">
+      <label>JSON Input (array of objects)</label>
+      <textarea id="jsonArea" rows="10" placeholder='[{"question":"...","option":["..","..","..",".."]}]'></textarea>
+      <div class="hint">JSON में \n डालो तो preview/PPTX में line break दिखेगा।</div>
 
-<div class="row" style="display:flex;gap:12px;flex-wrap:wrap">
-  <div class="col" style="flex:1;min-width:300px">
+      <h3 style="color:#fff;margin-top:8px">या Manual Entry</h3>
+      <label>Question</label>
+      <textarea id="manualQ" rows="2"></textarea>
 
-    <label>JSON Input</label>
-    <textarea id="jsonArea" rows="12" placeholder='[{"question":"...", "option":["","","",""]}]'></textarea>
+      <label>Options (4)</label>
+      <input id="opt1" placeholder="Option 1" />
+      <input id="opt2" placeholder="Option 2" />
+      <input id="opt3" placeholder="Option 3" />
+      <input id="opt4" placeholder="Option 4" />
 
-    <h3 style="color:#fff;margin-top:10px">या Manual Entry</h3>
+      <button id="addManual" class="btn btn-grey" style="margin-top:8px"><i class="fa fa-plus"></i> Add to List</button>
 
-    <label>Question</label>
-    <textarea id="manualQ" rows="2"></textarea>
+      <label style="margin-top:12px">Background Image (optional)</label>
+      <input type="file" id="bgImg" accept="image/*">
 
-    <label>Options (4)</label>
-    <input id="opt1" placeholder="Option 1" />
-    <input id="opt2" placeholder="Option 2" />
-    <input id="opt3" placeholder="Option 3" />
-    <input id="opt4" placeholder="Option 4" />
+      <label style="margin-top:8px">Question Text Color</label>
+      <input type="color" id="qColor" value="#ffffff">
 
-    <button id="addManual" class="btn btn-grey" style="margin-top:6px">
-      <i class="fa fa-plus"></i> Add to List
-    </button>
+      <label style="margin-top:8px">Option Text Color</label>
+      <input type="color" id="optColor" value="#ffffff">
 
-    <label style="margin-top:12px">Background Image (Optional)</label>
-    <input type="file" id="bgImg" accept="image/*">
-
-    <label>Question Text Color</label>
-    <input type="color" id="qColor" value="#ffffff">
-
-    <label>Option Text Color</label>
-    <input type="color" id="optColor" value="#ffffff">
-
-    <div style="margin-top:12px">
-      <button id="importBtn" class="btn btn-grey">
-        <i class="fa fa-check"></i> Import JSON
-      </button>
-      <button id="generateBtn" class="btn btn-blue">
-        <i class="fa fa-file-powerpoint"></i> Generate PPTX
-      </button>
-      <button id="clearBtn" class="btn btn-red">
-        <i class="fa fa-trash"></i> Clear
-      </button>
+      <div style="margin-top:12px">
+        <button id="importBtn" class="btn btn-grey"><i class="fa fa-check"></i> Import JSON</button>
+        <button id="generateBtn" class="btn btn-blue"><i class="fa fa-file-powerpoint"></i> Generate PPTX</button>
+        <button id="clearBtn" class="btn btn-red"><i class="fa fa-trash"></i> Clear</button>
+      </div>
     </div>
 
-  </div>
+    <div class="col">
+      <label>Preview (click to edit any text)</label>
+      <div id="preview" class="preview">
+        <div style="color:#7aa">Preview दिखाई देगा यहाँ…</div>
+      </div>
 
-  <div class="col" style="flex:1;min-width:300px">
-    <label>Preview (Editable)</label>
-    <div id="preview" class="preview">
-      <div style="color:#7aa">Preview दिखाई देगा यहाँ…</div>
+      <div class="hint" style="margin-top:8px">Preview में edit करने के बाद Generate दबाओ — वही updated content PPTX में आएगा।</div>
     </div>
   </div>
-</div>
-
 </div>
 </div>
 
 <script>
-
 const $ = id => document.getElementById(id);
-let DATA = [];
+let DATA = [];           // array of {question, option:[4]}
 let BG_DATAURL = null;
 
-/* Convert image → Base64 */
+/* file → dataURL */
 function fileToDataURL(file){
   return new Promise(res=>{
     const r = new FileReader();
@@ -145,118 +133,162 @@ function fileToDataURL(file){
   });
 }
 
-/* Preview Renderer */
+/* sanitize and ensure 4 options */
+function normalizeItem(item){
+  const q = (item.question||"").replace(/\\r/g,"").replace(/\\t/g," ").replace(/\r/g,"").replace(/\\n/g,"\n");
+  const opts = (item.option || ["","","",""]).slice(0,4).map(o=> (o||"").replace(/\\r/g,"").replace(/\\t/g," ").replace(/\\n/g,"\n"));
+  while(opts.length<4) opts.push("");
+  return { question: q, option: opts };
+}
+
+/* render preview — single editable block per MCQ (question + options with \n) */
 function renderPreview(){
   const box = $('preview');
   box.innerHTML = '';
-
   if(DATA.length === 0){
     box.innerHTML = '<div style="color:#7aa">No questions.</div>';
     return;
   }
 
   DATA.forEach((q,i)=>{
-    const div = document.createElement('div');
-    div.className = 'slide-preview';
+    const outer = document.createElement('div');
+    outer.className = 'slide-preview';
 
-    div.innerHTML = `
-      <div class="slide-q" contenteditable="true">Q${i+1}. ${q.question}</div>
-      <div class="slide-opt" contenteditable="true">1. ${q.option[0]}</div>
-      <div class="slide-opt" contenteditable="true">2. ${q.option[1]}</div>
-      <div class="slide-opt" contenteditable="true">3. ${q.option[2]}</div>
-      <div class="slide-opt" contenteditable="true">4. ${q.option[3]}</div>
-    `;
-    box.appendChild(div);
+    const textBlock = document.createElement('div');
+    textBlock.className = 'slide-block';
+    textBlock.contentEditable = 'true';
+
+    // compose lines: first Qn., then options each on own line (no blank lines)
+    const lines = [];
+    lines.push(`Q${i+1}. ${q.question}`);
+    lines.push(`1. ${q.option[0]}`);
+    lines.push(`2. ${q.option[1]}`);
+    lines.push(`3. ${q.option[2]}`);
+    lines.push(`4. ${q.option[3]}`);
+    textBlock.innerText = lines.join('\n');
+
+    // on blur, update DATA from preview
+    textBlock.addEventListener('blur', ()=> {
+      const updated = parseBlockToItem(textBlock.innerText);
+      DATA[i] = normalizeItem(updated);
+      // re-render to normalize format (keeps numbering consistent)
+      renderPreview();
+    });
+
+    outer.appendChild(textBlock);
+    box.appendChild(outer);
   });
 }
 
-/* Import JSON */
+/* parse preview block text back to {question, option[]} */
+function parseBlockToItem(text){
+  // split lines, first line -> question (remove leading Qn. if present)
+  const lines = text.split(/\r?\n/).map(s=>s.trim()).filter((l,idx)=> !(l==="" && idx===0));
+  if(lines.length===0) return {question:"", option:["","","",""]};
+
+  // first line may start with "Qx. " or not
+  let first = lines[0];
+  first = first.replace(/^[Qq]\d+\.\s*/, '');   // remove Qn. prefix if exists
+
+  const opts = [];
+  for(let i=1;i<lines.length && opts.length<4;i++){
+    let l = lines[i];
+    l = l.replace(/^\d+\.\s*/, ''); // remove "1. " prefix if exists
+    opts.push(l);
+  }
+  // if fewer than 4, try to use remaining lines as options
+  while(opts.length<4) opts.push("");
+
+  return { question: first, option: opts };
+}
+
+/* IMPORT JSON */
 $('importBtn').addEventListener('click', ()=>{
   try{
     let j = JSON.parse($('jsonArea').value);
     if(!Array.isArray(j)) j = [j];
-
-    DATA = j.map(q=>({
-      question:(q.question||"").replace(/\\n/g,"\n"),
-      option:(q.option||["","","",""]).map(o=>o.replace(/\\n/g,"\n"))
-    }));
-
+    DATA = j.map(normalizeItem);
     renderPreview();
   }catch(e){
-    alert("Invalid JSON");
+    alert("Invalid JSON — सही JSON array डालो।");
   }
 });
 
-/* Manual Add */
+/* ADD MANUAL */
 $('addManual').addEventListener('click', ()=>{
   const q = $('manualQ').value.trim();
   if(!q){ alert("Question खाली है"); return; }
-
-  DATA.push({
-    question:q,
-    option:[
+  const item = {
+    question: q,
+    option: [
       $('opt1').value.trim(),
       $('opt2').value.trim(),
       $('opt3').value.trim(),
       $('opt4').value.trim()
     ]
-  });
-
-  $('manualQ').value = $('opt1').value = $('opt2').value =
-  $('opt3').value = $('opt4').value = "";
-
+  };
+  DATA.push(normalizeItem(item));
+  $('manualQ').value = $('opt1').value = $('opt2').value = $('opt3').value = $('opt4').value = "";
   renderPreview();
 });
 
+/* BG image */
 $('bgImg').addEventListener('change', async ev=>{
   const f = ev.target.files[0];
   if(!f) return;
   BG_DATAURL = await fileToDataURL(f);
 });
 
-/* Generate PPTX */
-$('generateBtn').addEventListener('click', async ()=>{
-  if(DATA.length === 0){ alert("No questions"); return; }
-
-  let pptx = new PptxGenJS();
-  const qColor = $('qColor').value;
-  const optColor = $('optColor').value;
-
-  DATA.forEach((q,i)=>{
-    const slide = pptx.addSlide();
-    slide.background = BG_DATAURL ? {data:BG_DATAURL} : {color:"000000"};
-
-    slide.addText(`Q${i+1}. ${q.question}`,{
-      x:0.5, y:0.4, w:9,
-      fontSize:28, bold:true,
-      fontFace:"Kalam",
-      color:qColor
-    });
-
-    let y = 1.05; /* question के थोड़ा नीचे */
-
-    q.option.forEach((opt,j)=>{
-      slide.addText(`${j+1}. ${opt}`,{
-        x:0.7, y:y, w:9,
-        fontSize:22,
-        fontFace:"Kalam",
-        color:optColor
-      });
-
-      y += 0.01;  /* ZERO GAP (लगभग चिपका हुआ) */
-    });
-
-  });
-
-  await pptx.writeFile({ fileName:"MCQ-Kalam-NoGap.pptx" });
-});
-
-/* Clear */
+/* CLEAR */
 $('clearBtn').addEventListener('click', ()=>{
   DATA = [];
   $('jsonArea').value = "";
   renderPreview();
 });
+
+/* Before generating PPTX, sync any in-place edits in preview into DATA */
+function syncPreviewToData(){
+  const blocks = document.querySelectorAll('.slide-block');
+  blocks.forEach((blk, idx)=>{
+    const parsed = parseBlockToItem(blk.innerText || "");
+    DATA[idx] = normalizeItem(parsed);
+  });
+}
+
+/* Generate PPTX — use rich text so question fontSize bigger and options immediately below (no extra gaps) */
+$('generateBtn').addEventListener('click', async ()=>{
+  if(DATA.length === 0){ alert("No questions to export"); return; }
+
+  // sync edits
+  syncPreviewToData();
+
+  const pptx = new PptxGenJS();
+  const qColor = $('qColor').value.replace('#','');
+  const optColor = $('optColor').value.replace('#','');
+
+  DATA.forEach((item, i)=>{
+    const slide = pptx.addSlide();
+    if(BG_DATAURL) slide.background = { data: BG_DATAURL };
+    else slide.background = { color: "000000" };
+
+    // Compose rich text: question (bigger) + newline + options (each on own line)
+    const optsText = `1. ${item.option[0]}\n2. ${item.option[1]}\n3. ${item.option[2]}\n4. ${item.option[3]}`;
+    const rich = [
+      { text: `Q${i+1}. ${item.question}\n`, options: { fontSize: 28, bold:true, fontFace:"Kalam", color: qColor } },
+      { text: optsText, options: { fontSize: 22, fontFace:"Kalam", color: optColor } }
+    ];
+
+    // place single text box so spacing between lines is minimal and consistent
+    slide.addText(rich, { x:0.5, y:0.35, w:9, align:'left', bullet:false });
+
+    // Note: Using single rich text block prevents unwanted extra gaps between separate addText calls.
+  });
+
+  await pptx.writeFile({ fileName: "MCQ_Kalam_Compact.pptx" });
+});
+
+/* Initialize empty preview */
+renderPreview();
 
 </script>
 </body>
