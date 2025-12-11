@@ -4,12 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>MCQ → PPTX (Kalam + Colors + Bold + Margins)</title>
+<title>MCQ → PPTX (Columns + Margins + Kalam)</title>
 
-<!-- Kalam font -->
 <link href="https://fonts.googleapis.com/css2?family=Kalam&display=swap" rel="stylesheet">
-
-<!-- PPTX Library -->
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
 <style>
@@ -22,25 +19,25 @@ textarea,input{width:100%;padding:8px;border-radius:6px;border:1px solid #334;ba
 .btn-grey{background:#333;color:#ccd}
 .btn-red{background:#e11d48;color:#fff}
 
-.row{display:flex;gap:14px;flex-wrap:wrap}
-.col{flex:1;min-width:300px}
-
 .preview{background:#071019;border:1px solid #203040;margin-top:10px;
-         border-radius:8px;padding:12px;max-height:500px;overflow:auto}
+         border-radius:8px;padding:12px;max-height:520px;overflow:auto}
 .slide-box{background:#000;color:#fff;padding:8px;border-radius:6px;margin-bottom:10px}
 .slide-block{white-space:pre-line;font-size:18px;line-height:1.05}
-.slide-block[contenteditable="true"]{outline:1px dashed #666;border-radius:4px;padding:6px}
+.slide-block[contenteditable="true"]{outline:1px dashed #666;padding:6px;border-radius:4px}
+
+.row{display:flex;gap:14px;flex-wrap:wrap}
+.col{flex:1;min-width:300px}
 </style>
 </head>
 
 <body>
 <div class="card">
 
-<h2 style="color:#fff">MCQ → PPTX (Kalam + Colors + Bold Q + No Gap + Margins)</h2>
+<h2 style="color:#fff">MCQ → PPTX (Line Break, Columns, Margins + Kalam)</h2>
 
 <div class="row">
 
-<!-- LEFT PANEL -->
+<!-- LEFT -->
 <div class="col">
 
 <label>JSON Input</label>
@@ -51,7 +48,7 @@ textarea,input{width:100%;padding:8px;border-radius:6px;border:1px solid #334;ba
 <label>Question</label>
 <textarea id="qInput" rows="2"></textarea>
 
-<label>Options (4)</label>
+<label>Options</label>
 <input id="o1" placeholder="Option 1">
 <input id="o2" placeholder="Option 2">
 <input id="o3" placeholder="Option 3">
@@ -59,81 +56,82 @@ textarea,input{width:100%;padding:8px;border-radius:6px;border:1px solid #334;ba
 
 <button class="btn btn-grey" id="addBtn">Add Question</button>
 
-<label>Background Image (optional)</label>
+<label style="margin-top:10px">Background Image</label>
 <input type="file" id="bgImg" accept="image/*">
 
 <div class="row">
-  <div class="col">
-    <label>Slide Width (px)</label>
-    <input id="wPx" value="1280">
-  </div>
-  <div class="col">
-    <label>Slide Height (px)</label>
-    <input id="hPx" value="720">
-  </div>
+  <div class="col"><label>Slide Width (px)</label><input id="wPx" value="1280"></div>
+  <div class="col"><label>Slide Height (px)</label><input id="hPx" value="720"></div>
 </div>
 
 <div class="row">
-  <div class="col">
-    <label>Top Margin (px)</label>
-    <input id="topM" value="20">
-  </div>
-  <div class="col">
-    <label>Left Margin (px)</label>
-    <input id="leftM" value="20">
-  </div>
+  <div class="col"><label>Top Margin</label><input id="topM" value="130"></div>
+  <div class="col"><label>Left Margin</label><input id="leftM" value="50"></div>
 </div>
 
 <div class="row">
-  <div class="col">
-    <label>Question Color</label>
-    <input type="color" id="qColor" value="#ffffff">
-  </div>
-  <div class="col">
-    <label>Option Color</label>
-    <input type="color" id="oColor" value="#ffffff">
-  </div>
+  <div class="col"><label>Right Margin</label><input id="rightM" value="50"></div>
+  <div class="col"><label>Bottom Margin</label><input id="bottomM" value="100"></div>
+</div>
+
+<div class="row">
+  <div class="col"><label>Question Color</label><input type="color" id="qColor" value="#ffff00"></div>
+  <div class="col"><label>Option Color</label><input type="color" id="oColor" value="#ffffff"></div>
 </div>
 
 <button id="importBtn" class="btn btn-grey">Import JSON</button>
 <button id="makeBtn" class="btn btn-blue">Generate PPTX</button>
-<button id="clrBtn" class="btn btn-red">Clear All</button>
+<button id="clrBtn" class="btn btn-red">Clear</button>
 
 </div>
 
-<!-- RIGHT PANEL -->
+<!-- RIGHT -->
 <div class="col">
-
 <label>Preview (editable)</label>
-<div id="preview" class="preview">
-  <div style="color:#7aa">Preview दिखाई देगा…</div>
+<div id="preview" class="preview"><div style="color:#7aa">Preview दिखाई देगा…</div></div>
 </div>
 
 </div>
 </div>
-</div>
+
 
 <script>
-const $=id=>document.getElementById(id);
-let DATA=[];
-let BG=null;
 
-/* File → Base64 */
-function fileToURL(f){return new Promise(res=>{let r=new FileReader();r.onload=()=>res(r.result);r.readAsDataURL(f);});}
+const $ = id => document.getElementById(id);
+let DATA = [];
+let BG = null;
 
-/* Normalize */
-function norm(x){
+/* Normalize newlines */
+function normalize(item){
  return {
-   question:(x.question||"").replace(/\\n/g,"\n"),
-   option:(x.option||["","","",""]).slice(0,4).map(o=>o.replace(/\\n/g,"\n"))
+   question:(item.question||"")
+       .replace(/\\n/g,"\n")
+       .replace(/\/n/g,"\n"),
+   option:(item.option||["","","",""])
+       .slice(0,4)
+       .map(o=>o.replace(/\\n/g,"\n").replace(/\/n/g,"\n"))
  };
 }
 
-/* Preview Render */
+/* Parse editable preview */
+function parseBlock(t){
+ let L=t.split("\n").map(s=>s.trim()).filter(Boolean);
+ let q=L[0].replace(/^[Qq]\d+\.\s*/,"");
+ let o=[];
+ for(let i=1;i<L.length && o.length<4;i++)
+   o.push(L[i].replace(/^\d+\.\s*/,""));
+ while(o.length<4) o.push("");
+ return normalize({question:q,option:o});
+}
+
+/* Render Preview */
 function render(){
  let box=$("preview");
  box.innerHTML="";
- if(DATA.length===0){box.innerHTML="<div style='color:#7aa'>No questions.</div>";return;}
+ if(!DATA.length){
+   box.innerHTML="<div style='color:#7aa'>No questions.</div>";
+   return;
+ }
 
  DATA.forEach((q,i)=>{
    let wrap=document.createElement("div");
@@ -143,7 +141,7 @@ function render(){
    blk.className="slide-block";
    blk.contentEditable="true";
 
-   blk.innerText=
+   blk.innerText =
      `Q${i+1}. ${q.question}\n`+
      `1. ${q.option[0]}\n`+
      `2. ${q.option[1]}\n`+
@@ -151,7 +149,7 @@ function render(){
      `4. ${q.option[3]}`;
 
    blk.addEventListener("blur",()=>{
-     DATA[i]=parseBlock(blk.innerText);
+     DATA[i] = parseBlock(blk.innerText);
      render();
    });
 
@@ -160,121 +158,166 @@ function render(){
  });
 }
 
-function parseBlock(t){
- let L=t.split("\n").map(s=>s.trim()).filter(Boolean);
- let Q=L[0].replace(/^[Qq]\d+\.\s*/,"");
- let O=[];
- for(let i=1;i<L.length && O.length<4;i++)
-   O.push(L[i].replace(/^\d+\.\s*/,""));
- while(O.length<4) O.push("");
- return norm({question:Q, option:O});
-}
-
 /* Import JSON */
 $("importBtn").onclick=()=>{
  try{
    let j=JSON.parse($("jsonData").value);
    if(!Array.isArray(j)) j=[j];
-   DATA=j.map(norm);
+   DATA=j.map(normalize);
    render();
- }catch(e){alert("Invalid JSON");}
+ }catch(err){alert("JSON Error");}
 };
 
-/* Add Manual */
+/* Add manually */
 $("addBtn").onclick=()=>{
- let q=$("qInput").value.trim();
- if(!q) return alert("Question empty");
- DATA.push(norm({question:q,option:[$("o1").value,$("o2").value,$("o3").value,$("o4").value]}));
+ if(!$("qInput").value.trim()) return alert("Empty question");
+
+ DATA.push(normalize({
+   question:$("qInput").value,
+   option:[$("o1").value,$("o2").value,$("o3").value,$("o4").value]
+ }));
+
  $("qInput").value=$("o1").value=$("o2").value=$("o3").value=$("o4").value="";
  render();
 };
 
-/* BG Upload */
+/* BG upload */
 $("bgImg").onchange=async e=>{
  let f=e.target.files[0];
  if(!f) return;
- BG=await fileToURL(f);
+ let r=new FileReader();
+ r.onload=()=>BG=r.result;
+ r.readAsDataURL(f);
 };
 
-/* Sync Preview */
-function syncPrev(){
+function syncPreview(){
  document.querySelectorAll(".slide-block").forEach((blk,i)=>{
-   DATA[i]=parseBlock(blk.innerText);
+   DATA[i] = parseBlock(blk.innerText);
  });
 }
 
-/* Wrap long text */
-function wrapText(ctx, txt, x, y, maxW, lh){
+/* Canvas helpers */
+function wrapText(ctx,txt,x,y,maxW,lh,bottomLimit){
  let words=txt.split(" ");
  let line="";
  for(let w of words){
    let test=line+w+" ";
-   if(ctx.measureText(test).width>maxW){
+   if(ctx.measureText(test).width > maxW){
      ctx.fillText(line,x,y);
      y+=lh;
+     if(y>bottomLimit) return bottomLimit;  
      line=w+" ";
-   }else line=test;
+   } else line=test;
  }
  ctx.fillText(line,x,y);
- return y+lh;
+ y+=lh;
+ return y;
 }
 
-/* Render single slide → image */
-async function canvasSlide(item,W,H,top,left,qc,oc){
+/* Detect column-type question */
+function detectTwoColumn(text){
+ let rows=text.split("\n").map(s=>s.trim());
+ return rows.some(r=>/A\./.test(r)) && rows.some(r=>/1\./.test(r));
+}
+
+/* Render canvas slide */
+async function canvasSlide(item,index,W,H,top,left,right,bottom,qc,oc){
  await document.fonts.load("30px Kalam");
 
  let c=document.createElement("canvas");
  c.width=W; c.height=H;
  let ctx=c.getContext("2d");
 
+ /* BG */
  if(BG){
-   let im=new Image(); im.src=BG;
-   await new Promise(r=>{im.onload=r;});
-   ctx.drawImage(im,0,0,W,H);
+   let img=new Image(); img.src=BG;
+   await new Promise(r=>img.onload=r);
+   ctx.drawImage(img,0,0,W,H);
  } else {
-   ctx.fillStyle="#000"; ctx.fillRect(0,0,W,H);
+   ctx.fillStyle="#000";
+   ctx.fillRect(0,0,W,H);
  }
 
  let qF=Math.round(H*0.045);
  let oF=Math.round(H*0.038);
 
- ctx.textBaseline="top";
-
- /* QUESTION — BOLD */
- ctx.font=`bold ${qF}px Kalam`;
- ctx.fillStyle=qc;
  let y=top;
+ let usableWidth=W-left-right;
+ let bottomLimit = H-bottom;
 
- for(let l of item.question.split("\n")){
-   y=wrapText(ctx,l,left,y,W-left*2,qF+2);
+ /* FULL QUESTION TEXT WITH AUTO NUMBER */
+ let Q = `Q${index+1}. ${item.question}`;
+
+ let isTwoCol = detectTwoColumn(Q);
+
+ /* --- COLUMN MODE --- */
+ if(isTwoCol){
+   ctx.font=`bold ${qF}px Kalam`;
+   ctx.fillStyle=qc;
+
+   let lines=Q.split("\n");
+
+   let col1=[];
+   let col2=[];
+   lines.forEach(row=>{
+     if(/^A\.|^B\.|^C\.|^D\./.test(row)) col1.push(row);
+     else if(/^1\.|^2\.|^3\.|^4\./.test(row)) col2.push(row);
+     else col1.push(row);
+   });
+
+   let colGap=280;
+
+   /* DRAW COLUMN 1 */
+   for(let ln of col1){
+     y = wrapText(ctx,ln,left,y,usableWidth, qF+4, bottomLimit);
+   }
+
+   /* RESET Y for column 2 top alignment */
+   let y2 = top;
+
+   ctx.font=`bold ${qF}px Kalam`;
+   col2.forEach(ln=>{
+     y2 = wrapText(ctx,ln,left+colGap,y2,usableWidth-colGap, qF+4, bottomLimit);
+   });
+
+ } else {
+   /* Normal mode */
+   ctx.font=`bold ${qF}px Kalam`;
+   ctx.fillStyle=qc;
+
+   for(let ln of Q.split("\n")){
+     y = wrapText(ctx,ln,left,y,usableWidth,qF+4,bottomLimit);
+   }
  }
 
- /* OPTIONS — NOT BOLD */
+ /* OPTIONS */
  ctx.font=`${oF}px Kalam`;
  ctx.fillStyle=oc;
 
  for(let i=0;i<4;i++){
-   let line=`${i+1}. ${item.option[i]}`;
-   y=wrapText(ctx,line,left,y,W-left*2,oF+2);
+   let ln=`${i+1}. ${item.option[i]}`;
+   y = wrapText(ctx,ln,left,y,usableWidth,oF+3,bottomLimit);
  }
 
  return c.toDataURL("image/png");
 }
 
-/* px → inches */
 function pxIn(px){return px/96;}
 
-/* Generate PPT */
 $("makeBtn").onclick=async()=>{
 
  if(!DATA.length) return alert("No questions");
 
- syncPrev();
+ syncPreview();
 
  let W=parseInt($("wPx").value);
  let H=parseInt($("hPx").value);
+
  let top=parseInt($("topM").value);
  let left=parseInt($("leftM").value);
+ let right=parseInt($("rightM").value);
+ let bottom=parseInt($("bottomM").value);
+
  let qc=$("qColor").value;
  let oc=$("oColor").value;
 
@@ -282,19 +325,19 @@ $("makeBtn").onclick=async()=>{
  ppt.defineLayout({name:"CUST",width:pxIn(W),height:pxIn(H)});
  ppt.layout="CUST";
 
- for(let item of DATA){
-   let durl=await canvasSlide(item,W,H,top,left,qc,oc);
-   let s=ppt.addSlide();
-   s.addImage({data:durl,x:0,y:0,w:pxIn(W),h:pxIn(H)});
+ for(let i=0;i<DATA.length;i++){
+   let img = await canvasSlide(DATA[i],i,W,H,top,left,right,bottom,qc,oc);
+   let slide=ppt.addSlide();
+   slide.addImage({data:img,x:0,y:0,w:pxIn(W),h:pxIn(H)});
  }
 
- ppt.writeFile({fileName:"MCQ_Kalam_Final.pptx"});
+ ppt.writeFile({fileName:"MCQ_Final_Columns.pptx"});
 };
 
-/* Clear */
 $("clrBtn").onclick=()=>{DATA=[];$("jsonData").value="";render();};
 
 render();
 </script>
+
 </body>
 </html>
