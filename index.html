@@ -1,412 +1,374 @@
 <!doctype html>
 <html lang="hi">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+
 <title>MCQ → PPTX (Exact Preview → PPT)</title>
 
-<!-- Kalam font -->
 <link href="https://fonts.googleapis.com/css2?family=Kalam&display=swap" rel="stylesheet">
-
-<!-- PPTX Generator -->
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
 <style>
-  body{font-family:'Kalam',cursive;background:#0f1720;color:#eee;margin:16px}
-  .card{background:#121926;padding:16px;border-radius:10px;border:1px solid #223;max-width:1150px;margin:auto}
-  label{color:#9fb7ff;font-weight:700;margin-top:8px;display:block}
-  textarea,input{width:100%;padding:8px;border-radius:6px;border:1px solid #334;background:#0b1220;color:#fff;font-family:'Kalam',cursive}
-  .btn{padding:8px 12px;border:none;border-radius:8px;margin-top:10px;cursor:pointer;font-family:'Kalam',cursive;font-weight:700}
-  .btn-blue{background:#0b74ff;color:#fff}.btn-grey{background:#333;color:#ccd}.btn-red{background:#e11d48;color:#fff}
+body{font-family:'Kalam',cursive;background:#0f1720;color:#eee;margin:16px}
+.card{background:#121926;padding:16px;border-radius:10px;border:1px solid #223;max-width:1150px;margin:auto}
 
-  .row{display:flex;gap:12px;flex-wrap:wrap}
-  .col{flex:1;min-width:300px}
+label{color:#9fb7ff;font-weight:700;margin-top:8px;display:block}
+textarea,input{width:100%;padding:8px;border-radius:6px;border:1px solid #334;background:#0b1220;color:#fff;font-family:'Kalam',cursive}
 
-  .preview{background:#071019;padding:12px;border-radius:8px;margin-top:10px;border:1px solid #203040;max-height:520px;overflow:auto}
-  .slide-preview{background:#000;padding:10px;border-radius:6px;margin-bottom:12px;color:#fff;font-family:'Kalam',cursive}
-  .slide-block{white-space:pre-wrap;font-size:18px;line-height:1.25}
-  .slide-block[contenteditable="true"]{outline:1px dashed rgba(120,140,180,0.14);padding:6px;border-radius:4px}
+.btn{padding:8px 12px;border:none;border-radius:8px;margin-top:10px;cursor:pointer;font-family:'Kalam',cursive;font-weight:700}
+.btn-blue{background:#0b74ff;color:#fff}
+.btn-grey{background:#333;color:#ccd}
+.btn-red{background:#e11d48;color:#fff}
+
+.preview{background:#071019;padding:12px;border-radius:8px;margin-top:10px;border:1px solid #203040;max-height:520px;overflow:auto}
+.slide-preview{background:#000;color:#fff;padding:10px;border-radius:6px;margin-bottom:12px;position:relative}
+
+.slide-delete{
+  position:absolute;
+  top:4px;
+  right:4px;
+  background:#e11d48;
+  color:#fff;
+  border:none;
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  cursor:pointer;
+  font-size:16px;
+  line-height:22px;
+  text-align:center;
+}
+
+.slide-block{
+  white-space:pre-wrap;
+  font-size:18px;
+  line-height:1.25;
+  padding-right:28px;
+}
+.slide-block[contenteditable="true"]{
+  outline:1px dashed rgba(120,140,180,0.14);
+  padding:6px;
+  border-radius:4px;
+}
+
+.row{display:flex;flex-wrap:wrap;gap:12px}
+.col{flex:1;min-width:300px}
+
 </style>
 </head>
+
 <body>
 <div class="card">
-  <h2 style="color:#fff">MCQ → PPTX (Exact block mapping — final)</h2>
 
-  <div class="row">
-    <div class="col">
-      <label>JSON Input</label>
-      <textarea id="jsonArea" rows="8" placeholder='[{"question":"...","option":["..","..","..",".."]}]'></textarea>
+<h2 style="color:#fff">MCQ → PPTX (Final Version with Delete + Fixed Margins)</h2>
 
-      <h3 style="color:#fff;margin-top:8px">Manual Entry</h3>
-      <label>Question (exact text with line breaks)</label>
-      <textarea id="manualQ" rows="3" placeholder="यहाँ लिखें — \n से line break होगा"></textarea>
+<div class="row">
 
-      <label>Options (4)</label>
-      <input id="opt1" placeholder="Option 1">
-      <input id="opt2" placeholder="Option 2">
-      <input id="opt3" placeholder="Option 3">
-      <input id="opt4" placeholder="Option 4">
+<!-- LEFT -->
+<div class="col">
 
-      <button id="addManual" class="btn btn-grey">Add to List</button>
+<label>JSON Input</label>
+<textarea id="jsonArea" rows="8" placeholder='[{"question":"...","option":["..","..","..",".."]}]'></textarea>
 
-      <label style="margin-top:12px">Background Image (optional)</label>
-      <input type="file" id="bgImg" accept="image/*">
+<h3 style="color:#fff;margin-top:8px">Manual Entry</h3>
 
-      <div style="display:flex;gap:8px;margin-top:12px">
-        <div style="flex:1"><label>Slide width (px)</label><input id="slideW" value="1280"></div>
-        <div style="flex:1"><label>Slide height (px)</label><input id="slideH" value="720"></div>
-      </div>
+<label>Question</label>
+<textarea id="manualQ" rows="3"></textarea>
 
-      <div style="display:flex;gap:8px;margin-top:10px">
-        <div style="flex:1"><label>Top margin (px)</label><input id="topM" value="130"></div>
-        <div style="flex:1"><label>Left margin (px)</label><input id="leftM" value="50"></div>
-      </div>
+<label>Options</label>
+<input id="opt1" placeholder="Option 1">
+<input id="opt2" placeholder="Option 2">
+<input id="opt3" placeholder="Option 3">
+<input id="opt4" placeholder="Option 4">
 
-      <div style="display:flex;gap:8px;margin-top:10px">
-        <div style="flex:1"><label>Right margin (px)</label><input id="rightM" value="50"></div>
-        <div style="flex:1"><label>Bottom margin (px)</label><input id="bottomM" value="100"></div>
-      </div>
+<button id="addManual" class="btn btn-grey">Add Question</button>
 
-      <div style="display:flex;gap:8px;margin-top:10px">
-        <div style="flex:1"><label>Question Color</label><input type="color" id="qColor" value="#ffff00"></div>
-        <div style="flex:1"><label>Option Color</label><input type="color" id="optColor" value="#ffffff"></div>
-      </div>
+<label style="margin-top:12px">Background Image</label>
+<input type="file" id="bgImg" accept="image/*">
 
-      <div style="margin-top:12px">
-        <button id="importBtn" class="btn btn-grey">Import JSON</button>
-        <button id="generateBtn" class="btn btn-blue">Generate PPTX</button>
-        <button id="clearBtn" class="btn btn-red">Clear</button>
-      </div>
-    </div>
-
-    <div class="col">
-      <label>Preview (editable)</label>
-      <div id="preview" class="preview">
-        <div style="color:#7aa">Preview दिखाई देगा यहाँ…</div>
-      </div>
-      <div style="color:#7aa;margin-top:8px">Preview में जो दिखाई देगा वही PPT में आयेगा — line-break and spacing preserved.</div>
-    </div>
-  </div>
+<!-- DEFAULT UPDATED MARGINS -->
+<div class="row" style="margin-top:12px">
+  <div class="col"><label>Top Margin</label><input id="topM" value="90"></div>
+  <div class="col"><label>Left Margin</label><input id="leftM" value="90"></div>
 </div>
+
+<div class="row">
+  <div class="col"><label>Right Margin</label><input id="rightM" value="90"></div>
+  <div class="col"><label>Bottom Margin</label><input id="bottomM" value="50"></div>
+</div>
+
+<div class="row">
+  <div class="col"><label>Slide Width</label><input id="slideW" value="1280"></div>
+  <div class="col"><label>Slide Height</label><input id="slideH" value="720"></div>
+</div>
+
+<div class="row">
+  <div class="col"><label>Question Color</label><input type="color" id="qColor" value="#ffff00"></div>
+  <div class="col"><label>Option Color</label><input type="color" id="optColor" value="#ffffff"></div>
+</div>
+
+<button id="importBtn" class="btn btn-grey">Import JSON</button>
+<button id="generateBtn" class="btn btn-blue">Generate PPTX</button>
+<button id="clearBtn" class="btn btn-red">Clear</button>
+
+</div>
+
+<!-- RIGHT -->
+<div class="col">
+<label>Preview (Editable)</label>
+<div id="preview" class="preview">
+  <div style="color:#7aa">Preview यहाँ दिखेगा…</div>
+</div>
+</div>
+
+</div><!-- row -->
+</div><!-- card -->
 
 <script>
 const $ = id => document.getElementById(id);
 
-let DATA = [];         // { question: string (with \n), option: [4 strings] }
+let DATA = [];
 let BG_DATAURL = null;
 
-// helper: convert file to dataURL
-function fileToDataURL(file){
-  return new Promise(res=>{
-    const r = new FileReader();
-    r.onload = ()=>res(r.result);
-    r.readAsDataURL(file);
-  });
-}
-
-// Normalizer: convert escaped to real newline. Preserve internal leading spaces as user wrote.
-// We WILL NOT strip leading spaces — user explicitly wanted exact content.
-// But also allow user to type /n to mean newline.
+// normalize function
 function normalizeItem(item){
-  const q = (item.question || "")
-              .replace(/\\n/g, "\n")
-              .replace(/\/n/g, "\n");
-  const opts = (item.option || ["","","",""]).slice(0,4).map(o => (o||"").replace(/\\n/g,"\n").replace(/\/n/g,"\n"));
-  while(opts.length < 4) opts.push("");
-  return { question: q, option: opts };
+  const q = (item.question||"")
+              .replace(/\\n/g,"\n")
+              .replace(/\/n/g,"\n");
+  const opts=(item.option||["","","",""]).slice(0,4).map(o=>o.replace(/\\n/g,"\n").replace(/\/n/g,"\n"));
+  while(opts.length<4) opts.push("");
+  return { question:q, option:opts };
 }
 
-// RENDER PREVIEW (editable)
+// PARSE edited block
+function parseBlock(txt){
+  const lines = txt.split("\n");
+  let first = lines[0].replace(/^[Qq]\d+\.\s*/,'');
+  let opts=[];
+  let optStart=-1;
+
+  for(let i=1;i<lines.length;i++){
+    if(/^\s*1\./.test(lines[i])){ optStart=i; break; }
+  }
+  if(optStart===-1){
+    return { question:[first].concat(lines.slice(1)).join("\n"), option:["","","",""] };
+  }
+  const qLines=[first].concat(lines.slice(1,optStart));
+
+  for(let i=optStart;i<optStart+4 && i<lines.length;i++){
+    opts.push(lines[i].replace(/^\s*\d+\.\s*/,''));
+  }
+  while(opts.length<4) opts.push("");
+  return { question:qLines.join("\n"), option:opts };
+}
+
+// RENDER PREVIEW (with delete icon)
 function renderPreview(){
   const box = $('preview');
-  box.innerHTML = '';
-  if(DATA.length === 0){
-    box.innerHTML = '<div style="color:#7aa">No questions.</div>';
+  box.innerHTML = "";
+
+  if(DATA.length===0){
+    box.innerHTML='<div style="color:#7aa">No questions.</div>';
     return;
   }
 
-  DATA.forEach((q, i)=>{
-    const wrap = document.createElement('div');
-    wrap.className = 'slide-preview';
+  DATA.forEach((q,i)=>{
+    const wrap=document.createElement('div');
+    wrap.className='slide-preview';
 
-    const block = document.createElement('div');
-    block.className = 'slide-block';
-    block.contentEditable = "true";
+    const del=document.createElement('button');
+    del.className='slide-delete';
+    del.innerText='×';
+    del.onclick=()=>{
+      DATA.splice(i,1);
+      renderPreview();
+    };
 
-    // Compose as a single block: question lines as-is, then options each on its own line.
-    const text = `Q${i+1}. ${q.question}\n1. ${q.option[0]}\n2. ${q.option[1]}\n3. ${q.option[2]}\n4. ${q.option[3]}`;
-    block.innerText = text;
+    const blk=document.createElement('div');
+    blk.className='slide-block';
+    blk.contentEditable="true";
 
-    // On blur: parse updated text back into DATA (preserving newlines)
-    block.addEventListener('blur', ()=>{
-      const parsed = parseBlockToItem(block.innerText);
-      DATA[i] = normalizeItem(parsed);
-      renderPreview(); // re-render to normalize numbering
-    });
+    blk.innerText =
+      `Q${i+1}. ${q.question}\n`+
+      `1. ${q.option[0]}\n`+
+      `2. ${q.option[1]}\n`+
+      `3. ${q.option[2]}\n`+
+      `4. ${q.option[3]}`;
 
-    wrap.appendChild(block);
+    blk.onblur=()=>{
+      DATA[i] = normalizeItem(parseBlock(blk.innerText));
+      renderPreview();
+    };
+
+    wrap.appendChild(del);
+    wrap.appendChild(blk);
     box.appendChild(wrap);
   });
 }
 
-// Parse preview block text back to {question, option[]}
-// We preserve everything: first line after Qn. is question first line; all lines up to the first option number "1." should be considered part of the question.
-// Implementation: find index of line that starts with "1." (option start). Everything from second token up to that index-1 is question continuation.
-function parseBlockToItem(text){
-  const lines = text.split(/\r?\n/);
-  if(lines.length === 0) return { question: "", option: ["","","",""] };
-
-  // first line may begin with "Q<number>. "
-  let first = lines[0].replace(/^[Qq]\d+\.\s*/, '');
-  // find index of first option line that starts with "1." (allow spaces before)
-  let optStart = -1;
-  for(let i=1;i<lines.length;i++){
-    if(/^\s*1\.\s*/.test(lines[i])) { optStart = i; break; }
-  }
-  let qLines = [];
-  if(optStart === -1){
-    // no explicit option lines — everything after first line is part of question
-    qLines = [first].concat(lines.slice(1));
-    // options empty
-    return { question: qLines.join('\n'), option: ["","","",""] };
-  } else {
-    // question is first + lines from 1 .. optStart-1 (preserve as-is, but remove possible leading "1." marker)
-    qLines = [first].concat(lines.slice(1, optStart));
-    // Now parse options from optStart ... optStart+3 expecting "1. ...", "2. ...", etc.
-    const opts = [];
-    for(let i = optStart; i < Math.min(optStart+4, lines.length); i++){
-      const line = lines[i].replace(/^\s*\d+\.\s*/, '');
-      opts.push(line);
-    }
-    while(opts.length < 4) opts.push("");
-    return { question: qLines.join('\n'), option: opts };
-  }
+// file to dataURL
+function fileToDataURL(f){
+  return new Promise(res=>{
+    let r=new FileReader();
+    r.onload=()=>res(r.result);
+    r.readAsDataURL(f);
+  });
 }
 
 // IMPORT JSON
-$('importBtn').addEventListener('click', ()=>{
+$('importBtn').onclick=()=>{
   try{
-    let j = JSON.parse($('jsonArea').value);
-    if(!Array.isArray(j)) j = [j];
-    DATA = j.map(normalizeItem);
+    let j=JSON.parse($('jsonArea').value);
+    if(!Array.isArray(j)) j=[j];
+    DATA=j.map(normalizeItem);
     renderPreview();
-  } catch(e){
-    alert("Invalid JSON");
-  }
-});
+  }catch(e){alert('Invalid JSON');}
+};
 
 // ADD MANUAL
-$('addManual').addEventListener('click', ()=>{
-  const q = $('manualQ').value;
-  if(!q){ alert("Question खाली है"); return; }
+$('addManual').onclick=()=>{
+  let q=$('manualQ').value;
+  if(!q.trim()) return alert("Empty question");
 
   DATA.push(normalizeItem({
-    question: q,
-    option: [
-      $('opt1').value || '',
-      $('opt2').value || '',
-      $('opt3').value || '',
-      $('opt4').value || ''
+    question:q,
+    option:[
+      $('opt1').value,
+      $('opt2').value,
+      $('opt3').value,
+      $('opt4').value
     ]
   }));
 
-  $('manualQ').value = '';
-  $('opt1').value = $('opt2').value = $('opt3').value = $('opt4').value = '';
+  $('manualQ').value="";
+  $('opt1').value=$('opt2').value=$('opt3').value=$('opt4').value="";
   renderPreview();
-});
+};
 
-// BG IMAGE
-$('bgImg').addEventListener('change', async (ev)=>{
-  const f = ev.target.files[0];
-  if(!f) return;
-  BG_DATAURL = await fileToDataURL(f);
-});
-
-// WRAP & DRAW helper: wraps a given single logical line (preserve forced line break) into multiple visual lines and draws them.
-function wrapAndDraw(ctx, line, leftX, y, maxW, lineHeight){
-  // If entire line is empty, advance by lineHeight
-  if(line === '' || line.trim() === ''){
-    return y + lineHeight;
+// BG upload
+$('bgImg').onchange=async(ev)=>{
+  if(ev.target.files[0]){
+    BG_DATAURL = await fileToDataURL(ev.target.files[0]);
   }
-  const words = line.split(' ');
-  let cur = '';
+};
+
+// CANVAS WRAP helper
+function wrap(ctx,text,x,y,maxW,lineH){
+  if(text.trim()===""){ return y+lineH; }
+  let words=text.split(" ");
+  let line="";
   for(let w of words){
-    const test = cur ? (cur + ' ' + w) : w;
-    const width = ctx.measureText(test).width;
-    if(width > maxW && cur !== ''){
-      ctx.fillText(cur, leftX, y);
-      y += lineHeight;
-      cur = w;
-    } else {
-      cur = test;
-    }
+    let test=line+w+" ";
+    if(ctx.measureText(test).width>maxW && line!==""){
+      ctx.fillText(line,x,y);
+      y+=lineH;
+      line=w+" ";
+    }else line=test;
   }
-  if(cur) {
-    ctx.fillText(cur, leftX, y);
-    y += lineHeight;
-  }
-  return y;
+  ctx.fillText(line,x,y);
+  return y+lineH;
 }
 
-// MAIN: generate canvas image from a single full block (question+options) exactly as preview
-async function renderBlockToImage(item, pxW, pxH, margins, qColor, optColor){
-  await document.fonts.load('20px Kalam');
-  await document.fonts.ready;
+// RENDER BLOCK TO IMAGE
+async function blockToImg(item,pxW,pxH,m,qc,oc){
+  await document.fonts.load('30px Kalam');
 
-  const canvas = document.createElement('canvas');
-  canvas.width = pxW;
-  canvas.height = pxH;
-  const ctx = canvas.getContext('2d');
+  let c=document.createElement('canvas');
+  c.width=pxW; c.height=pxH;
+  let ctx=c.getContext('2d');
 
-  // background
+  // BG
   if(BG_DATAURL){
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.src = BG_DATAURL;
-    await new Promise(res => {
-      img.onload = res;
-      img.onerror = res; // if error, continue with black bg
-    });
-    try { ctx.drawImage(img, 0, 0, pxW, pxH); } catch(e){ ctx.fillStyle="#000"; ctx.fillRect(0,0,pxW,pxH); }
+    let img=new Image();
+    img.src=BG_DATAURL;
+    await new Promise(r=>img.onload=r);
+    ctx.drawImage(img,0,0,pxW,pxH);
   } else {
-    ctx.fillStyle = "#000";
-    ctx.fillRect(0,0,pxW,pxH);
+    ctx.fillStyle="#000"; ctx.fillRect(0,0,pxW,pxH);
   }
 
-  // line heights & fonts
-  const qFontPx = Math.round(pxH * 0.045);      // question font size
-  const optFontPx = Math.round(pxH * 0.038);    // option font size
-  const qLineH = Math.round(qFontPx * 1.25);
-  const optLineH = Math.round(optFontPx * 1.25);
+  const qFont=Math.round(pxH*0.045);
+  const oFont=Math.round(pxH*0.038);
+  const qH=Math.round(qFont*1.25);
+  const oH=Math.round(oFont*1.25);
 
-  const leftX = margins.left;
-  const rightLimit = pxW - margins.right;
-  const maxW = rightLimit - leftX;
-  const bottomLimit = pxH - margins.bottom;
+  const left=m.left;
+  const maxW=pxW-m.right-left;
+  const bottom=pxH-m.bottom;
 
-  let y = margins.top;
+  let y=m.top;
 
-  // Compose fullBlock lines exactly as preview
-  // We'll draw question lines first (preserve their forced breaks), using q font
-  const questionLines = item.question.split('\n'); // preserved as-is
+  ctx.textBaseline='top';
 
-  ctx.textBaseline = 'top';
+  // Draw question lines
+  ctx.fillStyle=qc;
+  ctx.font=`bold ${qFont}px Kalam`;
 
-  // Draw question lines: each logical question line may be wrapped visually
-  ctx.fillStyle = qColor;
-  ctx.font = `bold ${qFontPx}px Kalam`;
-  for(let ql of questionLines){
-    // ql may be empty => produce blank line
-    y = wrapAndDraw(ctx, ql, leftX, y, maxW, qLineH);
-    if(y > bottomLimit) return canvas.toDataURL('image/png');
+  let qLines=item.question.split("\n");
+  for(let ln of qLines){
+    y=wrap(ctx,ln,left,y,maxW,qH);
+    if(y>bottom) return c.toDataURL('image/png');
   }
 
-  // No extra gap — options start immediately after last question line
-  // Draw options one by one; each option string itself may contain '\n' which must be respected.
-  ctx.font = `${optFontPx}px Kalam`;
+  // Draw options
+  ctx.font=`${oFont}px Kalam`;
+  ctx.fillStyle=oc;
 
   for(let i=0;i<4;i++){
-    const optText = item.option[i] || '';
-    // Option may have multiple lines inside it; preserve them.
-    // But prepend label "1. " only to the first visual logical line of the option block.
-    const lines = optText.split('\n');
-    if(lines.length === 0 || (lines.length === 1 && lines[0].trim() === '')){
-      // Draw label only (if even option is empty), then advance line
-      ctx.fillStyle = optColor;
-      y = wrapAndDraw(ctx, `${i+1}. `, leftX, y, maxW, optLineH);
-      if(y > bottomLimit) return canvas.toDataURL('image/png');
-      continue;
-    }
-    // draw first line with label prefix
-    ctx.fillStyle = optColor;
-    const firstLine = `${i+1}. ${lines[0]}`;
-    y = wrapAndDraw(ctx, firstLine, leftX, y, maxW, optLineH);
-    if(y > bottomLimit) return canvas.toDataURL('image/png');
+    let opt=item.option[i]||"";
+    let lines=opt.split("\n");
 
-    // subsequent lines of this option (if any) — draw without label, aligned same leftX
+    // पहला line → with label
+    let first=`${i+1}. ${lines[0]}`;
+    y=wrap(ctx,first,left,y,maxW,oH);
+    if(y>bottom) return c.toDataURL('image/png');
+
+    // बाकी lines → no label
     for(let k=1;k<lines.length;k++){
-      y = wrapAndDraw(ctx, lines[k], leftX, y, maxW, optLineH);
-      if(y > bottomLimit) return canvas.toDataURL('image/png');
+      y=wrap(ctx,lines[k],left,y,maxW,oH);
+      if(y>bottom) return c.toDataURL('image/png');
     }
   }
 
-  return canvas.toDataURL('image/png');
+  return c.toDataURL('image/png');
 }
 
-// Generate PPT
-$('generateBtn').addEventListener('click', async ()=>{
-  if(DATA.length === 0){ alert("No questions"); return; }
+// GENERATE PPTX
+$('generateBtn').onclick=async()=>{
+  if(DATA.length===0) return alert("No data");
 
-  // collect settings
-  const pxW = parseInt($('slideW').value) || 1280;
-  const pxH = parseInt($('slideH').value) || 720;
-  const margins = {
-    top: parseInt($('topM').value) || 130,
-    left: parseInt($('leftM').value) || 50,
-    right: parseInt($('rightM').value) || 50,
-    bottom: parseInt($('bottomM').value) || 100
+  const pxW=parseInt($("slideW").value);
+  const pxH=parseInt($("slideH").value);
+
+  const margins={
+    top:parseInt($("topM").value),
+    left:parseInt($("leftM").value),
+    right:parseInt($("rightM").value),
+    bottom:parseInt($("bottomM").value)
   };
-  const qColor = $('qColor').value || '#ffff00';
-  const optColor = $('optColor').value || '#ffffff';
 
-  // create pptx and set custom size (convert px->inch using 96dpi)
-  const pptx = new PptxGenJS();
-  const wIn = pxW / 96;
-  const hIn = pxH / 96;
-  try{ pptx.defineLayout({ name:'CUST', width: wIn, height: hIn }); pptx.layout = 'CUST'; } catch(e){ /* ignore */ }
+  const qc=$("qColor").value;
+  const oc=$("optColor").value;
+
+  const ppt=new PptxGenJS();
+  ppt.defineLayout({name:"CUST",width:pxW/96,height:pxH/96});
+  ppt.layout="CUST";
 
   for(let i=0;i<DATA.length;i++){
-    // full image from block
-    const imgData = await renderBlockToImage(DATA[i], pxW, pxH, margins, qColor, optColor);
-    const slide = pptx.addSlide();
-    slide.addImage({ data: imgData, x:0, y:0, w: wIn, h: hIn });
+    let img=await blockToImg(DATA[i],pxW,pxH,margins,qc,oc);
+    let slide=ppt.addSlide();
+    slide.addImage({data:img,x:0,y:0,w:pxW/96,h:pxH/96});
   }
 
-  await pptx.writeFile({ fileName: "MCQ_exact_preview.pptx" });
-});
+  ppt.writeFile({fileName:"MCQ_Final.pptx"});
+};
 
-// Clear
-$('clearBtn').addEventListener('click', ()=>{
-  DATA = [];
-  $('jsonArea').value = '';
-  renderPreview();
-});
+// CLEAR
+$('clearBtn').onclick=()=>{ DATA=[]; $('jsonArea').value=""; renderPreview(); };
 
-// File upload bg
-$('bgImg').addEventListener('change', async (ev)=>{
-  const f = ev.target.files[0];
-  if(!f) return;
-  BG_DATAURL = await fileToDataURL(f);
-});
-
-// parse preview -> item (used when editing preview)
-function parsePreviewBlock(text){
-  // reuse parseBlockToItem logic
-  return parseBlockToItem(text);
-}
-
-// on import or manual add, render preview
-// also support manual add button
-$('addManual').addEventListener('click', ()=>{
-  const q = $('manualQ').value || '';
-  DATA.push(normalizeItem({ question: q, option: [ $('opt1').value, $('opt2').value, $('opt3').value, $('opt4').value ] }));
-  $('manualQ').value = $('opt1').value = $('opt2').value = $('opt3').value = $('opt4').value = '';
-  renderPreview();
-});
-
-// wire import button
-$('importBtn').addEventListener('click', ()=>{
-  try{
-    let j = JSON.parse($('jsonArea').value);
-    if(!Array.isArray(j)) j = [j];
-    DATA = j.map(normalizeItem);
-    renderPreview();
-  } catch(e){ alert('Invalid JSON'); }
-});
-
-// initial render
 renderPreview();
-
 </script>
+
 </body>
 </html>
