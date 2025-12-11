@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>MCQ → PPTX (Perfect Line Break + Columns + Margins + Kalam)</title>
+<title>MCQ → PPTX (Perfect Question Line Break FIX + Margins + Kalam)</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Kalam&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
@@ -33,13 +33,11 @@ textarea,input{width:100%;padding:8px;border-radius:6px;border:1px solid #334;ba
 <body>
 <div class="card">
 
-<h2 style="color:#fff">MCQ → PPTX (Line Break FIX + Margins + Columns + Kalam)</h2>
+<h2 style="color:#fff">MCQ → PPTX (QUESTION LINE BREAK FIXED)</h2>
 
 <div class="row">
 
-<!-- LEFT -->
 <div class="col">
-
 <label>JSON Input</label>
 <textarea id="jsonData" rows="8"></textarea>
 
@@ -60,8 +58,8 @@ textarea,input{width:100%;padding:8px;border-radius:6px;border:1px solid #334;ba
 <input type="file" id="bgImg" accept="image/*">
 
 <div class="row">
-  <div class="col"><label>Slide Width (px)</label><input id="wPx" value="1280"></div>
-  <div class="col"><label>Slide Height (px)</label><input id="hPx" value="720"></div>
+  <div class="col"><label>Slide Width</label><input id="wPx" value="1280"></div>
+  <div class="col"><label>Slide Height</label><input id="hPx" value="720"></div>
 </div>
 
 <div class="row">
@@ -85,10 +83,11 @@ textarea,input{width:100%;padding:8px;border-radius:6px;border:1px solid #334;ba
 
 </div>
 
-<!-- RIGHT -->
 <div class="col">
 <label>Preview (editable)</label>
-<div id="preview" class="preview"><div style="color:#7aa">Preview दिखाई देगा…</div></div>
+<div id="preview" class="preview">
+  <div style="color:#7aa">Preview दिखाई देगा…</div>
+</div>
 </div>
 
 </div>
@@ -97,11 +96,11 @@ textarea,input{width:100%;padding:8px;border-radius:6px;border:1px solid #334;ba
 
 <script>
 
-const $ = id => document.getElementById(id);
-let DATA = [];
-let BG = null;
+const $=id=>document.getElementById(id);
+let DATA=[];
+let BG=null;
 
-/* ---------------- FIXED NORMALIZER (No trim, keep all newlines) ---------------- */
+/* KEEP ALL NEWLINES EXACTLY */
 function normalize(item){
  return {
    question:(item.question||"")
@@ -113,29 +112,26 @@ function normalize(item){
  };
 }
 
-/* ------------- FIXED PARSE BLOCK — NO TRIM, NO LOSS OF NEWLINES ------------- */
+/* NO TRIM ANYWHERE */
 function parseBlock(t){
- let lines = t.split("\n");   // keep ALL lines exactly as typed
-
- let q = lines[0].replace(/^[Qq]\d+\.\s*/, "");
-
- let opts = [];
- for(let i=1;i<lines.length && opts.length<4;i++){
+ let lines = t.split("\n");
+ let q = lines[0].replace(/^[Qq]\d+\.\s*/,"");
+ let opts=[];
+ for(let i=1;i<lines.length && opts.length<4;i++)
    opts.push(lines[i].replace(/^\d+\.\s*/,""));
- }
  while(opts.length<4) opts.push("");
-
- return normalize({question:q, option:opts});
+ return normalize({question:q,option:opts});
 }
 
-/* ---------------- Preview Renderer ---------------- */
+/* Preview */
 function render(){
  let box=$("preview");
  box.innerHTML="";
  if(!DATA.length){
-   box.innerHTML="<div style='color:#7aa'>No questions.</div>";
+   box.innerHTML="<div style='color:#7aa'>No Questions</div>";
    return;
  }
+
  DATA.forEach((q,i)=>{
    let wrap=document.createElement("div");
    wrap.className="slide-box";
@@ -144,87 +140,80 @@ function render(){
    blk.className="slide-block";
    blk.contentEditable="true";
 
-   blk.innerText =
+   blk.innerText=
      `Q${i+1}. ${q.question}\n`+
      `1. ${q.option[0]}\n`+
      `2. ${q.option[1]}\n`+
      `3. ${q.option[2]}\n`+
      `4. ${q.option[3]}`;
 
-   blk.addEventListener("blur",()=>{
-     DATA[i] = parseBlock(blk.innerText);
+   blk.onblur=()=>{
+     DATA[i]=parseBlock(blk.innerText);
      render();
-   });
+   };
 
    wrap.appendChild(blk);
    box.appendChild(wrap);
  });
 }
 
-/* ---------------- JSON Input ---------------- */
+/* Upload BG */
+$("bgImg").onchange=e=>{
+ let f=e.target.files[0];
+ if(!f)return;
+ let r=new FileReader();
+ r.onload=()=>BG=r.result;
+ r.readAsDataURL(f);
+};
+
 $("importBtn").onclick=()=>{
  try{
    let j=JSON.parse($("jsonData").value);
    if(!Array.isArray(j)) j=[j];
    DATA=j.map(normalize);
    render();
- }catch(err){alert("JSON Error");}
+ }catch(e){alert("JSON Error");}
 };
 
-/* ---------------- Add manually ---------------- */
 $("addBtn").onclick=()=>{
- if(!$("qInput").value.trim()) return alert("Empty question");
-
+ if(!$("qInput").value.trim()) return alert("Question empty");
  DATA.push(normalize({
    question:$("qInput").value,
    option:[$("o1").value,$("o2").value,$("o3").value,$("o4").value]
  }));
-
  $("qInput").value=$("o1").value=$("o2").value=$("o3").value=$("o4").value="";
  render();
 };
 
-/* ---------------- Background upload ---------------- */
-$("bgImg").onchange=async e=>{
- let f=e.target.files[0];
- if(!f) return;
- let r=new FileReader();
- r.onload=()=>BG=r.result;
- r.readAsDataURL(f);
-};
-
-/* ---------------- Sync preview ---------------- */
-function syncPreview(){
+function syncPrev(){
  document.querySelectorAll(".slide-block").forEach((blk,i)=>{
    DATA[i]=parseBlock(blk.innerText);
  });
 }
 
-/* Canvas wrap */
-function wrapText(ctx,txt,x,y,maxW,lh,bottom){
+/* CANVAS WRAP */
+function wrapText(ctx,txt,x,y,maxW,lh,limit){
+ if(txt==="" || txt.trim()===""){
+   y+=lh;
+   return y;
+ }
  let words=txt.split(" ");
  let line="";
  for(let w of words){
-   let t=line+w+" ";
-   if(ctx.measureText(t).width>maxW){
+   let test=line+w+" ";
+   if(ctx.measureText(test).width>maxW){
      ctx.fillText(line,x,y);
      y+=lh;
-     if(y>=bottom) return bottom;
+     if(y>=limit) return limit;
      line=w+" ";
-   } else line=t;
+   }else line=test;
  }
  ctx.fillText(line,x,y);
  y+=lh;
  return y;
 }
 
-/* Detect 2-column */
-function detectTwoCol(text){
- let rows=text.split("\n");
- return rows.some(r=>/^A\./.test(r)) && rows.some(r=>/^1\./.test(r));
-}
-
-/* ---------------- Canvas slide renderer (FINAL FIX) ---------------- */
+/* MAIN FIX → treat EVERY question newline as question line */
 async function canvasSlide(item,index,W,H,top,left,right,bottom,qc,oc){
  await document.fonts.load("30px Kalam");
 
@@ -233,10 +222,10 @@ async function canvasSlide(item,index,W,H,top,left,right,bottom,qc,oc){
  let ctx=c.getContext("2d");
 
  if(BG){
-   let im=new Image(); im.src=BG;
-   await new Promise(r=>im.onload=r);
-   ctx.drawImage(im,0,0,W,H);
- } else {
+   let img=new Image();img.src=BG;
+   await new Promise(r=>img.onload=r);
+   ctx.drawImage(img,0,0,W,H);
+ }else{
    ctx.fillStyle="#000";
    ctx.fillRect(0,0,W,H);
  }
@@ -245,52 +234,22 @@ async function canvasSlide(item,index,W,H,top,left,right,bottom,qc,oc){
  let oF=Math.round(H*0.038);
 
  let maxW=W-left-right;
- let y=top;
  let limit=H-bottom;
+ let y=top;
 
- let Q=`Q${index+1}. ${item.question}`;
+ let lines = item.question.split("\n");
+ let Q = "Q"+(index+1)+". "+lines[0];
+ let rest = lines.slice(1);
 
- let isTwo=detectTwoCol(Q);
+ ctx.font=`bold ${qF}px Kalam`;
+ ctx.fillStyle=qc;
 
- /* ------- COLUMN MODE -------- */
- if(isTwo){
-   ctx.font=`bold ${qF}px Kalam`;
-   ctx.fillStyle=qc;
+ /* FIRST LINE OF QUESTION */
+ y = wrapText(ctx, Q, left, y, maxW, qF+3, limit);
 
-   let lines=Q.split("\n");
-   let col1=[],col2=[];
-   lines.forEach(r=>{
-     if(/^A\.|^B\.|^C\.|^D\./.test(r)) col1.push(r);
-     else if(/^1\.|^2\.|^3\.|^4\./.test(r)) col2.push(r);
-     else col1.push(r);
-   });
-
-   let gap=280;
-
-   /* Col1 */
-   for(let ln of col1){
-     if(ln.trim()===""){y+=qF+2;continue;}
-     y=wrapText(ctx,ln,left,y,maxW,qF+3,limit);
-   }
-
-   /* Col2 */
-   let y2=top;
-   ctx.font=`bold ${qF}px Kalam`;
-   for(let ln of col2){
-     if(ln.trim()===""){y2+=qF+2;continue;}
-     y2=wrapText(ctx,ln,left+gap,y2,maxW-gap,qF+3,limit);
-   }
-
- } else {
-
-   /* ------- NORMAL MODE -------- */
-   ctx.font=`bold ${qF}px Kalam`;
-   ctx.fillStyle=qc;
-
-   for(let ln of Q.split("\n")){
-     if(ln.trim()===""){y+=qF+2;continue;}
-     y=wrapText(ctx,ln,left,y,maxW,qF+3,limit);
-   }
+ /* REST QUESTION LINES (same block) */
+ for(let ln of rest){
+   y = wrapText(ctx, ln, left, y, maxW, qF+3, limit);
  }
 
  /* OPTIONS */
@@ -299,7 +258,7 @@ async function canvasSlide(item,index,W,H,top,left,right,bottom,qc,oc){
 
  for(let i=0;i<4;i++){
    let ln=`${i+1}. ${item.option[i]}`;
-   y=wrapText(ctx,ln,left,y,maxW,oF+2,limit);
+   y = wrapText(ctx, ln, left, y, maxW, oF+2, limit);
  }
 
  return c.toDataURL("image/png");
@@ -307,15 +266,13 @@ async function canvasSlide(item,index,W,H,top,left,right,bottom,qc,oc){
 
 function pxIn(px){return px/96;}
 
-/* ---------------- Generate PPT ---------------- */
 $("makeBtn").onclick=async()=>{
-
- if(!DATA.length) return alert("No questions!");
-
- syncPreview();
+ if(!DATA.length) return alert("No questions");
+ syncPrev();
 
  let W=parseInt($("wPx").value);
  let H=parseInt($("hPx").value);
+
  let top=parseInt($("topM").value);
  let left=parseInt($("leftM").value);
  let right=parseInt($("rightM").value);
@@ -325,19 +282,18 @@ $("makeBtn").onclick=async()=>{
  let oc=$("oColor").value;
 
  let ppt=new PptxGenJS();
- ppt.defineLayout({name:"CUST",width:pxIn(W),height:pxIn(H)});
- ppt.layout="CUST";
+ ppt.defineLayout({name:"C",width:pxIn(W),height:pxIn(H)});
+ ppt.layout="C";
 
  for(let i=0;i<DATA.length;i++){
-   let img = await canvasSlide(DATA[i],i,W,H,top,left,right,bottom,qc,oc);
+   let img=await canvasSlide(DATA[i],i,W,H,top,left,right,bottom,qc,oc);
    let slide=ppt.addSlide();
    slide.addImage({data:img,x:0,y:0,w:pxIn(W),h:pxIn(H)});
  }
 
- ppt.writeFile({fileName:"MCQ_Final_FIXED.pptx"});
+ ppt.writeFile({fileName:"MCQ_FIXED_FINAL.pptx"});
 };
 
-/* ---------------- Clear ---------------- */
 $("clrBtn").onclick=()=>{DATA=[];$("jsonData").value="";render();};
 
 render();
