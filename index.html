@@ -25,43 +25,30 @@ textarea,input{width:100%;padding:8px;border-radius:6px;border:1px solid #334;ba
 .slide-preview{background:#000;color:#fff;padding:10px;border-radius:6px;margin-bottom:12px;position:relative}
 
 .slide-delete{
-  position:absolute;
-  top:4px;
-  right:4px;
-  background:#e11d48;
-  color:#fff;
-  border:none;
-  width:24px;
-  height:24px;
-  border-radius:50%;
-  cursor:pointer;
-  font-size:16px;
-  line-height:22px;
-  text-align:center;
+  position:absolute;top:4px;right:4px;
+  background:#e11d48;color:#fff;border:none;
+  width:24px;height:24px;border-radius:50%;
+  cursor:pointer;font-size:16px;line-height:22px;text-align:center;
 }
 
 .slide-block{
-  white-space:pre-wrap;
-  font-size:18px;
-  line-height:1.25;
+  white-space:pre-wrap;font-size:18px;line-height:1.25;
   padding-right:28px;
 }
 .slide-block[contenteditable="true"]{
-  outline:1px dashed rgba(120,140,180,0.14);
-  padding:6px;
-  border-radius:4px;
+  outline:1px dashed rgba(120,140,180,0.2);
+  padding:6px;border-radius:4px;
 }
 
 .row{display:flex;flex-wrap:wrap;gap:12px}
 .col{flex:1;min-width:300px}
-
 </style>
 </head>
 
 <body>
 <div class="card">
 
-<h2 style="color:#fff">MCQ → PPTX (Final Version with Delete + Fixed Margins)</h2>
+<h2 style="color:#fff">MCQ → PPTX (Final Fixed Version: 1300×710 + Auto Number)</h2>
 
 <div class="row">
 
@@ -69,7 +56,7 @@ textarea,input{width:100%;padding:8px;border-radius:6px;border:1px solid #334;ba
 <div class="col">
 
 <label>JSON Input</label>
-<textarea id="jsonArea" rows="8" placeholder='[{"question":"...","option":["..","..","..",".."]}]'></textarea>
+<textarea id="jsonArea" rows="8"></textarea>
 
 <h3 style="color:#fff;margin-top:8px">Manual Entry</h3>
 
@@ -87,25 +74,26 @@ textarea,input{width:100%;padding:8px;border-radius:6px;border:1px solid #334;ba
 <label style="margin-top:12px">Background Image</label>
 <input type="file" id="bgImg" accept="image/*">
 
-<!-- DEFAULT UPDATED MARGINS -->
+<!-- DEFAULT FIXED MARGINS -->
 <div class="row" style="margin-top:12px">
-  <div class="col"><label>Top Margin</label><input id="topM" value="90"></div>
-  <div class="col"><label>Left Margin</label><input id="leftM" value="90"></div>
+  <div class="col"><label>Top</label><input id="topM" value="90"></div>
+  <div class="col"><label>Left</label><input id="leftM" value="90"></div>
 </div>
 
 <div class="row">
-  <div class="col"><label>Right Margin</label><input id="rightM" value="90"></div>
-  <div class="col"><label>Bottom Margin</label><input id="bottomM" value="50"></div>
+  <div class="col"><label>Right</label><input id="rightM" value="90"></div>
+  <div class="col"><label>Bottom</label><input id="bottomM" value="50"></div>
+</div>
+
+<!-- FIXED SIZE => 1300 × 710 -->
+<div class="row">
+  <div class="col"><label>Slide Width</label><input id="slideW" value="1300"></div>
+  <div class="col"><label>Slide Height</label><input id="slideH" value="710"></div>
 </div>
 
 <div class="row">
-  <div class="col"><label>Slide Width</label><input id="slideW" value="1280"></div>
-  <div class="col"><label>Slide Height</label><input id="slideH" value="720"></div>
-</div>
-
-<div class="row">
-  <div class="col"><label>Question Color</label><input type="color" id="qColor" value="#ffff00"></div>
-  <div class="col"><label>Option Color</label><input type="color" id="optColor" value="#ffffff"></div>
+  <div class="col"><label>Q Color</label><input type="color" id="qColor" value="#ffff00"></div>
+  <div class="col"><label>Opt Color</label><input type="color" id="optColor" value="#ffffff"></div>
 </div>
 
 <button id="importBtn" class="btn btn-grey">Import JSON</button>
@@ -117,79 +105,78 @@ textarea,input{width:100%;padding:8px;border-radius:6px;border:1px solid #334;ba
 <!-- RIGHT -->
 <div class="col">
 <label>Preview (Editable)</label>
-<div id="preview" class="preview">
-  <div style="color:#7aa">Preview यहाँ दिखेगा…</div>
+<div id="preview" class="preview"><div style="color:#7aa">Preview दिखाई देगा…</div></div>
+</div>
+
 </div>
 </div>
 
-</div><!-- row -->
-</div><!-- card -->
 
 <script>
 const $ = id => document.getElementById(id);
 
-let DATA = [];
-let BG_DATAURL = null;
+let DATA=[];  
+let BG=null;
 
-// normalize function
+// normalize
 function normalizeItem(item){
-  const q = (item.question||"")
-              .replace(/\\n/g,"\n")
-              .replace(/\/n/g,"\n");
-  const opts=(item.option||["","","",""]).slice(0,4).map(o=>o.replace(/\\n/g,"\n").replace(/\/n/g,"\n"));
-  while(opts.length<4) opts.push("");
-  return { question:q, option:opts };
+  return {
+    question:(item.question||"").replace(/\\n/g,"\n").replace(/\/n/g,"\n"),
+    option:(item.option||["","","",""]).slice(0,4).map(o=>o.replace(/\\n/g,"\n").replace(/\/n/g,"\n"))
+  };
 }
 
-// PARSE edited block
-function parseBlock(txt){
-  const lines = txt.split("\n");
-  let first = lines[0].replace(/^[Qq]\d+\.\s*/,'');
-  let opts=[];
-  let optStart=-1;
+// parse editable preview
+function parseBlock(text){
+  const lines=text.split("\n");
+  let first=lines[0].replace(/^[Qq]\d+\.\s*/,'');
+  let opts=[],optStart=-1;
 
   for(let i=1;i<lines.length;i++){
     if(/^\s*1\./.test(lines[i])){ optStart=i; break; }
   }
+
   if(optStart===-1){
-    return { question:[first].concat(lines.slice(1)).join("\n"), option:["","","",""] };
+    return {question:[first].concat(lines.slice(1)).join("\n"),option:["","","",""]};
   }
+
   const qLines=[first].concat(lines.slice(1,optStart));
 
   for(let i=optStart;i<optStart+4 && i<lines.length;i++){
     opts.push(lines[i].replace(/^\s*\d+\.\s*/,''));
   }
   while(opts.length<4) opts.push("");
-  return { question:qLines.join("\n"), option:opts };
+
+  return {question:qLines.join("\n"),option:opts};
 }
 
-// RENDER PREVIEW (with delete icon)
+// RENDER PREVIEW
 function renderPreview(){
-  const box = $('preview');
-  box.innerHTML = "";
+  const box=$("preview");
+  box.innerHTML="";
 
   if(DATA.length===0){
-    box.innerHTML='<div style="color:#7aa">No questions.</div>';
+    box.innerHTML='<div style="color:#7aa">No Questions</div>';
     return;
   }
 
   DATA.forEach((q,i)=>{
-    const wrap=document.createElement('div');
-    wrap.className='slide-preview';
+    const wrap=document.createElement("div");
+    wrap.className="slide-preview";
 
-    const del=document.createElement('button');
-    del.className='slide-delete';
-    del.innerText='×';
+    const del=document.createElement("button");
+    del.className="slide-delete";
+    del.innerText="×";
     del.onclick=()=>{
       DATA.splice(i,1);
       renderPreview();
     };
 
-    const blk=document.createElement('div');
-    blk.className='slide-block';
+    const blk=document.createElement("div");
+    blk.className="slide-block";
     blk.contentEditable="true";
 
-    blk.innerText =
+    blk.innerText=
       `Q${i+1}. ${q.question}\n`+
       `1. ${q.option[0]}\n`+
       `2. ${q.option[1]}\n`+
@@ -197,7 +184,7 @@ function renderPreview(){
       `4. ${q.option[3]}`;
 
     blk.onblur=()=>{
-      DATA[i] = normalizeItem(parseBlock(blk.innerText));
+      DATA[i]=normalizeItem(parseBlock(blk.innerText));
       renderPreview();
     };
 
@@ -207,10 +194,10 @@ function renderPreview(){
   });
 }
 
-// file to dataURL
-function fileToDataURL(f){
+// FILE → dataURL
+function fileToURL(f){
   return new Promise(res=>{
-    let r=new FileReader();
+    const r=new FileReader();
     r.onload=()=>res(r.result);
     r.readAsDataURL(f);
   });
@@ -223,13 +210,13 @@ $('importBtn').onclick=()=>{
     if(!Array.isArray(j)) j=[j];
     DATA=j.map(normalizeItem);
     renderPreview();
-  }catch(e){alert('Invalid JSON');}
+  }catch(e){ alert("Invalid JSON"); }
 };
 
 // ADD MANUAL
 $('addManual').onclick=()=>{
-  let q=$('manualQ').value;
-  if(!q.trim()) return alert("Empty question");
+  const q=$('manualQ').value.trim();
+  if(!q) return alert("Question empty");
 
   DATA.push(normalizeItem({
     question:q,
@@ -246,127 +233,124 @@ $('addManual').onclick=()=>{
   renderPreview();
 };
 
-// BG upload
+// BG
 $('bgImg').onchange=async(ev)=>{
-  if(ev.target.files[0]){
-    BG_DATAURL = await fileToDataURL(ev.target.files[0]);
-  }
+  if(ev.target.files[0]) BG = await fileToURL(ev.target.files[0]);
 };
 
-// CANVAS WRAP helper
-function wrap(ctx,text,x,y,maxW,lineH){
-  if(text.trim()===""){ return y+lineH; }
-  let words=text.split(" ");
+// wrap helper
+function wrapLine(ctx,text,x,y,maxW,lineH){
+  if(text.trim()==="") return y+lineH;
+
+  const words=text.split(" ");
   let line="";
+
   for(let w of words){
-    let test=line+w+" ";
-    if(ctx.measureText(test).width>maxW && line!==""){
+    const t=line+w+" ";
+    if(ctx.measureText(t).width>maxW && line!==""){
       ctx.fillText(line,x,y);
       y+=lineH;
       line=w+" ";
-    }else line=test;
+    }else line=t;
   }
   ctx.fillText(line,x,y);
   return y+lineH;
 }
 
-// RENDER BLOCK TO IMAGE
-async function blockToImg(item,pxW,pxH,m,qc,oc){
-  await document.fonts.load('30px Kalam');
+// block → image
+async function blockToImage(item,pxW,pxH,m,qc,oc){
+  await document.fonts.load("30px Kalam");
 
-  let c=document.createElement('canvas');
-  c.width=pxW; c.height=pxH;
-  let ctx=c.getContext('2d');
+  const c=document.createElement("canvas");
+  c.width=pxW;
+  c.height=pxH;
+  const ctx=c.getContext("2d");
 
-  // BG
-  if(BG_DATAURL){
+  if(BG){
     let img=new Image();
-    img.src=BG_DATAURL;
+    img.src=BG;
     await new Promise(r=>img.onload=r);
     ctx.drawImage(img,0,0,pxW,pxH);
   } else {
-    ctx.fillStyle="#000"; ctx.fillRect(0,0,pxW,pxH);
+    ctx.fillStyle="#000";
+    ctx.fillRect(0,0,pxW,pxH);
   }
 
-  const qFont=Math.round(pxH*0.045);
-  const oFont=Math.round(pxH*0.038);
-  const qH=Math.round(qFont*1.25);
-  const oH=Math.round(oFont*1.25);
+  const qF=32, qH=40;
+  const oF=28, oH=34;
 
+  let y=m.top;
   const left=m.left;
   const maxW=pxW-m.right-left;
   const bottom=pxH-m.bottom;
 
-  let y=m.top;
-
-  ctx.textBaseline='top';
-
-  // Draw question lines
+  // QUESTION
   ctx.fillStyle=qc;
-  ctx.font=`bold ${qFont}px Kalam`;
+  ctx.font=`bold ${qF}px Kalam`;
 
   let qLines=item.question.split("\n");
   for(let ln of qLines){
-    y=wrap(ctx,ln,left,y,maxW,qH);
-    if(y>bottom) return c.toDataURL('image/png');
+    y=wrapLine(ctx,ln,left,y,maxW,qH);
+    if(y>bottom) return c.toDataURL("image/png");
   }
 
-  // Draw options
-  ctx.font=`${oFont}px Kalam`;
+  // OPTIONS
   ctx.fillStyle=oc;
+  ctx.font=`${oF}px Kalam`;
 
   for(let i=0;i<4;i++){
     let opt=item.option[i]||"";
     let lines=opt.split("\n");
 
-    // पहला line → with label
     let first=`${i+1}. ${lines[0]}`;
-    y=wrap(ctx,first,left,y,maxW,oH);
-    if(y>bottom) return c.toDataURL('image/png');
+    y=wrapLine(ctx,first,left,y,maxW,oH);
+    if(y>bottom) return c.toDataURL("image/png");
 
-    // बाकी lines → no label
     for(let k=1;k<lines.length;k++){
-      y=wrap(ctx,lines[k],left,y,maxW,oH);
-      if(y>bottom) return c.toDataURL('image/png');
+      y=wrapLine(ctx,lines[k],left,y,maxW,oH);
+      if(y>bottom) return c.toDataURL("image/png");
     }
   }
-
-  return c.toDataURL('image/png');
+  return c.toDataURL("image/png");
 }
 
-// GENERATE PPTX
+// PPT GENERATION
 $('generateBtn').onclick=async()=>{
-  if(DATA.length===0) return alert("No data");
+  if(DATA.length===0) return alert("No questions");
 
-  const pxW=parseInt($("slideW").value);
-  const pxH=parseInt($("slideH").value);
+  const pxW=1300, pxH=710;
 
   const margins={
-    top:parseInt($("topM").value),
-    left:parseInt($("leftM").value),
-    right:parseInt($("rightM").value),
-    bottom:parseInt($("bottomM").value)
+    top:parseInt($('topM').value),
+    left:parseInt($('leftM').value),
+    right:parseInt($('rightM').value),
+    bottom:parseInt($('bottomM').value)
   };
 
-  const qc=$("qColor").value;
-  const oc=$("optColor").value;
+  const qc=$('qColor').value;
+  const oc=$('optColor').value;
 
   const ppt=new PptxGenJS();
-  ppt.defineLayout({name:"CUST",width:pxW/96,height:pxH/96});
-  ppt.layout="CUST";
+  ppt.defineLayout({name:"FIXED",width:pxW/96,height:pxH/96});
+  ppt.layout="FIXED";
 
   for(let i=0;i<DATA.length;i++){
-    let img=await blockToImg(DATA[i],pxW,pxH,margins,qc,oc);
+    let img=await blockToImage(DATA[i],pxW,pxH,margins,qc,oc);
     let slide=ppt.addSlide();
     slide.addImage({data:img,x:0,y:0,w:pxW/96,h:pxH/96});
   }
 
-  ppt.writeFile({fileName:"MCQ_Final.pptx"});
+  ppt.writeFile({fileName:"MCQ_Final_Fixed_1300x710.pptx"});
 };
 
 // CLEAR
-$('clearBtn').onclick=()=>{ DATA=[]; $('jsonArea').value=""; renderPreview(); };
+$('clearBtn').onclick=()=>{
+  DATA=[];
+  $('jsonArea').value="";
+  renderPreview();
+};
 
+// FIRST RENDER
 renderPreview();
 </script>
 
