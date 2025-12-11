@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>MCQ → PPTX (Perfect Question Line Break FIX + Margins + Kalam)</title>
+<title>MCQ → PPTX (Perfect Preview → PPT Matching + Kalam Fix)</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Kalam&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
@@ -22,7 +22,7 @@ textarea,input{width:100%;padding:8px;border-radius:6px;border:1px solid #334;ba
 .preview{background:#071019;border:1px solid #203040;margin-top:10px;
          border-radius:8px;padding:12px;max-height:520px;overflow:auto}
 .slide-box{background:#000;color:#fff;padding:8px;border-radius:6px;margin-bottom:10px}
-.slide-block{white-space:pre-line;font-size:18px;line-height:1.05}
+.slide-block{white-space:pre-line;font-size:18px;line-height:1.2}
 .slide-block[contenteditable="true"]{outline:1px dashed #666;padding:6px;border-radius:4px}
 
 .row{display:flex;gap:14px;flex-wrap:wrap}
@@ -33,10 +33,11 @@ textarea,input{width:100%;padding:8px;border-radius:6px;border:1px solid #334;ba
 <body>
 <div class="card">
 
-<h2 style="color:#fff">MCQ → PPTX (QUESTION LINE BREAK FIXED)</h2>
+<h2 style="color:#fff">MCQ → PPTX (FINAL FIXED VERSION)</h2>
 
 <div class="row">
 
+<!-- LEFT -->
 <div class="col">
 <label>JSON Input</label>
 <textarea id="jsonData" rows="8"></textarea>
@@ -83,11 +84,10 @@ textarea,input{width:100%;padding:8px;border-radius:6px;border:1px solid #334;ba
 
 </div>
 
+<!-- RIGHT -->
 <div class="col">
 <label>Preview (editable)</label>
-<div id="preview" class="preview">
-  <div style="color:#7aa">Preview दिखाई देगा…</div>
-</div>
+<div id="preview" class="preview"><div style="color:#7aa">Preview दिखाई देगा…</div></div>
 </div>
 
 </div>
@@ -96,11 +96,11 @@ textarea,input{width:100%;padding:8px;border-radius:6px;border:1px solid #334;ba
 
 <script>
 
-const $=id=>document.getElementById(id);
-let DATA=[];
-let BG=null;
+const $ = id => document.getElementById(id);
+let DATA = [];
+let BG = null;
 
-/* KEEP ALL NEWLINES EXACTLY */
+/* NEW NORMALIZER — no trims, no loss */
 function normalize(item){
  return {
    question:(item.question||"")
@@ -112,18 +112,19 @@ function normalize(item){
  };
 }
 
-/* NO TRIM ANYWHERE */
+/* PREVIEW PARSE — no split loss */
 function parseBlock(t){
- let lines = t.split("\n");
+ let lines=t.split("\n");
  let q = lines[0].replace(/^[Qq]\d+\.\s*/,"");
  let opts=[];
- for(let i=1;i<lines.length && opts.length<4;i++)
+ for(let i=1;i<lines.length && opts.length<4;i++){
    opts.push(lines[i].replace(/^\d+\.\s*/,""));
+ }
  while(opts.length<4) opts.push("");
  return normalize({question:q,option:opts});
 }
 
-/* Preview */
+/* Render preview */
 function render(){
  let box=$("preview");
  box.innerHTML="";
@@ -140,7 +141,7 @@ function render(){
    blk.className="slide-block";
    blk.contentEditable="true";
 
-   blk.innerText=
+   blk.innerText =
      `Q${i+1}. ${q.question}\n`+
      `1. ${q.option[0]}\n`+
      `2. ${q.option[1]}\n`+
@@ -157,7 +158,30 @@ function render(){
  });
 }
 
-/* Upload BG */
+/* Import JSON */
+$("importBtn").onclick=()=>{
+ try{
+   let j=JSON.parse($("jsonData").value);
+   if(!Array.isArray(j)) j=[j];
+   DATA=j.map(normalize);
+   render();
+ }catch(e){alert("Invalid JSON");}
+};
+
+/* Add manually */
+$("addBtn").onclick=()=>{
+ if(!$("qInput").value.trim()) return alert("Question empty");
+
+ DATA.push(normalize({
+   question:$("qInput").value,
+   option:[$("o1").value,$("o2").value,$("o3").value,$("o4").value]
+ }));
+
+ $("qInput").value=$("o1").value=$("o2").value=$("o3").value=$("o4").value="";
+ render();
+};
+
+/* BG Upload */
 $("bgImg").onchange=e=>{
  let f=e.target.files[0];
  if(!f)return;
@@ -166,99 +190,72 @@ $("bgImg").onchange=e=>{
  r.readAsDataURL(f);
 };
 
-$("importBtn").onclick=()=>{
- try{
-   let j=JSON.parse($("jsonData").value);
-   if(!Array.isArray(j)) j=[j];
-   DATA=j.map(normalize);
-   render();
- }catch(e){alert("JSON Error");}
-};
-
-$("addBtn").onclick=()=>{
- if(!$("qInput").value.trim()) return alert("Question empty");
- DATA.push(normalize({
-   question:$("qInput").value,
-   option:[$("o1").value,$("o2").value,$("o3").value,$("o4").value]
- }));
- $("qInput").value=$("o1").value=$("o2").value=$("o3").value=$("o4").value="";
- render();
-};
-
+/* Sync preview → DATA */
 function syncPrev(){
  document.querySelectorAll(".slide-block").forEach((blk,i)=>{
    DATA[i]=parseBlock(blk.innerText);
  });
 }
 
-/* CANVAS WRAP */
+/* WRAP TEXT */
 function wrapText(ctx,txt,x,y,maxW,lh,limit){
- if(txt==="" || txt.trim()===""){
+ if(txt.trim()===""){
    y+=lh;
    return y;
  }
  let words=txt.split(" ");
  let line="";
  for(let w of words){
-   let test=line+w+" ";
-   if(ctx.measureText(test).width>maxW){
+   let t=line+w+" ";
+   if(ctx.measureText(t).width>maxW){
      ctx.fillText(line,x,y);
      y+=lh;
      if(y>=limit) return limit;
      line=w+" ";
-   }else line=test;
+   } else line=t;
  }
  ctx.fillText(line,x,y);
  y+=lh;
  return y;
 }
 
-/* MAIN FIX → treat EVERY question newline as question line */
-async function canvasSlide(item,index,W,H,top,left,right,bottom,qc,oc){
+/* ⭐ FINAL CANVAS — FULL TEXT EXACT RENDER ⭐ */
+async function canvasSlide(fullText,W,H,top,left,right,bottom,qColor,oColor){
+
  await document.fonts.load("30px Kalam");
 
  let c=document.createElement("canvas");
  c.width=W; c.height=H;
  let ctx=c.getContext("2d");
 
+ /* BG */
  if(BG){
-   let img=new Image();img.src=BG;
+   let img=new Image();
+   img.src=BG;
    await new Promise(r=>img.onload=r);
    ctx.drawImage(img,0,0,W,H);
- }else{
+ } else {
    ctx.fillStyle="#000";
    ctx.fillRect(0,0,W,H);
  }
-
- let qF=Math.round(H*0.045);
- let oF=Math.round(H*0.038);
 
  let maxW=W-left-right;
  let limit=H-bottom;
  let y=top;
 
- let lines = item.question.split("\n");
- let Q = "Q"+(index+1)+". "+lines[0];
- let rest = lines.slice(1);
+ let lines = fullText.split("\n");
 
- ctx.font=`bold ${qF}px Kalam`;
- ctx.fillStyle=qc;
+ /* Main font */
+ ctx.font=`30px Kalam`;
 
- /* FIRST LINE OF QUESTION */
- y = wrapText(ctx, Q, left, y, maxW, qF+3, limit);
+ for(let ln of lines){
 
- /* REST QUESTION LINES (same block) */
- for(let ln of rest){
-   y = wrapText(ctx, ln, left, y, maxW, qF+3, limit);
- }
+   // QUESTION LINES → yellow
+   if(!/^\d+\./.test(ln)) ctx.fillStyle=qColor;
+   else ctx.fillStyle=oColor;
 
- /* OPTIONS */
- ctx.font=`${oF}px Kalam`;
- ctx.fillStyle=oc;
-
- for(let i=0;i<4;i++){
-   let ln=`${i+1}. ${item.option[i]}`;
-   y = wrapText(ctx, ln, left, y, maxW, oF+2, limit);
+   y = wrapText(ctx, ln, left, y, maxW, 34, limit);
+   if(y >= limit) break;
  }
 
  return c.toDataURL("image/png");
@@ -266,13 +263,15 @@ async function canvasSlide(item,index,W,H,top,left,right,bottom,qc,oc){
 
 function pxIn(px){return px/96;}
 
+/* Generate PPT */
 $("makeBtn").onclick=async()=>{
+
  if(!DATA.length) return alert("No questions");
+
  syncPrev();
 
  let W=parseInt($("wPx").value);
  let H=parseInt($("hPx").value);
-
  let top=parseInt($("topM").value);
  let left=parseInt($("leftM").value);
  let right=parseInt($("rightM").value);
@@ -282,21 +281,31 @@ $("makeBtn").onclick=async()=>{
  let oc=$("oColor").value;
 
  let ppt=new PptxGenJS();
- ppt.defineLayout({name:"C",width:pxIn(W),height:pxIn(H)});
- ppt.layout="C";
+ ppt.defineLayout({name:"CUST",width:pxIn(W),height:pxIn(H)});
+ ppt.layout="CUST";
 
  for(let i=0;i<DATA.length;i++){
-   let img=await canvasSlide(DATA[i],i,W,H,top,left,right,bottom,qc,oc);
+
+   let fullText =
+     `Q${i+1}. ${DATA[i].question}\n`+
+     `1. ${DATA[i].option[0]}\n`+
+     `2. ${DATA[i].option[1]}\n`+
+     `3. ${DATA[i].option[2]}\n`+
+     `4. ${DATA[i].option[3]}`;
+
+   let img = await canvasSlide(fullText,W,H,top,left,right,bottom,qc,oc);
+
    let slide=ppt.addSlide();
    slide.addImage({data:img,x:0,y:0,w:pxIn(W),h:pxIn(H)});
  }
 
- ppt.writeFile({fileName:"MCQ_FIXED_FINAL.pptx"});
+ ppt.writeFile({fileName:"MCQ_FINAL_PPTX_FIXED.pptx"});
 };
 
 $("clrBtn").onclick=()=>{DATA=[];$("jsonData").value="";render();};
 
 render();
+
 </script>
 
 </body>
