@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 
-<title>MCQ → PPTX (Perfect Version)</title>
+<title>MCQ → PPTX (FAST & STABLE)</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Kalam&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
@@ -12,63 +12,53 @@
 <style>
 body{
   font-family:'Kalam',cursive;
-  background:#0f1720;color:#eee;margin:16px;
+  background:#0f1720;color:#eee;margin:16px
 }
 .card{
   background:#121926;padding:16px;border-radius:10px;
-  border:1px solid #223;max-width:1150px;margin:auto;
+  border:1px solid #223;max-width:1200px;margin:auto
 }
-label{color:#9fb7ff;font-weight:700;margin-top:8px;display:block}
+label{display:block;margin-top:8px;color:#9fb7ff;font-weight:700}
 textarea,input{
   width:100%;padding:8px;border-radius:6px;
-  border:1px solid #334;background:#0b1220;color:#fff;
-  font-family:'Kalam',cursive;
+  border:1px solid #334;background:#0b1220;color:#fff
 }
 .btn{
-  padding:8px 12px;border:none;border-radius:8px;margin-top:10px;
-  cursor:pointer;font-family:'Kalam',cursive;font-weight:700;
+  padding:10px 14px;border:none;border-radius:8px;
+  margin-top:10px;font-weight:700;cursor:pointer
 }
 .btn-blue{background:#0b74ff;color:#fff}
-.btn-grey{background:#333;color:#ccd}
+.btn-grey{background:#333;color:#ccc}
 .btn-red{background:#e11d48;color:#fff}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.col{flex:1;min-width:280px}
 
 .preview{
-  background:#071019;padding:12px;border-radius:8px;margin-top:10px;
-  border:1px solid #203040;max-height:520px;overflow:auto;
+  background:#071019;padding:12px;border-radius:8px;
+  margin-top:10px;border:1px solid #203040;
+  max-height:520px;overflow:auto
 }
 .slide-preview{
-  background:#000;color:#fff;padding:10px;border-radius:6px;
-  margin-bottom:12px;position:relative;
+  background:#000;color:#fff;
+  padding:8px;border-radius:6px;
+  margin-bottom:10px;white-space:pre-wrap
 }
-.slide-delete{
-  position:absolute;top:4px;right:4px;background:#e11d48;color:#fff;
-  border:none;width:24px;height:24px;border-radius:50%;cursor:pointer;
-  font-size:16px;line-height:22px;text-align:center;
-}
-.slide-block{
-  white-space:pre-wrap;font-size:18px;line-height:1.25;padding-right:28px;
-}
-.slide-block[contenteditable="true"]{
-  outline:1px dashed rgba(120,140,180,0.2);
-  padding:6px;border-radius:4px;
-}
-
-.row{display:flex;flex-wrap:wrap;gap:12px}
-.col{flex:1;min-width:300px}
 </style>
 </head>
 
 <body>
 <div class="card">
 
-<h2>MCQ → PPTX (Auto Number + Background FIXED)</h2>
+<h2>⚡ MCQ → PPTX (Ultra Fast – Full Version)</h2>
 
 <div class="row">
 
+<!-- LEFT -->
 <div class="col">
-
 <label>JSON Input</label>
-<textarea id="jsonArea" rows="8"></textarea>
+<textarea id="jsonArea" rows="8" placeholder='[
+ { "question":"राजस्थान की राजधानी?", "option":["जयपुर","जोधपुर","बीकानेर","उदयपुर"] }
+]'></textarea>
 
 <h3>Manual Entry</h3>
 <label>Question</label>
@@ -85,38 +75,26 @@ textarea,input{
 <label style="margin-top:12px">Background Image</label>
 <input type="file" id="bgImg" accept="image/*">
 
-<!-- FIXED MARGINS -->
-<div class="row" style="margin-top:12px">
-  <div class="col"><label>Top</label><input id="topM" value="90"></div>
-  <div class="col"><label>Left</label><input id="leftM" value="90"></div>
-</div>
-
 <div class="row">
-  <div class="col"><label>Right</label><input id="rightM" value="90"></div>
-  <div class="col"><label>Bottom</label><input id="bottomM" value="50"></div>
+  <div class="col">
+    <label>Question Color</label>
+    <input type="color" id="qColor" value="#ffff00">
+  </div>
+  <div class="col">
+    <label>Option Color</label>
+    <input type="color" id="optColor" value="#ffffff">
+  </div>
 </div>
 
-<!-- FIXED SIZE 1300×710 -->
-<div class="row">
-  <div class="col"><label>Width</label><input id="slideW" value="1300"></div>
-  <div class="col"><label>Height</label><input id="slideH" value="710"></div>
+<button id="importBtn" class="btn btn-grey">Import JSON</button>
+<button id="generateBtn" class="btn btn-blue">Generate PPTX (FAST)</button>
+<button id="clearBtn" class="btn btn-red">Clear All</button>
 </div>
 
-<div class="row">
-  <div class="col"><label>Q Color</label><input type="color" id="qColor" value="#ffff00"></div>
-  <div class="col"><label>Opt Color</label><input type="color" id="optColor" value="#ffffff"></div>
-</div>
-
-<button id="importBtn" class="btn btn-grey">Import</button>
-<button id="generateBtn" class="btn btn-blue">Generate PPTX</button>
-<button id="clearBtn" class="btn btn-red">Clear</button>
-
-</div>
-
-<!-- PREVIEW -->
+<!-- RIGHT -->
 <div class="col">
 <label>Preview</label>
-<div id="preview" class="preview"><div style="color:#7aa">Preview here…</div></div>
+<div id="preview" class="preview">No Questions</div>
 </div>
 
 </div>
@@ -128,216 +106,101 @@ const $ = id => document.getElementById(id);
 let DATA=[];
 let BG=null;
 
-// normalize
 function normalize(item){
   return {
-    question:(item.question||"").replace(/\\n/g,"\n").replace(/\/n/g,"\n"),
+    question:(item.question||""),
     option:(item.option||["","","",""]).slice(0,4)
-      .map(o=>o.replace(/\\n/g,"\n").replace(/\/n/g,"\n"))
   };
 }
 
-// parse block
-function parseBlock(text){
-  const lines=text.split("\n");
-  let first=lines[0].replace(/^[Qq]\d+\.\s*/,'');
-  let opts=[],optStart=-1;
-
-  for(let i=1;i<lines.length;i++){
-    if(/^\s*1\./.test(lines[i])){ optStart=i; break; }
-  }
-
-  if(optStart===-1){
-    return { question:[first].concat(lines.slice(1)).join("\n"), option:["","","",""] };
-  }
-
-  const qLines=[first].concat(lines.slice(1,optStart));
-
-  for(let i=optStart;i<optStart+4 && i<lines.length;i++){
-    opts.push(lines[i].replace(/^\s*\d+\.\s*/,''));
-  }
-  while(opts.length<4) opts.push("");
-
-  return { question:qLines.join("\n"), option:opts };
-}
-
-// preview
 function renderPreview(){
-  const box=$("preview");
-  box.innerHTML="";
-
+  const p=$("preview");
+  p.innerHTML="";
   if(DATA.length===0){
-    box.innerHTML='<div style="color:#7aa">No Questions</div>';
+    p.innerText="No Questions";
     return;
   }
-
   DATA.forEach((q,i)=>{
-    const wrap=document.createElement("div");
-    wrap.className="slide-preview";
-
-    const del=document.createElement("button");
-    del.className="slide-delete";
-    del.innerText="×";
-    del.onclick=()=>{ DATA.splice(i,1); renderPreview(); };
-
-    const blk=document.createElement("div");
-    blk.className="slide-block";
-    blk.contentEditable="true";
-
-    blk.innerText=
+    const d=document.createElement("div");
+    d.className="slide-preview";
+    d.innerText=
       `Q${i+1}. ${q.question}\n`+
       `1. ${q.option[0]}\n`+
       `2. ${q.option[1]}\n`+
       `3. ${q.option[2]}\n`+
       `4. ${q.option[3]}`;
-
-    blk.onblur=()=>{
-      DATA[i]=normalize(parseBlock(blk.innerText));
-      renderPreview();
-    };
-
-    wrap.appendChild(del);
-    wrap.appendChild(blk);
-    box.appendChild(wrap);
+    p.appendChild(d);
   });
 }
 
-// BG upload
-$('bgImg').onchange=async(e)=>{
-  if(!e.target.files[0])return;
+$("bgImg").onchange=e=>{
+  if(!e.target.files[0]) return;
   const r=new FileReader();
   r.onload=()=>BG=r.result;
   r.readAsDataURL(e.target.files[0]);
 };
 
-// wrap
-function wrapLine(ctx,text,x,y,maxW,lineH){
-  if(text.trim()==="") return y+lineH;
-  const words=text.split(" ");
-  let line="";
-  for(let w of words){
-    const t=line+w+" ";
-    if(ctx.measureText(t).width>maxW && line!==""){
-      ctx.fillText(line,x,y); y+=lineH; line=w+" ";
-    } else line=t;
-  }
-  ctx.fillText(line,x,y);
-  return y+lineH;
-}
-
-// block → image
-async function blockToImg(item,index,pxW,pxH,m,qc,oc){
-  await document.fonts.load("30px Kalam");
-
-  const c=document.createElement("canvas");
-  c.width=pxW; c.height=pxH;
-  const ctx=c.getContext("2d");
-
-  if(BG){
-    let img=new Image();
-    img.src=BG;
-    await new Promise(r=>img.onload=r);
-    ctx.drawImage(img,0,0,pxW,pxH);
-  } else{
-    ctx.fillStyle="#000"; ctx.fillRect(0,0,pxW,pxH);
-  }
-
-  const qF=32,qH=40;
-  const oF=28,oH=34;
-  let y=m.top;
-
-  const left=m.left;
-  const maxW=pxW-m.right-left;
-  const bottom=pxH-m.bottom;
-
-  // QUESTION NUMBER + TEXT
-  ctx.fillStyle=qc;
-  ctx.font=`bold ${qF}px Kalam`;
-
-  let qLines = (`Q${index+1}. ` + item.question).split("\n");
-
-  for(let ln of qLines){
-    y=wrapLine(ctx,ln,left,y,maxW,qH);
-    if(y>bottom) return c.toDataURL("image/png");
-  }
-
-  // OPTIONS
-  ctx.fillStyle=oc;
-  ctx.font=`${oF}px Kalam`;
-
-  for(let i=0;i<4;i++){
-    let opt=item.option[i]||"";
-    let lines=opt.split("\n");
-
-    let first=`${i+1}. ${lines[0]}`;
-    y=wrapLine(ctx,first,left,y,maxW,oH);
-    if(y>bottom) return c.toDataURL("image/png");
-
-    for(let k=1;k<lines.length;k++){
-      y=wrapLine(ctx,lines[k],left,y,maxW,oH);
-      if(y>bottom) return c.toDataURL("image/png");
-    }
-  }
-
-  return c.toDataURL("image/png");
-}
-
-$('addManual').onclick=()=>{
-  const q=$('manualQ').value;
-  if(!q.trim()) return;
-
+$("addManual").onclick=()=>{
+  if(!$("manualQ").value.trim()) return;
   DATA.push(normalize({
-    question:q,
+    question:$("manualQ").value,
     option:[
-      $('opt1').value,$('opt2').value,$('opt3').value,$('opt4').value
+      $("opt1").value,$("opt2").value,
+      $("opt3").value,$("opt4").value
     ]
   }));
-
-  $('manualQ').value="";
-  $('opt1').value=$('opt2').value=$('opt3').value=$('opt4').value="";
+  $("manualQ").value="";
+  $("opt1").value=$("opt2").value=$("opt3").value=$("opt4").value="";
   renderPreview();
 };
 
-// IMPORT
-$('importBtn').onclick=()=>{
+$("importBtn").onclick=()=>{
   try{
-    let j=JSON.parse($('jsonArea').value);
+    let j=JSON.parse($("jsonArea").value);
     if(!Array.isArray(j)) j=[j];
     DATA=j.map(normalize);
     renderPreview();
-  }catch(e){ alert("Invalid JSON") }
+  }catch(e){ alert("Invalid JSON"); }
 };
 
-// GENERATE PPT
-$('generateBtn').onclick=async()=>{
+$("generateBtn").onclick=()=>{
   if(DATA.length===0) return alert("No questions");
 
-  const pxW=1300, pxH=710;
-
-  const m={
-    top:parseInt($('topM').value),
-    left:parseInt($('leftM').value),
-    right:parseInt($('rightM').value),
-    bottom:parseInt($('bottomM').value)
-  };
-
-  const qc=$('qColor').value;
-  const oc=$('optColor').value;
+  const qc=$("qColor").value.replace("#","");
+  const oc=$("optColor").value.replace("#","");
 
   const ppt=new PptxGenJS();
-  ppt.defineLayout({name:"FIXED",width:pxW/96,height:pxH/96});
-  ppt.layout="FIXED";
+  ppt.defineLayout({name:"FIX",width:13.54,height:7.4});
+  ppt.layout="FIX";
 
-  for(let i=0;i<DATA.length;i++){
-    const img=await blockToImg(DATA[i],i,pxW,pxH,m,qc,oc);
-    let slide=ppt.addSlide();
-    slide.addImage({data:img,x:0,y:0,w:pxW/96,h:pxH/96});
-  }
+  DATA.forEach((q,i)=>{
+    const slide=ppt.addSlide();
 
-  ppt.writeFile({fileName:"MCQ_Final_1300x710.pptx"});
+    if(BG) slide.background={data:BG};
+
+    slide.addText(`Q${i+1}. ${q.question}`,{
+      x:0.7,y:0.6,w:12,
+      fontSize:28,bold:true,
+      color:qc,fontFace:"Kalam",
+      lineSpacing:32
+    });
+
+    q.option.forEach((op,idx)=>{
+      slide.addText(`${idx+1}. ${op}`,{
+        x:0.9,y:1.8+idx*0.9,w:11,
+        fontSize:24,color:oc,
+        fontFace:"Kalam"
+      });
+    });
+  });
+
+  ppt.writeFile({fileName:"MCQ_FAST_FINAL.pptx"});
 };
 
-$('clearBtn').onclick=()=>{ DATA=[]; $('jsonArea').value=""; renderPreview(); };
+$("clearBtn").onclick=()=>{
+  DATA=[];$("jsonArea").value="";
+  renderPreview();
+};
 
 renderPreview();
 </script>
