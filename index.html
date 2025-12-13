@@ -1,10 +1,10 @@
+
 <!doctype html>
 <html lang="hi">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-
-<title>MCQ → PPTX COMPLETE FAST</title>
+<title>MCQ → PPTX FINAL SAFE</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Kalam&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
@@ -20,58 +20,39 @@ textarea,input{width:100%;padding:8px;border-radius:6px;border:1px solid #334;ba
 .btn-red{background:#e11d48;color:#fff}
 .row{display:flex;gap:12px;flex-wrap:wrap}
 .col{flex:1;min-width:280px}
+
 .preview{background:#071019;padding:12px;border-radius:8px;margin-top:10px;border:1px solid #203040;max-height:520px;overflow:auto}
-.slide-preview{background:#000;color:#fff;padding:8px;border-radius:6px;margin-bottom:10px;white-space:pre-wrap}
+.slide-preview{background:#000;color:#fff;padding:10px;border-radius:6px;margin-bottom:12px;position:relative}
+.slide-preview .del{position:absolute;top:4px;right:6px;background:#e11d48;border:none;color:#fff;border-radius:50%;width:22px;height:22px;cursor:pointer}
+.slide-preview .blk{white-space:pre-wrap;outline:1px dashed rgba(255,255,255,.15);padding:6px;border-radius:4px}
 </style>
 </head>
 
 <body>
 <div class="card">
-<h2>MCQ → PPTX (COMPLETE UPDATE – NO LAG)</h2>
+<h2>MCQ → PPTX (FINAL SAFE + EDITABLE)</h2>
 
 <div class="row">
 <div class="col">
-
 <label>JSON Input</label>
-<textarea id="jsonArea" rows="8"></textarea>
+<textarea id="jsonArea" rows="7"></textarea>
 
-<h3>Manual Entry</h3>
-<label>Question</label>
-<textarea id="manualQ" rows="3"></textarea>
-
-<label>Options</label>
-<input id="opt1" placeholder="Option 1">
-<input id="opt2" placeholder="Option 2">
-<input id="opt3" placeholder="Option 3">
-<input id="opt4" placeholder="Option 4">
-
-<button id="addManual" class="btn btn-grey">Add Question</button>
-
-<label>Background Image</label>
+<label>Background Image (≤ 8MB)</label>
 <input type="file" id="bgImg" accept="image/*">
 
-<div class="row">
-  <div class="col"><label>Top</label><input id="topM" value="0.6"></div>
-  <div class="col"><label>Left</label><input id="leftM" value="0.7"></div>
-</div>
-<div class="row">
-  <div class="col"><label>Right</label><input id="rightM" value="0.7"></div>
-  <div class="col"><label>Bottom</label><input id="bottomM" value="0.5"></div>
-</div>
+<label>Q Color</label>
+<input type="color" id="qColor" value="#ffff00">
 
-<div class="row">
-  <div class="col"><label>Q Color</label><input type="color" id="qColor" value="#ffff00"></div>
-  <div class="col"><label>Opt Color</label><input type="color" id="optColor" value="#ffffff"></div>
-</div>
+<label>Option Color</label>
+<input type="color" id="optColor" value="#ffffff">
 
 <button id="importBtn" class="btn btn-grey">Import JSON</button>
 <button id="generateBtn" class="btn btn-blue">Generate PPTX</button>
 <button id="clearBtn" class="btn btn-red">Clear</button>
-
 </div>
 
 <div class="col">
-<label>Preview</label>
+<label>Preview (Editable)</label>
 <div id="preview" class="preview">No Questions</div>
 </div>
 </div>
@@ -82,85 +63,94 @@ const $=id=>document.getElementById(id);
 let DATA=[], BG=null;
 
 function normalize(x){
-  return {question:x.question||"", option:(x.option||["","","",""]).slice(0,4)};
+  return {
+    question:(x.question||""),
+    option:(x.option||["","","",""]).slice(0,4)
+  };
 }
 
 function renderPreview(){
   const p=$("preview"); p.innerHTML="";
   if(DATA.length===0){p.innerText="No Questions";return;}
   DATA.forEach((q,i)=>{
-    const d=document.createElement("div");
-    d.className="slide-preview";
-    d.innerText=`Q${i+1}. ${q.question}\n1. ${q.option[0]}\n2. ${q.option[1]}\n3. ${q.option[2]}\n4. ${q.option[3]}`;
-    p.appendChild(d);
+    const w=document.createElement("div");
+    w.className="slide-preview";
+
+    const del=document.createElement("button");
+    del.className="del"; del.innerText="×";
+    del.onclick=()=>{DATA.splice(i,1);renderPreview();};
+
+    const blk=document.createElement("div");
+    blk.className="blk"; blk.contentEditable="true";
+    blk.innerText=
+      `Q${i+1}. ${q.question}\n`+
+      `1. ${q.option[0]}\n2. ${q.option[1]}\n3. ${q.option[2]}\n4. ${q.option[3]}`;
+
+    blk.onblur=()=>{
+      const lines=blk.innerText.split("\n");
+      const ques=lines[0].replace(/^Q\d+\.\s*/,"");
+      const opts=lines.slice(1,5).map(l=>l.replace(/^\d+\.\s*/,""));
+      DATA[i]={question:ques,option:opts};
+    };
+
+    w.appendChild(del); w.appendChild(blk);
+    p.appendChild(w);
   });
 }
 
 $("bgImg").onchange=e=>{
+  const f=e.target.files[0];
+  if(!f) return;
+  if(f.size>8*1024*1024){alert("BG image बहुत बड़ी है (8MB max)");return;}
   const r=new FileReader();
   r.onload=()=>BG=r.result;
-  r.readAsDataURL(e.target.files[0]);
-};
-
-$("addManual").onclick=()=>{
-  if(!$("manualQ").value.trim())return;
-  DATA.push(normalize({
-    question:$("manualQ").value,
-    option:[$("opt1").value,$("opt2").value,$("opt3").value,$("opt4").value]
-  }));
-  $("manualQ").value="";
-  $("opt1").value=$("opt2").value=$("opt3").value=$("opt4").value="";
-  renderPreview();
+  r.readAsDataURL(f);
 };
 
 $("importBtn").onclick=()=>{
   try{
     let j=JSON.parse($("jsonArea").value);
-    if(!Array.isArray(j))j=[j];
+    if(!Array.isArray(j)) j=[j];
     DATA=j.map(normalize);
     renderPreview();
   }catch(e){alert("Invalid JSON");}
 };
 
-$("generateBtn").onclick=()=>{
-  if(DATA.length===0)return alert("No questions");
+$("generateBtn").onclick=async()=>{
+  if(DATA.length===0) return alert("No questions");
 
   const ppt=new PptxGenJS();
-  // 🔥 1300×710 px ≈ 13.54 × 7.4 inch
   ppt.defineLayout({name:"FIX",width:13.54,height:7.4});
   ppt.layout="FIX";
 
   const qc=$("qColor").value.replace("#","");
   const oc=$("optColor").value.replace("#","");
 
-  const top=+$("topM").value, left=+$("leftM").value;
-  const right=+$("rightM").value, bottom=+$("bottomM").value;
-  const w=13.54-left-right;
-
-  DATA.forEach((q,i)=>{
+  for(let i=0;i<DATA.length;i++){
+    const q=DATA[i];
     const s=ppt.addSlide();
     if(BG) s.background={data:BG};
 
     s.addText(`Q${i+1}. ${q.question}`,{
-      x:left,y:top,w:w,fontSize:28,bold:true,color:qc,fontFace:"Kalam"
+      x:0.7,y:0.6,w:12,fontSize:28,bold:true,color:qc,fontFace:"Kalam"
     });
 
     q.option.forEach((op,k)=>{
       s.addText(`${k+1}. ${op}`,{
-        x:left+0.2,y:top+1.2+k*0.9,w:w,
-        fontSize:24,color:oc,fontFace:"Kalam"
+        x:0.9,y:1.8+k*0.9,w:11,fontSize:24,color:oc,fontFace:"Kalam"
       });
     });
-  });
 
-  ppt.writeFile({fileName:"MCQ_COMPLETE_FAST.pptx"});
+    // 🔥 throttle (browser ko saans)
+    if(i%10===0) await new Promise(r=>setTimeout(r,0));
+  }
+
+  await ppt.writeFile({fileName:"MCQ_FINAL_SAFE.pptx"});
 };
 
-$("clearBtn").onclick=()=>{
-  DATA=[];$("jsonArea").value="";renderPreview();
-};
+$("clearBtn").onclick=()=>{DATA=[];$("jsonArea").value="";renderPreview();};
 
 renderPreview();
 </script>
 </body>
-  </html>
+</html>
