@@ -4,127 +4,98 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 
-<title>MCQ → PPTX (Perfect Version)</title>
+<title>Smart PPTX Maker (Notes + Quiz)</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Kalam&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
 <style>
-body{
-  font-family:'Kalam',cursive;
-  background:#0f1720;color:#eee;margin:16px;
+:root { --accent: #0b74ff; --bg: #0f1720; --card: #161f2c; --text: #eee; }
+body{ font-family:'Kalam', cursive; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+.container { max-width: 1200px; margin: auto; }
+.header { text-align: center; margin-bottom: 20px; color: var(--accent); }
+.card{ background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid #223; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+label{ color: #9fb7ff; font-weight: 700; margin-top: 12px; display: block; font-size: 0.9em; }
+textarea, input, select{ 
+    width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #334; 
+    background: #0b1220; color: #fff; font-family: inherit; margin-top: 5px; box-sizing: border-box;
 }
-.card{
-  background:#121926;padding:16px;border-radius:10px;
-  border:1px solid #223;max-width:1150px;margin:auto;
+.btn-row { display: flex; gap: 10px; margin-top: 15px; }
+.btn{ 
+    flex: 1; padding: 12px; border: none; border-radius: 8px; cursor: pointer; 
+    font-family: inherit; font-weight: 700; transition: 0.3s; 
 }
-label{color:#9fb7ff;font-weight:700;margin-top:8px;display:block}
-textarea,input{
-  width:100%;padding:8px;border-radius:6px;
-  border:1px solid #334;background:#0b1220;color:#fff;
-  font-family:'Kalam',cursive;
-}
-.btn{
-  padding:8px 12px;border:none;border-radius:8px;margin-top:10px;
-  cursor:pointer;font-family:'Kalam',cursive;font-weight:700;
-}
-.btn-blue{background:#0b74ff;color:#fff}
-.btn-grey{background:#333;color:#ccd}
-.btn-red{background:#e11d48;color:#fff}
+.btn-blue{ background: var(--accent); color: #fff; }
+.btn-red{ background: #e11d48; color: #fff; }
+.btn-grey{ background: #334155; color: #fff; }
+.btn:hover { opacity: 0.9; transform: translateY(-1px); }
 
-.preview{
-  background:#071019;padding:12px;border-radius:8px;margin-top:10px;
-  border:1px solid #203040;max-height:520px;overflow:auto;
+.preview-container { 
+    background: #071019; border-radius: 10px; border: 1px solid #203040; 
+    height: 600px; overflow-y: auto; padding: 15px; 
 }
-.slide-preview{
-  background:#000;color:#fff;padding:10px;border-radius:6px;
-  margin-bottom:12px;position:relative;
+.slide-card { 
+    background: #000; border: 1px solid #444; margin-bottom: 15px; 
+    padding: 15px; border-radius: 8px; position: relative; min-height: 100px;
 }
-.slide-delete{
-  position:absolute;top:4px;right:4px;background:#e11d48;color:#fff;
-  border:none;width:24px;height:24px;border-radius:50%;cursor:pointer;
-  font-size:16px;line-height:22px;text-align:center;
+.slide-tag { 
+    position: absolute; top: 5px; right: 10px; font-size: 12px; color: var(--accent); 
 }
-.slide-block{
-  white-space:pre-wrap;font-size:18px;line-height:1.25;padding-right:28px;
-}
-.slide-block[contenteditable="true"]{
-  outline:1px dashed rgba(120,140,180,0.2);
-  padding:6px;border-radius:4px;
-}
-
-.row{display:flex;flex-wrap:wrap;gap:12px}
-.col{flex:1;min-width:300px}
+.row { display: flex; flex-wrap: wrap; gap: 15px; }
+.col { flex: 1; min-width: 300px; }
+.num-input { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 </style>
 </head>
 
 <body>
-<div class="card">
 
-<h2>MCQ → PPTX (Auto Number + Background FIXED)</h2>
+<div class="container">
+    <div class="header">
+        <h1>Smart Notes & Quiz PPTX Generator</h1>
+    </div>
 
-<div class="row">
+    <div class="row">
+        <div class="col card">
+            <label>JSON Input (Notes, H1, List or Quiz)</label>
+            <textarea id="jsonArea" rows="6" placeholder='[{"h1":"Title", "content":"Notes..."}, {"question":"??", "option":["A","B"]}]'></textarea>
+            
+            <div class="btn-row">
+                <button id="importBtn" class="btn btn-grey">Import JSON</button>
+                <button id="clearBtn" class="btn btn-red">Clear All</button>
+            </div>
 
-<div class="col">
+            <hr style="border:0; border-top:1px solid #334; margin:20px 0;">
 
-<label>JSON Input</label>
-<textarea id="jsonArea" rows="8"></textarea>
+            <label>Design Settings</label>
+            <div class="num-input">
+                <div><label>Top Margin</label><input type="number" id="topM" value="80"></div>
+                <div><label>Left Margin</label><input type="number" id="leftM" value="80"></div>
+                <div><label>Right Margin</label><input type="number" id="rightM" value="80"></div>
+                <div><label>Bottom Margin</label><input type="number" id="bottomM" value="60"></div>
+            </div>
 
-<h3>Manual Entry</h3>
-<label>Question</label>
-<textarea id="manualQ" rows="3"></textarea>
+            <div class="num-input">
+                <div><label>H1/Q Color</label><input type="color" id="qColor" value="#ffff00"></div>
+                <div><label>Text Color</label><input type="color" id="optColor" value="#ffffff"></div>
+            </div>
 
-<label>Options</label>
-<input id="opt1" placeholder="Option 1">
-<input id="opt2" placeholder="Option 2">
-<input id="opt3" placeholder="Option 3">
-<input id="opt4" placeholder="Option 4">
+            <label>Custom Background Image</label>
+            <input type="file" id="bgImg" accept="image/*">
 
-<button id="addManual" class="btn btn-grey">Add Question</button>
+            <button id="generateBtn" class="btn btn-blue" style="margin-top:20px; font-size:1.2em;">Generate PPTX</button>
+        </div>
 
-<label style="margin-top:12px">Background Image</label>
-<input type="file" id="bgImg" accept="image/*">
-
-<!-- FIXED MARGINS -->
-<div class="row" style="margin-top:12px">
-  <div class="col"><label>Top</label><input id="topM" value="90"></div>
-  <div class="col"><label>Left</label><input id="leftM" value="90"></div>
+        <div class="col">
+            <label>Live Preview (Slides View)</label>
+            <div id="preview" class="preview-container">
+                <div style="text-align:center; color:#556;">Import JSON to see preview...</div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="row">
-  <div class="col"><label>Right</label><input id="rightM" value="90"></div>
-  <div class="col"><label>Bottom</label><input id="bottomM" value="50"></div>
-</div>
-
-<!-- FIXED SIZE 1300×710 -->
-<div class="row">
-  <div class="col"><label>Width</label><input id="slideW" value="1300"></div>
-  <div class="col"><label>Height</label><input id="slideH" value="710"></div>
-</div>
-
-<div class="row">
-  <div class="col"><label>Q Color</label><input type="color" id="qColor" value="#ffff00"></div>
-  <div class="col"><label>Opt Color</label><input type="color" id="optColor" value="#ffffff"></div>
-</div>
-
-<button id="importBtn" class="btn btn-grey">Import</button>
-<button id="generateBtn" class="btn btn-blue">Generate PPTX</button>
-<button id="clearBtn" class="btn btn-red">Clear</button>
-
-</div>
-
-<!-- PREVIEW -->
-<div class="col">
-<label>Preview</label>
-<div id="preview" class="preview"><div style="color:#7aa">Preview here…</div></div>
-</div>
-
-</div>
-</div>
-
-<<script>
-  const $ = id => document.getElementById(id);
-
+<script>
+const $ = id => document.getElementById(id);
 let DATA = [];
 let BG = null;
 
@@ -132,7 +103,6 @@ let BG = null;
 const calcCanvas = document.createElement("canvas");
 const calcCtx = calcCanvas.getContext("2d");
 
-// Helper to check text height
 function getWrappedHeight(text, font, maxW, lineH) {
     calcCtx.font = font;
     const words = text.split(" ");
@@ -145,11 +115,10 @@ function getWrappedHeight(text, font, maxW, lineH) {
             line = w + " ";
         } else line = t;
     }
-    linesCount++; // for the last line
+    linesCount++; 
     return linesCount * lineH;
 }
 
-// Logic to split content based on Canvas Height
 async function createSlidesFromData(item, pxW, pxH, m) {
     const slides = [];
     let currentLines = [];
@@ -157,10 +126,10 @@ async function createSlidesFromData(item, pxW, pxH, m) {
     const maxW = pxW - m.left - m.right;
     const maxY = pxH - m.bottom;
 
-    const addLine = (text, type, h) => {
+    const addLine = (text, type) => {
         const font = type === 'h1' ? "bold 45px Kalam" : (type === 'q' ? "bold 34px Kalam" : "28px Kalam");
         const lineH = type === 'h1' ? 55 : (type === 'q' ? 42 : 38);
-        const neededH = getWrappedHeight(text, font, maxW, lineH) + 10;
+        const neededH = getWrappedHeight(text, font, maxW, lineH) + 15;
 
         if (currentY + neededH > maxY && currentLines.length > 0) {
             slides.push([...currentLines]);
@@ -171,38 +140,38 @@ async function createSlidesFromData(item, pxW, pxH, m) {
         currentY += neededH;
     };
 
-    // 1. Process H1
     if (item.h1) addLine(item.h1.toUpperCase(), 'h1');
-
-    // 2. Process Content/Paragraph
-    if (item.content) {
-        item.content.split('\n').forEach(l => addLine(l, 'p'));
-    }
-
-    // 3. Process Lists
-    if (item.list) {
-        item.list.forEach(l => addLine("• " + l, 'li'));
-    }
-
-    // Push notes slides
+    if (item.content) item.content.split('\n').forEach(l => addLine(l, 'p'));
+    if (item.list) item.list.forEach(l => addLine("• " + l, 'li'));
+    
     if (currentLines.length > 0) slides.push([...currentLines]);
 
-    // 4. Process QUIZ (Always on a NEW SLIDE)
     if (item.question) {
         let quizLines = [];
         quizLines.push({ text: "Q. " + item.question, type: 'q', font: "bold 34px Kalam", lineH: 42 });
-        if (item.option) {
-            item.option.forEach((o, idx) => {
-                if (o) quizLines.push({ text: `${idx + 1}. ${o}`, type: 'o', font: "28px Kalam", lineH: 38 });
-            });
-        }
-        slides.push(quizLines); // Quiz moves to its own slide
+        let opts = item.option || item.options || [];
+        opts.forEach((o, idx) => {
+            if (o) quizLines.push({ text: `${idx + 1}. ${o}`, type: 'o', font: "28px Kalam", lineH: 38 });
+        });
+        slides.push(quizLines);
     }
-
     return slides;
 }
 
-// Canvas Painting
+function renderPreview() {
+    const box = $("preview");
+    box.innerHTML = "";
+    if (DATA.length === 0) { box.innerHTML = "<div style='color:#556; text-align:center;'>No data loaded.</div>"; return; }
+
+    DATA.forEach((item, idx) => {
+        const div = document.createElement("div");
+        div.className = "slide-card";
+        let title = item.h1 || item.question || "Slide Group " + (idx+1);
+        div.innerHTML = `<span class="slide-tag">Item ${idx+1}</span><div style="color:var(--accent)">${title}</div>`;
+        box.appendChild(div);
+    });
+}
+
 async function drawSlideImage(lines, pxW, pxH, m, qc, oc) {
     const c = document.createElement("canvas");
     c.width = pxW; c.height = pxH;
@@ -222,53 +191,61 @@ async function drawSlideImage(lines, pxW, pxH, m, qc, oc) {
     lines.forEach(line => {
         ctx.fillStyle = (line.type === 'h1' || line.type === 'q') ? qc : oc;
         ctx.font = line.font;
-        y = wrapLine(ctx, line.text, m.left, y, maxW, line.lineH);
-        y += 10;
+        const words = line.text.split(" ");
+        let currentLine = "";
+        for (let w of words) {
+            let t = currentLine + w + " ";
+            if (ctx.measureText(t).width > maxW && currentLine !== "") {
+                ctx.fillText(currentLine, m.left, y); y += line.lineH; currentLine = w + " ";
+            } else currentLine = t;
+        }
+        ctx.fillText(currentLine, m.left, y);
+        y += line.lineH + 10;
     });
-
     return c.toDataURL("image/png");
 }
 
-function wrapLine(ctx, text, x, y, maxW, lineH) {
-    const words = text.split(" ");
-    let line = "";
-    for (let w of words) {
-        let t = line + w + " ";
-        if (ctx.measureText(t).width > maxW && line !== "") {
-            ctx.fillText(line, x, y); y += lineH; line = w + " ";
-        } else line = t;
-    }
-    ctx.fillText(line, x, y);
-    return y + lineH;
-}
+$('bgImg').onchange = (e) => {
+    const reader = new FileReader();
+    reader.onload = () => BG = reader.result;
+    reader.readAsDataURL(e.target.files[0]);
+};
 
-// Generate PPT
+$('importBtn').onclick = () => {
+    try {
+        const raw = JSON.parse($('jsonArea').value);
+        DATA = Array.isArray(raw) ? raw : [raw];
+        renderPreview();
+    } catch (e) { alert("JSON Format Error! Please check your input."); }
+};
+
 $('generateBtn').onclick = async () => {
-    if (DATA.length === 0) return alert("No Data");
+    if (DATA.length === 0) return alert("Please import data first!");
     
     const pxW = 1300, pxH = 710;
-    const m = { 
-        top: parseInt($('topM').value) || 80, 
-        left: parseInt($('leftM').value) || 80, 
-        right: parseInt($('rightM').value) || 80, 
-        bottom: parseInt($('bottomM').value) || 50 
+    const m = {
+        top: parseInt($('topM').value),
+        left: parseInt($('leftM').value),
+        right: parseInt($('rightM').value),
+        bottom: parseInt($('bottomM').value)
     };
 
     const ppt = new PptxGenJS();
-    ppt.defineLayout({ name: "FIXED", width: pxW / 96, height: pxH / 96 });
-    ppt.layout = "FIXED";
+    ppt.defineLayout({ name: "CUSTOM", width: pxW/96, height: pxH/96 });
+    ppt.layout = "CUSTOM";
 
-    for (let item of DATA) {
-        const slideDataArray = await createSlidesFromData(item, pxW, pxH, m);
-        for (let slideLines of slideDataArray) {
-            const img = await drawSlideImage(slideLines, pxW, pxH, m, $('qColor').value, $('optColor').value);
+    for (const item of DATA) {
+        const slidesToCreate = await createSlidesFromData(item, pxW, pxH, m);
+        for (const lines of slidesToCreate) {
+            const img = await drawSlideImage(lines, pxW, pxH, m, $('qColor').value, $('optColor').value);
             let slide = ppt.addSlide();
-            slide.addImage({ data: img, x: 0, y: 0, w: pxW / 96, h: pxH / 96 });
+            slide.addImage({ data: img, x: 0, y: 0, w: pxW/96, h: pxH/96 });
         }
     }
-    ppt.writeFile({ fileName: "Dynamic_Notes_Quiz.pptx" });
+    ppt.writeFile({ fileName: "Study_Presentation.pptx" });
 };
 
+$('clearBtn').onclick = () => { DATA = []; $('jsonArea').value = ""; renderPreview(); };
 </script>
 
 </body>
