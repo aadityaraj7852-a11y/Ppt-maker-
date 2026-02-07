@@ -3,37 +3,43 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Kalam PPT Maker (Light Mode)</title>
+<title>MCQ/Notes PPT Generator (Editable)</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
 <style>
-:root { --accent: #0b74ff; --bg: #f4f7fa; --card: #ffffff; --text: #333; --border: #d1d9e0; }
+:root { --accent: #ffeb3b; --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; --border: #334155; }
 body{ font-family: 'Kalam', cursive; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
-.container { max-width: 1250px; margin: auto; }
-.card{ background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-label{ color: #444; font-weight: 700; margin-top: 10px; display: block; }
+.container { max-width: 1300px; margin: auto; }
+.card{ background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+label{ color: #94a3b8; font-weight: 700; margin-top: 10px; display: block; font-size: 0.9em; }
 textarea, input { 
     width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); 
-    background: #fff; color: #000; font-family: 'Kalam', cursive; margin-top: 5px; box-sizing: border-box;
+    background: #0f172a; color: #fff; font-family: 'Kalam', cursive; margin-top: 5px; box-sizing: border-box;
 }
 .btn-row { display: flex; gap: 10px; margin-top: 15px; }
 .btn{ flex: 1; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Kalam', cursive; font-weight: 700; transition: 0.2s; }
-.btn-blue{ background: var(--accent); color: #fff; }
+.btn-blue{ background: #2563eb; color: #fff; }
 .btn-red{ background: #e11d48; color: #fff; }
-.btn-grey{ background: #64748b; color: #fff; }
+.btn-grey{ background: #475569; color: #fff; }
 
-.preview-container { background: #fff; border-radius: 10px; border: 1px solid var(--border); height: 650px; overflow-y: auto; padding: 15px; }
-.slide-card { background: #f9f9f9; border: 1px solid var(--border); margin-bottom: 15px; padding: 15px; border-radius: 8px; }
-.preview-h1 { color: #000; font-weight: bold; font-size: 1.3em; margin-bottom: 5px; border-bottom: 2px solid var(--accent); display: inline-block; }
-.preview-content { color: #444; white-space: pre-wrap; margin: 10px 0; font-size: 1.1em; }
-.preview-list { margin: 5px 0; padding-left: 20px; color: #555; }
-.preview-q-box { background: #fffbeb; padding: 10px; border-radius: 6px; border-left: 4px solid #facc15; margin-top: 10px; }
-.preview-opt { font-size: 0.95em; color: #666; margin-left: 10px; }
+.preview-container { background: #020617; border-radius: 10px; border: 1px solid var(--border); height: 680px; overflow-y: auto; padding: 15px; }
+.slide-card { background: #000; border: 1px solid #334; margin-bottom: 15px; padding: 15px; border-radius: 8px; position: relative; }
+.edit-hint { position: absolute; top: 5px; right: 10px; font-size: 10px; color: #475569; }
+
+/* Editable Content Styles */
+[contenteditable="true"] { outline: none; padding: 2px; border-radius: 4px; transition: 0.2s; }
+[contenteditable="true"]:hover { background: #1e293b; }
+[contenteditable="true"]:focus { background: #1e293b; border: 1px dashed var(--accent); }
+
+.preview-h1 { color: var(--accent); font-weight: bold; font-size: 1.4em; border-bottom: 1px solid #333; margin-bottom: 10px; }
+.preview-content { color: #fff; white-space: pre-wrap; font-size: 1.1em; margin: 10px 0; }
+.preview-q-box { color: var(--accent); font-weight: bold; margin-top: 15px; border-top: 1px dashed #333; padding-top: 10px; }
+.preview-opt { color: #fff; font-size: 1em; margin-left: 15px; }
 
 .row { display: flex; flex-wrap: wrap; gap: 20px; }
-.col { flex: 1; min-width: 320px; }
+.col { flex: 1; min-width: 350px; }
 .margin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 </style>
 </head>
@@ -43,13 +49,13 @@ textarea, input {
 <div class="container">
     <div class="row">
         <div class="col card">
-            <h2 style="margin-top:0; color:var(--accent)">PPT Generator</h2>
+            <h2 style="margin:0 0 15px 0; color:var(--accent)">PPT Settings</h2>
             <label>JSON Input</label>
-            <textarea id="jsonArea" rows="8" placeholder="Paste JSON here..."></textarea>
+            <textarea id="jsonArea" rows="8" placeholder="यहाँ JSON पेस्ट करें..."></textarea>
             
             <div class="btn-row">
-                <button id="importBtn" class="btn btn-grey">Import JSON</button>
-                <button id="clearBtn" class="btn btn-red">Clear</button>
+                <button id="importBtn" class="btn btn-grey">Import & Preview</button>
+                <button id="clearBtn" class="btn btn-red">Clear All</button>
             </div>
 
             <label>Margins (Pixels)</label>
@@ -61,20 +67,20 @@ textarea, input {
             </div>
 
             <div class="margin-grid">
-                <div><label>H1/Q Color</label><input type="color" id="qColor" value="#ff0000"></div>
-                <div><label>Text Color</label><input type="color" id="optColor" value="#000000"></div>
+                <div><label>Question/H1 Color</label><input type="color" id="qColor" value="#ffff00"></div>
+                <div><label>Content Color</label><input type="color" id="optColor" value="#ffffff"></div>
             </div>
 
-            <label>Background Image</label>
+            <label>Background Image (Optional)</label>
             <input type="file" id="bgImg" accept="image/*">
 
-            <button id="generateBtn" class="btn btn-blue" style="margin-top:20px; width:100%; font-size:1.2em;">Generate PPTX</button>
+            <button id="generateBtn" class="btn btn-blue" style="margin-top:20px; width:100%; font-size:1.2em;">Download Black PPTX</button>
         </div>
 
         <div class="col">
-            <label>Full Content Preview</label>
+            <label>Live Preview (Click to Edit)</label>
             <div id="preview" class="preview-container">
-                <div style="text-align:center; color:#999; margin-top:50px;">डेटा यहाँ दिखाई देगा...</div>
+                <div style="text-align:center; color:#475569; margin-top:50px;">डेटा लोड होने पर यहाँ दिखाई देगा...</div>
             </div>
         </div>
     </div>
@@ -104,28 +110,66 @@ function getWrappedHeight(text, font, maxW, lineH) {
     return linesCount * lineH;
 }
 
+// Render Data and allow live editing
 function renderPreview() {
     const box = $("preview");
     box.innerHTML = "";
     DATA.forEach((item, idx) => {
         const div = document.createElement("div");
         div.className = "slide-card";
-        let html = `<div style="font-size:12px; color:var(--accent)">Item ${idx+1} Content:</div>`;
+        div.innerHTML = `<span class="edit-hint">Click to edit</span>`;
         
-        if(item.h1) html += `<div class="preview-h1">${item.h1}</div>`;
-        if(item.content) html += `<div class="preview-content">${item.content}</div>`;
+        if(item.h1) {
+            const h1El = document.createElement("div");
+            h1El.className = "preview-h1";
+            h1El.contentEditable = "true";
+            h1El.innerText = item.h1;
+            h1El.onblur = (e) => DATA[idx].h1 = e.target.innerText;
+            div.appendChild(h1El);
+        }
+
+        if(item.content) {
+            const pEl = document.createElement("div");
+            pEl.className = "preview-content";
+            pEl.contentEditable = "true";
+            pEl.innerText = item.content;
+            pEl.onblur = (e) => DATA[idx].content = e.target.innerText;
+            div.appendChild(pEl);
+        }
+
         if(item.list) {
-            item.list.forEach(li => html += `<div class="preview-list">• ${li}</div>`);
-        }
-        if(item.question) {
-            html += `<div class="preview-q-box"><strong>Q: ${item.question}</strong><br>`;
-            let opts = item.option || item.options || [];
-            opts.forEach((o, i) => {
-                html += `<div class="preview-opt">${i+1}. ${o}</div>`;
+            item.list.forEach((li, liIdx) => {
+                const liEl = document.createElement("div");
+                liEl.style.color = "#ccc";
+                liEl.contentEditable = "true";
+                liEl.innerText = "• " + li;
+                liEl.onblur = (e) => DATA[idx].list[liIdx] = e.target.innerText.replace("• ", "");
+                div.appendChild(liEl);
             });
-            html += `</div>`;
         }
-        div.innerHTML = html;
+
+        if(item.question) {
+            const qEl = document.createElement("div");
+            qEl.className = "preview-q-box";
+            qEl.contentEditable = "true";
+            qEl.innerText = "Q: " + item.question;
+            qEl.onblur = (e) => DATA[idx].question = e.target.innerText.replace("Q: ", "");
+            div.appendChild(qEl);
+
+            let opts = item.option || item.options || [];
+            opts.forEach((o, oIdx) => {
+                const oEl = document.createElement("div");
+                oEl.className = "preview-opt";
+                oEl.contentEditable = "true";
+                oEl.innerText = `${oIdx + 1}. ${o}`;
+                oEl.onblur = (e) => {
+                    let clean = e.target.innerText.replace(/^\d+\.\s*/, "");
+                    if(DATA[idx].option) DATA[idx].option[oIdx] = clean;
+                    else DATA[idx].options[oIdx] = clean;
+                };
+                div.appendChild(oEl);
+            });
+        }
         box.appendChild(div);
     });
 }
@@ -179,7 +223,7 @@ async function drawSlideImage(lines, pxW, pxH, m, qc, oc) {
         await new Promise(r => img.onload = r);
         ctx.drawImage(img, 0, 0, pxW, pxH);
     } else {
-        ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, pxW, pxH);
+        ctx.fillStyle = "#000000"; ctx.fillRect(0, 0, pxW, pxH);
     }
 
     let y = m.top;
@@ -211,13 +255,11 @@ $('importBtn').onclick = () => {
 };
 
 $('generateBtn').onclick = async () => {
-    if (DATA.length === 0) return alert("No Data!");
+    if (DATA.length === 0) return alert("Please import JSON first!");
     const pxW = 1300, pxH = 710;
     const m = { 
-        top: parseInt($('topM').value), 
-        bottom: parseInt($('bottomM').value), 
-        left: parseInt($('leftM').value), 
-        right: parseInt($('rightM').value) 
+        top: parseInt($('topM').value), bottom: parseInt($('bottomM').value), 
+        left: parseInt($('leftM').value), right: parseInt($('rightM').value) 
     };
     const ppt = new PptxGenJS();
     ppt.defineLayout({ name: "A", width: pxW/96, height: pxH/96 });
@@ -231,7 +273,7 @@ $('generateBtn').onclick = async () => {
             slide.addImage({ data: img, x: 0, y: 0, w: pxW/96, h: pxH/96 });
         }
     }
-    ppt.writeFile({ fileName: "Notes_Presentation.pptx" });
+    ppt.writeFile({ fileName: "Dark_Presentation.pptx" });
 };
 
 $('bgImg').onchange = (e) => {
