@@ -122,72 +122,88 @@ textarea,input{
 </div>
 </div>
 
-<script>
+<<script>
   const $ = id => document.getElementById(id);
 
 let DATA = [];
 let BG = null;
 
-// New Logic: Content Parser for Slides
-function parseToSlides(item, maxLines = 7) {
-    let lines = [];
-    
-    // Check for H1
-    if (item.h1) lines.push({ text: item.h1.toUpperCase(), type: 'h1' });
-    
-    // Check for Paragraph/Content
+// Drawing context for height calculation
+const calcCanvas = document.createElement("canvas");
+const calcCtx = calcCanvas.getContext("2d");
+
+// Helper to check text height
+function getWrappedHeight(text, font, maxW, lineH) {
+    calcCtx.font = font;
+    const words = text.split(" ");
+    let line = "";
+    let linesCount = 0;
+    for (let w of words) {
+        let t = line + w + " ";
+        if (calcCtx.measureText(t).width > maxW && line !== "") {
+            linesCount++;
+            line = w + " ";
+        } else line = t;
+    }
+    linesCount++; // for the last line
+    return linesCount * lineH;
+}
+
+// Logic to split content based on Canvas Height
+async function createSlidesFromData(item, pxW, pxH, m) {
+    const slides = [];
+    let currentLines = [];
+    let currentY = m.top;
+    const maxW = pxW - m.left - m.right;
+    const maxY = pxH - m.bottom;
+
+    const addLine = (text, type, h) => {
+        const font = type === 'h1' ? "bold 45px Kalam" : (type === 'q' ? "bold 34px Kalam" : "28px Kalam");
+        const lineH = type === 'h1' ? 55 : (type === 'q' ? 42 : 38);
+        const neededH = getWrappedHeight(text, font, maxW, lineH) + 10;
+
+        if (currentY + neededH > maxY && currentLines.length > 0) {
+            slides.push([...currentLines]);
+            currentLines = [];
+            currentY = m.top;
+        }
+        currentLines.push({ text, type, font, lineH });
+        currentY += neededH;
+    };
+
+    // 1. Process H1
+    if (item.h1) addLine(item.h1.toUpperCase(), 'h1');
+
+    // 2. Process Content/Paragraph
     if (item.content) {
-        let contentLines = item.content.split('\n');
-        contentLines.forEach(l => lines.push({ text: l, type: 'p' }));
+        item.content.split('\n').forEach(l => addLine(l, 'p'));
     }
 
-    // Check for List
-    if (item.list && Array.isArray(item.list)) {
-        item.list.forEach(l => lines.push({ text: "• " + l, type: 'li' }));
+    // 3. Process Lists
+    if (item.list) {
+        item.list.forEach(l => addLine("• " + l, 'li'));
     }
 
-    // Check for MCQ (Legacy Support)
+    // Push notes slides
+    if (currentLines.length > 0) slides.push([...currentLines]);
+
+    // 4. Process QUIZ (Always on a NEW SLIDE)
     if (item.question) {
-        lines.push({ text: "Q. " + item.question, type: 'q' });
+        let quizLines = [];
+        quizLines.push({ text: "Q. " + item.question, type: 'q', font: "bold 34px Kalam", lineH: 42 });
         if (item.option) {
             item.option.forEach((o, idx) => {
-                if(o) lines.push({ text: `${idx + 1}. ${o}`, type: 'o' });
+                if (o) quizLines.push({ text: `${idx + 1}. ${o}`, type: 'o', font: "28px Kalam", lineH: 38 });
             });
         }
+        slides.push(quizLines); // Quiz moves to its own slide
     }
 
-    // Split into chunks of 7 lines
-    let slides = [];
-    for (let i = 0; i < lines.length; i += maxLines) {
-        slides.push(lines.slice(i, i + maxLines));
-    }
     return slides;
 }
 
-// Preview rendering
-function renderPreview() {
-    const box = $("preview");
-    box.innerHTML = "";
-    if (DATA.length === 0) { box.innerHTML = '<div style="color:#7aa">No Data</div>'; return; }
-
-    DATA.forEach((item, i) => {
-        const wrap = document.createElement("div");
-        wrap.className = "slide-preview";
-        const slides = parseToSlides(item);
-        
-        wrap.innerHTML = `<strong>Item ${i+1} (${slides.length} Slides)</strong>`;
-        const del = document.createElement("button");
-        del.className = "slide-delete"; del.innerText = "×";
-        del.onclick = () => { DATA.splice(i, 1); renderPreview(); };
-        
-        wrap.appendChild(del);
-        box.appendChild(wrap);
-    });
-}
-
-// Advanced Drawing Engine
-async function drawSlide(lines, pxW, pxH, m, qc, oc) {
-    await document.fonts.load("30px Kalam");
+// Canvas Painting
+async function drawSlideImage(lines, pxW, pxH, m, qc, oc) {
     const c = document.createElement("canvas");
     c.width = pxW; c.height = pxH;
     const ctx = c.getContext("2d");
@@ -201,24 +217,13 @@ async function drawSlide(lines, pxW, pxH, m, qc, oc) {
     }
 
     let y = m.top;
-    const left = m.left;
-    const maxW = pxW - m.right - m.left;
+    const maxW = pxW - m.left - m.right;
 
     lines.forEach(line => {
-        if (line.type === 'h1') {
-            ctx.fillStyle = qc;
-            ctx.font = `bold 45px Kalam`;
-            y = wrapLine(ctx, line.text, left, y, maxW, 55);
-        } else if (line.type === 'q') {
-            ctx.fillStyle = qc;
-            ctx.font = `bold 34px Kalam`;
-            y = wrapLine(ctx, line.text, left, y, maxW, 42);
-        } else {
-            ctx.fillStyle = oc;
-            ctx.font = `28px Kalam`;
-            y = wrapLine(ctx, line.text, left, y, maxW, 38);
-        }
-        y += 10; // spacing
+        ctx.fillStyle = (line.type === 'h1' || line.type === 'q') ? qc : oc;
+        ctx.font = line.font;
+        y = wrapLine(ctx, line.text, m.left, y, maxW, line.lineH);
+        y += 10;
     });
 
     return c.toDataURL("image/png");
@@ -237,44 +242,31 @@ function wrapLine(ctx, text, x, y, maxW, lineH) {
     return y + lineH;
 }
 
-// Updated Import for JSON
-$('importBtn').onclick = () => {
-    try {
-        let j = JSON.parse($('jsonArea').value);
-        DATA = Array.isArray(j) ? j : [j];
-        renderPreview();
-    } catch (e) { alert("Invalid JSON Format"); }
-};
-
-// Main PPT Generation Update
+// Generate PPT
 $('generateBtn').onclick = async () => {
-    if (DATA.length === 0) return alert("No content to generate");
+    if (DATA.length === 0) return alert("No Data");
     
     const pxW = 1300, pxH = 710;
-    const m = { top: 80, left: 80, right: 80, bottom: 50 }; // Default margins
-    const qc = $('qColor').value || "#FFD700";
-    const oc = $('optColor').value || "#FFFFFF";
+    const m = { 
+        top: parseInt($('topM').value) || 80, 
+        left: parseInt($('leftM').value) || 80, 
+        right: parseInt($('rightM').value) || 80, 
+        bottom: parseInt($('bottomM').value) || 50 
+    };
 
     const ppt = new PptxGenJS();
-    ppt.defineLayout({ name: "CUSTOM", width: pxW / 96, height: pxH / 96 });
-    ppt.layout = "CUSTOM";
+    ppt.defineLayout({ name: "FIXED", width: pxW / 96, height: pxH / 96 });
+    ppt.layout = "FIXED";
 
     for (let item of DATA) {
-        const slideChunks = parseToSlides(item, 7); // Max 7 lines per slide
-        for (let chunk of slideChunks) {
-            const imgData = await drawSlide(chunk, pxW, pxH, m, qc, oc);
+        const slideDataArray = await createSlidesFromData(item, pxW, pxH, m);
+        for (let slideLines of slideDataArray) {
+            const img = await drawSlideImage(slideLines, pxW, pxH, m, $('qColor').value, $('optColor').value);
             let slide = ppt.addSlide();
-            slide.addImage({ data: imgData, x: 0, y: 0, w: pxW / 96, h: pxH / 96 });
+            slide.addImage({ data: img, x: 0, y: 0, w: pxW / 96, h: pxH / 96 });
         }
     }
-
-    ppt.writeFile({ fileName: "Study_Notes_PPT.pptx" });
-};
-
-$('bgImg').onchange = (e) => {
-    const r = new FileReader();
-    r.onload = () => BG = r.result;
-    r.readAsDataURL(e.target.files[0]);
+    ppt.writeFile({ fileName: "Dynamic_Notes_Quiz.pptx" });
 };
 
 </script>
