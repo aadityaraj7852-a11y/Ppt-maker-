@@ -123,225 +123,161 @@ textarea,input{
 </div>
 
 <script>
-const $ = id => document.getElementById(id);
+  const $ = id => document.getElementById(id);
 
-let DATA=[];
-let BG=null;
+let DATA = [];
+let BG = null;
 
-// normalize
-function normalize(item){
-  return {
-    question:(item.question||"").replace(/\\n/g,"\n").replace(/\/n/g,"\n"),
-    option:(item.option||["","","",""]).slice(0,4)
-      .map(o=>o.replace(/\\n/g,"\n").replace(/\/n/g,"\n"))
-  };
-}
-
-// parse block
-function parseBlock(text){
-  const lines=text.split("\n");
-  let first=lines[0].replace(/^[Qq]\d+\.\s*/,'');
-  let opts=[],optStart=-1;
-
-  for(let i=1;i<lines.length;i++){
-    if(/^\s*1\./.test(lines[i])){ optStart=i; break; }
-  }
-
-  if(optStart===-1){
-    return { question:[first].concat(lines.slice(1)).join("\n"), option:["","","",""] };
-  }
-
-  const qLines=[first].concat(lines.slice(1,optStart));
-
-  for(let i=optStart;i<optStart+4 && i<lines.length;i++){
-    opts.push(lines[i].replace(/^\s*\d+\.\s*/,''));
-  }
-  while(opts.length<4) opts.push("");
-
-  return { question:qLines.join("\n"), option:opts };
-}
-
-// preview
-function renderPreview(){
-  const box=$("preview");
-  box.innerHTML="";
-
-  if(DATA.length===0){
-    box.innerHTML='<div style="color:#7aa">No Questions</div>';
-    return;
-  }
-
-  DATA.forEach((q,i)=>{
-    const wrap=document.createElement("div");
-    wrap.className="slide-preview";
-
-    const del=document.createElement("button");
-    del.className="slide-delete";
-    del.innerText="×";
-    del.onclick=()=>{ DATA.splice(i,1); renderPreview(); };
-
-    const blk=document.createElement("div");
-    blk.className="slide-block";
-    blk.contentEditable="true";
-
-    blk.innerText=
-      `Q${i+1}. ${q.question}\n`+
-      `1. ${q.option[0]}\n`+
-      `2. ${q.option[1]}\n`+
-      `3. ${q.option[2]}\n`+
-      `4. ${q.option[3]}`;
-
-    blk.onblur=()=>{
-      DATA[i]=normalize(parseBlock(blk.innerText));
-      renderPreview();
-    };
-
-    wrap.appendChild(del);
-    wrap.appendChild(blk);
-    box.appendChild(wrap);
-  });
-}
-
-// BG upload
-$('bgImg').onchange=async(e)=>{
-  if(!e.target.files[0])return;
-  const r=new FileReader();
-  r.onload=()=>BG=r.result;
-  r.readAsDataURL(e.target.files[0]);
-};
-
-// wrap
-function wrapLine(ctx,text,x,y,maxW,lineH){
-  if(text.trim()==="") return y+lineH;
-  const words=text.split(" ");
-  let line="";
-  for(let w of words){
-    const t=line+w+" ";
-    if(ctx.measureText(t).width>maxW && line!==""){
-      ctx.fillText(line,x,y); y+=lineH; line=w+" ";
-    } else line=t;
-  }
-  ctx.fillText(line,x,y);
-  return y+lineH;
-}
-
-// block → image
-async function blockToImg(item,index,pxW,pxH,m,qc,oc){
-  await document.fonts.load("30px Kalam");
-
-  const c=document.createElement("canvas");
-  c.width=pxW; c.height=pxH;
-  const ctx=c.getContext("2d");
-
-  if(BG){
-    let img=new Image();
-    img.src=BG;
-    await new Promise(r=>img.onload=r);
-    ctx.drawImage(img,0,0,pxW,pxH);
-  } else{
-    ctx.fillStyle="#000"; ctx.fillRect(0,0,pxW,pxH);
-  }
-
-  const qF=32,qH=40;
-  const oF=28,oH=34;
-  let y=m.top;
-
-  const left=m.left;
-  const maxW=pxW-m.right-left;
-  const bottom=pxH-m.bottom;
-
-  // QUESTION NUMBER + TEXT
-  ctx.fillStyle=qc;
-  ctx.font=`bold ${qF}px Kalam`;
-
-  let qLines = (`Q${index+1}. ` + item.question).split("\n");
-
-  for(let ln of qLines){
-    y=wrapLine(ctx,ln,left,y,maxW,qH);
-    if(y>bottom) return c.toDataURL("image/png");
-  }
-
-  // OPTIONS
-  ctx.fillStyle=oc;
-  ctx.font=`${oF}px Kalam`;
-
-  for(let i=0;i<4;i++){
-    let opt=item.option[i]||"";
-    let lines=opt.split("\n");
-
-    let first=`${i+1}. ${lines[0]}`;
-    y=wrapLine(ctx,first,left,y,maxW,oH);
-    if(y>bottom) return c.toDataURL("image/png");
-
-    for(let k=1;k<lines.length;k++){
-      y=wrapLine(ctx,lines[k],left,y,maxW,oH);
-      if(y>bottom) return c.toDataURL("image/png");
+// New Logic: Content Parser for Slides
+function parseToSlides(item, maxLines = 7) {
+    let lines = [];
+    
+    // Check for H1
+    if (item.h1) lines.push({ text: item.h1.toUpperCase(), type: 'h1' });
+    
+    // Check for Paragraph/Content
+    if (item.content) {
+        let contentLines = item.content.split('\n');
+        contentLines.forEach(l => lines.push({ text: l, type: 'p' }));
     }
-  }
 
-  return c.toDataURL("image/png");
+    // Check for List
+    if (item.list && Array.isArray(item.list)) {
+        item.list.forEach(l => lines.push({ text: "• " + l, type: 'li' }));
+    }
+
+    // Check for MCQ (Legacy Support)
+    if (item.question) {
+        lines.push({ text: "Q. " + item.question, type: 'q' });
+        if (item.option) {
+            item.option.forEach((o, idx) => {
+                if(o) lines.push({ text: `${idx + 1}. ${o}`, type: 'o' });
+            });
+        }
+    }
+
+    // Split into chunks of 7 lines
+    let slides = [];
+    for (let i = 0; i < lines.length; i += maxLines) {
+        slides.push(lines.slice(i, i + maxLines));
+    }
+    return slides;
 }
 
-$('addManual').onclick=()=>{
-  const q=$('manualQ').value;
-  if(!q.trim()) return;
+// Preview rendering
+function renderPreview() {
+    const box = $("preview");
+    box.innerHTML = "";
+    if (DATA.length === 0) { box.innerHTML = '<div style="color:#7aa">No Data</div>'; return; }
 
-  DATA.push(normalize({
-    question:q,
-    option:[
-      $('opt1').value,$('opt2').value,$('opt3').value,$('opt4').value
-    ]
-  }));
+    DATA.forEach((item, i) => {
+        const wrap = document.createElement("div");
+        wrap.className = "slide-preview";
+        const slides = parseToSlides(item);
+        
+        wrap.innerHTML = `<strong>Item ${i+1} (${slides.length} Slides)</strong>`;
+        const del = document.createElement("button");
+        del.className = "slide-delete"; del.innerText = "×";
+        del.onclick = () => { DATA.splice(i, 1); renderPreview(); };
+        
+        wrap.appendChild(del);
+        box.appendChild(wrap);
+    });
+}
 
-  $('manualQ').value="";
-  $('opt1').value=$('opt2').value=$('opt3').value=$('opt4').value="";
-  renderPreview();
+// Advanced Drawing Engine
+async function drawSlide(lines, pxW, pxH, m, qc, oc) {
+    await document.fonts.load("30px Kalam");
+    const c = document.createElement("canvas");
+    c.width = pxW; c.height = pxH;
+    const ctx = c.getContext("2d");
+
+    if (BG) {
+        let img = new Image(); img.src = BG;
+        await new Promise(r => img.onload = r);
+        ctx.drawImage(img, 0, 0, pxW, pxH);
+    } else {
+        ctx.fillStyle = "#000"; ctx.fillRect(0, 0, pxW, pxH);
+    }
+
+    let y = m.top;
+    const left = m.left;
+    const maxW = pxW - m.right - m.left;
+
+    lines.forEach(line => {
+        if (line.type === 'h1') {
+            ctx.fillStyle = qc;
+            ctx.font = `bold 45px Kalam`;
+            y = wrapLine(ctx, line.text, left, y, maxW, 55);
+        } else if (line.type === 'q') {
+            ctx.fillStyle = qc;
+            ctx.font = `bold 34px Kalam`;
+            y = wrapLine(ctx, line.text, left, y, maxW, 42);
+        } else {
+            ctx.fillStyle = oc;
+            ctx.font = `28px Kalam`;
+            y = wrapLine(ctx, line.text, left, y, maxW, 38);
+        }
+        y += 10; // spacing
+    });
+
+    return c.toDataURL("image/png");
+}
+
+function wrapLine(ctx, text, x, y, maxW, lineH) {
+    const words = text.split(" ");
+    let line = "";
+    for (let w of words) {
+        let t = line + w + " ";
+        if (ctx.measureText(t).width > maxW && line !== "") {
+            ctx.fillText(line, x, y); y += lineH; line = w + " ";
+        } else line = t;
+    }
+    ctx.fillText(line, x, y);
+    return y + lineH;
+}
+
+// Updated Import for JSON
+$('importBtn').onclick = () => {
+    try {
+        let j = JSON.parse($('jsonArea').value);
+        DATA = Array.isArray(j) ? j : [j];
+        renderPreview();
+    } catch (e) { alert("Invalid JSON Format"); }
 };
 
-// IMPORT
-$('importBtn').onclick=()=>{
-  try{
-    let j=JSON.parse($('jsonArea').value);
-    if(!Array.isArray(j)) j=[j];
-    DATA=j.map(normalize);
-    renderPreview();
-  }catch(e){ alert("Invalid JSON") }
+// Main PPT Generation Update
+$('generateBtn').onclick = async () => {
+    if (DATA.length === 0) return alert("No content to generate");
+    
+    const pxW = 1300, pxH = 710;
+    const m = { top: 80, left: 80, right: 80, bottom: 50 }; // Default margins
+    const qc = $('qColor').value || "#FFD700";
+    const oc = $('optColor').value || "#FFFFFF";
+
+    const ppt = new PptxGenJS();
+    ppt.defineLayout({ name: "CUSTOM", width: pxW / 96, height: pxH / 96 });
+    ppt.layout = "CUSTOM";
+
+    for (let item of DATA) {
+        const slideChunks = parseToSlides(item, 7); // Max 7 lines per slide
+        for (let chunk of slideChunks) {
+            const imgData = await drawSlide(chunk, pxW, pxH, m, qc, oc);
+            let slide = ppt.addSlide();
+            slide.addImage({ data: imgData, x: 0, y: 0, w: pxW / 96, h: pxH / 96 });
+        }
+    }
+
+    ppt.writeFile({ fileName: "Study_Notes_PPT.pptx" });
 };
 
-// GENERATE PPT
-$('generateBtn').onclick=async()=>{
-  if(DATA.length===0) return alert("No questions");
-
-  const pxW=1300, pxH=710;
-
-  const m={
-    top:parseInt($('topM').value),
-    left:parseInt($('leftM').value),
-    right:parseInt($('rightM').value),
-    bottom:parseInt($('bottomM').value)
-  };
-
-  const qc=$('qColor').value;
-  const oc=$('optColor').value;
-
-  const ppt=new PptxGenJS();
-  ppt.defineLayout({name:"FIXED",width:pxW/96,height:pxH/96});
-  ppt.layout="FIXED";
-
-  for(let i=0;i<DATA.length;i++){
-    const img=await blockToImg(DATA[i],i,pxW,pxH,m,qc,oc);
-    let slide=ppt.addSlide();
-    slide.addImage({data:img,x:0,y:0,w:pxW/96,h:pxH/96});
-  }
-
-  ppt.writeFile({fileName:"MCQ_Final_1300x710.pptx"});
+$('bgImg').onchange = (e) => {
+    const r = new FileReader();
+    r.onload = () => BG = r.result;
+    r.readAsDataURL(e.target.files[0]);
 };
 
-$('clearBtn').onclick=()=>{ DATA=[]; $('jsonArea').value=""; renderPreview(); };
-
-renderPreview();
 </script>
 
 </body>
 </html>
-
