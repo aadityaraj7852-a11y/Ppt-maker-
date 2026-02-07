@@ -3,17 +3,16 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>MCQ/Notes PPT Generator (Editable)</title>
-
+<title>Ultimate Flexible PPT Maker</title>
 <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
 <style>
-:root { --accent: #ffeb3b; --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; --border: #334155; }
+:root { --accent: #ffff00; --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; --border: #334155; }
 body{ font-family: 'Kalam', cursive; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
 .container { max-width: 1300px; margin: auto; }
-.card{ background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-label{ color: #94a3b8; font-weight: 700; margin-top: 10px; display: block; font-size: 0.9em; }
+.card{ background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); }
+label{ color: #94a3b8; font-weight: 700; margin-top: 10px; display: block; }
 textarea, input { 
     width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); 
     background: #0f172a; color: #fff; font-family: 'Kalam', cursive; margin-top: 5px; box-sizing: border-box;
@@ -24,41 +23,37 @@ textarea, input {
 .btn-red{ background: #e11d48; color: #fff; }
 .btn-grey{ background: #475569; color: #fff; }
 
-.preview-container { background: #020617; border-radius: 10px; border: 1px solid var(--border); height: 680px; overflow-y: auto; padding: 15px; }
-.slide-card { background: #000; border: 1px solid #334; margin-bottom: 15px; padding: 15px; border-radius: 8px; position: relative; }
-.edit-hint { position: absolute; top: 5px; right: 10px; font-size: 10px; color: #475569; }
+.preview-container { background: #000; border-radius: 10px; border: 1px solid var(--border); height: 700px; overflow-y: auto; padding: 15px; }
+.slide-card { background: #0b1220; border: 1px solid #334; margin-bottom: 15px; padding: 20px; border-radius: 8px; }
+[contenteditable="true"] { outline: none; transition: 0.2s; }
+[contenteditable="true"]:focus { background: #1e293b; color: #fff; }
 
-/* Editable Content Styles */
-[contenteditable="true"] { outline: none; padding: 2px; border-radius: 4px; transition: 0.2s; }
-[contenteditable="true"]:hover { background: #1e293b; }
-[contenteditable="true"]:focus { background: #1e293b; border: 1px dashed var(--accent); }
-
-.preview-h1 { color: var(--accent); font-weight: bold; font-size: 1.4em; border-bottom: 1px solid #333; margin-bottom: 10px; }
-.preview-content { color: #fff; white-space: pre-wrap; font-size: 1.1em; margin: 10px 0; }
-.preview-q-box { color: var(--accent); font-weight: bold; margin-top: 15px; border-top: 1px dashed #333; padding-top: 10px; }
-.preview-opt { color: #fff; font-size: 1em; margin-left: 15px; }
+.preview-h1 { color: var(--accent); font-weight: bold; font-size: 1.5em; margin-bottom: 10px; }
+.preview-p { color: #fff; white-space: pre-wrap; font-size: 1.1em; margin-bottom: 10px; }
+.preview-li { color: #ccd6f6; margin-left: 15px; }
+.preview-q { color: var(--accent); font-weight: bold; margin-top: 20px; border-top: 1px solid #223; padding-top: 10px; }
+.preview-opt { color: #fff; margin-left: 20px; }
 
 .row { display: flex; flex-wrap: wrap; gap: 20px; }
 .col { flex: 1; min-width: 350px; }
 .margin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 </style>
 </head>
-
 <body>
 
 <div class="container">
     <div class="row">
         <div class="col card">
-            <h2 style="margin:0 0 15px 0; color:var(--accent)">PPT Settings</h2>
-            <label>JSON Input</label>
-            <textarea id="jsonArea" rows="8" placeholder="यहाँ JSON पेस्ट करें..."></textarea>
+            <h2 style="margin:0; color:var(--accent)">PPT Universal Maker</h2>
+            <label>JSON Input (किसी भी क्रम में डेटा डालें)</label>
+            <textarea id="jsonArea" rows="12" placeholder='[{"h1":"Title"}, {"list":["A","B"]}, {"content":"Text"}]'></textarea>
             
             <div class="btn-row">
-                <button id="importBtn" class="btn btn-grey">Import & Preview</button>
+                <button id="importBtn" class="btn btn-grey">Import Data</button>
                 <button id="clearBtn" class="btn btn-red">Clear All</button>
             </div>
 
-            <label>Margins (Pixels)</label>
+            <label>Settings</label>
             <div class="margin-grid">
                 <div><label>Top</label><input type="number" id="topM" value="90"></div>
                 <div><label>Bottom</label><input type="number" id="bottomM" value="60"></div>
@@ -67,21 +62,19 @@ textarea, input {
             </div>
 
             <div class="margin-grid">
-                <div><label>Question/H1 Color</label><input type="color" id="qColor" value="#ffff00"></div>
-                <div><label>Content Color</label><input type="color" id="optColor" value="#ffffff"></div>
+                <div><label>Yellow Color</label><input type="color" id="qColor" value="#ffff00"></div>
+                <div><label>White Color</label><input type="color" id="optColor" value="#ffffff"></div>
             </div>
 
-            <label>Background Image (Optional)</label>
+            <label>Background Image</label>
             <input type="file" id="bgImg" accept="image/*">
 
-            <button id="generateBtn" class="btn btn-blue" style="margin-top:20px; width:100%; font-size:1.2em;">Download Black PPTX</button>
+            <button id="generateBtn" class="btn btn-blue" style="margin-top:20px; width:100%; font-size:1.2em;">Generate PPTX</button>
         </div>
 
         <div class="col">
-            <label>Live Preview (Click to Edit)</label>
-            <div id="preview" class="preview-container">
-                <div style="text-align:center; color:#475569; margin-top:50px;">डेटा लोड होने पर यहाँ दिखाई देगा...</div>
-            </div>
+            <label>Editable Preview</label>
+            <div id="preview" class="preview-container"></div>
         </div>
     </div>
 </div>
@@ -110,66 +103,42 @@ function getWrappedHeight(text, font, maxW, lineH) {
     return linesCount * lineH;
 }
 
-// Render Data and allow live editing
 function renderPreview() {
     const box = $("preview");
     box.innerHTML = "";
     DATA.forEach((item, idx) => {
         const div = document.createElement("div");
         div.className = "slide-card";
-        div.innerHTML = `<span class="edit-hint">Click to edit</span>`;
-        
-        if(item.h1) {
-            const h1El = document.createElement("div");
-            h1El.className = "preview-h1";
-            h1El.contentEditable = "true";
-            h1El.innerText = item.h1;
-            h1El.onblur = (e) => DATA[idx].h1 = e.target.innerText;
-            div.appendChild(h1El);
-        }
 
-        if(item.content) {
-            const pEl = document.createElement("div");
-            pEl.className = "preview-content";
-            pEl.contentEditable = "true";
-            pEl.innerText = item.content;
-            pEl.onblur = (e) => DATA[idx].content = e.target.innerText;
-            div.appendChild(pEl);
-        }
-
-        if(item.list) {
-            item.list.forEach((li, liIdx) => {
-                const liEl = document.createElement("div");
-                liEl.style.color = "#ccc";
-                liEl.contentEditable = "true";
-                liEl.innerText = "• " + li;
-                liEl.onblur = (e) => DATA[idx].list[liIdx] = e.target.innerText.replace("• ", "");
-                div.appendChild(liEl);
-            });
-        }
-
-        if(item.question) {
-            const qEl = document.createElement("div");
-            qEl.className = "preview-q-box";
-            qEl.contentEditable = "true";
-            qEl.innerText = "Q: " + item.question;
-            qEl.onblur = (e) => DATA[idx].question = e.target.innerText.replace("Q: ", "");
-            div.appendChild(qEl);
-
-            let opts = item.option || item.options || [];
-            opts.forEach((o, oIdx) => {
-                const oEl = document.createElement("div");
-                oEl.className = "preview-opt";
-                oEl.contentEditable = "true";
-                oEl.innerText = `${oIdx + 1}. ${o}`;
-                oEl.onblur = (e) => {
-                    let clean = e.target.innerText.replace(/^\d+\.\s*/, "");
-                    if(DATA[idx].option) DATA[idx].option[oIdx] = clean;
-                    else DATA[idx].options[oIdx] = clean;
+        Object.keys(item).forEach(key => {
+            const el = document.createElement("div");
+            el.contentEditable = "true";
+            
+            if(key === 'h1') {
+                el.className = "preview-h1"; el.innerText = item.h1;
+                el.onblur = (e) => DATA[idx].h1 = e.target.innerText;
+            } else if(key === 'content') {
+                el.className = "preview-p"; el.innerText = item.content;
+                el.onblur = (e) => DATA[idx].content = e.target.innerText;
+            } else if(key === 'list') {
+                el.innerHTML = item.list.map(li => `<div>• ${li}</div>`).join("");
+                el.onblur = (e) => {
+                    DATA[idx].list = e.target.innerText.split('\n').map(s => s.replace('• ', '').trim()).filter(s => s);
+                    renderPreview(); // refresh to fix dots
                 };
-                div.appendChild(oEl);
-            });
-        }
+            } else if(key === 'question') {
+                el.className = "preview-q"; el.innerText = "Q: " + item.question;
+                el.onblur = (e) => DATA[idx].question = e.target.innerText.replace("Q: ", "");
+            } else if(key === 'option' || key === 'options') {
+                let opts = item.option || item.options;
+                el.innerHTML = opts.map((o, i) => `<div>${i+1}. ${o}</div>`).join("");
+                el.onblur = (e) => {
+                    let newOpts = e.target.innerText.split('\n').map(s => s.replace(/^\d+\.\s*/, '').trim()).filter(s => s);
+                    if(item.option) DATA[idx].option = newOpts; else DATA[idx].options = newOpts;
+                };
+            }
+            div.appendChild(el);
+        });
         box.appendChild(div);
     });
 }
@@ -195,20 +164,24 @@ async function createSlidesFromData(item, pxW, pxH, m) {
         currentY += neededH;
     };
 
-    if (item.h1) addLine(item.h1.toUpperCase(), 'h1');
-    if (item.content) item.content.split('\n').forEach(l => addLine(l, 'p'));
-    if (item.list) item.list.forEach(l => addLine("• " + l, 'li'));
-    if (currentLines.length > 0) slides.push([...currentLines]);
+    // PROCESS KEYS IN THE EXACT ORDER THEY APPEAR IN JSON
+    Object.keys(item).forEach(key => {
+        if(key === 'h1' && item.h1) addLine(item.h1.toUpperCase(), 'h1');
+        if(key === 'content' && item.content) item.content.split('\n').forEach(l => addLine(l, 'p'));
+        if(key === 'list' && item.list) item.list.forEach(l => addLine("• " + l, 'li'));
+        
+        // If question appears inside the same object, it follows the order but usually we want it on a new slide
+        if(key === 'question' && item.question) {
+            if(currentLines.length > 0) { slides.push([...currentLines]); currentLines = []; currentY = m.top; }
+            addLine("Q. " + item.question, 'q');
+            let opts = item.option || item.options || [];
+            opts.forEach((o, i) => addLine(`${i+1}. ${o}`, 'o'));
+            slides.push([...currentLines]);
+            currentLines = []; currentY = m.top;
+        }
+    });
 
-    if (item.question) {
-        let quizLines = [];
-        quizLines.push({ text: "Q. " + item.question, type: 'q', font: "bold 38px Kalam", lineH: 50 });
-        let opts = item.option || item.options || [];
-        opts.forEach((o, idx) => {
-            if (o) quizLines.push({ text: `${idx + 1}. ${o}`, type: 'o', font: "30px Kalam", lineH: 42 });
-        });
-        slides.push(quizLines);
-    }
+    if (currentLines.length > 0) slides.push([...currentLines]);
     return slides;
 }
 
@@ -223,7 +196,7 @@ async function drawSlideImage(lines, pxW, pxH, m, qc, oc) {
         await new Promise(r => img.onload = r);
         ctx.drawImage(img, 0, 0, pxW, pxH);
     } else {
-        ctx.fillStyle = "#000000"; ctx.fillRect(0, 0, pxW, pxH);
+        ctx.fillStyle = "#000"; ctx.fillRect(0, 0, pxW, pxH);
     }
 
     let y = m.top;
@@ -233,14 +206,14 @@ async function drawSlideImage(lines, pxW, pxH, m, qc, oc) {
         ctx.fillStyle = (line.type === 'h1' || line.type === 'q') ? qc : oc;
         ctx.font = line.font;
         const words = line.text.split(" ");
-        let currentLine = "";
+        let currentText = "";
         for (let w of words) {
-            let t = currentLine + w + " ";
-            if (ctx.measureText(t).width > maxW && currentLine !== "") {
-                ctx.fillText(currentLine, m.left, y); y += line.lineH; currentLine = w + " ";
-            } else currentLine = t;
+            let t = currentText + w + " ";
+            if (ctx.measureText(t).width > maxW && currentText !== "") {
+                ctx.fillText(currentText, m.left, y); y += line.lineH; currentText = w + " ";
+            } else currentText = t;
         }
-        ctx.fillText(currentLine, m.left, y);
+        ctx.fillText(currentText, m.left, y);
         y += line.lineH + 10;
     });
     return c.toDataURL("image/png");
@@ -251,29 +224,26 @@ $('importBtn').onclick = () => {
         const raw = JSON.parse($('jsonArea').value);
         DATA = Array.isArray(raw) ? raw : [raw];
         renderPreview();
-    } catch (e) { alert("JSON Format Error!"); }
+    } catch (e) { alert("Invalid JSON!"); }
 };
 
 $('generateBtn').onclick = async () => {
-    if (DATA.length === 0) return alert("Please import JSON first!");
+    if (DATA.length === 0) return alert("Import Data first!");
     const pxW = 1300, pxH = 710;
-    const m = { 
-        top: parseInt($('topM').value), bottom: parseInt($('bottomM').value), 
-        left: parseInt($('leftM').value), right: parseInt($('rightM').value) 
-    };
+    const m = { top:parseInt($('topM').value), bottom:parseInt($('bottomM').value), left:parseInt($('leftM').value), right:parseInt($('rightM').value) };
     const ppt = new PptxGenJS();
-    ppt.defineLayout({ name: "A", width: pxW/96, height: pxH/96 });
-    ppt.layout = "A";
+    ppt.defineLayout({ name:"S", width:pxW/96, height:pxH/96 });
+    ppt.layout = "S";
 
     for (const item of DATA) {
         const slides = await createSlidesFromData(item, pxW, pxH, m);
-        for (const lines of slides) {
-            const img = await drawSlideImage(lines, pxW, pxH, m, $('qColor').value, $('optColor').value);
-            let slide = ppt.addSlide();
-            slide.addImage({ data: img, x: 0, y: 0, w: pxW/96, h: pxH/96 });
+        for (const slideLines of slides) {
+            const img = await drawSlideImage(slideLines, pxW, pxH, m, $('qColor').value, $('optColor').value);
+            let s = ppt.addSlide();
+            s.addImage({ data:img, x:0, y:0, w:pxW/96, h:pxH/96 });
         }
     }
-    ppt.writeFile({ fileName: "Dark_Presentation.pptx" });
+    ppt.writeFile({ fileName: "Flex_Presentation.pptx" });
 };
 
 $('bgImg').onchange = (e) => {
@@ -284,6 +254,5 @@ $('bgImg').onchange = (e) => {
 
 $('clearBtn').onclick = () => { DATA = []; $('jsonArea').value = ""; renderPreview(); };
 </script>
-
 </body>
 </html>
