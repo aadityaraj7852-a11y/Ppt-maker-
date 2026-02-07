@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Ultimate Flexible PPT Maker</title>
+<title>Continuous Flow PPT Maker</title>
 <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
@@ -25,14 +25,14 @@ textarea, input {
 
 .preview-container { background: #000; border-radius: 10px; border: 1px solid var(--border); height: 700px; overflow-y: auto; padding: 15px; }
 .slide-card { background: #0b1220; border: 1px solid #334; margin-bottom: 15px; padding: 20px; border-radius: 8px; }
-[contenteditable="true"] { outline: none; transition: 0.2s; }
-[contenteditable="true"]:focus { background: #1e293b; color: #fff; }
+[contenteditable="true"] { outline: none; transition: 0.2s; border: 1px transparent dashed; }
+[contenteditable="true"]:hover { border-color: #444; }
+[contenteditable="true"]:focus { background: #1e293b; color: #fff; border-color: var(--accent); }
 
-.preview-h1 { color: var(--accent); font-weight: bold; font-size: 1.5em; margin-bottom: 10px; }
-.preview-p { color: #fff; white-space: pre-wrap; font-size: 1.1em; margin-bottom: 10px; }
-.preview-li { color: #ccd6f6; margin-left: 15px; }
+.preview-h1 { color: var(--accent); font-weight: bold; font-size: 1.5em; margin-bottom: 8px; }
+.preview-p { color: #fff; white-space: pre-wrap; font-size: 1.1em; margin-bottom: 8px; }
+.preview-li { color: #ccd6f6; margin-left: 15px; display: block; }
 .preview-q { color: var(--accent); font-weight: bold; margin-top: 20px; border-top: 1px solid #223; padding-top: 10px; }
-.preview-opt { color: #fff; margin-left: 20px; }
 
 .row { display: flex; flex-wrap: wrap; gap: 20px; }
 .col { flex: 1; min-width: 350px; }
@@ -44,26 +44,26 @@ textarea, input {
 <div class="container">
     <div class="row">
         <div class="col card">
-            <h2 style="margin:0; color:var(--accent)">PPT Universal Maker</h2>
-            <label>JSON Input (किसी भी क्रम में डेटा डालें)</label>
-            <textarea id="jsonArea" rows="12" placeholder='[{"h1":"Title"}, {"list":["A","B"]}, {"content":"Text"}]'></textarea>
+            <h2 style="margin:0; color:var(--accent)">PPT Perfect Flow</h2>
+            <label>JSON Input</label>
+            <textarea id="jsonArea" rows="12" placeholder='[{"h1":"शीर्षक", "content":"नोट्स...", "list":["बिंदु 1"]}]'></textarea>
             
             <div class="btn-row">
-                <button id="importBtn" class="btn btn-grey">Import Data</button>
-                <button id="clearBtn" class="btn btn-red">Clear All</button>
+                <button id="importBtn" class="btn btn-grey">Import</button>
+                <button id="clearBtn" class="btn btn-red">Clear</button>
             </div>
 
-            <label>Settings</label>
+            <label>Margins</label>
             <div class="margin-grid">
                 <div><label>Top</label><input type="number" id="topM" value="90"></div>
-                <div><label>Bottom</label><input type="number" id="bottomM" value="60"></div>
+                <div><label>Bottom</label><input type="number" id="bottomM" value="70"></div>
                 <div><label>Left</label><input type="number" id="leftM" value="90"></div>
                 <div><label>Right</label><input type="number" id="rightM" value="90"></div>
             </div>
 
             <div class="margin-grid">
-                <div><label>Yellow Color</label><input type="color" id="qColor" value="#ffff00"></div>
-                <div><label>White Color</label><input type="color" id="optColor" value="#ffffff"></div>
+                <div><label>Heading/Q Color</label><input type="color" id="qColor" value="#ffff00"></div>
+                <div><label>Text Color</label><input type="color" id="optColor" value="#ffffff"></div>
             </div>
 
             <label>Background Image</label>
@@ -109,80 +109,100 @@ function renderPreview() {
     DATA.forEach((item, idx) => {
         const div = document.createElement("div");
         div.className = "slide-card";
-
         Object.keys(item).forEach(key => {
             const el = document.createElement("div");
             el.contentEditable = "true";
-            
             if(key === 'h1') {
                 el.className = "preview-h1"; el.innerText = item.h1;
                 el.onblur = (e) => DATA[idx].h1 = e.target.innerText;
+                div.appendChild(el);
             } else if(key === 'content') {
                 el.className = "preview-p"; el.innerText = item.content;
                 el.onblur = (e) => DATA[idx].content = e.target.innerText;
+                div.appendChild(el);
             } else if(key === 'list') {
-                el.innerHTML = item.list.map(li => `<div>• ${li}</div>`).join("");
-                el.onblur = (e) => {
-                    DATA[idx].list = e.target.innerText.split('\n').map(s => s.replace('• ', '').trim()).filter(s => s);
-                    renderPreview(); // refresh to fix dots
-                };
+                item.list.forEach((li, lIdx) => {
+                    const l = document.createElement("div");
+                    l.className = "preview-li"; l.contentEditable = "true";
+                    l.innerText = "• " + li;
+                    l.onblur = (e) => DATA[idx].list[lIdx] = e.target.innerText.replace("• ", "");
+                    div.appendChild(l);
+                });
             } else if(key === 'question') {
-                el.className = "preview-q"; el.innerText = "Q: " + item.question;
-                el.onblur = (e) => DATA[idx].question = e.target.innerText.replace("Q: ", "");
-            } else if(key === 'option' || key === 'options') {
-                let opts = item.option || item.options;
-                el.innerHTML = opts.map((o, i) => `<div>${i+1}. ${o}</div>`).join("");
-                el.onblur = (e) => {
-                    let newOpts = e.target.innerText.split('\n').map(s => s.replace(/^\d+\.\s*/, '').trim()).filter(s => s);
-                    if(item.option) DATA[idx].option = newOpts; else DATA[idx].options = newOpts;
-                };
+                const q = document.createElement("div");
+                q.className = "preview-q"; q.contentEditable = "true";
+                q.innerText = "Q: " + item.question;
+                q.onblur = (e) => DATA[idx].question = e.target.innerText.replace("Q: ", "");
+                div.appendChild(q);
+                let opts = item.option || item.options || [];
+                opts.forEach((o, oIdx) => {
+                    const op = document.createElement("div");
+                    op.style.marginLeft = "20px"; op.contentEditable = "true";
+                    op.innerText = `${oIdx + 1}. ${o}`;
+                    op.onblur = (e) => {
+                        let val = e.target.innerText.replace(/^\d+\.\s*/, '');
+                        if(item.option) DATA[idx].option[oIdx] = val; else DATA[idx].options[oIdx] = val;
+                    };
+                    div.appendChild(op);
+                });
             }
-            div.appendChild(el);
         });
         box.appendChild(div);
     });
 }
 
-async function createSlidesFromData(item, pxW, pxH, m) {
-    const slides = [];
-    let currentLines = [];
+// Logic to keep H1, P, and List together until margin hits
+async function createSlidesFromData(allData, pxW, pxH, m) {
+    const finalSlides = [];
+    let currentSlideLines = [];
     let currentY = m.top;
     const maxW = pxW - m.left - m.right;
     const maxY = pxH - m.bottom;
 
-    const addLine = (text, type) => {
+    const pushLine = (text, type) => {
         const font = (type === 'h1' || type === 'q') ? "bold 40px Kalam" : "30px Kalam";
         const lineH = (type === 'h1' || type === 'q') ? 52 : 42;
-        const neededH = getWrappedHeight(text, font, maxW, lineH) + 12;
+        const neededH = getWrappedHeight(text, font, maxW, lineH) + 10;
 
-        if (currentY + neededH > maxY && currentLines.length > 0) {
-            slides.push([...currentLines]);
-            currentLines = [];
+        // If hits margin, start new slide
+        if (currentY + neededH > maxY && currentSlideLines.length > 0) {
+            finalSlides.push([...currentSlideLines]);
+            currentSlideLines = [];
             currentY = m.top;
         }
-        currentLines.push({ text, type, font, lineH });
+        currentSlideLines.push({ text, type, font, lineH });
         currentY += neededH;
     };
 
-    // PROCESS KEYS IN THE EXACT ORDER THEY APPEAR IN JSON
-    Object.keys(item).forEach(key => {
-        if(key === 'h1' && item.h1) addLine(item.h1.toUpperCase(), 'h1');
-        if(key === 'content' && item.content) item.content.split('\n').forEach(l => addLine(l, 'p'));
-        if(key === 'list' && item.list) item.list.forEach(l => addLine("• " + l, 'li'));
-        
-        // If question appears inside the same object, it follows the order but usually we want it on a new slide
-        if(key === 'question' && item.question) {
-            if(currentLines.length > 0) { slides.push([...currentLines]); currentLines = []; currentY = m.top; }
-            addLine("Q. " + item.question, 'q');
+    allData.forEach(item => {
+        // If it's a Quiz, flush existing notes to a slide and start Quiz on New Slide
+        if (item.question) {
+            if (currentSlideLines.length > 0) {
+                finalSlides.push([...currentSlideLines]);
+                currentSlideLines = [];
+                currentY = m.top;
+            }
+            // Add Quiz
+            pushLine("Q. " + item.question, 'q');
             let opts = item.option || item.options || [];
-            opts.forEach((o, i) => addLine(`${i+1}. ${o}`, 'o'));
-            slides.push([...currentLines]);
-            currentLines = []; currentY = m.top;
+            opts.forEach((o, i) => pushLine(`${i+1}. ${o}`, 'o'));
+            
+            // Quiz always ends the slide
+            finalSlides.push([...currentSlideLines]);
+            currentSlideLines = [];
+            currentY = m.top;
+        } else {
+            // Notes handling (H1, Content, List in order)
+            Object.keys(item).forEach(key => {
+                if(key === 'h1') pushLine(item.h1.toUpperCase(), 'h1');
+                if(key === 'content') item.content.split('\n').forEach(l => pushLine(l, 'p'));
+                if(key === 'list') item.list.forEach(l => pushLine("• " + l, 'li'));
+            });
         }
     });
 
-    if (currentLines.length > 0) slides.push([...currentLines]);
-    return slides;
+    if (currentSlideLines.length > 0) finalSlides.push(currentSlideLines);
+    return finalSlides;
 }
 
 async function drawSlideImage(lines, pxW, pxH, m, qc, oc) {
@@ -195,9 +215,7 @@ async function drawSlideImage(lines, pxW, pxH, m, qc, oc) {
         let img = new Image(); img.src = BG;
         await new Promise(r => img.onload = r);
         ctx.drawImage(img, 0, 0, pxW, pxH);
-    } else {
-        ctx.fillStyle = "#000"; ctx.fillRect(0, 0, pxW, pxH);
-    }
+    } else { ctx.fillStyle = "#000"; ctx.fillRect(0, 0, pxW, pxH); }
 
     let y = m.top;
     const maxW = pxW - m.left - m.right;
@@ -206,14 +224,14 @@ async function drawSlideImage(lines, pxW, pxH, m, qc, oc) {
         ctx.fillStyle = (line.type === 'h1' || line.type === 'q') ? qc : oc;
         ctx.font = line.font;
         const words = line.text.split(" ");
-        let currentText = "";
+        let lineTxt = "";
         for (let w of words) {
-            let t = currentText + w + " ";
-            if (ctx.measureText(t).width > maxW && currentText !== "") {
-                ctx.fillText(currentText, m.left, y); y += line.lineH; currentText = w + " ";
-            } else currentText = t;
+            let t = lineTxt + w + " ";
+            if (ctx.measureText(t).width > maxW && lineTxt !== "") {
+                ctx.fillText(lineTxt, m.left, y); y += line.lineH; lineTxt = w + " ";
+            } else lineTxt = t;
         }
-        ctx.fillText(currentText, m.left, y);
+        ctx.fillText(lineTxt, m.left, y);
         y += line.lineH + 10;
     });
     return c.toDataURL("image/png");
@@ -228,22 +246,22 @@ $('importBtn').onclick = () => {
 };
 
 $('generateBtn').onclick = async () => {
-    if (DATA.length === 0) return alert("Import Data first!");
+    if (DATA.length === 0) return alert("No Data!");
     const pxW = 1300, pxH = 710;
     const m = { top:parseInt($('topM').value), bottom:parseInt($('bottomM').value), left:parseInt($('leftM').value), right:parseInt($('rightM').value) };
     const ppt = new PptxGenJS();
     ppt.defineLayout({ name:"S", width:pxW/96, height:pxH/96 });
     ppt.layout = "S";
 
-    for (const item of DATA) {
-        const slides = await createSlidesFromData(item, pxW, pxH, m);
-        for (const slideLines of slides) {
-            const img = await drawSlideImage(slideLines, pxW, pxH, m, $('qColor').value, $('optColor').value);
-            let s = ppt.addSlide();
-            s.addImage({ data:img, x:0, y:0, w:pxW/96, h:pxH/96 });
-        }
+    // GLOBAL PROCESSOR
+    const allSlides = await createSlidesFromData(DATA, pxW, pxH, m);
+    
+    for (const slideLines of allSlides) {
+        const img = await drawSlideImage(slideLines, pxW, pxH, m, $('qColor').value, $('optColor').value);
+        let s = ppt.addSlide();
+        s.addImage({ data:img, x:0, y:0, w:pxW/96, h:pxH/96 });
     }
-    ppt.writeFile({ fileName: "Flex_Presentation.pptx" });
+    ppt.writeFile({ fileName: "Study_Continuous.pptx" });
 };
 
 $('bgImg').onchange = (e) => {
