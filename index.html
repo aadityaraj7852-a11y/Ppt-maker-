@@ -3,280 +3,402 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Continuous Flow PPT Maker</title>
+<title>Ultimate PPT Maker - Pro Plus</title>
 <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
 <style>
-:root { --accent: #ffff00; --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; --border: #334155; }
-body{ font-family: 'Kalam', cursive; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
-.container { max-width: 1300px; margin: auto; }
-.card{ background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); }
-label{ color: #94a3b8; font-weight: 700; margin-top: 10px; display: block; }
-textarea, input { 
-    width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); 
-    background: #0f172a; color: #fff; font-family: 'Kalam', cursive; margin-top: 5px; box-sizing: border-box;
+/* --- CSS Variables & Themes --- */
+:root { 
+    --accent: #ffeb3b; --sub-accent: #00e676; --h3-accent: #00bcd4; --bold-color: #ff9800; --btn-blue: #2563eb; 
+    --bg-main: #0f172a; --card-bg: #1e293b; --text-main: #f8fafc; --text-muted: #94a3b8;
+    --border: #334155; --input-bg: #0b1220; --slide-bg: #000000;
 }
+
+body.light-mode {
+    --accent: #d97706; --sub-accent: #16a34a; --h3-accent: #0284c7; --bold-color: #dc2626; --btn-blue: #1d4ed8;
+    --bg-main: #f1f5f9; --card-bg: #ffffff; --text-main: #0f172a; --text-muted: #475569;
+    --border: #cbd5e1; --input-bg: #f8fafc; --slide-bg: #ffffff;
+}
+
+body { font-family: 'Kalam', cursive; background: var(--bg-main); color: var(--text-main); margin: 0; padding: 20px; transition: background 0.3s, color 0.3s; }
+
+.main-wrapper { display: flex; gap: 30px; max-width: 1600px; margin: auto; align-items: flex-start; }
+.left-panel { flex: 0 0 500px; background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: sticky; top: 20px; max-height: calc(100vh - 40px); overflow-y: auto; }
+.right-panel { flex: 1; background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.1); min-height: calc(100vh - 40px); }
+
+@media (max-width: 1050px) { .main-wrapper { flex-direction: column; } .left-panel { position: static; flex: auto; width: 100%; max-height: none; } }
+
+.header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid var(--border); padding-bottom: 15px; }
+.header-row h2 { margin: 0; color: var(--accent); font-size: 2em; }
+.theme-btn { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border); padding: 8px 15px; border-radius: 8px; cursor: pointer; font-family: 'Kalam'; font-weight: bold; transition: 0.3s; }
+
+label { color: var(--text-muted); font-weight: 700; margin-top: 15px; display: block; font-size: 1.1em; }
+textarea, input[type="number"], select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text-main); font-family: 'Kalam', cursive; margin-top: 5px; box-sizing: border-box; font-size: 1.1em; }
+textarea:focus, input:focus, select:focus { outline: none; border-color: var(--accent); }
+input[type="color"] { width: 100%; height: 40px; padding: 2px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; background: var(--input-bg); }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
+.grid-5 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 5px; }
+
 .btn-row { display: flex; gap: 10px; margin-top: 15px; }
-.btn{ flex: 1; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Kalam', cursive; font-weight: 700; transition: 0.2s; }
-.btn-blue{ background: #2563eb; color: #fff; }
-.btn-red{ background: #e11d48; color: #fff; }
-.btn-grey{ background: #475569; color: #fff; }
+.btn { flex: 1; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Kalam', cursive; font-weight: 700; font-size: 1.1em; transition: 0.2s; color: #fff; }
+.btn:hover { opacity: 0.9; transform: translateY(-2px); }
+.btn-blue { background: var(--btn-blue); }
+.btn-red { background: #e11d48; }
+.btn-grey { background: #475569; }
+.btn-generate { background: linear-gradient(135deg, #10b981, #059669); font-size: 1.3em; padding: 15px; margin-top: 20px; width: 100%; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
 
-.preview-container { background: #000; border-radius: 10px; border: 1px solid var(--border); height: 700px; overflow-y: auto; padding: 15px; }
-.slide-card { background: #0b1220; border: 1px solid #334; margin-bottom: 15px; padding: 20px; border-radius: 8px; }
-[contenteditable="true"] { outline: none; transition: 0.2s; border: 1px transparent dashed; }
-[contenteditable="true"]:hover { border-color: #444; }
-[contenteditable="true"]:focus { background: #1e293b; color: #fff; border-color: var(--accent); }
+.preview-list { display: flex; flex-direction: column; gap: 30px; }
+.slide-card { background-color: var(--slide-bg); background-size: cover !important; background-position: center !important; border: 2px solid var(--border); padding: 30px; border-radius: 8px; position: relative; aspect-ratio: 16 / 9; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); overflow: hidden; display: flex; flex-direction: column; }
+.slide-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 0; }
+body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
+.slide-content { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; }
 
-.preview-h1 { color: var(--accent); font-weight: bold; font-size: 1.5em; margin-bottom: 8px; }
-.preview-p { color: #fff; white-space: pre-wrap; font-size: 1.1em; margin-bottom: 8px; }
-.preview-li { color: #ccd6f6; margin-left: 15px; display: block; }
-.preview-q { color: var(--accent); font-weight: bold; margin-top: 20px; border-top: 1px solid #223; padding-top: 10px; }
+[contenteditable="true"] { outline: none; border: 1px dashed transparent; transition: 0.2s; }
+[contenteditable="true"]:hover { border-color: rgba(150,150,150,0.5); background: rgba(128,128,128,0.1); }
 
-.row { display: flex; flex-wrap: wrap; gap: 20px; }
-.col { flex: 1; min-width: 350px; }
-.margin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.p-h1 { color: var(--accent); font-size: 2.2em; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid rgba(150,150,150,0.3); padding-bottom: 5px; }
+.p-h2 { color: var(--sub-accent); font-size: 1.6em; font-weight: bold; margin-bottom: 8px; }
+.p-h3 { color: var(--h3-accent); font-size: 1.4em; font-weight: bold; margin-bottom: 8px; }
+.p-text, .p-li { font-size: 1.3em; margin-bottom: 8px; line-height: 1.5; white-space: pre-wrap; color: var(--text-main); }
+.p-q { color: var(--accent); font-size: 1.6em; font-weight: bold; margin-top: 10px; }
+
+/* Image Options & Drop Area */
+.img-controls { margin-top: auto; display: flex; gap: 10px; align-items: center; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 6px; }
+body.light-mode .img-controls { background: rgba(0,0,0,0.05); }
+.image-drop-area { border: 2px dashed rgba(150,150,150,0.5); border-radius: 8px; background: rgba(128,128,128,0.1); height: 100px; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; transition: 0.3s; flex: 1; }
+.image-drop-area:hover { border-color: var(--accent); }
+.image-drop-area span { color: var(--text-muted); font-size: 1em; pointer-events: none; font-weight: bold; }
+.image-drop-area img { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; z-index: 1; }
+.remove-img-btn { position: absolute; top: 5px; right: 5px; background: #e11d48; color: white; border: none; border-radius: 5px; padding: 4px 8px; cursor: pointer; z-index: 2; font-family: 'Kalam'; font-size: 0.8em; }
+
 </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="row">
-        <div class="col card">
-            <h2 style="margin:0; color:var(--accent)">PPT Perfect Flow</h2>
-            <label>JSON Input</label>
-            <textarea id="jsonArea" rows="12" placeholder='[{"h1":"शीर्षक", "content":"नोट्स...", "list":["बिंदु 1"]}]'></textarea>
-            
-            <div class="btn-row">
-                <button id="importBtn" class="btn btn-grey">Import</button>
-                <button id="clearBtn" class="btn btn-red">Clear</button>
-            </div>
-
-            <label>Margins</label>
-            <div class="margin-grid">
-                <div><label>Top</label><input type="number" id="topM" value="90"></div>
-                <div><label>Bottom</label><input type="number" id="bottomM" value="70"></div>
-                <div><label>Left</label><input type="number" id="leftM" value="90"></div>
-                <div><label>Right</label><input type="number" id="rightM" value="90"></div>
-            </div>
-
-            <div class="margin-grid">
-                <div><label>Heading/Q Color</label><input type="color" id="qColor" value="#ffff00"></div>
-                <div><label>Text Color</label><input type="color" id="optColor" value="#ffffff"></div>
-            </div>
-
-            <label>Background Image</label>
-            <input type="file" id="bgImg" accept="image/*">
-
-            <button id="generateBtn" class="btn btn-blue" style="margin-top:20px; width:100%; font-size:1.2em;">Generate PPTX</button>
+<div class="main-wrapper">
+    <div class="left-panel">
+        <div class="header-row">
+            <h2>🎓 Pro PPT Maker</h2>
+            <button id="themeToggle" class="theme-btn">🌙 Dark Mode</button>
         </div>
 
-        <div class="col">
-            <label>Editable Preview</label>
-            <div id="preview" class="preview-container"></div>
+        <label>JSON Data Input</label>
+        <textarea id="jsonArea" rows="6" placeholder='[{"h1":"Main", "h3":"Sub", "content":"Notes with <b>Bold Text</b>..."}]'></textarea>
+        
+        <div class="btn-row">
+            <button id="importBtn" class="btn btn-grey">📥 Import & Load</button>
+            <button id="clearBtn" class="btn btn-red">🗑️ Clear All</button>
         </div>
+
+        <label>Slide Margins (px)</label>
+        <div class="grid-4">
+            <div><label style="margin-top:5px; font-size:0.9em;">Top</label><input type="number" id="topM" value="110"></div>
+            <div><label style="margin-top:5px; font-size:0.9em;">Bottom</label><input type="number" id="bottomM" value="70"></div>
+            <div><label style="margin-top:5px; font-size:0.9em;">Left</label><input type="number" id="leftM" value="90"></div>
+            <div><label style="margin-top:5px; font-size:0.9em;">Right</label><input type="number" id="rightM" value="90"></div>
+        </div>
+
+        <label>Text Colors (H1, H2, H3, Bold, Normal)</label>
+        <div class="grid-5">
+            <div><label style="margin-top:5px; font-size:0.8em;">H1</label><input type="color" id="h1Color" value="#ffeb3b"></div>
+            <div><label style="margin-top:5px; font-size:0.8em;">H2</label><input type="color" id="h2Color" value="#00e676"></div>
+            <div><label style="margin-top:5px; font-size:0.8em;">H3</label><input type="color" id="h3Color" value="#00bcd4"></div>
+            <div><label style="margin-top:5px; font-size:0.8em;"><b>Bold</b></label><input type="color" id="boldColor" value="#ff9800"></div>
+            <div><label style="margin-top:5px; font-size:0.8em;">Normal</label><input type="color" id="optColor" value="#ffffff"></div>
+        </div>
+
+        <label>Master Background Setup</label>
+        <select id="bgSelect">
+            <option value="none" selected>No Background (Solid Color)</option>
+            <option value="default1">Default Image 1 (Yellow Theme)</option>
+            <option value="default2">Default Image 2 (Blue Theme)</option>
+            <option value="custom">Upload Custom Background...</option>
+        </select>
+        <input type="file" id="bgImgUpload" accept="image/*" style="display:none; margin-top:10px;">
+
+        <button id="generateBtn" class="btn btn-generate">💾 Generate PPTX File</button>
+    </div>
+
+    <div class="right-panel">
+        <h3 style="margin-top:0; color:var(--text-main); font-size:1.8em; border-bottom:1px solid var(--border); padding-bottom:10px;">👁️ Live Slide Preview</h3>
+        <p style="color:var(--text-muted); font-size:1em; margin-top:-5px;">Note: Write <b>&lt;b&gt;word&lt;/b&gt;</b> in text to make it bold & colored in Final PPTX.</p>
+        <div id="preview" class="preview-list"></div>
     </div>
 </div>
 
 <script>
 const $ = id => document.getElementById(id);
 let DATA = [];
-let BG = null;
+let isLightMode = false;
+let customBgDataUrl = null;
 
-const calcCanvas = document.createElement("canvas");
-const calcCtx = calcCanvas.getContext("2d");
+// Theme Logic
+$('themeToggle').onclick = () => {
+    isLightMode = !isLightMode;
+    document.body.classList.toggle('light-mode', isLightMode);
+    $('themeToggle').innerText = isLightMode ? "☀️ Light Mode" : "🌙 Dark Mode";
+    if(isLightMode && $('optColor').value === "#ffffff") $('optColor').value = "#000000";
+    else if(!isLightMode && $('optColor').value === "#000000") $('optColor').value = "#ffffff";
+    saveState(); renderPreview();
+};
 
-function getWrappedHeight(text, font, maxW, lineH) {
-    calcCtx.font = font;
-    // Split by manual line breaks first
-    const paragraphs = text.split("\n");
-    let totalHeight = 0;
+const defaultImg1 = "https://blogger.googleusercontent.com/img/a/AVvXsEglEH5N9CdXH5F3qcRU9elRqBnLtC5_9Lhz-j_dBi9hYBCK1oBC88Vthv4uS0e5yMl2FsXPjbhxs9KLqI2Xtzs6S7FpxIRLb2PBzYUNJ5y_MnaNDQUHJE7PnnXlFvtN7XriHTUhs7P3rHCwobRgRBdJxoio0N7rDoc4vhiAlC1pW2QdgkSu62VZK1Hf2aI=s1280";
+const defaultImg2 = "https://blogger.googleusercontent.com/img/a/AVvXsEhZ4Fw8Xl52IHLZQRVn5u8z3UuTjlVkhKD6MLEIpJtwZj0ZFe3230Yfzaw5AAO_m406K4whQuP7Va_w8l16_JoT3Mbkw811x3kMHm_pKmzAvj44_19ICmPZQQAF430R6Awe0Vhgm-DHOgaWhoZf0o1Tl0lJwOC6JX5n1ZsgfBVgT5Qgmv4kd-DebHbyTiw=s1280";
 
-    paragraphs.forEach(para => {
-        const words = para.split(" ");
-        let line = "";
-        let linesCount = 0;
-        for (let w of words) {
-            let t = line + w + " ";
-            if (calcCtx.measureText(t).width > maxW && line !== "") {
-                linesCount++;
-                line = w + " ";
-            } else line = t;
-        }
-        linesCount++; 
-        totalHeight += linesCount * lineH;
-    });
-    return totalHeight;
+function getBgUrl() {
+    let val = $('bgSelect').value;
+    if(val === 'default1') return defaultImg1;
+    if(val === 'default2') return defaultImg2;
+    if(val === 'custom') return customBgDataUrl;
+    return null;
+}
+
+$('bgSelect').onchange = (e) => {
+    if(e.target.value === 'custom') $('bgImgUpload').style.display = 'block';
+    else $('bgImgUpload').style.display = 'none';
+    renderPreview(); saveState();
+};
+
+$('bgImgUpload').onchange = (e) => {
+    const reader = new FileReader();
+    reader.onload = () => { customBgDataUrl = reader.result; renderPreview(); saveState(); };
+    if(e.target.files[0]) reader.readAsDataURL(e.target.files[0]);
+};
+
+function saveState() {
+    const state = {
+        data: DATA, margins: { t: $('topM').value, b: $('bottomM').value, l: $('leftM').value, r: $('rightM').value },
+        colors: { h1: $('h1Color').value, h2: $('h2Color').value, h3: $('h3Color').value, bold: $('boldColor').value, opt: $('optColor').value },
+        bg: $('bgSelect').value, theme: isLightMode, customBg: customBgDataUrl
+    };
+    localStorage.setItem('proPptStatePlus', JSON.stringify(state));
+}
+
+function loadState() {
+    const saved = localStorage.getItem('proPptStatePlus');
+    if(saved) {
+        const state = JSON.parse(saved); DATA = state.data || [];
+        $('jsonArea').value = DATA.length ? JSON.stringify(DATA, null, 2) : "";
+        $('topM').value = state.margins.t; $('bottomM').value = state.margins.b; $('leftM').value = state.margins.l; $('rightM').value = state.margins.r;
+        $('h1Color').value = state.colors.h1; $('h2Color').value = state.colors.h2; 
+        if(state.colors.h3) $('h3Color').value = state.colors.h3; if(state.colors.bold) $('boldColor').value = state.colors.bold;
+        $('optColor').value = state.colors.opt;
+        $('bgSelect').value = state.bg;
+        customBgDataUrl = state.customBg || null;
+        if(state.bg === 'custom') $('bgImgUpload').style.display = 'block';
+        
+        isLightMode = state.theme || false;
+        if(isLightMode) { document.body.classList.add('light-mode'); $('themeToggle').innerText = "☀️ Light Mode"; }
+    }
+    renderPreview();
+}
+
+['topM', 'bottomM', 'leftM', 'rightM', 'h1Color', 'h2Color', 'h3Color', 'boldColor', 'optColor'].forEach(id => {
+    $(id).addEventListener('change', () => { renderPreview(); saveState(); });
+});
+
+$('importBtn').onclick = () => { try { const raw = JSON.parse($('jsonArea').value); DATA = Array.isArray(raw) ? raw : [raw]; renderPreview(); saveState(); } catch (e) { alert("Invalid JSON Code!"); } };
+$('clearBtn').onclick = () => { if(confirm("Clear all slides?")) { DATA = []; $('jsonArea').value = ""; localStorage.removeItem('proPptStatePlus'); renderPreview(); } };
+
+// Function to fake-render <b> in preview without breaking contenteditable easily
+function formatPreviewText(text, boldHex) {
+    if(!text) return "";
+    return text.replace(/<b>(.*?)<\/b>/g, `<span style="color:${boldHex}; font-weight:bold;">&lt;b&gt;$1&lt;/b&gt;</span>`);
 }
 
 function renderPreview() {
-    const box = $("preview");
-    box.innerHTML = "";
+    const box = $("preview"); box.innerHTML = "";
+    if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted);'>No data. Please import JSON code.</p>"; return; }
+
+    const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
+    const bgUrl = getBgUrl();
+
     DATA.forEach((item, idx) => {
-        const div = document.createElement("div");
-        div.className = "slide-card";
-        Object.keys(item).forEach(key => {
-            const el = document.createElement("div");
-            el.contentEditable = "true";
-            if(key === 'h1') {
-                el.className = "preview-h1"; el.innerText = item.h1;
-                el.onblur = (e) => DATA[idx].h1 = e.target.innerText;
-                div.appendChild(el);
-            } else if(key === 'content') {
-                el.className = "preview-p"; el.innerText = item.content;
-                el.onblur = (e) => DATA[idx].content = e.target.innerText;
-                div.appendChild(el);
-            } else if(key === 'list') {
-                item.list.forEach((li, lIdx) => {
-                    const l = document.createElement("div");
-                    l.className = "preview-li"; l.contentEditable = "true";
-                    l.innerText = "• " + li;
-                    l.onblur = (e) => DATA[idx].list[lIdx] = e.target.innerText.replace("• ", "");
-                    div.appendChild(l);
-                });
-            } else if(key === 'question') {
-                const q = document.createElement("div");
-                q.className = "preview-q"; q.contentEditable = "true";
-                q.innerText = "Q: " + item.question;
-                q.onblur = (e) => DATA[idx].question = e.target.innerText.replace("Q: ", "");
-                div.appendChild(q);
-                let opts = item.option || item.options || [];
-                opts.forEach((o, oIdx) => {
-                    const op = document.createElement("div");
-                    op.style.marginLeft = "20px"; op.contentEditable = "true";
-                    op.innerText = `${oIdx + 1}. ${o}`;
-                    op.onblur = (e) => {
-                        let val = e.target.innerText.replace(/^\d+\.\s*/, '');
-                        if(item.option) DATA[idx].option[oIdx] = val; else DATA[idx].options[oIdx] = val;
-                    };
-                    div.appendChild(op);
-                });
-            }
-        });
-        box.appendChild(div);
-    });
-}
+        const div = document.createElement("div"); div.className = "slide-card";
+        if(bgUrl) div.style.background = `url('${bgUrl}')`; else div.style.backgroundColor = isLightMode ? "#ffffff" : "#000000";
 
-async function createSlidesFromData(allData, pxW, pxH, m) {
-    const finalSlides = [];
-    let currentSlideLines = [];
-    let currentY = m.top;
-    const maxW = pxW - m.left - m.right;
-    const maxY = pxH - m.bottom;
-
-    const pushLine = (text, type) => {
-        const font = (type === 'h1' || type === 'q') ? "bold 40px Kalam" : "30px Kalam";
-        const lineH = (type === 'h1' || type === 'q') ? 52 : 42;
-        const neededH = getWrappedHeight(text, font, maxW, lineH) + 10;
-
-        if (currentY + neededH > maxY && currentSlideLines.length > 0) {
-            finalSlides.push([...currentSlideLines]);
-            currentSlideLines = [];
-            currentY = m.top;
-        }
-        currentSlideLines.push({ text, type, font, lineH });
-        currentY += neededH;
-    };
-
-    allData.forEach(item => {
-        if (item.question) {
-            if (currentSlideLines.length > 0) {
-                finalSlides.push([...currentSlideLines]);
-                currentSlideLines = [];
-                currentY = m.top;
-            }
-            pushLine("Q. " + item.question, 'q');
-            let opts = item.option || item.options || [];
-            opts.forEach((o, i) => pushLine(`${i+1}. ${o}`, 'o'));
-            
-            finalSlides.push([...currentSlideLines]);
-            currentSlideLines = [];
-            currentY = m.top;
-        } else {
-            Object.keys(item).forEach(key => {
-                if(key === 'h1') pushLine(item.h1.toUpperCase(), 'h1');
-                if(key === 'content') item.content.split('\n').forEach(l => pushLine(l, 'p'));
-                if(key === 'list') item.list.forEach(l => pushLine("• " + l, 'li'));
-            });
-        }
-    });
-
-    if (currentSlideLines.length > 0) finalSlides.push(currentSlideLines);
-    return finalSlides;
-}
-
-async function drawSlideImage(lines, pxW, pxH, m, qc, oc) {
-    const c = document.createElement("canvas");
-    c.width = pxW; c.height = pxH;
-    const ctx = c.getContext("2d");
-    await document.fonts.load("30px Kalam");
-
-    if (BG) {
-        let img = new Image(); img.src = BG;
-        await new Promise(r => img.onload = r);
-        ctx.drawImage(img, 0, 0, pxW, pxH);
-    } else { ctx.fillStyle = "#000"; ctx.fillRect(0, 0, pxW, pxH); }
-
-    let y = m.top;
-    const maxW = pxW - m.left - m.right;
-
-    lines.forEach(line => {
-        ctx.fillStyle = (line.type === 'h1' || line.type === 'q') ? qc : oc;
-        ctx.font = line.font;
+        const contentWrap = document.createElement("div"); contentWrap.className = "slide-content";
         
-        // Split by manual line breaks \n
-        const paras = line.text.split("\n");
-        paras.forEach(para => {
-            const words = para.split(" ");
-            let lineTxt = "";
-            for (let w of words) {
-                let t = lineTxt + w + " ";
-                if (ctx.measureText(t).width > maxW && lineTxt !== "") {
-                    ctx.fillText(lineTxt, m.left, y); y += line.lineH; lineTxt = w + " ";
-                } else lineTxt = t;
+        Object.keys(item).forEach(key => {
+            if(key === 'image' || key === 'imgPos') return;
+            const el = document.createElement("div"); el.contentEditable = "true";
+            
+            if(key === 'h1') { el.className = "p-h1"; el.innerText = item.h1; el.style.color = h1c; el.onblur = e => { DATA[idx].h1 = e.target.innerText; saveState(); }; contentWrap.appendChild(el); }
+            else if(key === 'h2') { el.className = "p-h2"; el.innerText = item.h2; el.style.color = h2c; el.onblur = e => { DATA[idx].h2 = e.target.innerText; saveState(); }; contentWrap.appendChild(el); }
+            else if(key === 'h3') { el.className = "p-h3"; el.innerText = item.h3; el.style.color = h3c; el.onblur = e => { DATA[idx].h3 = e.target.innerText; saveState(); }; contentWrap.appendChild(el); }
+            else if(key === 'content') { el.className = "p-text"; el.innerHTML = formatPreviewText(item.content, bc); el.style.color = oc; el.onblur = e => { DATA[idx].content = e.target.innerText; saveState(); }; contentWrap.appendChild(el); }
+            else if(key === 'list') {
+                item.list.forEach((li, lIdx) => { const l = document.createElement("div"); l.className = "p-li"; l.contentEditable = "true"; l.style.color = oc; l.innerHTML = "• " + formatPreviewText(li, bc); l.onblur = e => { DATA[idx].list[lIdx] = e.target.innerText.replace("• ", ""); saveState(); }; contentWrap.appendChild(l); });
             }
-            ctx.fillText(lineTxt, m.left, y);
-            y += line.lineH;
+            else if(key === 'question') {
+                const q = document.createElement("div"); q.className = "p-q"; q.contentEditable = "true"; q.style.color = h1c; q.innerHTML = "Q. " + formatPreviewText(item.question, bc); q.onblur = e => { DATA[idx].question = e.target.innerText.replace(/^Q\.\s*/, ""); saveState(); }; contentWrap.appendChild(q);
+                let opts = item.option || item.options || [];
+                opts.forEach((o, oIdx) => { const op = document.createElement("div"); op.className = "p-text"; op.style.marginLeft = "20px"; op.contentEditable = "true"; op.style.color = oc; op.innerHTML = `${oIdx + 1}. ` + formatPreviewText(o, bc); op.onblur = e => { let val = e.target.innerText.replace(/^\d+\.\s*/, ''); if(item.option) DATA[idx].option[oIdx] = val; else DATA[idx].options[oIdx] = val; saveState(); }; contentWrap.appendChild(op); });
+            }
         });
-        y += 10; // Extra spacing between objects
-    });
-    return c.toDataURL("image/png");
-}
 
-$('importBtn').onclick = () => {
-    try {
-        const raw = JSON.parse($('jsonArea').value);
-        DATA = Array.isArray(raw) ? raw : [raw];
-        renderPreview();
-    } catch (e) { alert("Invalid JSON!"); }
-};
+        // Image Controls
+        const imgControls = document.createElement("div"); imgControls.className = "img-controls";
+        
+        const posSel = document.createElement("select");
+        posSel.innerHTML = `<option value="bottom" ${item.imgPos==='bottom'?'selected':''}>Pos: Bottom Center</option>
+                            <option value="top-right" ${item.imgPos==='top-right'?'selected':''}>Pos: Top Right</option>
+                            <option value="top-left" ${item.imgPos==='top-left'?'selected':''}>Pos: Top Left</option>`;
+        posSel.style.width = "180px"; posSel.style.padding = "5px"; posSel.style.margin = "0";
+        posSel.onchange = (e) => { DATA[idx].imgPos = e.target.value; renderPreview(); saveState(); };
+        imgControls.appendChild(posSel);
+
+        const imgBox = document.createElement("div"); imgBox.className = "image-drop-area";
+        const fileIn = document.createElement("input"); fileIn.type = "file"; fileIn.accept = "image/*"; fileIn.style.display = "none";
+        fileIn.onchange = (e) => { const reader = new FileReader(); reader.onload = () => { DATA[idx].image = reader.result; renderPreview(); saveState(); }; if(e.target.files[0]) reader.readAsDataURL(e.target.files[0]); };
+        imgBox.onclick = () => fileIn.click();
+
+        if(item.image) {
+            const img = document.createElement("img"); img.src = item.image; imgBox.appendChild(img);
+            const rmBtn = document.createElement("button"); rmBtn.className = "remove-img-btn"; rmBtn.innerText = "✖ Remove";
+            rmBtn.onclick = (e) => { e.stopPropagation(); delete DATA[idx].image; renderPreview(); saveState(); };
+            imgBox.appendChild(rmBtn);
+        } else { imgBox.innerHTML = "<span>🖼️ Click to Add Image</span>"; }
+
+        imgControls.appendChild(imgBox); imgControls.appendChild(fileIn);
+        contentWrap.appendChild(imgControls);
+        div.appendChild(contentWrap); box.appendChild(div);
+    });
+}
 
 $('generateBtn').onclick = async () => {
-    if (DATA.length === 0) return alert("No Data!");
-    const pxW = 1300, pxH = 710;
-    const m = { top:parseInt($('topM').value), bottom:parseInt($('bottomM').value), left:parseInt($('leftM').value), right:parseInt($('rightM').value) };
-    const ppt = new PptxGenJS();
-    ppt.defineLayout({ name:"S", width:pxW/96, height:pxH/96 });
-    ppt.layout = "S";
+    if (DATA.length === 0) return alert("No Data! Please import JSON first.");
+    const btn = $('generateBtn'); btn.innerHTML = "⏳ Generating PPTX... Please wait"; btn.disabled = true;
 
-    const allSlides = await createSlidesFromData(DATA, pxW, pxH, m);
-    
-    for (const slideLines of allSlides) {
-        const img = await drawSlideImage(slideLines, pxW, pxH, m, $('qColor').value, $('optColor').value);
-        let s = ppt.addSlide();
-        s.addImage({ data:img, x:0, y:0, w:pxW/96, h:pxH/96 });
-    }
-    ppt.writeFile({ fileName: "Study_Continuous.pptx" });
+    setTimeout(async () => {
+        const pxW = 1300, pxH = 710;
+        const m = { top:parseInt($('topM').value), bottom:parseInt($('bottomM').value), left:parseInt($('leftM').value), right:parseInt($('rightM').value) };
+        const ppt = new PptxGenJS(); ppt.defineLayout({ name:"S", width:pxW/96, height:pxH/96 }); ppt.layout = "S";
+
+        for (const item of DATA) {
+            let s = ppt.addSlide();
+            const c = document.createElement("canvas"); c.width = pxW; c.height = pxH; const ctx = c.getContext("2d");
+            await document.fonts.load("30px Kalam"); await document.fonts.load("bold 30px Kalam"); 
+            await document.fonts.load("bold 34px Kalam"); await document.fonts.load("bold 44px Kalam");
+
+            let bgUrl = getBgUrl();
+            if (bgUrl) {
+                try { let img = new Image(); img.crossOrigin = "Anonymous"; img.src = bgUrl; await new Promise((res, rej) => { img.onload = res; img.onerror = rej; }); ctx.drawImage(img, 0, 0, pxW, pxH); } 
+                catch(e) { ctx.fillStyle = isLightMode ? "#ffffff" : "#000000"; ctx.fillRect(0, 0, pxW, pxH); }
+            } else { ctx.fillStyle = isLightMode ? "#ffffff" : "#000000"; ctx.fillRect(0, 0, pxW, pxH); }
+
+            let y = m.top; const maxW = pxW - m.left - m.right;
+            const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
+
+            // --- Corner Image Logic ---
+            let cornerBox = null;
+            let currentImgPos = item.imgPos || 'bottom';
+            if (item.image && (currentImgPos === 'top-left' || currentImgPos === 'top-right')) {
+                let simg = new Image(); simg.src = item.image; await new Promise(r => simg.onload = r);
+                let maxCW = 220; let maxCH = 180; // Corner image max dimensions
+                let ratio = Math.min(maxCW / simg.width, maxCH / simg.height);
+                let fw = simg.width * ratio; let fh = simg.height * ratio;
+                let fx = currentImgPos === 'top-left' ? m.left : (pxW - m.right - fw);
+                let fy = m.top;
+                cornerBox = {x: fx, y: fy, w: fw, h: fh};
+                ctx.drawImage(simg, fx, fy, fw, fh);
+            }
+
+            // --- Smart Text Drawing with Inline Bold & Wrapping ---
+            const drawSmartText = (text, normalFont, boldFont, normalCol, boldCol, lineH) => {
+                const paras = text.split("\n");
+                paras.forEach(para => {
+                    if(!para) { y += lineH; return; }
+                    
+                    // Parse <b> tags
+                    let parts = para.split(/(<b>.*?<\/b>)/g);
+                    let words = [];
+                    parts.forEach(part => {
+                        if(part.startsWith('<b>') && part.endsWith('</b>')) {
+                            part.slice(3, -4).split(' ').forEach(w => { if(w) words.push({t: w, b: true}); });
+                        } else {
+                            part.split(' ').forEach(w => { if(w) words.push({t: w, b: false}); });
+                        }
+                    });
+
+                    let currentX = m.left;
+                    let lineMaxW = maxW;
+
+                    // Check Collision with Corner Image
+                    const updateCollision = () => {
+                        currentX = m.left; lineMaxW = maxW;
+                        if (cornerBox && y < cornerBox.y + cornerBox.h + 10) {
+                            if (currentImgPos === 'top-left') {
+                                currentX = cornerBox.x + cornerBox.w + 25; // 25px extra margin from image
+                                lineMaxW = pxW - m.right - currentX;
+                            } else if (currentImgPos === 'top-right') {
+                                lineMaxW = cornerBox.x - m.left - 25;
+                            }
+                        }
+                    };
+
+                    updateCollision();
+
+                    for(let i=0; i<words.length; i++) {
+                        let w = words[i];
+                        ctx.font = w.b ? boldFont : normalFont;
+                        ctx.fillStyle = w.b ? boldCol : normalCol;
+                        let metric = ctx.measureText(w.t + " ");
+
+                        if (currentX + metric.width > m.left + lineMaxW && currentX !== m.left) {
+                            y += lineH;
+                            updateCollision(); // Recalculate if we moved to a new line
+                        }
+                        ctx.fillText(w.t + " ", currentX, y);
+                        currentX += metric.width;
+                    }
+                    y += lineH;
+                });
+            };
+
+            // Draw All Fields
+            Object.keys(item).forEach(key => {
+                if(key === 'image' || key === 'imgPos') return;
+                
+                if(key==='h1'){ drawSmartText(item.h1, "bold 44px Kalam", "bold 44px Kalam", h1c, h1c, 56); y+=10; }
+                else if(key==='h2'){ drawSmartText(item.h2, "bold 34px Kalam", "bold 34px Kalam", h2c, h2c, 46); y+=5; }
+                else if(key==='h3'){ drawSmartText(item.h3, "bold 28px Kalam", "bold 28px Kalam", h3c, h3c, 38); y+=5; }
+                else if(key==='content'){ drawSmartText(item.content, "30px Kalam", "bold 30px Kalam", oc, bc, 42); y+=5; }
+                else if(key==='list'){ item.list.forEach(li => drawSmartText("• " + li, "30px Kalam", "bold 30px Kalam", oc, bc, 42)); y+=5; }
+                else if(key==='question'){ 
+                    drawSmartText("Q. " + item.question, "bold 44px Kalam", "bold 44px Kalam", h1c, h1c, 50); y+=10;
+                    let opts = item.option || item.options || []; 
+                    opts.forEach((o, i) => {
+                        // Options are drawn with indent
+                        let tempLeft = m.left; m.left += 20; 
+                        drawSmartText(`${i+1}. ${o}`, "30px Kalam", "bold 30px Kalam", oc, bc, 42);
+                        m.left = tempLeft;
+                    });
+                }
+            });
+
+            // Draw Bottom Image if Pos is Bottom
+            if (item.image && currentImgPos === 'bottom') {
+                let simg = new Image(); simg.src = item.image; await new Promise(r => simg.onload = r);
+                let availableH = pxH - m.bottom - y;
+                if(availableH > 50) { 
+                    let ratio = Math.min(maxW / simg.width, availableH / simg.height);
+                    let finalW = simg.width * ratio; let finalH = simg.height * ratio;
+                    let x = m.left + (maxW - finalW) / 2; let imgY = y + (availableH - finalH) / 2;
+                    ctx.drawImage(simg, x, imgY, finalW, finalH);
+                }
+            }
+            s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
+        }
+        ppt.writeFile({ fileName: "Coaching_Pro_Master.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
+    }, 100);
 };
 
-$('bgImg').onchange = (e) => {
-    const reader = new FileReader();
-    reader.onload = () => BG = reader.result;
-    reader.readAsDataURL(e.target.files[0]);
-};
-
-$('clearBtn').onclick = () => { DATA = []; $('jsonArea').value = ""; renderPreview(); };
+window.onload = () => loadState();
 </script>
 </body>
 </html>
