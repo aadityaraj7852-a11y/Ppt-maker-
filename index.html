@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Ultimate PPT Maker - Pro Plus (Bug Fixed)</title>
+<title>Ultimate PPT Maker - Pro Plus Plus</title>
 <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
@@ -12,23 +12,58 @@
 :root { 
     --accent: #ffeb3b; --sub-accent: #00e676; --h3-accent: #00bcd4; --bold-color: #ff9800; --btn-blue: #2563eb; 
     --bg-main: #0f172a; --card-bg: #1e293b; --text-main: #f8fafc; --text-muted: #94a3b8;
-    --border: #334155; --input-bg: #0b1220; --slide-bg: #000000;
+    --border: #334155; --input-bg: #0b1220; --slide-bg: #000000; --placeholder: rgba(255,255,255,0.1);
 }
 
 body.light-mode {
     --accent: #d97706; --sub-accent: #16a34a; --h3-accent: #0284c7; --bold-color: #dc2626; --btn-blue: #1d4ed8;
     --bg-main: #f1f5f9; --card-bg: #ffffff; --text-main: #0f172a; --text-muted: #475569;
-    --border: #cbd5e1; --input-bg: #f8fafc; --slide-bg: #ffffff;
+    --border: #cbd5e1; --input-bg: #f8fafc; --slide-bg: #ffffff; --placeholder: rgba(0,0,0,0.05);
 }
 
 body { font-family: 'Kalam', cursive; background: var(--bg-main); color: var(--text-main); margin: 0; padding: 20px; transition: background 0.3s, color 0.3s; }
 
-.main-wrapper { display: flex; gap: 30px; max-width: 1600px; margin: auto; align-items: flex-start; }
-.left-panel { flex: 0 0 500px; background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: sticky; top: 20px; max-height: calc(100vh - 40px); overflow-y: auto; }
-.right-panel { flex: 1; background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.1); min-height: calc(100vh - 40px); }
+/* --- Desktop Layout (Sticky Left, Scrollable Right) --- */
+.main-wrapper {
+    display: flex;
+    gap: 30px;
+    max-width: 1600px;
+    margin: auto;
+    align-items: flex-start;
+}
 
-@media (max-width: 1050px) { .main-wrapper { flex-direction: column; } .left-panel { position: static; flex: auto; width: 100%; max-height: none; } }
+/* Fixed Controls Panel */
+.left-panel {
+    flex: 0 0 500px;
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 20px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+}
 
+/* Scrollable Preview Panel */
+.right-panel {
+    flex: 1;
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    min-height: calc(100vh - 40px);
+}
+
+/* Responsive for Mobile/Tablets */
+@media (max-width: 1050px) {
+    .main-wrapper { flex-direction: column; }
+    .left-panel { position: static; flex: auto; width: 100%; max-height: none; }
+}
+
+/* --- UI Elements --- */
 .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid var(--border); padding-bottom: 15px; }
 .header-row h2 { margin: 0; color: var(--accent); font-size: 2em; }
 .theme-btn { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border); padding: 8px 15px; border-radius: 8px; cursor: pointer; font-family: 'Kalam'; font-weight: bold; transition: 0.3s; }
@@ -38,6 +73,7 @@ textarea, input[type="number"], select { width: 100%; padding: 10px; border-radi
 textarea:focus, input:focus, select:focus { outline: none; border-color: var(--accent); }
 input[type="color"] { width: 100%; height: 40px; padding: 2px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; background: var(--input-bg); }
 
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
 .grid-5 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 5px; }
 
@@ -49,40 +85,56 @@ input[type="color"] { width: 100%; height: 40px; padding: 2px; border-radius: 8p
 .btn-grey { background: #475569; }
 .btn-generate { background: linear-gradient(135deg, #10b981, #059669); font-size: 1.3em; padding: 15px; margin-top: 20px; width: 100%; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
 
-/* --- Preview Styles --- */
+/* --- Slide Preview Styles (Smart Wrapping) --- */
 .preview-list { display: flex; flex-direction: column; gap: 30px; }
-.slide-card { background-color: var(--slide-bg); background-size: cover !important; background-position: center !important; border: 2px solid var(--border); padding: 30px; border-radius: 8px; position: relative; aspect-ratio: 16 / 9; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); overflow: hidden; display: block; /* changed from flex for floats to work */ }
+
+.slide-card { 
+    background-color: var(--slide-bg); background-size: cover !important; background-position: center !important;
+    border: 2px solid var(--border); padding: 30px; border-radius: 8px; position: relative; 
+    aspect-ratio: 16 / 9; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); overflow: hidden;
+    display: flex; flex-direction: column;
+}
+/* Overlay for readability */
 .slide-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 0; }
 body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
-.slide-content { position: relative; z-index: 1; width: 100%; height: 100%; }
 
-/* Typography */
+.slide-content { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; }
+
 [contenteditable="true"] { outline: none; border: 1px dashed transparent; transition: 0.2s; }
 [contenteditable="true"]:hover { border-color: rgba(150,150,150,0.5); background: rgba(128,128,128,0.1); }
+
 .p-h1 { color: var(--accent); font-size: 2.2em; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid rgba(150,150,150,0.3); padding-bottom: 5px; clear: both; }
 .p-h2 { color: var(--sub-accent); font-size: 1.6em; font-weight: bold; margin-bottom: 8px; }
 .p-h3 { color: var(--h3-accent); font-size: 1.4em; font-weight: bold; margin-bottom: 8px; }
 .p-text, .p-li { font-size: 1.3em; margin-bottom: 8px; line-height: 1.5; white-space: pre-wrap; color: var(--text-main); }
 .p-q { color: var(--accent); font-size: 1.6em; font-weight: bold; margin-top: 10px; }
 
+/* Image Area with Float for Wrapping */
+.image-placeholder-box {
+    border: 2px dashed rgba(150,150,150,0.5);
+    border-radius: 8px;
+    background: var(--placeholder);
+    width: 250px; height: 250px; /* Size for wrapping */
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; position: relative; overflow: hidden; transition: 0.3s;
+}
+.image-placeholder-box.pos-top-right { float: right; margin: 0 0 15px 25px; }
+.image-placeholder-box.pos-top-left { float: left; margin: 0 25px 15px 0; }
+.image-placeholder-box.pos-bottom { clear: both; margin-top: 15px; width: 100%; height: 180px; float: none; }
+
+.image-placeholder-box:hover { border-color: var(--accent); background: rgba(128,128,128,0.2); }
+.image-placeholder-box span { color: var(--text-muted); font-size: 1.1em; pointer-events: none; font-weight: bold; }
+.image-placeholder-box img { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; z-index: 1; }
+.remove-img-btn { position: absolute; top: 5px; right: 5px; background: #e11d48; color: white; border: none; border-radius: 5px; padding: 4px 8px; cursor: pointer; z-index: 2; font-family: 'Kalam'; font-size: 0.8em; }
+
 /* Continued H1 Logic */
 .h1-continued { opacity: 0.4; font-size: 1.2em; border: none; padding: 0; margin-bottom: 0px; text-decoration: line-through; }
-.h1-continued::after { content: " (Continued - Hidden in final PPT)"; font-size: 0.7em; font-style: italic; color: #ff5252; text-decoration: none; display: inline-block; margin-left: 10px;}
+.h1-continued::after { content: " (Continued Topic - Hidden in final PPTX)"; font-size: 0.7em; font-style: italic; color: #ff5252; text-decoration: none;}
 
-/* Image Options & Drop Area with Floats for proper wrapping */
-.img-controls { display: flex; gap: 10px; align-items: center; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 6px; margin-bottom: 10px; clear: both;}
-body.light-mode .img-controls { background: rgba(0,0,0,0.05); }
+/* Hidden inputs and controls */
+.img-pos-row { margin-top: 10px; display: flex; gap: 10px; align-items: center; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 6px; }
+body.light-mode .img-pos-row { background: rgba(0,0,0,0.05); }
 
-/* Float Classes for Image Box */
-.float-top-right { float: right; margin: 0 0 15px 25px; width: 250px; height: 250px; }
-.float-top-left { float: left; margin: 0 25px 15px 0; width: 250px; height: 250px; }
-.float-bottom { clear: both; margin-top: 15px; width: 100%; height: 180px; }
-
-.image-drop-area { border: 2px dashed rgba(150,150,150,0.5); border-radius: 8px; background: rgba(128,128,128,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; transition: 0.3s; }
-.image-drop-area:hover { border-color: var(--accent); }
-.image-drop-area span { color: var(--text-main); font-size: 1em; pointer-events: none; font-weight: bold; text-align: center; padding: 10px;}
-.image-drop-area img { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; z-index: 1; }
-.remove-img-btn { position: absolute; top: 5px; right: 5px; background: #e11d48; color: white; border: none; border-radius: 5px; padding: 4px 8px; cursor: pointer; z-index: 2; font-family: 'Kalam'; font-size: 0.8em; }
 </style>
 </head>
 <body>
@@ -120,21 +172,22 @@ body.light-mode .img-controls { background: rgba(0,0,0,0.05); }
         </div>
 
         <label>Master Background Setup</label>
-        <select id="bgSelect">
+        <select id="bgSelect" style="margin-bottom: 10px;">
             <option value="none" selected>No Background (Solid Color)</option>
             <option value="default1">Default Image 1 (Yellow Theme)</option>
             <option value="default2">Default Image 2 (Blue Theme)</option>
             <option value="custom">Upload Custom Background...</option>
         </select>
-        <input type="file" id="bgImgUpload" accept="image/*" style="display:none; margin-top:10px;">
+        <input type="file" id="bgImgUpload" accept="image/*" style="display:none;">
 
         <button id="generateBtn" class="btn btn-generate">💾 Generate PPTX File</button>
     </div>
 
     <div class="right-panel">
-        <h3 style="margin-top:0; color:var(--text-main); font-size:1.8em; border-bottom:1px solid var(--border); padding-bottom:10px;">👁️ Live Slide Preview</h3>
-        <p style="color:var(--text-muted); font-size:1em; margin-top:-5px;">Note: Write <b>&lt;b&gt;word&lt;/b&gt;</b> in text to make it bold. Text auto-wraps around images!</p>
-        <div id="preview" class="preview-list"></div>
+        <h3 style="margin-top:0; color:var(--text-main); font-size:1.8em; border-bottom:1px solid var(--border); padding-bottom:10px;">👁️ Live Slide Preview (Editable)</h3>
+        <p style="color:var(--text-muted); font-size:1em; margin-top:-5px;">Note: Write <b>&lt;b&gt;word&lt;/b&gt;</b> in JSON to make it bold in Final PPTX.</p>
+        <div id="preview" class="preview-list">
+            </div>
     </div>
 </div>
 
@@ -144,6 +197,43 @@ let DATA = [];
 let isLightMode = false;
 let customBgDataUrl = null;
 
+// New Logic to Fix Blogger BG Image Bug
+const getCanvasFromUrl = (url) => {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.src = url;
+        img.onload = () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = img.width; canvas.height = img.height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            resolve(canvas.toDataURL("image/png"));
+        };
+        img.onerror = () => reject(new Error("Failed to load background image"));
+    });
+};
+
+const defaultImg1Raw = "https://blogger.googleusercontent.com/img/a/AVvXsEglEH5N9CdXH5F3qcRU9elRqBnLtC5_9Lhz-j_dBi9hYBCK1oBC88Vthv4uS0e5yMl2FsXPjbhxs9KLqI2Xtzs6S7FpxIRLb2PBzYUNJ5y_MnaNDQUHJE7PnnXlFvtN7XriHTUhs7P3rHCwobRgRBdJxoio0N7rDoc4vhiAlC1pW2QdgkSu62VZK1Hf2aI=s1280";
+const defaultImg2Raw = "https://blogger.googleusercontent.com/img/a/AVvXsEhZ4Fw8Xl52IHLZQRVn5u8z3UuTjlVkhKD6MLEIpJtwZj0ZFe3230Yfzaw5AAO_m406K4whQuP7Va_w8l16_JoT3Mbkw811x3kMHm_pKmzAvj44_19ICmPZQQAF430R6Awe0Vhgm-DHOgaWhoZf0o1Tl0lJwOC6JX5n1ZsgfBVgT5Qgmv4kd-DebHbyTiw=s1280";
+let defaultImg1Fixed = null;
+let defaultImg2Fixed = null;
+
+// Pre-load fixed backgrounds
+Promise.all([
+    getCanvasFromUrl(defaultImg1Raw).then(url => defaultImg1Fixed = url),
+    getCanvasFromUrl(defaultImg2Raw).then(url => defaultImg2Fixed = url)
+]).then(() => { if(DATA.length) renderPreview(); }); // Render if data loaded before images
+
+function getBgUrl() {
+    let val = $('bgSelect').value;
+    if(val === 'default1') return defaultImg1Fixed;
+    if(val === 'default2') return defaultImg2Fixed;
+    if(val === 'custom') return customBgDataUrl;
+    return null;
+}
+
+// Light/Dark Theme Logic
 $('themeToggle').onclick = () => {
     isLightMode = !isLightMode;
     document.body.classList.toggle('light-mode', isLightMode);
@@ -153,17 +243,7 @@ $('themeToggle').onclick = () => {
     saveState(); renderPreview();
 };
 
-const defaultImg1 = "https://blogger.googleusercontent.com/img/a/AVvXsEglEH5N9CdXH5F3qcRU9elRqBnLtC5_9Lhz-j_dBi9hYBCK1oBC88Vthv4uS0e5yMl2FsXPjbhxs9KLqI2Xtzs6S7FpxIRLb2PBzYUNJ5y_MnaNDQUHJE7PnnXlFvtN7XriHTUhs7P3rHCwobRgRBdJxoio0N7rDoc4vhiAlC1pW2QdgkSu62VZK1Hf2aI=s1280";
-const defaultImg2 = "https://blogger.googleusercontent.com/img/a/AVvXsEhZ4Fw8Xl52IHLZQRVn5u8z3UuTjlVkhKD6MLEIpJtwZj0ZFe3230Yfzaw5AAO_m406K4whQuP7Va_w8l16_JoT3Mbkw811x3kMHm_pKmzAvj44_19ICmPZQQAF430R6Awe0Vhgm-DHOgaWhoZf0o1Tl0lJwOC6JX5n1ZsgfBVgT5Qgmv4kd-DebHbyTiw=s1280";
-
-function getBgUrl() {
-    let val = $('bgSelect').value;
-    if(val === 'default1') return defaultImg1;
-    if(val === 'default2') return defaultImg2;
-    if(val === 'custom') return customBgDataUrl;
-    return null;
-}
-
+// Background Setup Logic
 $('bgSelect').onchange = (e) => {
     if(e.target.value === 'custom') $('bgImgUpload').style.display = 'block';
     else $('bgImgUpload').style.display = 'none';
@@ -176,17 +256,18 @@ $('bgImgUpload').onchange = (e) => {
     if(e.target.files[0]) reader.readAsDataURL(e.target.files[0]);
 };
 
+// Auto Save / Load
 function saveState() {
     const state = {
         data: DATA, margins: { t: $('topM').value, b: $('bottomM').value, l: $('leftM').value, r: $('rightM').value },
         colors: { h1: $('h1Color').value, h2: $('h2Color').value, h3: $('h3Color').value, bold: $('boldColor').value, opt: $('optColor').value },
         bg: $('bgSelect').value, theme: isLightMode, customBg: customBgDataUrl
     };
-    localStorage.setItem('proPptStateFinal', JSON.stringify(state));
+    localStorage.setItem('proPptStatePlus_NewUI', JSON.stringify(state));
 }
 
 function loadState() {
-    const saved = localStorage.getItem('proPptStateFinal');
+    const saved = localStorage.getItem('proPptStatePlus_NewUI');
     if(saved) {
         const state = JSON.parse(saved); DATA = state.data || [];
         $('jsonArea').value = DATA.length ? JSON.stringify(DATA, null, 2) : "";
@@ -204,25 +285,28 @@ function loadState() {
     renderPreview();
 }
 
+// Event Listeners for Live Update
 ['topM', 'bottomM', 'leftM', 'rightM', 'h1Color', 'h2Color', 'h3Color', 'boldColor', 'optColor'].forEach(id => {
     $(id).addEventListener('change', () => { renderPreview(); saveState(); });
 });
 
 $('importBtn').onclick = () => { try { const raw = JSON.parse($('jsonArea').value); DATA = Array.isArray(raw) ? raw : [raw]; renderPreview(); saveState(); } catch (e) { alert("Invalid JSON Code!"); } };
-$('clearBtn').onclick = () => { if(confirm("Clear all slides?")) { DATA = []; $('jsonArea').value = ""; localStorage.removeItem('proPptStateFinal'); renderPreview(); } };
+$('clearBtn').onclick = () => { if(confirm("Clear all slides?")) { DATA = []; $('jsonArea').value = ""; localStorage.removeItem('proPptStatePlus_NewUI'); renderPreview(); } };
 
+// Fake render <b> in preview
 function formatPreviewText(text, boldHex) {
     if(!text) return "";
     return text.replace(/<b>(.*?)<\/b>/g, `<span style="color:${boldHex}; font-weight:bold;">$1</span>`);
 }
 
+// Render HTML Preview with New Smart Wrapping Layout
 function renderPreview() {
     const box = $("preview"); box.innerHTML = "";
-    if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted);'>No data. Please import JSON code.</p>"; return; }
+    if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted); padding:20px; text-align:center;'>No data. Import JSON Code from the left panel to see preview.</p>"; return; }
 
     const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
     const bgUrl = getBgUrl();
-    let lastH1Preview = null; // Track H1 for preview
+    let lastH1Preview = null; 
 
     DATA.forEach((item, idx) => {
         const div = document.createElement("div"); div.className = "slide-card";
@@ -230,23 +314,13 @@ function renderPreview() {
 
         const contentWrap = document.createElement("div"); contentWrap.className = "slide-content";
         
-        // Setup Image Box (BEFORE text for CSS Floats to wrap properly)
+        // Setup Image Box (BEFORE text for CSS Floats to work)
         let currentImgPos = item.imgPos || 'bottom';
-        const imgControls = document.createElement("div"); imgControls.className = "img-controls";
-        const posSel = document.createElement("select");
-        posSel.innerHTML = `<option value="bottom" ${currentImgPos==='bottom'?'selected':''}>Pos: Bottom Center</option>
-                            <option value="top-right" ${currentImgPos==='top-right'?'selected':''}>Pos: Top Right</option>
-                            <option value="top-left" ${currentImgPos==='top-left'?'selected':''}>Pos: Top Left</option>`;
-        posSel.style.width = "180px"; posSel.style.padding = "5px"; posSel.style.margin = "0";
-        posSel.onchange = (e) => { DATA[idx].imgPos = e.target.value; renderPreview(); saveState(); };
-        imgControls.appendChild(posSel);
-        contentWrap.appendChild(imgControls); // Tools at very top
-
-        const imgBox = document.createElement("div"); 
-        let floatClass = currentImgPos === 'top-right' ? 'float-top-right' : currentImgPos === 'top-left' ? 'float-top-left' : 'float-bottom';
-        imgBox.className = "image-drop-area " + floatClass;
+        let floatClass = currentImgPos === 'top-right' ? 'pos-top-right' : currentImgPos === 'top-left' ? 'pos-top-left' : 'pos-bottom';
         
+        const imgBox = document.createElement("div"); imgBox.className = "image-placeholder-box " + floatClass;
         const fileIn = document.createElement("input"); fileIn.type = "file"; fileIn.accept = "image/*"; fileIn.style.display = "none";
+        
         fileIn.onchange = (e) => { const reader = new FileReader(); reader.onload = () => { DATA[idx].image = reader.result; renderPreview(); saveState(); }; if(e.target.files[0]) reader.readAsDataURL(e.target.files[0]); };
         imgBox.onclick = () => fileIn.click();
 
@@ -257,47 +331,60 @@ function renderPreview() {
             imgBox.appendChild(rmBtn);
         } else { imgBox.innerHTML = "<span>🖼️ Click to Add Image</span>"; }
 
-        // If top-right/top-left, append image box before text so text wraps around it
-        if (currentImgPos !== 'bottom') contentWrap.appendChild(imgBox);
+        // Controls at the very bottom of text
+        const imgPosRow = document.createElement("div"); imgPosRow.className = "img-pos-row";
+        const posSel = document.createElement("select");
+        posSel.innerHTML = `<option value="bottom" ${currentImgPos==='bottom'?'selected':''}>Pos: Bottom</option>
+                            <option value="top-right" ${currentImgPos==='top-right'?'selected':''}>Pos: Top Right</option>
+                            <option value="top-left" ${currentImgPos==='top-left'?'selected':''}>Pos: Top Left</option>`;
+        posSel.style.width = "180px"; posSel.style.padding = "5px"; posSel.style.margin = "0";
+        posSel.onchange = (e) => { DATA[idx].imgPos = e.target.value; renderPreview(); saveState(); };
+        imgPosRow.appendChild(posSel);
 
+        // Add Text Elements
+        const textElements = [];
         Object.keys(item).forEach(key => {
             if(key === 'image' || key === 'imgPos') return;
             const el = document.createElement("div"); el.contentEditable = "true";
             
             if(key === 'h1') { 
                 if (item.h1 === lastH1Preview) {
-                    el.className = "p-h1 h1-continued"; 
-                    el.style.color = h1c; 
+                    el.className = "p-h1 h1-continued"; el.style.color = h1c; 
                 } else {
-                    el.className = "p-h1"; 
-                    el.style.color = h1c; 
+                    el.className = "p-h1"; el.style.color = h1c; 
                     lastH1Preview = item.h1;
                 }
                 el.innerText = item.h1; 
-                el.onblur = e => { DATA[idx].h1 = e.target.innerText; saveState(); renderPreview(); }; 
-                contentWrap.appendChild(el); 
+                el.onblur = e => { DATA[idx].h1 = e.target.innerText; saveState(); renderPreview(); }; textElements.push(el);
             }
-            else if(key === 'h2') { el.className = "p-h2"; el.innerText = item.h2; el.style.color = h2c; el.onblur = e => { DATA[idx].h2 = e.target.innerText; saveState(); }; contentWrap.appendChild(el); }
-            else if(key === 'h3') { el.className = "p-h3"; el.innerText = item.h3; el.style.color = h3c; el.onblur = e => { DATA[idx].h3 = e.target.innerText; saveState(); }; contentWrap.appendChild(el); }
-            else if(key === 'content') { el.className = "p-text"; el.innerHTML = formatPreviewText(item.content, bc); el.style.color = oc; el.onblur = e => { DATA[idx].content = e.target.innerText; saveState(); }; contentWrap.appendChild(el); }
+            else if(key === 'h2') { el.className = "p-h2"; el.innerText = item.h2; el.style.color = h2c; el.onblur = e => { DATA[idx].h2 = e.target.innerText; saveState(); }; textElements.push(el); }
+            else if(key === 'h3') { el.className = "p-h3"; el.innerText = item.h3; el.style.color = h3c; el.onblur = e => { DATA[idx].h3 = e.target.innerText; saveState(); }; textElements.push(el); }
+            else if(key === 'content') { el.className = "p-text"; el.innerHTML = formatPreviewText(item.content, bc); el.style.color = oc; el.onblur = e => { DATA[idx].content = e.target.innerText; saveState(); }; textElements.push(el); }
             else if(key === 'list') {
-                item.list.forEach((li, lIdx) => { const l = document.createElement("div"); l.className = "p-li"; l.contentEditable = "true"; l.style.color = oc; l.innerHTML = "• " + formatPreviewText(li, bc); l.onblur = e => { DATA[idx].list[lIdx] = e.target.innerText.replace("• ", ""); saveState(); }; contentWrap.appendChild(l); });
+                item.list.forEach((li, lIdx) => { const l = document.createElement("div"); l.className = "p-li"; l.contentEditable = "true"; l.style.color = oc; l.innerHTML = "• " + formatPreviewText(li, bc); l.onblur = e => { DATA[idx].list[lIdx] = e.target.innerText.replace("• ", ""); saveState(); }; textElements.push(l); });
             }
             else if(key === 'question') {
-                const q = document.createElement("div"); q.className = "p-q"; q.contentEditable = "true"; q.style.color = h1c; q.innerHTML = "Q. " + formatPreviewText(item.question, bc); q.onblur = e => { DATA[idx].question = e.target.innerText.replace(/^Q\.\s*/, ""); saveState(); }; contentWrap.appendChild(q);
+                const q = document.createElement("div"); q.className = "p-q"; q.contentEditable = "true"; q.style.color = h1c; q.innerHTML = "Q. " + formatPreviewText(item.question, bc); q.onblur = e => { DATA[idx].question = e.target.innerText.replace(/^Q\.\s*/, ""); saveState(); }; textElements.push(q);
                 let opts = item.option || item.options || [];
-                opts.forEach((o, oIdx) => { const op = document.createElement("div"); op.className = "p-text"; op.style.marginLeft = "20px"; op.contentEditable = "true"; op.style.color = oc; op.innerHTML = `${oIdx + 1}. ` + formatPreviewText(o, bc); op.onblur = e => { let val = e.target.innerText.replace(/^\d+\.\s*/, ''); if(item.option) DATA[idx].option[oIdx] = val; else DATA[idx].options[oIdx] = val; saveState(); }; contentWrap.appendChild(op); });
+                opts.forEach((o, oIdx) => { const op = document.createElement("div"); op.className = "p-text"; op.style.marginLeft = "20px"; op.contentEditable = "true"; op.style.color = oc; op.innerHTML = `${oIdx + 1}. ` + formatPreviewText(o, bc); op.onblur = e => { let val = e.target.innerText.replace(/^\d+\.\s*/, ''); if(item.option) DATA[idx].option[oIdx] = val; else DATA[idx].options[oIdx] = val; saveState(); }; textElements.push(op); });
             }
         });
 
-        // If bottom, append image box after text
+        // Add Image Box BEFORE text if top-right/top-left for floats
+        if (currentImgPos !== 'bottom') contentWrap.appendChild(imgBox);
+
+        textElements.forEach(el => contentWrap.appendChild(el));
+
+        // Add Image Box AFTER text if bottom
         if (currentImgPos === 'bottom') contentWrap.appendChild(imgBox);
         
-        contentWrap.appendChild(fileIn); // Keep hidden input inside
+        contentWrap.appendChild(imgPosRow); // Pos tools at bottom
+        contentWrap.appendChild(fileIn);
         div.appendChild(contentWrap); box.appendChild(div);
     });
 }
 
+// Generate PPTX with Fixed Continued Topic Logic
 $('generateBtn').onclick = async () => {
     if (DATA.length === 0) return alert("No Data! Please import JSON first.");
     const btn = $('generateBtn'); btn.innerHTML = "⏳ Generating PPTX... Please wait"; btn.disabled = true;
@@ -331,7 +418,7 @@ $('generateBtn').onclick = async () => {
             let currentImgPos = item.imgPos || 'bottom';
             if (item.image && (currentImgPos === 'top-left' || currentImgPos === 'top-right')) {
                 let simg = new Image(); simg.src = item.image; await new Promise(r => simg.onload = r);
-                let maxCW = 300; let maxCH = 300; // Size matching preview
+                let maxCW = 300; let maxCH = 300; // PREVIEW MATCH
                 let ratio = Math.min(maxCW / simg.width, maxCH / simg.height);
                 let fw = simg.width * ratio; let fh = simg.height * ratio;
                 let fx = currentImgPos === 'top-left' ? m.left : (pxW - m.right - fw);
@@ -340,7 +427,7 @@ $('generateBtn').onclick = async () => {
                 ctx.drawImage(simg, fx, fy, fw, fh);
             }
 
-            // --- Smart Text Drawing with Wrapping (Bug Fixed) ---
+            // --- SMART TEXT DRAWING WITH BUG FIXED (BASELINE) ---
             const drawSmartText = (text, normalFont, boldFont, normalCol, boldCol, lineH, leftIndent = 0) => {
                 const paras = text.split("\n");
                 paras.forEach(para => {
@@ -361,7 +448,7 @@ $('generateBtn').onclick = async () => {
                         let startX = m.left + leftIndent;
                         let endX = pxW - m.right;
                         
-                        // Check if text baseline (currentY) falls within image box vertically
+                        // Check Vertical Hit
                         if (cornerBox && currentY < cornerBox.y + cornerBox.h + 10) {
                             if (currentImgPos === 'top-left') {
                                 startX = Math.max(startX, cornerBox.x + cornerBox.w + 30); // 30px gap
@@ -381,10 +468,10 @@ $('generateBtn').onclick = async () => {
                         ctx.fillStyle = w.b ? boldCol : normalCol;
                         let metric = ctx.measureText(w.t + " ");
 
-                        // Wrap text correctly if word exceeds endX
+                        // Check Wrap with dynamic EndX
                         if (currentX + metric.width > bounds.endX && currentX !== bounds.startX) {
                             y += lineH;
-                            bounds = getLineBounds(y); // Recalculate margins for new line
+                            bounds = getLineBounds(y); // Calculate margins for new line
                             currentX = bounds.startX;
                         }
                         ctx.fillText(w.t + " ", currentX, y);
@@ -394,7 +481,7 @@ $('generateBtn').onclick = async () => {
                 });
             };
 
-            // Draw Fields Sequence
+            // Draw Sequence
             Object.keys(item).forEach(key => {
                 if(key === 'image' || key === 'imgPos') return;
                 
@@ -428,10 +515,11 @@ $('generateBtn').onclick = async () => {
             }
             s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
         }
-        ppt.writeFile({ fileName: "Coaching_Pro_Master.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
+        ppt.writeFile({ fileName: "Study_Series.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
     }, 100);
 };
 
+// Start
 window.onload = () => loadState();
 </script>
 </body>
