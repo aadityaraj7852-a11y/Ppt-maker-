@@ -3,11 +3,12 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Ultimate PPT Maker - Original BG</title>
+<title>Ultimate PPT Maker - Clean Layout</title>
 <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
 <style>
+/* --- CSS Variables & Themes --- */
 :root { 
     --accent: #ffeb3b; --sub-accent: #00e676; --h3-accent: #00bcd4; --bold-color: #ff9800; --btn-blue: #2563eb; 
     --bg-main: #0f172a; --card-bg: #1e293b; --text-main: #f8fafc; --text-muted: #94a3b8;
@@ -22,6 +23,7 @@ body.light-mode {
 
 body { font-family: 'Kalam', cursive; background: var(--bg-main); color: var(--text-main); margin: 0; padding: 20px; transition: 0.3s; }
 
+/* Desktop Layout */
 .main-wrapper { display: flex; gap: 30px; max-width: 1600px; margin: auto; align-items: flex-start; }
 .left-panel { flex: 0 0 450px; background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: sticky; top: 20px; max-height: calc(100vh - 40px); overflow-y: auto; }
 .right-panel { flex: 1; background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.1); min-height: calc(100vh - 40px); }
@@ -44,45 +46,45 @@ input[type="color"] { width: 100%; height: 40px; padding: 2px; border-radius: 8p
 .btn-blue { background: #2563eb; } .btn-red { background: #e11d48; } .btn-grey { background: #475569; } .btn-cyan { background: #0ea5e9; }
 .btn-generate { background: linear-gradient(135deg, #10b981, #059669); font-size: 1.3em; padding: 15px; margin-top: 20px; width: 100%; }
 
+/* --- Preview Styles --- */
 .preview-list { display: flex; flex-direction: column; gap: 30px; }
 
-/* FIX: Image will not shift now (center/cover) */
 .slide-card { 
-    background-color: var(--slide-bg); 
-    background-size: cover !important; 
-    background-position: center !important; 
-    background-repeat: no-repeat !important;
+    background-color: var(--slide-bg); background-size: cover !important; background-position: center !important; 
     border: 2px solid var(--border); padding: 30px; border-radius: 8px; position: relative; 
-    aspect-ratio: 16 / 9; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); overflow: hidden; display: block; 
+    aspect-ratio: 16 / 9; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); overflow: hidden; 
+    display: flex; flex-direction: column;
 }
 .slide-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 0; }
 body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
 
-.slide-content { position: relative; z-index: 1; width: 100%; height: 100%; display: block; }
+.slide-content { position: relative; z-index: 1; width: 100%; height: 100%; display: flex; flex-direction: column; }
 
+/* Typography */
 [contenteditable="true"] { outline: none; border: 1px dashed transparent; transition: 0.2s; display: block; }
 [contenteditable="true"]:hover { border-color: rgba(150,150,150,0.5); background: rgba(128,128,128,0.1); }
-.p-h1 { color: var(--accent); font-size: 2.2em; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid rgba(150,150,150,0.3); padding-bottom: 5px; clear: both; }
+.p-h1 { color: var(--accent); font-size: 2.2em; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid rgba(150,150,150,0.3); padding-bottom: 5px; }
 .p-h2 { color: var(--sub-accent); font-size: 1.6em; font-weight: bold; margin-bottom: 8px; }
 .p-h3 { color: var(--h3-accent); font-size: 1.4em; font-weight: bold; margin-bottom: 8px; }
 .p-text, .p-li { font-size: 1.3em; margin-bottom: 8px; line-height: 1.5; white-space: pre-wrap; color: var(--text-main); }
 .p-q { color: var(--accent); font-size: 1.6em; font-weight: bold; margin-top: 10px; }
 
+/* H1 Continued Logic */
 .h1-continued { opacity: 0.4; font-size: 1.2em; border: none; padding: 0; margin-bottom: 0px; text-decoration: line-through; }
-.h1-continued::after { content: " (Continued - Hidden in PPTX)"; font-size: 0.7em; font-style: italic; color: #ff5252; text-decoration: none;}
+.h1-continued::after { content: " (Continued - Hidden in final PPTX)"; font-size: 0.7em; font-style: italic; color: #ff5252; text-decoration: none;}
 
-.image-placeholder-box { border: 2px dashed rgba(150,150,150,0.5); border-radius: 8px; background: rgba(128,128,128,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: 0.3s; }
-.pos-top-right { float: right; margin: 0 0 15px 25px; width: 250px; height: 250px; }
-.pos-top-left { float: left; margin: 0 25px 15px 0; width: 250px; height: 250px; }
-.pos-bottom { clear: both; margin-top: 15px; width: 100%; height: 180px; float: none; }
-.image-placeholder-box:hover { border-color: var(--accent); }
-.image-placeholder-box span { color: var(--text-muted); font-size: 1.1em; pointer-events: none; font-weight: bold; text-align: center; padding: 10px;}
+/* --- Simple Image Drop Area (No Floats) --- */
+.image-placeholder-box { 
+    border: 2px dashed rgba(150,150,150,0.5); border-radius: 8px; background: rgba(128,128,128,0.1); 
+    display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: 0.3s; 
+    flex: 1; /* Take remaining space at bottom */
+    min-height: 150px; margin-top: 15px; width: 100%;
+}
+.image-placeholder-box:hover { border-color: var(--accent); background: rgba(128,128,128,0.2); }
+.image-placeholder-box span { color: var(--text-muted); font-size: 1.1em; pointer-events: none; font-weight: bold; text-align: center;}
 .image-placeholder-box img { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; z-index: 1; }
-.remove-img-btn { position: absolute; top: 5px; right: 5px; background: #e11d48; color: white; border: none; border-radius: 5px; padding: 4px 8px; cursor: pointer; z-index: 2; font-family: 'Kalam'; font-size: 0.8em; }
+.remove-img-btn { position: absolute; top: 10px; right: 10px; background: #e11d48; color: white; border: none; border-radius: 5px; padding: 6px 12px; cursor: pointer; z-index: 2; font-family: 'Kalam'; font-size: 0.9em; }
 
-.img-pos-row { clear: both; margin-top: 10px; display: flex; gap: 10px; align-items: center; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 6px; }
-body.light-mode .img-pos-row { background: rgba(0,0,0,0.05); }
-.clearfix { clear: both; }
 </style>
 </head>
 <body>
@@ -146,7 +148,7 @@ const $ = id => document.getElementById(id);
 let DATA = [];
 let isLightMode = false;
 
-// तुम्हारी ओरिजिनल इमेजेज वापस आ गईं
+// Blogger Images restored
 const defaultImg1 = "https://blogger.googleusercontent.com/img/a/AVvXsEglEH5N9CdXH5F3qcRU9elRqBnLtC5_9Lhz-j_dBi9hYBCK1oBC88Vthv4uS0e5yMl2FsXPjbhxs9KLqI2Xtzs6S7FpxIRLb2PBzYUNJ5y_MnaNDQUHJE7PnnXlFvtN7XriHTUhs7P3rHCwobRgRBdJxoio0N7rDoc4vhiAlC1pW2QdgkSu62VZK1Hf2aI=s1280";
 const defaultImg2 = "https://blogger.googleusercontent.com/img/a/AVvXsEhZ4Fw8Xl52IHLZQRVn5u8z3UuTjlVkhKD6MLEIpJtwZj0ZFe3230Yfzaw5AAO_m406K4whQuP7Va_w8l16_JoT3Mbkw811x3kMHm_pKmzAvj44_19ICmPZQQAF430R6Awe0Vhgm-DHOgaWhoZf0o1Tl0lJwOC6JX5n1ZsgfBVgT5Qgmv4kd-DebHbyTiw=s1280";
 let customBgDataUrl = null;
@@ -216,9 +218,10 @@ function formatPreviewText(text, boldHex) {
     if(!text) return ""; return text.replace(/<b>(.*?)<\/b>/g, `<span style="color:${boldHex}; font-weight:bold;">$1</span>`);
 }
 
+// Clean HTML Preview
 function renderPreview() {
     const box = $("preview"); box.innerHTML = "";
-    if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted);'>No data. Please import JSON.</p>"; return; }
+    if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted); padding:20px; text-align:center;'>No data. Paste JSON and Import/Append.</p>"; return; }
 
     const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
     const bgUrl = getBgUrl();
@@ -234,26 +237,9 @@ function renderPreview() {
 
         const contentWrap = document.createElement("div"); contentWrap.className = "slide-content";
         
-        let currentImgPos = item.imgPos || 'bottom';
-        let floatClass = currentImgPos === 'top-right' ? 'pos-top-right' : currentImgPos === 'top-left' ? 'pos-top-left' : 'pos-bottom';
-        
-        const imgBox = document.createElement("div"); imgBox.className = "image-placeholder-box " + floatClass;
-        const fileIn = document.createElement("input"); fileIn.type = "file"; fileIn.accept = "image/*"; fileIn.style.display = "none";
-        
-        fileIn.onchange = (e) => { const reader = new FileReader(); reader.onload = () => { DATA[idx].image = reader.result; renderPreview(); }; if(e.target.files[0]) reader.readAsDataURL(e.target.files[0]); };
-        imgBox.onclick = () => fileIn.click();
-
-        if(item.image) {
-            const img = document.createElement("img"); img.src = item.image; imgBox.appendChild(img);
-            const rmBtn = document.createElement("button"); rmBtn.className = "remove-img-btn"; rmBtn.innerText = "✖ Remove";
-            rmBtn.onclick = (e) => { e.stopPropagation(); delete DATA[idx].image; renderPreview(); };
-            imgBox.appendChild(rmBtn);
-        } else { imgBox.innerHTML = "<span>🖼️ Click to Add Image</span>"; }
-
-        if (currentImgPos !== 'bottom') contentWrap.appendChild(imgBox);
-
+        // Text Elements
         Object.keys(item).forEach(key => {
-            if(key === 'image' || key === 'imgPos') return;
+            if(key === 'image' || key === 'imgPos') return; // Ignore old keys
             const el = document.createElement("div"); el.contentEditable = "true";
             
             if(key === 'h1') { 
@@ -274,28 +260,29 @@ function renderPreview() {
             }
         });
 
-        if (currentImgPos === 'bottom') contentWrap.appendChild(imgBox);
-        
-        const clearDiv = document.createElement("div"); clearDiv.className = "clearfix"; contentWrap.appendChild(clearDiv);
+        // Simple Image Box at the Bottom
+        const imgBox = document.createElement("div"); imgBox.className = "image-placeholder-box";
+        const fileIn = document.createElement("input"); fileIn.type = "file"; fileIn.accept = "image/*"; fileIn.style.display = "none";
+        fileIn.onchange = (e) => { const reader = new FileReader(); reader.onload = () => { DATA[idx].image = reader.result; renderPreview(); }; if(e.target.files[0]) reader.readAsDataURL(e.target.files[0]); };
+        imgBox.onclick = () => fileIn.click();
 
-        const imgPosRow = document.createElement("div"); imgPosRow.className = "img-pos-row";
-        const posSel = document.createElement("select");
-        posSel.innerHTML = `<option value="bottom" ${currentImgPos==='bottom'?'selected':''}>Pos: Bottom</option>
-                            <option value="top-right" ${currentImgPos==='top-right'?'selected':''}>Pos: Top Right</option>
-                            <option value="top-left" ${currentImgPos==='top-left'?'selected':''}>Pos: Top Left</option>`;
-        posSel.style.width = "180px"; posSel.style.padding = "5px"; posSel.style.margin = "0";
-        posSel.onchange = (e) => { DATA[idx].imgPos = e.target.value; renderPreview(); };
-        imgPosRow.appendChild(posSel);
+        if(item.image) {
+            const img = document.createElement("img"); img.src = item.image; imgBox.appendChild(img);
+            const rmBtn = document.createElement("button"); rmBtn.className = "remove-img-btn"; rmBtn.innerText = "✖ Remove Image";
+            rmBtn.onclick = (e) => { e.stopPropagation(); delete DATA[idx].image; renderPreview(); };
+            imgBox.appendChild(rmBtn);
+        } else { imgBox.innerHTML = "<span>🖼️ Click to Add Image to this Slide</span>"; }
 
-        contentWrap.appendChild(imgPosRow);
+        contentWrap.appendChild(imgBox);
         contentWrap.appendChild(fileIn);
         div.appendChild(contentWrap); box.appendChild(div);
     });
 }
 
+// Straightforward PPTX Generation
 $('generateBtn').onclick = async () => {
     if (DATA.length === 0) return alert("No Data! Please import JSON first.");
-    const btn = $('generateBtn'); btn.innerHTML = "⏳ Generating PPTX..."; btn.disabled = true;
+    const btn = $('generateBtn'); btn.innerHTML = "⏳ Generating PPTX... Please wait"; btn.disabled = true;
 
     setTimeout(async () => {
         const pxW = 1300, pxH = 710;
@@ -328,20 +315,7 @@ $('generateBtn').onclick = async () => {
             let y = m.top; const maxW = pxW - m.left - m.right;
             const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
 
-            let cornerBox = null;
-            let currentImgPos = item.imgPos || 'bottom';
-            if (item.image && (currentImgPos === 'top-left' || currentImgPos === 'top-right')) {
-                let simg = new Image(); simg.src = item.image; await new Promise(r => simg.onload = r);
-                let maxCW = 280; let maxCH = 280;
-                let ratio = Math.min(maxCW / simg.width, maxCH / simg.height);
-                let fw = simg.width * ratio; let fh = simg.height * ratio;
-                let fx = currentImgPos === 'top-left' ? m.left : (pxW - m.right - fw);
-                let fy = m.top + 50; 
-                cornerBox = {x: fx, y: fy, w: fw, h: fh};
-                ctx.drawImage(simg, fx, fy, fw, fh);
-            }
-
-            const drawSmartText = (text, normalFont, boldFont, normalCol, boldCol, lineH) => {
+            const drawSmartText = (text, normalFont, boldFont, normalCol, boldCol, lineH, leftIndent = 0) => {
                 const paras = text.split("\n");
                 paras.forEach(para => {
                     if(!para) { y += lineH; return; }
@@ -355,24 +329,17 @@ $('generateBtn').onclick = async () => {
                         }
                     });
 
-                    const getBounds = (currentY) => {
-                        let startX = m.left; let endX = pxW - m.right;
-                        if (cornerBox && currentY >= cornerBox.y - lineH && currentY <= cornerBox.y + cornerBox.h + 20) {
-                            if (currentImgPos === 'top-left') startX = cornerBox.x + cornerBox.w + 30;
-                            else if (currentImgPos === 'top-right') endX = cornerBox.x - 30;
-                        }
-                        return { startX, endX };
-                    };
-
-                    let bounds = getBounds(y); let currentX = bounds.startX;
+                    let currentX = m.left + leftIndent;
+                    let endX = pxW - m.right;
                     
                     for(let i=0; i<words.length; i++) {
                         let w = words[i];
                         ctx.font = w.b ? boldFont : normalFont; ctx.fillStyle = w.b ? boldCol : normalCol;
                         let metric = ctx.measureText(w.t + " ");
                         
-                        if (currentX + metric.width > bounds.endX && currentX !== bounds.startX) {
-                            y += lineH; bounds = getBounds(y); currentX = bounds.startX;
+                        // Simple wrap logic
+                        if (currentX + metric.width > endX && currentX !== m.left + leftIndent) {
+                            y += lineH; currentX = m.left + leftIndent;
                         }
                         ctx.fillText(w.t + " ", currentX, y); currentX += metric.width;
                     }
@@ -397,21 +364,19 @@ $('generateBtn').onclick = async () => {
                 else if(key==='question'){ 
                     drawSmartText("Q. " + item.question, "bold 44px Kalam", "bold 44px Kalam", h1c, h1c, 50); y+=10;
                     let opts = item.option || item.options || []; 
-                    opts.forEach((o, i) => { 
-                        let tempLeft = m.left; m.left += 20; 
-                        drawSmartText(`${i+1}. ${o}`, "30px Kalam", "bold 30px Kalam", oc, bc, 42);
-                        m.left = tempLeft;
-                    });
+                    opts.forEach((o, i) => { drawSmartText(`${i+1}. ${o}`, "30px Kalam", "bold 30px Kalam", oc, bc, 42, 20); });
                 }
             });
 
-            if (item.image && currentImgPos === 'bottom') {
+            // Draw image exactly at the bottom center of the remaining space
+            if (item.image) {
                 let simg = new Image(); simg.src = item.image; await new Promise(r => simg.onload = r);
                 let availableH = pxH - m.bottom - y;
                 if(availableH > 50) { 
                     let ratio = Math.min(maxW / simg.width, availableH / simg.height);
                     let finalW = simg.width * ratio; let finalH = simg.height * ratio;
-                    let x = m.left + (maxW - finalW) / 2; let imgY = y + (availableH - finalH) / 2;
+                    let x = m.left + (maxW - finalW) / 2; 
+                    let imgY = y + (availableH - finalH) / 2;
                     ctx.drawImage(simg, x, imgY, finalW, finalH);
                 }
             }
