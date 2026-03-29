@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Ultimate PPT Maker - Error Free</title>
+<title>Ultimate PPT Maker - HTML Version</title>
 <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
@@ -75,18 +75,17 @@ body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
 <div class="main-wrapper">
     <div class="left-panel">
         <div class="header-row">
-            <h2>🎓 Pro PPT Maker</h2>
+            <h2>🎓 HTML to PPT Pro</h2>
             <button id="themeToggle" class="theme-btn">🌙 Dark Mode</button>
         </div>
 
-        <label>JSON Data Input</label>
-        <textarea id="jsonArea" rows="8" placeholder='Paste your JSON here...'></textarea>
+        <label>HTML Data Input (H2 = New Slide)</label>
+        <textarea id="htmlArea" rows="8" placeholder='Paste your HTML Code here (<h2>, <ul>, <li>, <strong> etc.)...'></textarea>
         
         <div class="grid-2" style="margin-top: 15px;">
-            <button id="importBtn" class="btn btn-blue" title="डेटा प्रोसेस करें">📥 Load JSON</button>
-            <button id="copyBtn" class="btn btn-cyan" title="अपडेटेड JSON कॉपी करें">📋 Copy JSON</button>
+            <button id="importBtn" class="btn btn-blue" title="डेटा प्रोसेस करें">📥 Load HTML</button>
+            <button id="clearBtn" class="btn btn-red" title="सब डिलीट करें">🗑️ Clear All</button>
         </div>
-        <button id="clearBtn" class="btn btn-red" style="margin-top: 10px;" title="सब डिलीट करें">🗑️ Clear All Data</button>
 
         <label>Slide Margins (px)</label>
         <div class="grid-4">
@@ -168,51 +167,99 @@ $('bgImgUpload').onchange = (e) => {
 };
 
 // ==============================================
-// MAGIC JSON FIX (Handles multiple array pastes)
+// SMART HTML PARSER
 // ==============================================
+function cleanHtmlForCanvas(htmlStr) {
+    // Convert strong and bold to <b> tag which canvas parser uses
+    let str = htmlStr.replace(/<strong[^>]*>/gi, '<b>')
+                     .replace(/<\/strong>/gi, '</b>')
+                     .replace(/<b\s[^>]*>/gi, '<b>')
+                     .replace(/<br\s*[\/]?>/gi, '\n');
+    
+    // Remove all other HTML tags except <b>
+    str = str.replace(/<\/?(?!(b)\b)[a-z](?:[^>"']|"[^"]*"|'[^']*')*>/gi, '');
+    
+    // Decode HTML entities (like &nbsp;)
+    const txt = document.createElement("textarea");
+    txt.innerHTML = str;
+    return txt.value.trim();
+}
+
 $('importBtn').onclick = () => { 
-    try { 
-        let rawText = $('jsonArea').value.trim();
-        if(!rawText) return alert("Please paste JSON code!");
+    let rawHtml = $('htmlArea').value.trim();
+    if(!rawHtml) return alert("Please paste HTML code!");
 
-        // This regex converts `][` or `] [` into `,` so the JSON doesn't break
-        rawText = rawText.replace(/\]\s*\[/g, ',');
-        
-        DATA = JSON.parse(rawText); 
-        if(!Array.isArray(DATA)) DATA = [DATA];
-        
-        // Cleanly format the text area
-        $('jsonArea').value = JSON.stringify(DATA, null, 2);
-        renderPreview(); saveState();
-    } catch (e) { 
-        alert("Invalid JSON Code! Make sure your brackets are correct."); 
-    } 
-};
+    let slidesData = [];
+    let currentSlide = { list: [] };
 
-$('copyBtn').onclick = () => {
-    if (DATA.length === 0) return alert("No data to copy!");
-    $('jsonArea').value = JSON.stringify(DATA, null, 2);
-    navigator.clipboard.writeText($('jsonArea').value).then(() => {
-        const btn = $('copyBtn'); btn.innerHTML = "✅ Copied!"; setTimeout(() => btn.innerHTML = "📋 Copy JSON", 2000);
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(rawHtml, 'text/html');
+
+    Array.from(doc.body.children).forEach(el => {
+        // H1 or H2 triggers a new slide
+        if (el.tagName === 'H1' || el.tagName === 'H2') {
+            if (currentSlide.h1 || currentSlide.h2 || currentSlide.content || currentSlide.list.length > 0) {
+                slidesData.push(currentSlide);
+            }
+            currentSlide = { list: [] };
+            if (el.tagName === 'H1') currentSlide.h1 = el.innerText.trim();
+            if (el.tagName === 'H2') currentSlide.h2 = el.innerText.trim();
+        } 
+        else if (el.tagName === 'H3') {
+            currentSlide.h3 = el.innerText.trim();
+        } 
+        else if (el.tagName === 'UL' || el.tagName === 'OL') {
+            Array.from(el.children).forEach(li => {
+                if (li.tagName === 'LI') {
+                    currentSlide.list.push(cleanHtmlForCanvas(li.innerHTML));
+                }
+            });
+        } 
+        else if (el.tagName === 'P') {
+            let text = cleanHtmlForCanvas(el.innerHTML);
+            if(text) currentSlide.content = (currentSlide.content ? currentSlide.content + "\n\n" : "") + text;
+        } 
+        else if (el.tagName === 'TABLE') {
+            // Convert Table to formatted text layout
+            let tableText = "";
+            Array.from(el.querySelectorAll('tr')).forEach(tr => {
+                let rowText = Array.from(tr.querySelectorAll('th, td')).map(td => td.innerText.trim()).join("  |  ");
+                tableText += rowText + "\n";
+            });
+            if(tableText) currentSlide.content = (currentSlide.content ? currentSlide.content + "\n" : "") + tableText;
+        }
     });
+
+    // Push the very last slide
+    if (currentSlide.h1 || currentSlide.h2 || currentSlide.content || currentSlide.list.length > 0) {
+        slidesData.push(currentSlide);
+    }
+
+    if (slidesData.length === 0) {
+        alert("No valid HTML tags found! Use <h2>, <ul>, <li>, <p> etc.");
+        return;
+    }
+
+    DATA = slidesData;
+    renderPreview(); saveState();
 };
 
-$('clearBtn').onclick = () => { if(confirm("Clear all data?")) { DATA = []; $('jsonArea').value = ""; localStorage.removeItem('proPptStateFinalX'); renderPreview(); } };
+$('clearBtn').onclick = () => { if(confirm("Clear all data?")) { DATA = []; $('htmlArea').value = ""; localStorage.removeItem('htmlPptStateFinalX'); renderPreview(); } };
 
 function saveState() {
     const state = {
         data: DATA, margins: { t: $('topM').value, b: $('bottomM').value, l: $('leftM').value, r: $('rightM').value },
         colors: { h1: $('h1Color').value, h2: $('h2Color').value, h3: $('h3Color').value, bold: $('boldColor').value, opt: $('optColor').value },
-        bg: $('bgSelect').value, theme: isLightMode, customBg: customBgDataUrl
+        bg: $('bgSelect').value, theme: isLightMode, customBg: customBgDataUrl, htmlBox: $('htmlArea').value
     };
-    localStorage.setItem('proPptStateFinalX', JSON.stringify(state));
+    localStorage.setItem('htmlPptStateFinalX', JSON.stringify(state));
 }
 
 function loadState() {
-    const saved = localStorage.getItem('proPptStateFinalX');
+    const saved = localStorage.getItem('htmlPptStateFinalX');
     if(saved) {
         const state = JSON.parse(saved); DATA = state.data || [];
-        $('jsonArea').value = DATA.length ? JSON.stringify(DATA, null, 2) : "";
+        $('htmlArea').value = state.htmlBox || "";
         $('topM').value = state.margins.t; $('bottomM').value = state.margins.b; $('leftM').value = state.margins.l; $('rightM').value = state.margins.r;
         $('h1Color').value = state.colors.h1; $('h2Color').value = state.colors.h2; 
         if(state.colors.h3) $('h3Color').value = state.colors.h3; if(state.colors.bold) $('boldColor').value = state.colors.bold;
@@ -237,7 +284,7 @@ function formatPreviewText(text, boldHex) {
 
 function renderPreview() {
     const box = $("preview"); box.innerHTML = "";
-    if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted); padding:20px; text-align:center;'>No data. Paste JSON and click Load.</p>"; return; }
+    if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted); padding:20px; text-align:center;'>No data. Paste HTML code and click Load.</p>"; return; }
 
     const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
     const bgUrl = getBgUrl();
@@ -253,19 +300,24 @@ function renderPreview() {
             const el = document.createElement("div"); el.contentEditable = "true";
             
             if(key === 'h1') { 
-                el.className = "p-h1"; el.style.color = h1c; 
-                el.innerText = item.h1; el.onblur = e => { DATA[idx].h1 = e.target.innerText; saveState(); }; contentWrap.appendChild(el);
+                el.className = "p-h1"; el.style.color = h1c; el.innerText = item.h1; 
+                el.onblur = e => { DATA[idx].h1 = e.target.innerText; saveState(); }; contentWrap.appendChild(el);
             }
             else if(key === 'h2') { el.className = "p-h2"; el.innerText = item.h2; el.style.color = h2c; el.onblur = e => { DATA[idx].h2 = e.target.innerText; saveState(); }; contentWrap.appendChild(el); }
             else if(key === 'h3') { el.className = "p-h3"; el.innerText = item.h3; el.style.color = h3c; el.onblur = e => { DATA[idx].h3 = e.target.innerText; saveState(); }; contentWrap.appendChild(el); }
-            else if(key === 'content') { el.className = "p-text"; el.innerHTML = formatPreviewText(item.content, bc); el.style.color = oc; el.onblur = e => { DATA[idx].content = e.target.innerText; saveState(); }; contentWrap.appendChild(el); }
-            else if(key === 'list') {
-                item.list.forEach((li, lIdx) => { const l = document.createElement("div"); l.className = "p-li"; l.contentEditable = "true"; l.style.color = oc; l.innerHTML = "• " + formatPreviewText(li, bc); l.onblur = e => { DATA[idx].list[lIdx] = e.target.innerText.replace("• ", ""); saveState(); }; contentWrap.appendChild(l); });
+            else if(key === 'content') { 
+                if(!item.content) return;
+                el.className = "p-text"; el.innerHTML = formatPreviewText(item.content, bc); el.style.color = oc; 
+                el.onblur = e => { DATA[idx].content = e.target.innerText; saveState(); }; contentWrap.appendChild(el); 
             }
-            else if(key === 'question') {
-                const q = document.createElement("div"); q.className = "p-q"; q.contentEditable = "true"; q.style.color = h1c; q.innerHTML = "Q. " + formatPreviewText(item.question, bc); q.onblur = e => { DATA[idx].question = e.target.innerText.replace(/^Q\.\s*/, ""); saveState(); }; contentWrap.appendChild(q);
-                let opts = item.option || item.options || [];
-                opts.forEach((o, oIdx) => { const op = document.createElement("div"); op.className = "p-text"; op.style.marginLeft = "20px"; op.contentEditable = "true"; op.style.color = oc; op.innerHTML = `${oIdx + 1}. ` + formatPreviewText(o, bc); op.onblur = e => { let val = e.target.innerText.replace(/^\d+\.\s*/, ''); if(item.option) DATA[idx].option[oIdx] = val; else DATA[idx].options[oIdx] = val; saveState(); }; contentWrap.appendChild(op); });
+            else if(key === 'list') {
+                if(!item.list || item.list.length === 0) return;
+                item.list.forEach((li, lIdx) => { 
+                    const l = document.createElement("div"); l.className = "p-li"; l.contentEditable = "true"; l.style.color = oc; 
+                    l.innerHTML = "• " + formatPreviewText(li, bc); 
+                    l.onblur = e => { DATA[idx].list[lIdx] = e.target.innerText.replace("• ", ""); saveState(); }; 
+                    contentWrap.appendChild(l); 
+                });
             }
         });
 
@@ -274,7 +326,7 @@ function renderPreview() {
 }
 
 $('generateBtn').onclick = async () => {
-    if (DATA.length === 0) return alert("No Data! Please import JSON first.");
+    if (DATA.length === 0) return alert("No Data! Please import HTML first.");
     const btn = $('generateBtn'); btn.innerHTML = "⏳ Generating PPTX..."; btn.disabled = true;
 
     setTimeout(async () => {
@@ -299,9 +351,10 @@ $('generateBtn').onclick = async () => {
             const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
 
             const drawSmartText = (text, normalFont, boldFont, normalCol, boldCol, lineH, leftIndent = 0) => {
+                if(!text) return;
                 const paras = text.split("\n");
                 paras.forEach(para => {
-                    if(!para) { y += lineH; return; }
+                    if(!para.trim()) { y += lineH/2; return; }
                     let parts = para.split(/(<b>.*?<\/b>)/g);
                     let words = [];
                     parts.forEach(part => {
@@ -335,21 +388,16 @@ $('generateBtn').onclick = async () => {
                     ctx.strokeStyle = "rgba(150,150,150,0.4)"; ctx.lineWidth = 2; ctx.stroke();
                     y+=15;
                 }
-                else if(key==='h2'){ drawSmartText(item.h2, "bold 34px Kalam", "bold 34px Kalam", h2c, h2c, 46); y+=5; }
-                else if(key==='h3'){ drawSmartText(item.h3, "bold 28px Kalam", "bold 28px Kalam", h3c, h3c, 38); y+=5; }
-                else if(key==='content'){ drawSmartText(item.content, "30px Kalam", "bold 30px Kalam", oc, bc, 42); y+=5; }
-                else if(key==='list'){ item.list.forEach(li => drawSmartText("• " + li, "30px Kalam", "bold 30px Kalam", oc, bc, 42)); y+=5; }
-                else if(key==='question'){ 
-                    drawSmartText("Q. " + item.question, "bold 44px Kalam", "bold 44px Kalam", h1c, h1c, 50); y+=10;
-                    let opts = item.option || item.options || []; 
-                    opts.forEach((o, i) => { drawSmartText(`${i+1}. ${o}`, "30px Kalam", "bold 30px Kalam", oc, bc, 42, 20); });
-                }
+                else if(key==='h2' && item.h2){ drawSmartText(item.h2, "bold 34px Kalam", "bold 34px Kalam", h2c, h2c, 46); y+=5; }
+                else if(key==='h3' && item.h3){ drawSmartText(item.h3, "bold 28px Kalam", "bold 28px Kalam", h3c, h3c, 38); y+=5; }
+                else if(key==='content' && item.content){ drawSmartText(item.content, "30px Kalam", "bold 30px Kalam", oc, bc, 42); y+=5; }
+                else if(key==='list' && item.list.length > 0){ item.list.forEach(li => drawSmartText("• " + li, "30px Kalam", "bold 30px Kalam", oc, bc, 42, 20)); y+=5; }
             });
 
             s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
         }
         
-        ppt.writeFile({ fileName: "Study_Notes_Fixed.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
+        ppt.writeFile({ fileName: "Study_Notes_HTML_Fixed.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
     }, 100);
 };
 
