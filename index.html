@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Ultimate PPT Maker - Super Fast & Clean</title>
+<title>Ultimate PPT Maker - Error Free</title>
 <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
@@ -46,12 +46,11 @@ input[type="color"] { width: 100%; height: 40px; padding: 2px; border-radius: 8p
 .btn-blue { background: #2563eb; } .btn-red { background: #e11d48; } .btn-grey { background: #475569; } .btn-cyan { background: #0ea5e9; }
 .btn-generate { background: linear-gradient(135deg, #10b981, #059669); font-size: 1.3em; padding: 15px; margin-top: 20px; width: 100%; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
 
-/* --- Preview Styles (Clean Text Only) --- */
+/* --- Preview Styles --- */
 .preview-list { display: flex; flex-direction: column; gap: 30px; }
 
 .slide-card { 
     background-color: var(--slide-bg); background-size: cover !important; background-position: center !important; 
-    background-repeat: no-repeat !important;
     border: 2px solid var(--border); padding: 30px; border-radius: 8px; position: relative; 
     aspect-ratio: 16 / 9; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); overflow: hidden; 
     display: flex; flex-direction: column;
@@ -59,7 +58,7 @@ input[type="color"] { width: 100%; height: 40px; padding: 2px; border-radius: 8p
 .slide-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 0; }
 body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
 
-.slide-content { position: relative; z-index: 1; width: 100%; height: 100%; display: block; }
+.slide-content { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; }
 
 /* Typography */
 [contenteditable="true"] { outline: none; border: 1px dashed transparent; transition: 0.2s; display: block; }
@@ -81,16 +80,13 @@ body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
         </div>
 
         <label>JSON Data Input</label>
-        <textarea id="jsonArea" rows="6" placeholder='[{"h1":"Main", "h2":"Sub", "content":"Notes..."}]'></textarea>
+        <textarea id="jsonArea" rows="8" placeholder='Paste your JSON here...'></textarea>
         
         <div class="grid-2" style="margin-top: 15px;">
-            <button id="importBtn" class="btn btn-grey" title="पुराना मिटाकर नया डालें">📥 Replace Data</button>
-            <button id="appendBtn" class="btn btn-blue" title="पुरानी स्लाइड के नीचे नया जोड़ें">➕ Append JSON</button>
-        </div>
-        <div class="grid-2" style="margin-top: 10px;">
+            <button id="importBtn" class="btn btn-blue" title="डेटा प्रोसेस करें">📥 Load JSON</button>
             <button id="copyBtn" class="btn btn-cyan" title="अपडेटेड JSON कॉपी करें">📋 Copy JSON</button>
-            <button id="clearBtn" class="btn btn-red" title="सब डिलीट करें">🗑️ Clear All</button>
         </div>
+        <button id="clearBtn" class="btn btn-red" style="margin-top: 10px;" title="सब डिलीट करें">🗑️ Clear All Data</button>
 
         <label>Slide Margins (px)</label>
         <div class="grid-4">
@@ -112,8 +108,6 @@ body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
         <label>Master Background Setup</label>
         <select id="bgSelect" style="margin-bottom: 10px;">
             <option value="none" selected>No Background (Solid Color)</option>
-            <option value="default1">Default Image 1 (Yellow-Dark)</option>
-            <option value="default2">Default Image 2 (Blue-Dark)</option>
             <option value="custom">Upload Custom Background...</option>
         </select>
         <input type="file" id="bgImgUpload" accept="image/*" style="display:none;">
@@ -133,13 +127,8 @@ let DATA = [];
 let isLightMode = false;
 let customBgDataUrl = null;
 
-const defaultImg1 = "https://blogger.googleusercontent.com/img/a/AVvXsEglEH5N9CdXH5F3qcRU9elRqBnLtC5_9Lhz-j_dBi9hYBCK1oBC88Vthv4uS0e5yMl2FsXPjbhxs9KLqI2Xtzs6S7FpxIRLb2PBzYUNJ5y_MnaNDQUHJE7PnnXlFvtN7XriHTUhs7P3rHCwobRgRBdJxoio0N7rDoc4vhiAlC1pW2QdgkSu62VZK1Hf2aI=s1280";
-const defaultImg2 = "https://blogger.googleusercontent.com/img/a/AVvXsEhZ4Fw8Xl52IHLZQRVn5u8z3UuTjlVkhKD6MLEIpJtwZj0ZFe3230Yfzaw5AAO_m406K4whQuP7Va_w8l16_JoT3Mbkw811x3kMHm_pKmzAvj44_19ICmPZQQAF430R6Awe0Vhgm-DHOgaWhoZf0o1Tl0lJwOC6JX5n1ZsgfBVgT5Qgmv4kd-DebHbyTiw=s1280";
-
 function getBgUrl() {
     let val = $('bgSelect').value;
-    if(val === 'default1') return defaultImg1;
-    if(val === 'default2') return defaultImg2;
     if(val === 'custom') return customBgDataUrl;
     return null;
 }
@@ -159,21 +148,17 @@ $('bgSelect').onchange = (e) => {
     renderPreview(); saveState();
 };
 
-// --- FIX: Image Compressor to prevent 'Generating...' Hang ---
 $('bgImgUpload').onchange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    
     const reader = new FileReader();
     reader.onload = (event) => {
         const img = new Image();
         img.onload = () => {
-            // Compress image to 1300x710 resolution so it never crashes the tool
             const canvas = document.createElement("canvas");
             canvas.width = 1300; canvas.height = 710;
             const ctx = canvas.getContext("2d");
             ctx.drawImage(img, 0, 0, 1300, 710);
-            // Save as lightweight JPEG (Quality 0.7)
             customBgDataUrl = canvas.toDataURL("image/jpeg", 0.7); 
             renderPreview(); saveState();
         };
@@ -182,26 +167,26 @@ $('bgImgUpload').onchange = (e) => {
     reader.readAsDataURL(file);
 };
 
-// Buttons
+// ==============================================
+// MAGIC JSON FIX (Handles multiple array pastes)
+// ==============================================
 $('importBtn').onclick = () => { 
     try { 
-        DATA = JSON.parse($('jsonArea').value); 
+        let rawText = $('jsonArea').value.trim();
+        if(!rawText) return alert("Please paste JSON code!");
+
+        // This regex converts `][` or `] [` into `,` so the JSON doesn't break
+        rawText = rawText.replace(/\]\s*\[/g, ',');
+        
+        DATA = JSON.parse(rawText); 
         if(!Array.isArray(DATA)) DATA = [DATA];
+        
+        // Cleanly format the text area
         $('jsonArea').value = JSON.stringify(DATA, null, 2);
         renderPreview(); saveState();
-    } catch (e) { alert("Invalid JSON Code!"); } 
-};
-
-$('appendBtn').onclick = () => { 
-    try { 
-        if(!$('jsonArea').value.trim()) return alert("Please paste new JSON to append.");
-        let newData = JSON.parse($('jsonArea').value); 
-        if(!Array.isArray(newData)) newData = [newData];
-        DATA = DATA.concat(newData); 
-        $('jsonArea').value = JSON.stringify(DATA, null, 2); 
-        renderPreview(); saveState();
-        const btn = $('appendBtn'); btn.innerHTML = "✅ Appended!"; setTimeout(() => btn.innerHTML = "➕ Append JSON", 2000);
-    } catch (e) { alert("Invalid JSON Code!"); } 
+    } catch (e) { 
+        alert("Invalid JSON Code! Make sure your brackets are correct."); 
+    } 
 };
 
 $('copyBtn').onclick = () => {
@@ -212,7 +197,7 @@ $('copyBtn').onclick = () => {
     });
 };
 
-$('clearBtn').onclick = () => { if(confirm("Clear all slides?")) { DATA = []; $('jsonArea').value = ""; localStorage.removeItem('proPptStateClean'); renderPreview(); } };
+$('clearBtn').onclick = () => { if(confirm("Clear all data?")) { DATA = []; $('jsonArea').value = ""; localStorage.removeItem('proPptStateFinalX'); renderPreview(); } };
 
 function saveState() {
     const state = {
@@ -220,11 +205,11 @@ function saveState() {
         colors: { h1: $('h1Color').value, h2: $('h2Color').value, h3: $('h3Color').value, bold: $('boldColor').value, opt: $('optColor').value },
         bg: $('bgSelect').value, theme: isLightMode, customBg: customBgDataUrl
     };
-    localStorage.setItem('proPptStateClean', JSON.stringify(state));
+    localStorage.setItem('proPptStateFinalX', JSON.stringify(state));
 }
 
 function loadState() {
-    const saved = localStorage.getItem('proPptStateClean');
+    const saved = localStorage.getItem('proPptStateFinalX');
     if(saved) {
         const state = JSON.parse(saved); DATA = state.data || [];
         $('jsonArea').value = DATA.length ? JSON.stringify(DATA, null, 2) : "";
@@ -250,10 +235,9 @@ function formatPreviewText(text, boldHex) {
     if(!text) return ""; return text.replace(/<b>(.*?)<\/b>/g, `<span style="color:${boldHex}; font-weight:bold;">$1</span>`);
 }
 
-// Clean HTML Preview
 function renderPreview() {
     const box = $("preview"); box.innerHTML = "";
-    if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted); padding:20px; text-align:center;'>No data. Paste JSON and click Replace or Append.</p>"; return; }
+    if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted); padding:20px; text-align:center;'>No data. Paste JSON and click Load.</p>"; return; }
 
     const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
     const bgUrl = getBgUrl();
@@ -266,23 +250,22 @@ function renderPreview() {
         const contentWrap = document.createElement("div"); contentWrap.className = "slide-content";
 
         Object.keys(item).forEach(key => {
-            if(key === 'image' || key === 'imgPos') return; // Ignore any legacy image tags
             const el = document.createElement("div"); el.contentEditable = "true";
             
             if(key === 'h1') { 
                 el.className = "p-h1"; el.style.color = h1c; 
-                el.innerText = item.h1; el.onblur = e => { DATA[idx].h1 = e.target.innerText; saveState();}; contentWrap.appendChild(el);
+                el.innerText = item.h1; el.onblur = e => { DATA[idx].h1 = e.target.innerText; saveState(); }; contentWrap.appendChild(el);
             }
-            else if(key === 'h2') { el.className = "p-h2"; el.innerText = item.h2; el.style.color = h2c; el.onblur = e => { DATA[idx].h2 = e.target.innerText; saveState();}; contentWrap.appendChild(el); }
-            else if(key === 'h3') { el.className = "p-h3"; el.innerText = item.h3; el.style.color = h3c; el.onblur = e => { DATA[idx].h3 = e.target.innerText; saveState();}; contentWrap.appendChild(el); }
-            else if(key === 'content') { el.className = "p-text"; el.innerHTML = formatPreviewText(item.content, bc); el.style.color = oc; el.onblur = e => { DATA[idx].content = e.target.innerText; saveState();}; contentWrap.appendChild(el); }
+            else if(key === 'h2') { el.className = "p-h2"; el.innerText = item.h2; el.style.color = h2c; el.onblur = e => { DATA[idx].h2 = e.target.innerText; saveState(); }; contentWrap.appendChild(el); }
+            else if(key === 'h3') { el.className = "p-h3"; el.innerText = item.h3; el.style.color = h3c; el.onblur = e => { DATA[idx].h3 = e.target.innerText; saveState(); }; contentWrap.appendChild(el); }
+            else if(key === 'content') { el.className = "p-text"; el.innerHTML = formatPreviewText(item.content, bc); el.style.color = oc; el.onblur = e => { DATA[idx].content = e.target.innerText; saveState(); }; contentWrap.appendChild(el); }
             else if(key === 'list') {
-                item.list.forEach((li, lIdx) => { const l = document.createElement("div"); l.className = "p-li"; l.contentEditable = "true"; l.style.color = oc; l.innerHTML = "• " + formatPreviewText(li, bc); l.onblur = e => { DATA[idx].list[lIdx] = e.target.innerText.replace("• ", ""); saveState();}; contentWrap.appendChild(l); });
+                item.list.forEach((li, lIdx) => { const l = document.createElement("div"); l.className = "p-li"; l.contentEditable = "true"; l.style.color = oc; l.innerHTML = "• " + formatPreviewText(li, bc); l.onblur = e => { DATA[idx].list[lIdx] = e.target.innerText.replace("• ", ""); saveState(); }; contentWrap.appendChild(l); });
             }
             else if(key === 'question') {
-                const q = document.createElement("div"); q.className = "p-q"; q.contentEditable = "true"; q.style.color = h1c; q.innerHTML = "Q. " + formatPreviewText(item.question, bc); q.onblur = e => { DATA[idx].question = e.target.innerText.replace(/^Q\.\s*/, ""); saveState();}; contentWrap.appendChild(q);
+                const q = document.createElement("div"); q.className = "p-q"; q.contentEditable = "true"; q.style.color = h1c; q.innerHTML = "Q. " + formatPreviewText(item.question, bc); q.onblur = e => { DATA[idx].question = e.target.innerText.replace(/^Q\.\s*/, ""); saveState(); }; contentWrap.appendChild(q);
                 let opts = item.option || item.options || [];
-                opts.forEach((o, oIdx) => { const op = document.createElement("div"); op.className = "p-text"; op.style.marginLeft = "20px"; op.contentEditable = "true"; op.style.color = oc; op.innerHTML = `${oIdx + 1}. ` + formatPreviewText(o, bc); op.onblur = e => { let val = e.target.innerText.replace(/^\d+\.\s*/, ''); if(item.option) DATA[idx].option[oIdx] = val; else DATA[idx].options[oIdx] = val; saveState();}; contentWrap.appendChild(op); });
+                opts.forEach((o, oIdx) => { const op = document.createElement("div"); op.className = "p-text"; op.style.marginLeft = "20px"; op.contentEditable = "true"; op.style.color = oc; op.innerHTML = `${oIdx + 1}. ` + formatPreviewText(o, bc); op.onblur = e => { let val = e.target.innerText.replace(/^\d+\.\s*/, ''); if(item.option) DATA[idx].option[oIdx] = val; else DATA[idx].options[oIdx] = val; saveState(); }; contentWrap.appendChild(op); });
             }
         });
 
@@ -290,10 +273,9 @@ function renderPreview() {
     });
 }
 
-// 100% Hang-Free PPTX Generation
 $('generateBtn').onclick = async () => {
     if (DATA.length === 0) return alert("No Data! Please import JSON first.");
-    const btn = $('generateBtn'); btn.innerHTML = "⏳ Generating PPTX... Please wait"; btn.disabled = true;
+    const btn = $('generateBtn'); btn.innerHTML = "⏳ Generating PPTX..."; btn.disabled = true;
 
     setTimeout(async () => {
         const pxW = 1300, pxH = 710;
@@ -307,16 +289,8 @@ $('generateBtn').onclick = async () => {
         for (const item of DATA) {
             let s = ppt.addSlide();
             
-            // Safe Background Application
-            if (bgUrl) {
-                if(bgUrl.startsWith('data:image')) {
-                    s.background = { data: bgUrl };
-                } else {
-                    s.background = { path: bgUrl };
-                }
-            } else {
-                s.background = { color: isLightMode ? "FFFFFF" : "000000" };
-            }
+            if (bgUrl) { s.background = { data: bgUrl }; } 
+            else { s.background = { color: isLightMode ? "FFFFFF" : "000000" }; }
 
             const c = document.createElement("canvas"); c.width = pxW; c.height = pxH; const ctx = c.getContext("2d");
             ctx.textBaseline = "top"; 
@@ -338,8 +312,7 @@ $('generateBtn').onclick = async () => {
                         }
                     });
 
-                    let currentX = m.left + leftIndent;
-                    let endX = pxW - m.right;
+                    let currentX = m.left + leftIndent; let endX = pxW - m.right;
                     
                     for(let i=0; i<words.length; i++) {
                         let w = words[i];
@@ -356,8 +329,6 @@ $('generateBtn').onclick = async () => {
             };
 
             Object.keys(item).forEach(key => {
-                if(key === 'image' || key === 'imgPos') return; // Ignore completely
-                
                 if(key==='h1'){ 
                     drawSmartText(item.h1, "bold 44px Kalam", "bold 44px Kalam", h1c, h1c, 56); 
                     ctx.beginPath(); ctx.moveTo(m.left, y - 5); ctx.lineTo(pxW - m.right, y - 5);
@@ -375,11 +346,10 @@ $('generateBtn').onclick = async () => {
                 }
             });
 
-            // Transparent canvas containing only text added on top of PPT background
             s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
         }
         
-        ppt.writeFile({ fileName: "Study_Notes_Master.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
+        ppt.writeFile({ fileName: "Study_Notes_Fixed.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
     }, 100);
 };
 
