@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Ultimate PPT Maker - Final Fix</title>
+<title>Ultimate PPT Maker - Original BG</title>
 <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
@@ -22,7 +22,6 @@ body.light-mode {
 
 body { font-family: 'Kalam', cursive; background: var(--bg-main); color: var(--text-main); margin: 0; padding: 20px; transition: 0.3s; }
 
-/* Desktop Layout */
 .main-wrapper { display: flex; gap: 30px; max-width: 1600px; margin: auto; align-items: flex-start; }
 .left-panel { flex: 0 0 450px; background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: sticky; top: 20px; max-height: calc(100vh - 40px); overflow-y: auto; }
 .right-panel { flex: 1; background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.1); min-height: calc(100vh - 40px); }
@@ -45,23 +44,22 @@ input[type="color"] { width: 100%; height: 40px; padding: 2px; border-radius: 8p
 .btn-blue { background: #2563eb; } .btn-red { background: #e11d48; } .btn-grey { background: #475569; } .btn-cyan { background: #0ea5e9; }
 .btn-generate { background: linear-gradient(135deg, #10b981, #059669); font-size: 1.3em; padding: 15px; margin-top: 20px; width: 100%; }
 
-/* --- Preview Styles (Fixed Flexbox Issue) --- */
 .preview-list { display: flex; flex-direction: column; gap: 30px; }
 
-/* Changed to Block so Floats work correctly */
+/* FIX: Image will not shift now (center/cover) */
 .slide-card { 
-    background-color: var(--slide-bg); background-size: cover !important; background-position: center !important; 
+    background-color: var(--slide-bg); 
+    background-size: cover !important; 
+    background-position: center !important; 
+    background-repeat: no-repeat !important;
     border: 2px solid var(--border); padding: 30px; border-radius: 8px; position: relative; 
-    aspect-ratio: 16 / 9; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); overflow: hidden; 
-    display: block; 
+    aspect-ratio: 16 / 9; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); overflow: hidden; display: block; 
 }
 .slide-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 0; }
 body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
 
-/* Content Wrapper */
 .slide-content { position: relative; z-index: 1; width: 100%; height: 100%; display: block; }
 
-/* Typography */
 [contenteditable="true"] { outline: none; border: 1px dashed transparent; transition: 0.2s; display: block; }
 [contenteditable="true"]:hover { border-color: rgba(150,150,150,0.5); background: rgba(128,128,128,0.1); }
 .p-h1 { color: var(--accent); font-size: 2.2em; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid rgba(150,150,150,0.3); padding-bottom: 5px; clear: both; }
@@ -70,22 +68,15 @@ body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
 .p-text, .p-li { font-size: 1.3em; margin-bottom: 8px; line-height: 1.5; white-space: pre-wrap; color: var(--text-main); }
 .p-q { color: var(--accent); font-size: 1.6em; font-weight: bold; margin-top: 10px; }
 
-/* H1 Continued Logic */
 .h1-continued { opacity: 0.4; font-size: 1.2em; border: none; padding: 0; margin-bottom: 0px; text-decoration: line-through; }
-.h1-continued::after { content: " (Continued - Hidden in final PPTX)"; font-size: 0.7em; font-style: italic; color: #ff5252; text-decoration: none;}
+.h1-continued::after { content: " (Continued - Hidden in PPTX)"; font-size: 0.7em; font-style: italic; color: #ff5252; text-decoration: none;}
 
-/* --- Image Wrapping Logic --- */
-.image-placeholder-box { 
-    border: 2px dashed rgba(150,150,150,0.5); border-radius: 8px; background: rgba(128,128,128,0.2); 
-    display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: 0.3s; 
-}
-/* Fixed Dimensions for Floats */
+.image-placeholder-box { border: 2px dashed rgba(150,150,150,0.5); border-radius: 8px; background: rgba(128,128,128,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: 0.3s; }
 .pos-top-right { float: right; margin: 0 0 15px 25px; width: 250px; height: 250px; }
 .pos-top-left { float: left; margin: 0 25px 15px 0; width: 250px; height: 250px; }
 .pos-bottom { clear: both; margin-top: 15px; width: 100%; height: 180px; float: none; }
-
 .image-placeholder-box:hover { border-color: var(--accent); }
-.image-placeholder-box span { color: var(--text-muted); font-size: 1.1em; pointer-events: none; font-weight: bold; }
+.image-placeholder-box span { color: var(--text-muted); font-size: 1.1em; pointer-events: none; font-weight: bold; text-align: center; padding: 10px;}
 .image-placeholder-box img { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; z-index: 1; }
 .remove-img-btn { position: absolute; top: 5px; right: 5px; background: #e11d48; color: white; border: none; border-radius: 5px; padding: 4px 8px; cursor: pointer; z-index: 2; font-family: 'Kalam'; font-size: 0.8em; }
 
@@ -132,6 +123,15 @@ body.light-mode .img-pos-row { background: rgba(0,0,0,0.05); }
             <div><label style="margin-top:5px; font-size:0.8em;">Normal</label><input type="color" id="optColor" value="#ffffff"></div>
         </div>
 
+        <label>Master Background Setup</label>
+        <select id="bgSelect" style="margin-bottom: 10px;">
+            <option value="none" selected>No Background (Solid Color)</option>
+            <option value="default1">Default Image 1 (Yellow-Dark)</option>
+            <option value="default2">Default Image 2 (Blue-Dark)</option>
+            <option value="custom">Upload Custom Background...</option>
+        </select>
+        <input type="file" id="bgImgUpload" accept="image/*" style="display:none;">
+
         <button id="generateBtn" class="btn btn-generate">💾 Generate PPTX File</button>
     </div>
 
@@ -146,7 +146,19 @@ const $ = id => document.getElementById(id);
 let DATA = [];
 let isLightMode = false;
 
-// Theme Toggle
+// तुम्हारी ओरिजिनल इमेजेज वापस आ गईं
+const defaultImg1 = "https://blogger.googleusercontent.com/img/a/AVvXsEglEH5N9CdXH5F3qcRU9elRqBnLtC5_9Lhz-j_dBi9hYBCK1oBC88Vthv4uS0e5yMl2FsXPjbhxs9KLqI2Xtzs6S7FpxIRLb2PBzYUNJ5y_MnaNDQUHJE7PnnXlFvtN7XriHTUhs7P3rHCwobRgRBdJxoio0N7rDoc4vhiAlC1pW2QdgkSu62VZK1Hf2aI=s1280";
+const defaultImg2 = "https://blogger.googleusercontent.com/img/a/AVvXsEhZ4Fw8Xl52IHLZQRVn5u8z3UuTjlVkhKD6MLEIpJtwZj0ZFe3230Yfzaw5AAO_m406K4whQuP7Va_w8l16_JoT3Mbkw811x3kMHm_pKmzAvj44_19ICmPZQQAF430R6Awe0Vhgm-DHOgaWhoZf0o1Tl0lJwOC6JX5n1ZsgfBVgT5Qgmv4kd-DebHbyTiw=s1280";
+let customBgDataUrl = null;
+
+function getBgUrl() {
+    let val = $('bgSelect').value;
+    if(val === 'default1') return defaultImg1;
+    if(val === 'default2') return defaultImg2;
+    if(val === 'custom') return customBgDataUrl;
+    return null;
+}
+
 $('themeToggle').onclick = () => {
     isLightMode = !isLightMode;
     document.body.classList.toggle('light-mode', isLightMode);
@@ -156,7 +168,19 @@ $('themeToggle').onclick = () => {
     renderPreview();
 };
 
-// Button Actions (FIXED)
+$('bgSelect').onchange = (e) => {
+    if(e.target.value === 'custom') $('bgImgUpload').style.display = 'block';
+    else $('bgImgUpload').style.display = 'none';
+    renderPreview(); 
+};
+
+$('bgImgUpload').onchange = (e) => {
+    const reader = new FileReader();
+    reader.onload = () => { customBgDataUrl = reader.result; renderPreview(); };
+    if(e.target.files[0]) reader.readAsDataURL(e.target.files[0]);
+};
+
+// Buttons
 $('importBtn').onclick = () => { 
     try { 
         DATA = JSON.parse($('jsonArea').value); 
@@ -192,16 +216,22 @@ function formatPreviewText(text, boldHex) {
     if(!text) return ""; return text.replace(/<b>(.*?)<\/b>/g, `<span style="color:${boldHex}; font-weight:bold;">$1</span>`);
 }
 
-// 100% Correct HTML Preview (Float Fixed)
 function renderPreview() {
     const box = $("preview"); box.innerHTML = "";
     if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted);'>No data. Please import JSON.</p>"; return; }
 
     const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
+    const bgUrl = getBgUrl();
     let lastH1Preview = null; 
 
     DATA.forEach((item, idx) => {
         const div = document.createElement("div"); div.className = "slide-card";
+        if(bgUrl) {
+            div.style.background = `url('${bgUrl}') center/cover no-repeat`; 
+        } else {
+            div.style.backgroundColor = isLightMode ? "#ffffff" : "#000000";
+        }
+
         const contentWrap = document.createElement("div"); contentWrap.className = "slide-content";
         
         let currentImgPos = item.imgPos || 'bottom';
@@ -220,7 +250,6 @@ function renderPreview() {
             imgBox.appendChild(rmBtn);
         } else { imgBox.innerHTML = "<span>🖼️ Click to Add Image</span>"; }
 
-        // MUST insert Top-Left or Top-Right image BEFORE text for CSS floats to work
         if (currentImgPos !== 'bottom') contentWrap.appendChild(imgBox);
 
         Object.keys(item).forEach(key => {
@@ -238,12 +267,15 @@ function renderPreview() {
             else if(key === 'list') {
                 item.list.forEach((li, lIdx) => { const l = document.createElement("div"); l.className = "p-li"; l.contentEditable = "true"; l.style.color = oc; l.innerHTML = "• " + formatPreviewText(li, bc); l.onblur = e => { DATA[idx].list[lIdx] = e.target.innerText.replace("• ", ""); }; contentWrap.appendChild(l); });
             }
+            else if(key === 'question') {
+                const q = document.createElement("div"); q.className = "p-q"; q.contentEditable = "true"; q.style.color = h1c; q.innerHTML = "Q. " + formatPreviewText(item.question, bc); q.onblur = e => { DATA[idx].question = e.target.innerText.replace(/^Q\.\s*/, ""); }; contentWrap.appendChild(q);
+                let opts = item.option || item.options || [];
+                opts.forEach((o, oIdx) => { const op = document.createElement("div"); op.className = "p-text"; op.style.marginLeft = "20px"; op.contentEditable = "true"; op.style.color = oc; op.innerHTML = `${oIdx + 1}. ` + formatPreviewText(o, bc); op.onblur = e => { let val = e.target.innerText.replace(/^\d+\.\s*/, ''); if(item.option) DATA[idx].option[oIdx] = val; else DATA[idx].options[oIdx] = val; }; contentWrap.appendChild(op); });
+            }
         });
 
-        // Bottom image comes AFTER text
         if (currentImgPos === 'bottom') contentWrap.appendChild(imgBox);
         
-        // Clearfix and Image Position Selector
         const clearDiv = document.createElement("div"); clearDiv.className = "clearfix"; contentWrap.appendChild(clearDiv);
 
         const imgPosRow = document.createElement("div"); imgPosRow.className = "img-pos-row";
@@ -261,7 +293,6 @@ function renderPreview() {
     });
 }
 
-// 100% Correct PPTX Text Wrapping Logic
 $('generateBtn').onclick = async () => {
     if (DATA.length === 0) return alert("No Data! Please import JSON first.");
     const btn = $('generateBtn'); btn.innerHTML = "⏳ Generating PPTX..."; btn.disabled = true;
@@ -281,7 +312,18 @@ $('generateBtn').onclick = async () => {
             await document.fonts.load("30px Kalam"); await document.fonts.load("bold 30px Kalam"); 
             await document.fonts.load("bold 34px Kalam"); await document.fonts.load("bold 44px Kalam");
 
-            ctx.fillStyle = isLightMode ? "#ffffff" : "#000000"; ctx.fillRect(0, 0, pxW, pxH);
+            let bgUrl = getBgUrl();
+            if (bgUrl) {
+                try {
+                    let img = new Image(); 
+                    img.crossOrigin = "Anonymous";
+                    img.src = bgUrl; 
+                    await new Promise((res, rej) => { img.onload = res; img.onerror = rej; }); 
+                    ctx.drawImage(img, 0, 0, pxW, pxH);
+                } catch(e) {
+                    ctx.fillStyle = isLightMode ? "#ffffff" : "#000000"; ctx.fillRect(0, 0, pxW, pxH);
+                }
+            } else { ctx.fillStyle = isLightMode ? "#ffffff" : "#000000"; ctx.fillRect(0, 0, pxW, pxH); }
 
             let y = m.top; const maxW = pxW - m.left - m.right;
             const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
@@ -290,11 +332,11 @@ $('generateBtn').onclick = async () => {
             let currentImgPos = item.imgPos || 'bottom';
             if (item.image && (currentImgPos === 'top-left' || currentImgPos === 'top-right')) {
                 let simg = new Image(); simg.src = item.image; await new Promise(r => simg.onload = r);
-                let maxCW = 280; let maxCH = 280; // Size
+                let maxCW = 280; let maxCH = 280;
                 let ratio = Math.min(maxCW / simg.width, maxCH / simg.height);
                 let fw = simg.width * ratio; let fh = simg.height * ratio;
                 let fx = currentImgPos === 'top-left' ? m.left : (pxW - m.right - fw);
-                let fy = m.top + 50; // Push image slightly down
+                let fy = m.top + 50; 
                 cornerBox = {x: fx, y: fy, w: fw, h: fh};
                 ctx.drawImage(simg, fx, fy, fw, fh);
             }
@@ -313,7 +355,6 @@ $('generateBtn').onclick = async () => {
                         }
                     });
 
-                    // THIS is the master math to prevent text from crossing the image
                     const getBounds = (currentY) => {
                         let startX = m.left; let endX = pxW - m.right;
                         if (cornerBox && currentY >= cornerBox.y - lineH && currentY <= cornerBox.y + cornerBox.h + 20) {
@@ -353,6 +394,15 @@ $('generateBtn').onclick = async () => {
                 else if(key==='h3'){ drawSmartText(item.h3, "bold 28px Kalam", "bold 28px Kalam", h3c, h3c, 38); y+=5; }
                 else if(key==='content'){ drawSmartText(item.content, "30px Kalam", "bold 30px Kalam", oc, bc, 42); y+=5; }
                 else if(key==='list'){ item.list.forEach(li => drawSmartText("• " + li, "30px Kalam", "bold 30px Kalam", oc, bc, 42)); y+=5; }
+                else if(key==='question'){ 
+                    drawSmartText("Q. " + item.question, "bold 44px Kalam", "bold 44px Kalam", h1c, h1c, 50); y+=10;
+                    let opts = item.option || item.options || []; 
+                    opts.forEach((o, i) => { 
+                        let tempLeft = m.left; m.left += 20; 
+                        drawSmartText(`${i+1}. ${o}`, "30px Kalam", "bold 30px Kalam", oc, bc, 42);
+                        m.left = tempLeft;
+                    });
+                }
             });
 
             if (item.image && currentImgPos === 'bottom') {
