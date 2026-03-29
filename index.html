@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Ultimate PPT Maker - Fixed Sequence & Tables</title>
+<title>Ultimate PPT Maker - Fixed Table & Overlap</title>
 <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
@@ -63,10 +63,10 @@ body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
 
 /* Attractive HTML Table Preview */
 .preview-table-wrap { width: 100%; margin: 15px 0; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
-.preview-table { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.3); color: var(--text-main); font-size: 1.1em; }
-.preview-table th, .preview-table td { padding: 10px 15px; text-align: left; border: 1px solid rgba(150,150,150,0.3); }
+.preview-table { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.4); color: var(--text-main); font-size: 1.1em; }
+.preview-table th, .preview-table td { padding: 12px 15px; text-align: left; border: 1px solid rgba(150,150,150,0.4); line-height: 1.4; }
 .preview-table th { background: #2563eb; color: #fff; font-weight: bold; }
-body.light-mode .preview-table { background: rgba(255,255,255,0.7); }
+body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
 </style>
 </head>
 <body>
@@ -155,7 +155,7 @@ $('bgImgUpload').onchange = (e) => {
 };
 
 // ==============================================
-// SMART HTML PARSER (Maintains Strict Sequence)
+// SMART HTML PARSER 
 // ==============================================
 function cleanHtmlForCanvas(htmlStr) {
     let str = htmlStr.replace(/<strong[^>]*>/gi, '<b>').replace(/<\/strong>/gi, '</b>')
@@ -205,7 +205,6 @@ $('importBtn').onclick = () => {
     });
 
     if (currentSlide.length > 0) slidesData.push(currentSlide);
-
     if (slidesData.length === 0) return alert("No valid HTML tags found! Use <h2>, <ul>, <li>, <p>, <table> etc.");
 
     DATA = slidesData;
@@ -349,7 +348,8 @@ $('generateBtn').onclick = async () => {
                 else if(el.type === 'ul'){ el.items.forEach(li => drawSmartText("• " + li, "30px Kalam", "bold 30px Kalam", oc, bc, 42, 20)); y+=10; }
                 else if(el.type === 'table'){
                     tablesToRender.push({ rows: el.rows, y: y });
-                    y += (el.rows.length * 45) + 20; // Reserve space for the table
+                    // Calculate rough height based on rows (approx 60px per row to leave space below table)
+                    y += (el.rows.length * 60) + 40; 
                 }
             });
 
@@ -360,20 +360,34 @@ $('generateBtn').onclick = async () => {
                         let isHead = (rIdx === 0);
                         return {
                             text: cellHtml.replace(/<b>|<\/b>/g, ''), // Remove tags for ppt table
-                            options: { color: isHead ? 'FFFFFF' : (isLightMode ? '000000' : 'FFFFFF'), bold: isHead || cellHtml.includes('<b>'),
-                                       fontFace: 'Kalam', fontSize: 18, fill: isHead ? '2563EB' : (isLightMode ? 'F8FAFC' : '1E293B'),
-                                       align: 'center', valign: 'middle' }
+                            options: { 
+                                color: isHead ? 'FFFFFF' : (isLightMode ? '000000' : 'FFFFFF'), 
+                                bold: isHead || cellHtml.includes('<b>'),
+                                fontFace: 'Kalam', // PPT will load Kalam if installed on PC
+                                fontSize: 22, // Size increased for better readability
+                                fill: isHead ? '2563EB' : (isLightMode ? 'F8FAFC' : '1A2234'), // Beautiful dark matching fill
+                                align: 'center', 
+                                valign: 'middle',
+                                margin: [8, 8, 8, 8] // Added padding to stop overlap completely
+                            }
                         };
                     });
                 });
-                s.addTable(pptRows, { x: m.left/96, y: tbl.y/96, w: maxW/96, rowH: 0.45, border: { pt: 1, color: isLightMode ? 'CBD5E1' : '475569' } });
+                
+                // Note: removed 'rowH' so rows can auto-expand properly without overlapping text
+                s.addTable(pptRows, { 
+                    x: m.left/96, 
+                    y: tbl.y/96, 
+                    w: maxW/96, 
+                    border: { pt: 1.5, color: isLightMode ? 'CBD5E1' : '334155' }
+                });
             });
 
             // Add Text Canvas as Transparent Overlay
             s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
         }
         
-        ppt.writeFile({ fileName: "Study_Notes_HTML_Pro.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
+        ppt.writeFile({ fileName: "Study_Notes_Pro_Fixed.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
     }, 100);
 };
 
