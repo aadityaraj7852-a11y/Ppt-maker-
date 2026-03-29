@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Ultimate PPT Maker - HTML Version</title>
+<title>Ultimate PPT Maker - Fixed Sequence & Tables</title>
 <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
@@ -25,7 +25,7 @@ body { font-family: 'Kalam', cursive; background: var(--bg-main); color: var(--t
 
 /* Desktop Layout */
 .main-wrapper { display: flex; gap: 30px; max-width: 1600px; margin: auto; align-items: flex-start; }
-.left-panel { flex: 0 0 450px; background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: sticky; top: 20px; max-height: calc(100vh - 40px); overflow-y: auto; }
+.left-panel { flex: 0 0 480px; background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: sticky; top: 20px; max-height: calc(100vh - 40px); overflow-y: auto; }
 .right-panel { flex: 1; background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.1); min-height: calc(100vh - 40px); }
 @media (max-width: 1050px) { .main-wrapper { flex-direction: column; } .left-panel { position: static; flex: auto; width: 100%; max-height: none; } }
 
@@ -43,18 +43,11 @@ input[type="color"] { width: 100%; height: 40px; padding: 2px; border-radius: 8p
 .grid-5 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 5px; }
 .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Kalam', cursive; font-weight: 700; font-size: 1.1em; transition: 0.2s; color: #fff; text-align: center; }
 .btn:hover { opacity: 0.9; transform: translateY(-2px); }
-.btn-blue { background: #2563eb; } .btn-red { background: #e11d48; } .btn-grey { background: #475569; } .btn-cyan { background: #0ea5e9; }
-.btn-generate { background: linear-gradient(135deg, #10b981, #059669); font-size: 1.3em; padding: 15px; margin-top: 20px; width: 100%; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
+.btn-blue { background: #2563eb; } .btn-red { background: #e11d48; } .btn-generate { background: linear-gradient(135deg, #10b981, #059669); font-size: 1.3em; padding: 15px; margin-top: 20px; width: 100%; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
 
 /* --- Preview Styles --- */
 .preview-list { display: flex; flex-direction: column; gap: 30px; }
-
-.slide-card { 
-    background-color: var(--slide-bg); background-size: cover !important; background-position: center !important; 
-    border: 2px solid var(--border); padding: 30px; border-radius: 8px; position: relative; 
-    aspect-ratio: 16 / 9; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); overflow: hidden; 
-    display: flex; flex-direction: column;
-}
+.slide-card { background-color: var(--slide-bg); background-size: cover !important; background-position: center !important; border: 2px solid var(--border); padding: 30px; border-radius: 8px; position: relative; aspect-ratio: 16 / 9; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); overflow: hidden; display: flex; flex-direction: column; }
 .slide-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 0; }
 body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
 
@@ -64,10 +57,16 @@ body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
 [contenteditable="true"] { outline: none; border: 1px dashed transparent; transition: 0.2s; display: block; }
 [contenteditable="true"]:hover { border-color: rgba(150,150,150,0.5); background: rgba(128,128,128,0.1); }
 .p-h1 { color: var(--accent); font-size: 2.2em; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid rgba(150,150,150,0.3); padding-bottom: 5px; clear: both; }
-.p-h2 { color: var(--sub-accent); font-size: 1.6em; font-weight: bold; margin-bottom: 8px; }
-.p-h3 { color: var(--h3-accent); font-size: 1.4em; font-weight: bold; margin-bottom: 8px; }
+.p-h2 { color: var(--sub-accent); font-size: 1.6em; font-weight: bold; margin-bottom: 8px; margin-top: 10px; }
+.p-h3 { color: var(--h3-accent); font-size: 1.4em; font-weight: bold; margin-bottom: 8px; margin-top: 5px; }
 .p-text, .p-li { font-size: 1.3em; margin-bottom: 8px; line-height: 1.5; white-space: pre-wrap; color: var(--text-main); }
-.p-q { color: var(--accent); font-size: 1.6em; font-weight: bold; margin-top: 10px; }
+
+/* Attractive HTML Table Preview */
+.preview-table-wrap { width: 100%; margin: 15px 0; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+.preview-table { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.3); color: var(--text-main); font-size: 1.1em; }
+.preview-table th, .preview-table td { padding: 10px 15px; text-align: left; border: 1px solid rgba(150,150,150,0.3); }
+.preview-table th { background: #2563eb; color: #fff; font-weight: bold; }
+body.light-mode .preview-table { background: rgba(255,255,255,0.7); }
 </style>
 </head>
 <body>
@@ -80,7 +79,7 @@ body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
         </div>
 
         <label>HTML Data Input (H2 = New Slide)</label>
-        <textarea id="htmlArea" rows="8" placeholder='Paste your HTML Code here (<h2>, <ul>, <li>, <strong> etc.)...'></textarea>
+        <textarea id="htmlArea" rows="8" placeholder='Paste HTML (<h2>, <h3>, <ul>, <li>, <table>, <p> etc.)...'></textarea>
         
         <div class="grid-2" style="margin-top: 15px;">
             <button id="importBtn" class="btn btn-blue" title="डेटा प्रोसेस करें">📥 Load HTML</button>
@@ -126,11 +125,7 @@ let DATA = [];
 let isLightMode = false;
 let customBgDataUrl = null;
 
-function getBgUrl() {
-    let val = $('bgSelect').value;
-    if(val === 'custom') return customBgDataUrl;
-    return null;
-}
+function getBgUrl() { let val = $('bgSelect').value; return val === 'custom' ? customBgDataUrl : null; }
 
 $('themeToggle').onclick = () => {
     isLightMode = !isLightMode;
@@ -141,23 +136,16 @@ $('themeToggle').onclick = () => {
     renderPreview(); saveState();
 };
 
-$('bgSelect').onchange = (e) => {
-    if(e.target.value === 'custom') $('bgImgUpload').style.display = 'block';
-    else $('bgImgUpload').style.display = 'none';
-    renderPreview(); saveState();
-};
+$('bgSelect').onchange = (e) => { $('bgImgUpload').style.display = e.target.value === 'custom' ? 'block' : 'none'; renderPreview(); saveState(); };
 
 $('bgImgUpload').onchange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    const file = e.target.files[0]; if (!file) return;
     const reader = new FileReader();
     reader.onload = (event) => {
         const img = new Image();
         img.onload = () => {
-            const canvas = document.createElement("canvas");
-            canvas.width = 1300; canvas.height = 710;
-            const ctx = canvas.getContext("2d");
-            ctx.drawImage(img, 0, 0, 1300, 710);
+            const canvas = document.createElement("canvas"); canvas.width = 1300; canvas.height = 710;
+            const ctx = canvas.getContext("2d"); ctx.drawImage(img, 0, 0, 1300, 710);
             customBgDataUrl = canvas.toDataURL("image/jpeg", 0.7); 
             renderPreview(); saveState();
         };
@@ -167,21 +155,13 @@ $('bgImgUpload').onchange = (e) => {
 };
 
 // ==============================================
-// SMART HTML PARSER
+// SMART HTML PARSER (Maintains Strict Sequence)
 // ==============================================
 function cleanHtmlForCanvas(htmlStr) {
-    // Convert strong and bold to <b> tag which canvas parser uses
-    let str = htmlStr.replace(/<strong[^>]*>/gi, '<b>')
-                     .replace(/<\/strong>/gi, '</b>')
-                     .replace(/<b\s[^>]*>/gi, '<b>')
-                     .replace(/<br\s*[\/]?>/gi, '\n');
-    
-    // Remove all other HTML tags except <b>
+    let str = htmlStr.replace(/<strong[^>]*>/gi, '<b>').replace(/<\/strong>/gi, '</b>')
+                     .replace(/<b\s[^>]*>/gi, '<b>').replace(/<br\s*[\/]?>/gi, '\n');
     str = str.replace(/<\/?(?!(b)\b)[a-z](?:[^>"']|"[^"]*"|'[^']*')*>/gi, '');
-    
-    // Decode HTML entities (like &nbsp;)
-    const txt = document.createElement("textarea");
-    txt.innerHTML = str;
+    const txt = document.createElement("textarea"); txt.innerHTML = str;
     return txt.value.trim();
 }
 
@@ -190,55 +170,43 @@ $('importBtn').onclick = () => {
     if(!rawHtml) return alert("Please paste HTML code!");
 
     let slidesData = [];
-    let currentSlide = { list: [] };
+    let currentSlide = [];
 
     const parser = new DOMParser();
     const doc = parser.parseFromString(rawHtml, 'text/html');
 
     Array.from(doc.body.children).forEach(el => {
-        // H1 or H2 triggers a new slide
         if (el.tagName === 'H1' || el.tagName === 'H2') {
-            if (currentSlide.h1 || currentSlide.h2 || currentSlide.content || currentSlide.list.length > 0) {
-                slidesData.push(currentSlide);
-            }
-            currentSlide = { list: [] };
-            if (el.tagName === 'H1') currentSlide.h1 = el.innerText.trim();
-            if (el.tagName === 'H2') currentSlide.h2 = el.innerText.trim();
+            if (currentSlide.length > 0) slidesData.push(currentSlide);
+            currentSlide = [];
+            currentSlide.push({ type: el.tagName.toLowerCase(), text: cleanHtmlForCanvas(el.innerHTML) });
         } 
         else if (el.tagName === 'H3') {
-            currentSlide.h3 = el.innerText.trim();
-        } 
-        else if (el.tagName === 'UL' || el.tagName === 'OL') {
-            Array.from(el.children).forEach(li => {
-                if (li.tagName === 'LI') {
-                    currentSlide.list.push(cleanHtmlForCanvas(li.innerHTML));
-                }
-            });
+            currentSlide.push({ type: 'h3', text: cleanHtmlForCanvas(el.innerHTML) });
         } 
         else if (el.tagName === 'P') {
             let text = cleanHtmlForCanvas(el.innerHTML);
-            if(text) currentSlide.content = (currentSlide.content ? currentSlide.content + "\n\n" : "") + text;
+            if(text) currentSlide.push({ type: 'p', text: text });
+        } 
+        else if (el.tagName === 'UL' || el.tagName === 'OL') {
+            let items = [];
+            Array.from(el.children).forEach(li => { if (li.tagName === 'LI') items.push(cleanHtmlForCanvas(li.innerHTML)); });
+            if(items.length > 0) currentSlide.push({ type: 'ul', items: items });
         } 
         else if (el.tagName === 'TABLE') {
-            // Convert Table to formatted text layout
-            let tableText = "";
+            let rows = [];
             Array.from(el.querySelectorAll('tr')).forEach(tr => {
-                let rowText = Array.from(tr.querySelectorAll('th, td')).map(td => td.innerText.trim()).join("  |  ");
-                tableText += rowText + "\n";
+                let cells = [];
+                Array.from(tr.querySelectorAll('th, td')).forEach(td => cells.push(cleanHtmlForCanvas(td.innerHTML)));
+                if(cells.length > 0) rows.push(cells);
             });
-            if(tableText) currentSlide.content = (currentSlide.content ? currentSlide.content + "\n" : "") + tableText;
+            if(rows.length > 0) currentSlide.push({ type: 'table', rows: rows });
         }
     });
 
-    // Push the very last slide
-    if (currentSlide.h1 || currentSlide.h2 || currentSlide.content || currentSlide.list.length > 0) {
-        slidesData.push(currentSlide);
-    }
+    if (currentSlide.length > 0) slidesData.push(currentSlide);
 
-    if (slidesData.length === 0) {
-        alert("No valid HTML tags found! Use <h2>, <ul>, <li>, <p> etc.");
-        return;
-    }
+    if (slidesData.length === 0) return alert("No valid HTML tags found! Use <h2>, <ul>, <li>, <p>, <table> etc.");
 
     DATA = slidesData;
     renderPreview(); saveState();
@@ -263,24 +231,18 @@ function loadState() {
         $('topM').value = state.margins.t; $('bottomM').value = state.margins.b; $('leftM').value = state.margins.l; $('rightM').value = state.margins.r;
         $('h1Color').value = state.colors.h1; $('h2Color').value = state.colors.h2; 
         if(state.colors.h3) $('h3Color').value = state.colors.h3; if(state.colors.bold) $('boldColor').value = state.colors.bold;
-        $('optColor').value = state.colors.opt;
-        $('bgSelect').value = state.bg;
+        $('optColor').value = state.colors.opt; $('bgSelect').value = state.bg;
         customBgDataUrl = state.customBg || null;
         if(state.bg === 'custom') $('bgImgUpload').style.display = 'block';
-        
         isLightMode = state.theme || false;
         if(isLightMode) { document.body.classList.add('light-mode'); $('themeToggle').innerText = "☀️ Light Mode"; }
     }
     renderPreview();
 }
 
-['topM', 'bottomM', 'leftM', 'rightM', 'h1Color', 'h2Color', 'h3Color', 'boldColor', 'optColor'].forEach(id => {
-    $(id).addEventListener('change', () => { renderPreview(); saveState(); });
-});
+['topM', 'bottomM', 'leftM', 'rightM', 'h1Color', 'h2Color', 'h3Color', 'boldColor', 'optColor'].forEach(id => { $(id).addEventListener('change', () => { renderPreview(); saveState(); }); });
 
-function formatPreviewText(text, boldHex) {
-    if(!text) return ""; return text.replace(/<b>(.*?)<\/b>/g, `<span style="color:${boldHex}; font-weight:bold;">$1</span>`);
-}
+function formatPreviewText(text, boldHex) { if(!text) return ""; return text.replace(/<b>(.*?)<\/b>/g, `<span style="color:${boldHex}; font-weight:bold;">$1</span>`); }
 
 function renderPreview() {
     const box = $("preview"); box.innerHTML = "";
@@ -289,38 +251,45 @@ function renderPreview() {
     const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
     const bgUrl = getBgUrl();
 
-    DATA.forEach((item, idx) => {
+    DATA.forEach((slideElements, sIdx) => {
         const div = document.createElement("div"); div.className = "slide-card";
-        if(bgUrl) { div.style.background = `url('${bgUrl}') center/cover no-repeat`; } 
-        else { div.style.backgroundColor = isLightMode ? "#ffffff" : "#000000"; }
-
+        if(bgUrl) div.style.background = `url('${bgUrl}') center/cover no-repeat`; else div.style.backgroundColor = isLightMode ? "#ffffff" : "#000000";
         const contentWrap = document.createElement("div"); contentWrap.className = "slide-content";
 
-        Object.keys(item).forEach(key => {
-            const el = document.createElement("div"); el.contentEditable = "true";
-            
-            if(key === 'h1') { 
-                el.className = "p-h1"; el.style.color = h1c; el.innerText = item.h1; 
-                el.onblur = e => { DATA[idx].h1 = e.target.innerText; saveState(); }; contentWrap.appendChild(el);
-            }
-            else if(key === 'h2') { el.className = "p-h2"; el.innerText = item.h2; el.style.color = h2c; el.onblur = e => { DATA[idx].h2 = e.target.innerText; saveState(); }; contentWrap.appendChild(el); }
-            else if(key === 'h3') { el.className = "p-h3"; el.innerText = item.h3; el.style.color = h3c; el.onblur = e => { DATA[idx].h3 = e.target.innerText; saveState(); }; contentWrap.appendChild(el); }
-            else if(key === 'content') { 
-                if(!item.content) return;
-                el.className = "p-text"; el.innerHTML = formatPreviewText(item.content, bc); el.style.color = oc; 
-                el.onblur = e => { DATA[idx].content = e.target.innerText; saveState(); }; contentWrap.appendChild(el); 
-            }
-            else if(key === 'list') {
-                if(!item.list || item.list.length === 0) return;
-                item.list.forEach((li, lIdx) => { 
-                    const l = document.createElement("div"); l.className = "p-li"; l.contentEditable = "true"; l.style.color = oc; 
-                    l.innerHTML = "• " + formatPreviewText(li, bc); 
-                    l.onblur = e => { DATA[idx].list[lIdx] = e.target.innerText.replace("• ", ""); saveState(); }; 
-                    contentWrap.appendChild(l); 
+        slideElements.forEach((el, eIdx) => {
+            if (el.type === 'h1' || el.type === 'h2' || el.type === 'h3') {
+                const node = document.createElement("div"); node.className = "p-" + el.type;
+                node.style.color = el.type === 'h1' ? h1c : (el.type === 'h2' ? h2c : h3c);
+                node.contentEditable = "true"; node.innerHTML = formatPreviewText(el.text, bc);
+                node.onblur = e => { DATA[sIdx][eIdx].text = e.target.innerText; saveState(); }; contentWrap.appendChild(node);
+            } 
+            else if (el.type === 'p') {
+                const node = document.createElement("div"); node.className = "p-text"; node.style.color = oc;
+                node.contentEditable = "true"; node.innerHTML = formatPreviewText(el.text, bc);
+                node.onblur = e => { DATA[sIdx][eIdx].text = e.target.innerText; saveState(); }; contentWrap.appendChild(node);
+            } 
+            else if (el.type === 'ul') {
+                el.items.forEach((itemText, iIdx) => {
+                    const liNode = document.createElement("div"); liNode.className = "p-li"; liNode.style.color = oc;
+                    liNode.contentEditable = "true"; liNode.innerHTML = "• " + formatPreviewText(itemText, bc);
+                    liNode.onblur = e => { DATA[sIdx][eIdx].items[iIdx] = e.target.innerText.replace(/^•\s*/, ""); saveState(); };
+                    contentWrap.appendChild(liNode);
                 });
+            } 
+            else if (el.type === 'table') {
+                const tableWrap = document.createElement("div"); tableWrap.className = "preview-table-wrap";
+                const table = document.createElement("table"); table.className = "preview-table";
+                el.rows.forEach((row, rIdx) => {
+                    const tr = document.createElement("tr");
+                    row.forEach((cell, cIdx) => {
+                        const td = document.createElement(rIdx === 0 ? "th" : "td");
+                        td.contentEditable = "true"; td.innerHTML = formatPreviewText(cell, bc);
+                        td.onblur = e => { DATA[sIdx][eIdx].rows[rIdx][cIdx] = e.target.innerText; saveState(); }; tr.appendChild(td);
+                    }); table.appendChild(tr);
+                });
+                tableWrap.appendChild(table); contentWrap.appendChild(tableWrap);
             }
         });
-
         div.appendChild(contentWrap); box.appendChild(div);
     });
 }
@@ -338,66 +307,73 @@ $('generateBtn').onclick = async () => {
         await document.fonts.load("30px Kalam"); await document.fonts.load("bold 30px Kalam"); 
         await document.fonts.load("bold 34px Kalam"); await document.fonts.load("bold 44px Kalam");
 
-        for (const item of DATA) {
+        const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
+
+        for (const slideElements of DATA) {
             let s = ppt.addSlide();
+            if (bgUrl) s.background = { data: bgUrl }; else s.background = { color: isLightMode ? "FFFFFF" : "000000" };
+
+            // Transparent Canvas for Texts
+            const c = document.createElement("canvas"); c.width = pxW; c.height = pxH; const ctx = c.getContext("2d"); ctx.textBaseline = "top"; 
             
-            if (bgUrl) { s.background = { data: bgUrl }; } 
-            else { s.background = { color: isLightMode ? "FFFFFF" : "000000" }; }
-
-            const c = document.createElement("canvas"); c.width = pxW; c.height = pxH; const ctx = c.getContext("2d");
-            ctx.textBaseline = "top"; 
-
             let y = m.top; const maxW = pxW - m.left - m.right;
-            const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
+            let tablesToRender = [];
 
             const drawSmartText = (text, normalFont, boldFont, normalCol, boldCol, lineH, leftIndent = 0) => {
                 if(!text) return;
                 const paras = text.split("\n");
                 paras.forEach(para => {
                     if(!para.trim()) { y += lineH/2; return; }
-                    let parts = para.split(/(<b>.*?<\/b>)/g);
-                    let words = [];
+                    let parts = para.split(/(<b>.*?<\/b>)/g); let words = [];
                     parts.forEach(part => {
-                        if(part.startsWith('<b>') && part.endsWith('</b>')) {
-                            part.slice(3, -4).split(' ').forEach(w => { if(w) words.push({t: w, b: true}); });
-                        } else {
-                            part.split(' ').forEach(w => { if(w) words.push({t: w, b: false}); });
-                        }
+                        if(part.startsWith('<b>') && part.endsWith('</b>')) part.slice(3, -4).split(' ').forEach(w => { if(w) words.push({t: w, b: true}); });
+                        else part.split(' ').forEach(w => { if(w) words.push({t: w, b: false}); });
                     });
-
                     let currentX = m.left + leftIndent; let endX = pxW - m.right;
-                    
                     for(let i=0; i<words.length; i++) {
-                        let w = words[i];
-                        ctx.font = w.b ? boldFont : normalFont; ctx.fillStyle = w.b ? boldCol : normalCol;
+                        let w = words[i]; ctx.font = w.b ? boldFont : normalFont; ctx.fillStyle = w.b ? boldCol : normalCol;
                         let metric = ctx.measureText(w.t + " ");
-                        
-                        if (currentX + metric.width > endX && currentX !== m.left + leftIndent) {
-                            y += lineH; currentX = m.left + leftIndent;
-                        }
+                        if (currentX + metric.width > endX && currentX !== m.left + leftIndent) { y += lineH; currentX = m.left + leftIndent; }
                         ctx.fillText(w.t + " ", currentX, y); currentX += metric.width;
                     }
                     y += lineH;
                 });
             };
 
-            Object.keys(item).forEach(key => {
-                if(key==='h1'){ 
-                    drawSmartText(item.h1, "bold 44px Kalam", "bold 44px Kalam", h1c, h1c, 56); 
-                    ctx.beginPath(); ctx.moveTo(m.left, y - 5); ctx.lineTo(pxW - m.right, y - 5);
-                    ctx.strokeStyle = "rgba(150,150,150,0.4)"; ctx.lineWidth = 2; ctx.stroke();
-                    y+=15;
+            // Draw Texts to Canvas & Calculate Table Positions
+            slideElements.forEach(el => {
+                if(el.type === 'h1'){ drawSmartText(el.text, "bold 44px Kalam", "bold 44px Kalam", h1c, h1c, 56); y+=10; }
+                else if(el.type === 'h2'){ drawSmartText(el.text, "bold 34px Kalam", "bold 34px Kalam", h2c, h2c, 46); y+=10; }
+                else if(el.type === 'h3'){ drawSmartText(el.text, "bold 28px Kalam", "bold 28px Kalam", h3c, h3c, 38); y+=5; }
+                else if(el.type === 'p'){ drawSmartText(el.text, "30px Kalam", "bold 30px Kalam", oc, bc, 42); y+=8; }
+                else if(el.type === 'ul'){ el.items.forEach(li => drawSmartText("• " + li, "30px Kalam", "bold 30px Kalam", oc, bc, 42, 20)); y+=10; }
+                else if(el.type === 'table'){
+                    tablesToRender.push({ rows: el.rows, y: y });
+                    y += (el.rows.length * 45) + 20; // Reserve space for the table
                 }
-                else if(key==='h2' && item.h2){ drawSmartText(item.h2, "bold 34px Kalam", "bold 34px Kalam", h2c, h2c, 46); y+=5; }
-                else if(key==='h3' && item.h3){ drawSmartText(item.h3, "bold 28px Kalam", "bold 28px Kalam", h3c, h3c, 38); y+=5; }
-                else if(key==='content' && item.content){ drawSmartText(item.content, "30px Kalam", "bold 30px Kalam", oc, bc, 42); y+=5; }
-                else if(key==='list' && item.list.length > 0){ item.list.forEach(li => drawSmartText("• " + li, "30px Kalam", "bold 30px Kalam", oc, bc, 42, 20)); y+=5; }
             });
 
+            // Native PptxGenJS Table for High Quality
+            tablesToRender.forEach(tbl => {
+                let pptRows = tbl.rows.map((rowArr, rIdx) => {
+                    return rowArr.map(cellHtml => {
+                        let isHead = (rIdx === 0);
+                        return {
+                            text: cellHtml.replace(/<b>|<\/b>/g, ''), // Remove tags for ppt table
+                            options: { color: isHead ? 'FFFFFF' : (isLightMode ? '000000' : 'FFFFFF'), bold: isHead || cellHtml.includes('<b>'),
+                                       fontFace: 'Kalam', fontSize: 18, fill: isHead ? '2563EB' : (isLightMode ? 'F8FAFC' : '1E293B'),
+                                       align: 'center', valign: 'middle' }
+                        };
+                    });
+                });
+                s.addTable(pptRows, { x: m.left/96, y: tbl.y/96, w: maxW/96, rowH: 0.45, border: { pt: 1, color: isLightMode ? 'CBD5E1' : '475569' } });
+            });
+
+            // Add Text Canvas as Transparent Overlay
             s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
         }
         
-        ppt.writeFile({ fileName: "Study_Notes_HTML_Fixed.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
+        ppt.writeFile({ fileName: "Study_Notes_HTML_Pro.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
     }, 100);
 };
 
