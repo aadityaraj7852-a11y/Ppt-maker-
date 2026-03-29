@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Ultimate PPT Maker - Clean Layout</title>
+<title>Ultimate PPT Maker - Text Only - BG Fixed</title>
 <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
@@ -51,6 +51,7 @@ input[type="color"] { width: 100%; height: 40px; padding: 2px; border-radius: 8p
 
 .slide-card { 
     background-color: var(--slide-bg); background-size: cover !important; background-position: center !important; 
+    background-repeat: no-repeat !important;
     border: 2px solid var(--border); padding: 30px; border-radius: 8px; position: relative; 
     aspect-ratio: 16 / 9; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); overflow: hidden; 
     display: flex; flex-direction: column;
@@ -58,33 +59,22 @@ input[type="color"] { width: 100%; height: 40px; padding: 2px; border-radius: 8p
 .slide-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 0; }
 body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
 
-.slide-content { position: relative; z-index: 1; width: 100%; height: 100%; display: flex; flex-direction: column; }
+.slide-content { position: relative; z-index: 1; width: 100%; height: 100%; display: block; }
 
 /* Typography */
 [contenteditable="true"] { outline: none; border: 1px dashed transparent; transition: 0.2s; display: block; }
 [contenteditable="true"]:hover { border-color: rgba(150,150,150,0.5); background: rgba(128,128,128,0.1); }
-.p-h1 { color: var(--accent); font-size: 2.2em; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid rgba(150,150,150,0.3); padding-bottom: 5px; }
+.p-h1 { color: var(--accent); font-size: 2.2em; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid rgba(150,150,150,0.3); padding-bottom: 5px; clear: both; }
 .p-h2 { color: var(--sub-accent); font-size: 1.6em; font-weight: bold; margin-bottom: 8px; }
 .p-h3 { color: var(--h3-accent); font-size: 1.4em; font-weight: bold; margin-bottom: 8px; }
 .p-text, .p-li { font-size: 1.3em; margin-bottom: 8px; line-height: 1.5; white-space: pre-wrap; color: var(--text-main); }
 .p-q { color: var(--accent); font-size: 1.6em; font-weight: bold; margin-top: 10px; }
 
 /* H1 Continued Logic */
-.h1-continued { opacity: 0.4; font-size: 1.2em; border: none; padding: 0; margin-bottom: 0px; text-decoration: line-through; }
-.h1-continued::after { content: " (Continued - Hidden in final PPTX)"; font-size: 0.7em; font-style: italic; color: #ff5252; text-decoration: none;}
+.h1-continued { opacity: 0.6; color: var(--text-muted); font-size: 1.2em; border: none; padding: 0; margin-bottom: 0px;}
+.h1-continued::after { content: " (Continued - Hidden in final PPTX)"; font-size: 0.8em; font-style: italic; color: #ff5252; margin-left: 10px;}
 
-/* --- Simple Image Drop Area (No Floats) --- */
-.image-placeholder-box { 
-    border: 2px dashed rgba(150,150,150,0.5); border-radius: 8px; background: rgba(128,128,128,0.1); 
-    display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: 0.3s; 
-    flex: 1; /* Take remaining space at bottom */
-    min-height: 150px; margin-top: 15px; width: 100%;
-}
-.image-placeholder-box:hover { border-color: var(--accent); background: rgba(128,128,128,0.2); }
-.image-placeholder-box span { color: var(--text-muted); font-size: 1.1em; pointer-events: none; font-weight: bold; text-align: center;}
-.image-placeholder-box img { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; z-index: 1; }
-.remove-img-btn { position: absolute; top: 10px; right: 10px; background: #e11d48; color: white; border: none; border-radius: 5px; padding: 6px 12px; cursor: pointer; z-index: 2; font-family: 'Kalam'; font-size: 0.9em; }
-
+/* Removing all Image related CSS since features are removed */
 </style>
 </head>
 <body>
@@ -99,12 +89,8 @@ body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
         <label>JSON Data Input</label>
         <textarea id="jsonArea" rows="6" placeholder='[{"h1":"Main", "h2":"Sub", "content":"Notes..."}]'></textarea>
         
-        <div class="grid-2" style="margin-top: 15px;">
+        <div class="btn-row" style="margin-top: 15px; display: flex; gap: 10px;">
             <button id="importBtn" class="btn btn-grey" title="पुराना मिटाकर नया डालें">📥 Replace Data</button>
-            <button id="appendBtn" class="btn btn-blue" title="पुरानी स्लाइड के नीचे नया जोड़ें">➕ Append JSON</button>
-        </div>
-        <div class="grid-2" style="margin-top: 10px;">
-            <button id="copyBtn" class="btn btn-cyan" title="अपडेटेड JSON कॉपी करें">📋 Copy JSON</button>
             <button id="clearBtn" class="btn btn-red" title="सब डिलीट करें">🗑️ Clear All</button>
         </div>
 
@@ -138,7 +124,8 @@ body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
     </div>
 
     <div class="right-panel">
-        <h3 style="margin-top:0; color:var(--text-main); font-size:1.8em; border-bottom:1px solid var(--border); padding-bottom:10px;">👁️ Live Slide Preview</h3>
+        <h3 style="margin-top:0; color:var(--text-main); font-size:1.8em; border-bottom:1px solid var(--border); padding-bottom:10px;">👁️ Live Slide Preview (Text Only)</h3>
+        <p style="color:var(--text-muted); font-size:1em; margin-top:-5px;">Image addition features have been removed for a cleaner layout.</p>
         <div id="preview" class="preview-list"></div>
     </div>
 </div>
@@ -192,36 +179,16 @@ $('importBtn').onclick = () => {
     } catch (e) { alert("Invalid JSON Code!"); } 
 };
 
-$('appendBtn').onclick = () => { 
-    try { 
-        if(!$('jsonArea').value.trim()) return alert("Please paste new JSON to append.");
-        let newData = JSON.parse($('jsonArea').value); 
-        if(!Array.isArray(newData)) newData = [newData];
-        DATA = DATA.concat(newData); 
-        $('jsonArea').value = JSON.stringify(DATA, null, 2); 
-        renderPreview(); 
-        const btn = $('appendBtn'); btn.innerHTML = "✅ Appended!"; setTimeout(() => btn.innerHTML = "➕ Append JSON", 2000);
-    } catch (e) { alert("Invalid JSON Code!"); } 
-};
-
-$('copyBtn').onclick = () => {
-    if (DATA.length === 0) return alert("No data to copy!");
-    $('jsonArea').value = JSON.stringify(DATA, null, 2);
-    navigator.clipboard.writeText($('jsonArea').value).then(() => {
-        const btn = $('copyBtn'); btn.innerHTML = "✅ Copied!"; setTimeout(() => btn.innerHTML = "📋 Copy JSON", 2000);
-    });
-};
-
 $('clearBtn').onclick = () => { if(confirm("Clear all slides?")) { DATA = []; $('jsonArea').value = ""; renderPreview(); } };
 
 function formatPreviewText(text, boldHex) {
     if(!text) return ""; return text.replace(/<b>(.*?)<\/b>/g, `<span style="color:${boldHex}; font-weight:bold;">$1</span>`);
 }
 
-// Clean HTML Preview
+// Clean HTML Preview - Text Only
 function renderPreview() {
     const box = $("preview"); box.innerHTML = "";
-    if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted); padding:20px; text-align:center;'>No data. Paste JSON and Import/Append.</p>"; return; }
+    if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted); padding:20px; text-align:center;'>No data. Paste JSON and Import.</p>"; return; }
 
     const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
     const bgUrl = getBgUrl();
@@ -237,7 +204,8 @@ function renderPreview() {
 
         const contentWrap = document.createElement("div"); contentWrap.className = "slide-content";
         
-        // Text Elements
+        // Removed image box logic
+
         Object.keys(item).forEach(key => {
             if(key === 'image' || key === 'imgPos') return; // Ignore old keys
             const el = document.createElement("div"); el.contentEditable = "true";
@@ -260,26 +228,11 @@ function renderPreview() {
             }
         });
 
-        // Simple Image Box at the Bottom
-        const imgBox = document.createElement("div"); imgBox.className = "image-placeholder-box";
-        const fileIn = document.createElement("input"); fileIn.type = "file"; fileIn.accept = "image/*"; fileIn.style.display = "none";
-        fileIn.onchange = (e) => { const reader = new FileReader(); reader.onload = () => { DATA[idx].image = reader.result; renderPreview(); }; if(e.target.files[0]) reader.readAsDataURL(e.target.files[0]); };
-        imgBox.onclick = () => fileIn.click();
-
-        if(item.image) {
-            const img = document.createElement("img"); img.src = item.image; imgBox.appendChild(img);
-            const rmBtn = document.createElement("button"); rmBtn.className = "remove-img-btn"; rmBtn.innerText = "✖ Remove Image";
-            rmBtn.onclick = (e) => { e.stopPropagation(); delete DATA[idx].image; renderPreview(); };
-            imgBox.appendChild(rmBtn);
-        } else { imgBox.innerHTML = "<span>🖼️ Click to Add Image to this Slide</span>"; }
-
-        contentWrap.appendChild(imgBox);
-        contentWrap.appendChild(fileIn);
         div.appendChild(contentWrap); box.appendChild(div);
     });
 }
 
-// Straightforward PPTX Generation
+// PPTX Generation - Background Fixed
 $('generateBtn').onclick = async () => {
     if (DATA.length === 0) return alert("No Data! Please import JSON first.");
     const btn = $('generateBtn'); btn.innerHTML = "⏳ Generating PPTX... Please wait"; btn.disabled = true;
@@ -289,32 +242,32 @@ $('generateBtn').onclick = async () => {
         const m = { top:parseInt($('topM').value), bottom:parseInt($('bottomM').value), left:parseInt($('leftM').value), right:parseInt($('rightM').value) };
         const ppt = new PptxGenJS(); ppt.defineLayout({ name:"S", width:pxW/96, height:pxH/96 }); ppt.layout = "S";
 
+        let bgUrl = getBgUrl();
+        await document.fonts.load("30px Kalam"); await document.fonts.load("bold 30px Kalam"); 
+        await document.fonts.load("bold 34px Kalam"); await document.fonts.load("bold 44px Kalam");
+
         let lastH1PPT = null;
 
         for (const item of DATA) {
             let s = ppt.addSlide();
+            
+            // --- FIX: Apply Background directly to the slide object, bypassing CORS canvas issues ---
+            if (bgUrl) {
+                // PptxGenJS handles image download and CORS automatically
+                s.background = { path: bgUrl };
+            } else {
+                s.background = { fill: isLightMode ? "#ffffff" : "#000000" };
+            }
+
+            // --- Setup transparent canvas for text layer ---
             const c = document.createElement("canvas"); c.width = pxW; c.height = pxH; const ctx = c.getContext("2d");
             ctx.textBaseline = "top"; 
-
-            await document.fonts.load("30px Kalam"); await document.fonts.load("bold 30px Kalam"); 
-            await document.fonts.load("bold 34px Kalam"); await document.fonts.load("bold 44px Kalam");
-
-            let bgUrl = getBgUrl();
-            if (bgUrl) {
-                try {
-                    let img = new Image(); 
-                    img.crossOrigin = "Anonymous";
-                    img.src = bgUrl; 
-                    await new Promise((res, rej) => { img.onload = res; img.onerror = rej; }); 
-                    ctx.drawImage(img, 0, 0, pxW, pxH);
-                } catch(e) {
-                    ctx.fillStyle = isLightMode ? "#ffffff" : "#000000"; ctx.fillRect(0, 0, pxW, pxH);
-                }
-            } else { ctx.fillStyle = isLightMode ? "#ffffff" : "#000000"; ctx.fillRect(0, 0, pxW, pxH); }
+            // ctx.clearRect(0,0, pxW, pxH); // Canvas is transparent by default
 
             let y = m.top; const maxW = pxW - m.left - m.right;
             const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
 
+            // Simplified Text Drawing (No collisions check)
             const drawSmartText = (text, normalFont, boldFont, normalCol, boldCol, lineH, leftIndent = 0) => {
                 const paras = text.split("\n");
                 paras.forEach(para => {
@@ -368,23 +321,16 @@ $('generateBtn').onclick = async () => {
                 }
             });
 
-            // Draw image exactly at the bottom center of the remaining space
-            if (item.image) {
-                let simg = new Image(); simg.src = item.image; await new Promise(r => simg.onload = r);
-                let availableH = pxH - m.bottom - y;
-                if(availableH > 50) { 
-                    let ratio = Math.min(maxW / simg.width, availableH / simg.height);
-                    let finalW = simg.width * ratio; let finalH = simg.height * ratio;
-                    let x = m.left + (maxW - finalW) / 2; 
-                    let imgY = y + (availableH - finalH) / 2;
-                    ctx.drawImage(simg, x, imgY, finalW, finalH);
-                }
-            }
+            // Removed all inside-slide image drawing
+
+            // Add Text layer image on top of PPT background
             s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
         }
-        ppt.writeFile({ fileName: "Study_Notes.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
+        ppt.writeFile({ fileName: "Study_Notes_TextOnly.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
     }, 100);
 };
+
+window.onload = () => loadState();
 </script>
 </body>
 </html>
