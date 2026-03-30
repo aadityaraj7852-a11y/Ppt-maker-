@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Ultimate PPT Maker - Fixed Table & Overlap</title>
+<title>Ultimate PPT Maker - Auto Pagination (No Overflow)</title>
 <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
@@ -78,7 +78,7 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
             <button id="themeToggle" class="theme-btn">🌙 Dark Mode</button>
         </div>
 
-        <label>HTML Data Input (H2 = New Slide)</label>
+        <label>HTML Data Input (H1/H2 = Auto New Slide)</label>
         <textarea id="htmlArea" rows="8" placeholder='Paste HTML (<h2>, <h3>, <ul>, <li>, <table>, <p> etc.)...'></textarea>
         
         <div class="grid-2" style="margin-top: 15px;">
@@ -176,6 +176,7 @@ $('importBtn').onclick = () => {
     const doc = parser.parseFromString(rawHtml, 'text/html');
 
     Array.from(doc.body.children).forEach(el => {
+        // H1 and H2 always trigger a fresh block in our array structure
         if (el.tagName === 'H1' || el.tagName === 'H2') {
             if (currentSlide.length > 0) slidesData.push(currentSlide);
             currentSlide = [];
@@ -250,6 +251,7 @@ function renderPreview() {
     const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
     const bgUrl = getBgUrl();
 
+    // The live preview shows the parsed structure, but actual pagination happens during PPT generation.
     DATA.forEach((slideElements, sIdx) => {
         const div = document.createElement("div"); div.className = "slide-card";
         if(bgUrl) div.style.background = `url('${bgUrl}') center/cover no-repeat`; else div.style.backgroundColor = isLightMode ? "#ffffff" : "#000000";
@@ -293,6 +295,9 @@ function renderPreview() {
     });
 }
 
+// ==============================================
+// ADVANCED GENERATOR WITH AUTO-PAGINATION
+// ==============================================
 $('generateBtn').onclick = async () => {
     if (DATA.length === 0) return alert("No Data! Please import HTML first.");
     const btn = $('generateBtn'); btn.innerHTML = "⏳ Generating PPTX..."; btn.disabled = true;
@@ -309,14 +314,25 @@ $('generateBtn').onclick = async () => {
         const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
 
         for (const slideElements of DATA) {
+            
             let s = ppt.addSlide();
             if (bgUrl) s.background = { data: bgUrl }; else s.background = { color: isLightMode ? "FFFFFF" : "000000" };
 
-            // Transparent Canvas for Texts
-            const c = document.createElement("canvas"); c.width = pxW; c.height = pxH; const ctx = c.getContext("2d"); ctx.textBaseline = "top"; 
+            let c = document.createElement("canvas"); c.width = pxW; c.height = pxH; 
+            let ctx = c.getContext("2d"); ctx.textBaseline = "top"; 
             
             let y = m.top; const maxW = pxW - m.left - m.right;
-            let tablesToRender = [];
+            const bottomLimit = pxH - m.bottom;
+
+            // Helper: Stamp current canvas to PPT, create new slide, reset Y
+            const triggerPagination = () => {
+                s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
+                s = ppt.addSlide();
+                if (bgUrl) s.background = { data: bgUrl }; else s.background = { color: isLightMode ? "FFFFFF" : "000000" };
+                c = document.createElement("canvas"); c.width = pxW; c.height = pxH;
+                ctx = c.getContext("2d"); ctx.textBaseline = "top";
+                y = m.top;
+            };
 
             const drawSmartText = (text, normalFont, boldFont, normalCol, boldCol, lineH, leftIndent = 0) => {
                 if(!text) return;
@@ -328,66 +344,80 @@ $('generateBtn').onclick = async () => {
                         if(part.startsWith('<b>') && part.endsWith('</b>')) part.slice(3, -4).split(' ').forEach(w => { if(w) words.push({t: w, b: true}); });
                         else part.split(' ').forEach(w => { if(w) words.push({t: w, b: false}); });
                     });
+                    
                     let currentX = m.left + leftIndent; let endX = pxW - m.right;
+
+                    // Text pagination check before starting a line
+                    if (y + lineH > bottomLimit && y > m.top) triggerPagination();
+
                     for(let i=0; i<words.length; i++) {
                         let w = words[i]; ctx.font = w.b ? boldFont : normalFont; ctx.fillStyle = w.b ? boldCol : normalCol;
                         let metric = ctx.measureText(w.t + " ");
-                        if (currentX + metric.width > endX && currentX !== m.left + leftIndent) { y += lineH; currentX = m.left + leftIndent; }
+                        
+                        if (currentX + metric.width > endX && currentX !== m.left + leftIndent) { 
+                            y += lineH; currentX = m.left + leftIndent; 
+                            
+                            // Text pagination check if line wraps
+                            if (y + lineH > bottomLimit && y > m.top) triggerPagination();
+                        }
                         ctx.fillText(w.t + " ", currentX, y); currentX += metric.width;
                     }
                     y += lineH;
                 });
             };
 
-            // Draw Texts to Canvas & Calculate Table Positions
-            slideElements.forEach(el => {
+            // Process each element
+            slideElements.forEach((el) => {
+                // Headings always trigger a fresh slide if we aren't already at the top
+                if ((el.type === 'h1' || el.type === 'h2') && y > m.top) triggerPagination();
+
                 if(el.type === 'h1'){ drawSmartText(el.text, "bold 44px Kalam", "bold 44px Kalam", h1c, h1c, 56); y+=10; }
                 else if(el.type === 'h2'){ drawSmartText(el.text, "bold 34px Kalam", "bold 34px Kalam", h2c, h2c, 46); y+=10; }
-                else if(el.type === 'h3'){ drawSmartText(el.text, "bold 28px Kalam", "bold 28px Kalam", h3c, h3c, 38); y+=5; }
+                else if(el.type === 'h3'){ 
+                    if (y + 50 > bottomLimit && y > m.top) triggerPagination();
+                    drawSmartText(el.text, "bold 28px Kalam", "bold 28px Kalam", h3c, h3c, 38); y+=5; 
+                }
                 else if(el.type === 'p'){ drawSmartText(el.text, "30px Kalam", "bold 30px Kalam", oc, bc, 42); y+=8; }
-                else if(el.type === 'ul'){ el.items.forEach(li => drawSmartText("• " + li, "30px Kalam", "bold 30px Kalam", oc, bc, 42, 20)); y+=10; }
+                else if(el.type === 'ul'){ 
+                    el.items.forEach(li => {
+                        drawSmartText("• " + li, "30px Kalam", "bold 30px Kalam", oc, bc, 42, 20); y+=5;
+                    });
+                    y+=5; 
+                }
                 else if(el.type === 'table'){
-                    tablesToRender.push({ rows: el.rows, y: y });
-                    // Calculate rough height based on rows (approx 60px per row to leave space below table)
-                    y += (el.rows.length * 60) + 40; 
+                    let estTableHeight = (el.rows.length * 55) + 30;
+                    
+                    // Table Pagination Check
+                    if (y + estTableHeight > bottomLimit && y > m.top) triggerPagination();
+
+                    let pptRows = el.rows.map((rowArr, rIdx) => {
+                        return rowArr.map(cellHtml => {
+                            let isHead = (rIdx === 0);
+                            return {
+                                text: cellHtml.replace(/<b>|<\/b>/g, ''), 
+                                options: { 
+                                    color: isHead ? 'FFFFFF' : (isLightMode ? '000000' : 'FFFFFF'), 
+                                    bold: isHead || cellHtml.includes('<b>'),
+                                    fontFace: 'Kalam', fontSize: 22, 
+                                    fill: isHead ? '2563EB' : (isLightMode ? 'F8FAFC' : '1A2234'), 
+                                    align: 'center', valign: 'middle', margin: [8, 8, 8, 8] 
+                                }
+                            };
+                        });
+                    });
+                    
+                    // Draw Native Table onto the current slide 's'
+                    s.addTable(pptRows, { x: m.left/96, y: y/96, w: maxW/96, border: { pt: 1.5, color: isLightMode ? 'CBD5E1' : '334155' } });
+                    
+                    y += estTableHeight + 20; 
                 }
             });
 
-            // Native PptxGenJS Table for High Quality
-            tablesToRender.forEach(tbl => {
-                let pptRows = tbl.rows.map((rowArr, rIdx) => {
-                    return rowArr.map(cellHtml => {
-                        let isHead = (rIdx === 0);
-                        return {
-                            text: cellHtml.replace(/<b>|<\/b>/g, ''), // Remove tags for ppt table
-                            options: { 
-                                color: isHead ? 'FFFFFF' : (isLightMode ? '000000' : 'FFFFFF'), 
-                                bold: isHead || cellHtml.includes('<b>'),
-                                fontFace: 'Kalam', // PPT will load Kalam if installed on PC
-                                fontSize: 22, // Size increased for better readability
-                                fill: isHead ? '2563EB' : (isLightMode ? 'F8FAFC' : '1A2234'), // Beautiful dark matching fill
-                                align: 'center', 
-                                valign: 'middle',
-                                margin: [8, 8, 8, 8] // Added padding to stop overlap completely
-                            }
-                        };
-                    });
-                });
-                
-                // Note: removed 'rowH' so rows can auto-expand properly without overlapping text
-                s.addTable(pptRows, { 
-                    x: m.left/96, 
-                    y: tbl.y/96, 
-                    w: maxW/96, 
-                    border: { pt: 1.5, color: isLightMode ? 'CBD5E1' : '334155' }
-                });
-            });
-
-            // Add Text Canvas as Transparent Overlay
+            // Save the very last canvas of this parsed section
             s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
         }
         
-        ppt.writeFile({ fileName: "Study_Notes_Pro_Fixed.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
+        ppt.writeFile({ fileName: "Study_Notes_AutoPage.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
     }, 100);
 };
 
