@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Ultimate PPT Maker - Auto Pagination (No Overflow)</title>
+<title>Ultimate PPT Maker - Auto Pagination & MCQ</title>
 <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
@@ -38,12 +38,15 @@ textarea, input[type="number"], select { width: 100%; padding: 10px; border-radi
 textarea:focus, input:focus, select:focus { outline: none; border-color: var(--accent); }
 input[type="color"] { width: 100%; height: 40px; padding: 2px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; background: var(--input-bg); }
 
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
 .grid-5 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 5px; }
-.btn { width: 100%; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Kalam', cursive; font-weight: 700; font-size: 1.1em; transition: 0.2s; color: #fff; text-align: center; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.btn { width: 100%; padding: 10px 5px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Kalam', cursive; font-weight: 700; font-size: 1em; transition: 0.2s; color: #fff; text-align: center; }
 .btn:hover { opacity: 0.9; transform: translateY(-2px); }
-.btn-blue { background: #2563eb; } .btn-red { background: #e11d48; } .btn-generate { background: linear-gradient(135deg, #10b981, #059669); font-size: 1.3em; padding: 15px; margin-top: 20px; width: 100%; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
+.btn-blue { background: #2563eb; } .btn-purple { background: #8b5cf6; } .btn-red { background: #e11d48; } 
+.btn-generate { background: linear-gradient(135deg, #10b981, #059669); font-size: 1.3em; padding: 15px; margin-top: 20px; width: 100%; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
 
 /* --- Preview Styles --- */
 .preview-list { display: flex; flex-direction: column; gap: 30px; }
@@ -61,6 +64,10 @@ body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
 .p-h3 { color: var(--h3-accent); font-size: 1.4em; font-weight: bold; margin-bottom: 8px; margin-top: 5px; }
 .p-text, .p-li { font-size: 1.3em; margin-bottom: 8px; line-height: 1.5; white-space: pre-wrap; color: var(--text-main); }
 
+/* MCQ specific preview classes */
+.p-mcq-q { font-size: 1.8em; font-weight: bold; margin-bottom: 20px; line-height: 1.4; white-space: pre-wrap; }
+.p-mcq-opt { font-size: 1.5em; margin-bottom: 12px; line-height: 1.4; white-space: pre-wrap; padding-left: 20px; }
+
 /* Attractive HTML Table Preview */
 .preview-table-wrap { width: 100%; margin: 15px 0; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
 .preview-table { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.4); color: var(--text-main); font-size: 1.1em; }
@@ -74,15 +81,16 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
 <div class="main-wrapper">
     <div class="left-panel">
         <div class="header-row">
-            <h2>🎓 HTML to PPT Pro</h2>
+            <h2>🎓 HTML & MCQ PPT</h2>
             <button id="themeToggle" class="theme-btn">🌙 Dark Mode</button>
         </div>
 
-        <label>HTML Data Input (H1/H2 = Auto New Slide)</label>
-        <textarea id="htmlArea" rows="8" placeholder='Paste HTML (<h2>, <h3>, <ul>, <li>, <table>, <p> etc.)...'></textarea>
+        <label>Data Input (HTML Code OR JSON Array)</label>
+        <textarea id="htmlArea" rows="8" placeholder='Paste HTML Notes OR MCQ JSON Data here...'></textarea>
         
-        <div class="grid-2" style="margin-top: 15px;">
-            <button id="importBtn" class="btn btn-blue" title="डेटा प्रोसेस करें">📥 Load HTML</button>
+        <div class="grid-3" style="margin-top: 15px;">
+            <button id="importBtn" class="btn btn-blue" title="HTML नोट्स प्रोसेस करें">📥 HTML Notes</button>
+            <button id="importJsonBtn" class="btn btn-purple" title="MCQ JSON प्रोसेस करें">🧩 MCQ JSON</button>
             <button id="clearBtn" class="btn btn-red" title="सब डिलीट करें">🗑️ Clear All</button>
         </div>
 
@@ -94,13 +102,19 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
             <div><label style="margin-top:5px; font-size:0.9em;">Right</label><input type="number" id="rightM" value="90"></div>
         </div>
 
-        <label>Text Colors</label>
+        <label>Text Colors (HTML Notes)</label>
         <div class="grid-5">
             <div><label style="margin-top:5px; font-size:0.8em;">H1</label><input type="color" id="h1Color" value="#ffeb3b"></div>
             <div><label style="margin-top:5px; font-size:0.8em;">H2</label><input type="color" id="h2Color" value="#00e676"></div>
             <div><label style="margin-top:5px; font-size:0.8em;">H3</label><input type="color" id="h3Color" value="#00bcd4"></div>
             <div><label style="margin-top:5px; font-size:0.8em;"><b>Bold</b></label><input type="color" id="boldColor" value="#ff9800"></div>
             <div><label style="margin-top:5px; font-size:0.8em;">Normal</label><input type="color" id="optColor" value="#ffffff"></div>
+        </div>
+
+        <label>MCQ Colors (JSON Data)</label>
+        <div class="grid-2">
+            <div><label style="margin-top:5px; font-size:0.8em;">MCQ Question Color</label><input type="color" id="mcqQColor" value="#ffeb3b"></div>
+            <div><label style="margin-top:5px; font-size:0.8em;">MCQ Option Color</label><input type="color" id="mcqOptColor" value="#ffffff"></div>
         </div>
 
         <label>Master Background Setup</label>
@@ -131,8 +145,14 @@ $('themeToggle').onclick = () => {
     isLightMode = !isLightMode;
     document.body.classList.toggle('light-mode', isLightMode);
     $('themeToggle').innerText = isLightMode ? "☀️ Light Mode" : "🌙 Dark Mode";
-    if(isLightMode && $('optColor').value === "#ffffff") $('optColor').value = "#000000";
-    else if(!isLightMode && $('optColor').value === "#000000") $('optColor').value = "#ffffff";
+    
+    if(isLightMode) {
+        if($('optColor').value === "#ffffff") $('optColor').value = "#000000";
+        if($('mcqOptColor').value === "#ffffff") $('mcqOptColor').value = "#000000";
+    } else {
+        if($('optColor').value === "#000000") $('optColor').value = "#ffffff";
+        if($('mcqOptColor').value === "#000000") $('mcqOptColor').value = "#ffffff";
+    }
     renderPreview(); saveState();
 };
 
@@ -176,7 +196,6 @@ $('importBtn').onclick = () => {
     const doc = parser.parseFromString(rawHtml, 'text/html');
 
     Array.from(doc.body.children).forEach(el => {
-        // H1 and H2 always trigger a fresh block in our array structure
         if (el.tagName === 'H1' || el.tagName === 'H2') {
             if (currentSlide.length > 0) slidesData.push(currentSlide);
             currentSlide = [];
@@ -212,26 +231,79 @@ $('importBtn').onclick = () => {
     renderPreview(); saveState();
 };
 
-$('clearBtn').onclick = () => { if(confirm("Clear all data?")) { DATA = []; $('htmlArea').value = ""; localStorage.removeItem('htmlPptStateFinalX'); renderPreview(); } };
+// ==============================================
+// SMART JSON MCQ PARSER 
+// ==============================================
+$('importJsonBtn').onclick = () => {
+    let rawJson = $('htmlArea').value.trim();
+    if(!rawJson) return alert("Please paste MCQ JSON data!");
+
+    try {
+        let jsonArr = JSON.parse(rawJson);
+        if(!Array.isArray(jsonArr)) return alert("JSON should be an Array starting with [");
+        
+        let slidesData = [];
+        const alphabet = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+        jsonArr.forEach((item, index) => {
+            if(!item.question) return; // Skip if no question
+            
+            let currentSlide = [];
+            
+            // Extract Question
+            currentSlide.push({ type: 'mcq-q', text: `Q${index + 1}. ` + item.question });
+            
+            // Extract Options (handles both "option" and "options" key)
+            let opts = item.option || item.options || [];
+            if(Array.isArray(opts)) {
+                opts.forEach((optText, i) => {
+                    let label = alphabet[i] ? alphabet[i] + ") " : "";
+                    currentSlide.push({ type: 'mcq-opt', text: label + optText });
+                });
+            }
+
+            // Note: Purposely ignoring answer, solution, module, etc.
+            slidesData.push(currentSlide);
+        });
+
+        if (slidesData.length === 0) return alert("No valid questions found in JSON!");
+        
+        DATA = slidesData;
+        renderPreview(); saveState();
+
+    } catch (e) {
+        alert("Invalid JSON format! Error: " + e.message);
+    }
+};
+
+$('clearBtn').onclick = () => { if(confirm("Clear all data?")) { DATA = []; $('htmlArea').value = ""; localStorage.removeItem('htmlPptStateFinalX2'); renderPreview(); } };
 
 function saveState() {
     const state = {
         data: DATA, margins: { t: $('topM').value, b: $('bottomM').value, l: $('leftM').value, r: $('rightM').value },
-        colors: { h1: $('h1Color').value, h2: $('h2Color').value, h3: $('h3Color').value, bold: $('boldColor').value, opt: $('optColor').value },
+        colors: { 
+            h1: $('h1Color').value, h2: $('h2Color').value, h3: $('h3Color').value, 
+            bold: $('boldColor').value, opt: $('optColor').value, 
+            mcqQ: $('mcqQColor').value, mcqOpt: $('mcqOptColor').value 
+        },
         bg: $('bgSelect').value, theme: isLightMode, customBg: customBgDataUrl, htmlBox: $('htmlArea').value
     };
-    localStorage.setItem('htmlPptStateFinalX', JSON.stringify(state));
+    localStorage.setItem('htmlPptStateFinalX2', JSON.stringify(state));
 }
 
 function loadState() {
-    const saved = localStorage.getItem('htmlPptStateFinalX');
+    const saved = localStorage.getItem('htmlPptStateFinalX2');
     if(saved) {
         const state = JSON.parse(saved); DATA = state.data || [];
         $('htmlArea').value = state.htmlBox || "";
         $('topM').value = state.margins.t; $('bottomM').value = state.margins.b; $('leftM').value = state.margins.l; $('rightM').value = state.margins.r;
         $('h1Color').value = state.colors.h1; $('h2Color').value = state.colors.h2; 
         if(state.colors.h3) $('h3Color').value = state.colors.h3; if(state.colors.bold) $('boldColor').value = state.colors.bold;
-        $('optColor').value = state.colors.opt; $('bgSelect').value = state.bg;
+        $('optColor').value = state.colors.opt; 
+        if(state.colors.mcqQ) $('mcqQColor').value = state.colors.mcqQ;
+        if(state.colors.mcqOpt) $('mcqOptColor').value = state.colors.mcqOpt;
+        
+        $('bgSelect').value = state.bg;
         customBgDataUrl = state.customBg || null;
         if(state.bg === 'custom') $('bgImgUpload').style.display = 'block';
         isLightMode = state.theme || false;
@@ -240,18 +312,18 @@ function loadState() {
     renderPreview();
 }
 
-['topM', 'bottomM', 'leftM', 'rightM', 'h1Color', 'h2Color', 'h3Color', 'boldColor', 'optColor'].forEach(id => { $(id).addEventListener('change', () => { renderPreview(); saveState(); }); });
+['topM', 'bottomM', 'leftM', 'rightM', 'h1Color', 'h2Color', 'h3Color', 'boldColor', 'optColor', 'mcqQColor', 'mcqOptColor'].forEach(id => { $(id).addEventListener('change', () => { renderPreview(); saveState(); }); });
 
 function formatPreviewText(text, boldHex) { if(!text) return ""; return text.replace(/<b>(.*?)<\/b>/g, `<span style="color:${boldHex}; font-weight:bold;">$1</span>`); }
 
 function renderPreview() {
     const box = $("preview"); box.innerHTML = "";
-    if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted); padding:20px; text-align:center;'>No data. Paste HTML code and click Load.</p>"; return; }
+    if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted); padding:20px; text-align:center;'>No data. Paste HTML or JSON code and click Load.</p>"; return; }
 
     const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
+    const mcqQc = $('mcqQColor').value, mcqOc = $('mcqOptColor').value;
     const bgUrl = getBgUrl();
 
-    // The live preview shows the parsed structure, but actual pagination happens during PPT generation.
     DATA.forEach((slideElements, sIdx) => {
         const div = document.createElement("div"); div.className = "slide-card";
         if(bgUrl) div.style.background = `url('${bgUrl}') center/cover no-repeat`; else div.style.backgroundColor = isLightMode ? "#ffffff" : "#000000";
@@ -276,7 +348,17 @@ function renderPreview() {
                     liNode.onblur = e => { DATA[sIdx][eIdx].items[iIdx] = e.target.innerText.replace(/^•\s*/, ""); saveState(); };
                     contentWrap.appendChild(liNode);
                 });
-            } 
+            }
+            else if (el.type === 'mcq-q') {
+                const node = document.createElement("div"); node.className = "p-mcq-q"; node.style.color = mcqQc;
+                node.contentEditable = "true"; node.innerHTML = formatPreviewText(el.text, bc);
+                node.onblur = e => { DATA[sIdx][eIdx].text = e.target.innerText; saveState(); }; contentWrap.appendChild(node);
+            }
+            else if (el.type === 'mcq-opt') {
+                const node = document.createElement("div"); node.className = "p-mcq-opt"; node.style.color = mcqOc;
+                node.contentEditable = "true"; node.innerHTML = formatPreviewText(el.text, bc);
+                node.onblur = e => { DATA[sIdx][eIdx].text = e.target.innerText; saveState(); }; contentWrap.appendChild(node);
+            }
             else if (el.type === 'table') {
                 const tableWrap = document.createElement("div"); tableWrap.className = "preview-table-wrap";
                 const table = document.createElement("table"); table.className = "preview-table";
@@ -299,7 +381,7 @@ function renderPreview() {
 // ADVANCED GENERATOR WITH AUTO-PAGINATION
 // ==============================================
 $('generateBtn').onclick = async () => {
-    if (DATA.length === 0) return alert("No Data! Please import HTML first.");
+    if (DATA.length === 0) return alert("No Data! Please import HTML or JSON first.");
     const btn = $('generateBtn'); btn.innerHTML = "⏳ Generating PPTX..."; btn.disabled = true;
 
     setTimeout(async () => {
@@ -310,8 +392,10 @@ $('generateBtn').onclick = async () => {
         let bgUrl = getBgUrl();
         await document.fonts.load("30px Kalam"); await document.fonts.load("bold 30px Kalam"); 
         await document.fonts.load("bold 34px Kalam"); await document.fonts.load("bold 44px Kalam");
+        await document.fonts.load("bold 40px Kalam"); await document.fonts.load("34px Kalam");
 
         const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
+        const mcqQc = $('mcqQColor').value, mcqOc = $('mcqOptColor').value;
 
         for (const slideElements of DATA) {
             
@@ -324,7 +408,6 @@ $('generateBtn').onclick = async () => {
             let y = m.top; const maxW = pxW - m.left - m.right;
             const bottomLimit = pxH - m.bottom;
 
-            // Helper: Stamp current canvas to PPT, create new slide, reset Y
             const triggerPagination = () => {
                 s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
                 s = ppt.addSlide();
@@ -347,7 +430,6 @@ $('generateBtn').onclick = async () => {
                     
                     let currentX = m.left + leftIndent; let endX = pxW - m.right;
 
-                    // Text pagination check before starting a line
                     if (y + lineH > bottomLimit && y > m.top) triggerPagination();
 
                     for(let i=0; i<words.length; i++) {
@@ -356,8 +438,6 @@ $('generateBtn').onclick = async () => {
                         
                         if (currentX + metric.width > endX && currentX !== m.left + leftIndent) { 
                             y += lineH; currentX = m.left + leftIndent; 
-                            
-                            // Text pagination check if line wraps
                             if (y + lineH > bottomLimit && y > m.top) triggerPagination();
                         }
                         ctx.fillText(w.t + " ", currentX, y); currentX += metric.width;
@@ -368,7 +448,6 @@ $('generateBtn').onclick = async () => {
 
             // Process each element
             slideElements.forEach((el) => {
-                // Headings always trigger a fresh slide if we aren't already at the top
                 if ((el.type === 'h1' || el.type === 'h2') && y > m.top) triggerPagination();
 
                 if(el.type === 'h1'){ drawSmartText(el.text, "bold 44px Kalam", "bold 44px Kalam", h1c, h1c, 56); y+=10; }
@@ -379,15 +458,18 @@ $('generateBtn').onclick = async () => {
                 }
                 else if(el.type === 'p'){ drawSmartText(el.text, "30px Kalam", "bold 30px Kalam", oc, bc, 42); y+=8; }
                 else if(el.type === 'ul'){ 
-                    el.items.forEach(li => {
-                        drawSmartText("• " + li, "30px Kalam", "bold 30px Kalam", oc, bc, 42, 20); y+=5;
-                    });
+                    el.items.forEach(li => { drawSmartText("• " + li, "30px Kalam", "bold 30px Kalam", oc, bc, 42, 20); y+=5; });
                     y+=5; 
+                }
+                // --- MCQ Elements ---
+                else if(el.type === 'mcq-q'){ 
+                    drawSmartText(el.text, "bold 40px Kalam", "bold 40px Kalam", mcqQc, mcqQc, 52); y+=20; 
+                }
+                else if(el.type === 'mcq-opt'){ 
+                    drawSmartText(el.text, "34px Kalam", "bold 34px Kalam", mcqOc, mcqOc, 46, 30); y+=10; 
                 }
                 else if(el.type === 'table'){
                     let estTableHeight = (el.rows.length * 55) + 30;
-                    
-                    // Table Pagination Check
                     if (y + estTableHeight > bottomLimit && y > m.top) triggerPagination();
 
                     let pptRows = el.rows.map((rowArr, rIdx) => {
@@ -405,15 +487,11 @@ $('generateBtn').onclick = async () => {
                             };
                         });
                     });
-                    
-                    // Draw Native Table onto the current slide 's'
                     s.addTable(pptRows, { x: m.left/96, y: y/96, w: maxW/96, border: { pt: 1.5, color: isLightMode ? 'CBD5E1' : '334155' } });
-                    
                     y += estTableHeight + 20; 
                 }
             });
 
-            // Save the very last canvas of this parsed section
             s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
         }
         
