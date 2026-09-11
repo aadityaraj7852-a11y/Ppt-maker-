@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Ultimate PPT Maker - Auto Pagination & MCQ</title>
+<title>Ultimate PPT Maker - Auto Pagination & MCQ Pro</title>
 <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
 <style>
@@ -30,7 +31,7 @@ body { font-family: 'Kalam', cursive; background: var(--bg-main); color: var(--t
 @media (max-width: 1050px) { .main-wrapper { flex-direction: column; } .left-panel { position: static; flex: auto; width: 100%; max-height: none; } }
 
 .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid var(--border); padding-bottom: 15px; }
-.header-row h2 { margin: 0; color: var(--accent); font-size: 2em; }
+.header-row h2 { margin: 0; color: var(--accent); font-size: 1.8em; }
 .theme-btn { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border); padding: 8px 15px; border-radius: 8px; cursor: pointer; font-family: 'Kalam'; font-weight: bold; transition: 0.3s; }
 
 label { color: var(--text-muted); font-weight: 700; margin-top: 15px; display: block; font-size: 1.1em; }
@@ -38,14 +39,14 @@ textarea, input[type="number"], select { width: 100%; padding: 10px; border-radi
 textarea:focus, input:focus, select:focus { outline: none; border-color: var(--accent); }
 input[type="color"] { width: 100%; height: 40px; padding: 2px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; background: var(--input-bg); }
 
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
 .grid-5 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 5px; }
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
 .btn { width: 100%; padding: 10px 5px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Kalam', cursive; font-weight: 700; font-size: 1em; transition: 0.2s; color: #fff; text-align: center; }
 .btn:hover { opacity: 0.9; transform: translateY(-2px); }
-.btn-blue { background: #2563eb; } .btn-purple { background: #8b5cf6; } .btn-red { background: #e11d48; } 
+.btn-blue { background: #2563eb; } .btn-purple { background: #8b5cf6; } .btn-red { background: #e11d48; } .btn-green { background: #10b981; }
 .btn-generate { background: linear-gradient(135deg, #10b981, #059669); font-size: 1.3em; padding: 15px; margin-top: 20px; width: 100%; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
 
 /* --- Preview Styles --- */
@@ -54,15 +55,16 @@ input[type="color"] { width: 100%; height: 40px; padding: 2px; border-radius: 8p
 .slide-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 0; }
 body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
 
-.slide-content { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; }
+.slide-content { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+.slide-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px; font-size: 0.9em; color: var(--text-muted); }
 
 /* Typography */
 [contenteditable="true"] { outline: none; border: 1px dashed transparent; transition: 0.2s; display: block; }
 [contenteditable="true"]:hover { border-color: rgba(150,150,150,0.5); background: rgba(128,128,128,0.1); }
-.p-h1 { color: var(--accent); font-size: 2.2em; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid rgba(150,150,150,0.3); padding-bottom: 5px; clear: both; }
-.p-h2 { color: var(--sub-accent); font-size: 1.6em; font-weight: bold; margin-bottom: 8px; margin-top: 10px; }
-.p-h3 { color: var(--h3-accent); font-size: 1.4em; font-weight: bold; margin-bottom: 8px; margin-top: 5px; }
-.p-text, .p-li { font-size: 1.3em; margin-bottom: 8px; line-height: 1.5; white-space: pre-wrap; color: var(--text-main); }
+.p-h1 { font-size: 2.2em; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid rgba(150,150,150,0.3); padding-bottom: 5px; clear: both; }
+.p-h2 { font-size: 1.6em; font-weight: bold; margin-bottom: 8px; margin-top: 10px; }
+.p-h3 { font-size: 1.4em; font-weight: bold; margin-bottom: 8px; margin-top: 5px; }
+.p-text, .p-li { font-size: 1.3em; margin-bottom: 8px; line-height: 1.5; white-space: pre-wrap; }
 
 /* MCQ specific preview classes */
 .p-mcq-q { font-size: 1.8em; font-weight: bold; margin-bottom: 20px; line-height: 1.4; white-space: pre-wrap; }
@@ -71,7 +73,7 @@ body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
 /* Attractive HTML Table Preview */
 .preview-table-wrap { width: 100%; margin: 15px 0; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
 .preview-table { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.4); color: var(--text-main); font-size: 1.1em; }
-.preview-table th, .preview-table td { padding: 12px 15px; text-align: left; border: 1px solid rgba(150,150,150,0.4); line-height: 1.4; }
+.preview-table th, .preview-table td { padding: 10px 12px; text-align: left; border: 1px solid rgba(150,150,150,0.4); line-height: 1.4; }
 .preview-table th { background: #2563eb; color: #fff; font-weight: bold; }
 body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
 </style>
@@ -81,17 +83,21 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
 <div class="main-wrapper">
     <div class="left-panel">
         <div class="header-row">
-            <h2>🎓 HTML & MCQ PPT</h2>
+            <h2>🎓 PPT & MCQ Studio</h2>
             <button id="themeToggle" class="theme-btn">🌙 Dark Mode</button>
         </div>
 
-        <label>Data Input (HTML Code OR JSON Array)</label>
-        <textarea id="htmlArea" rows="8" placeholder='Paste HTML Notes OR MCQ JSON Data here...'></textarea>
+        <label>Data Input (HTML / Auto-Split / JSON)</label>
+        <textarea id="htmlArea" rows="6" placeholder='Paste HTML Notes, MCQ JSON, or normal text. Headings (H1, H2, H3) will auto-split slides!'></textarea>
         
-        <div class="grid-3" style="margin-top: 15px;">
-            <button id="importBtn" class="btn btn-blue" title="HTML नोट्स प्रोसेस करें">📥 HTML Notes</button>
-            <button id="importJsonBtn" class="btn btn-purple" title="MCQ JSON प्रोसेस करें">🧩 MCQ JSON</button>
-            <button id="clearBtn" class="btn btn-red" title="सब डिलीट करें">🗑️ Clear All</button>
+        <div class="grid-3" style="margin-top: 10px;">
+            <button id="importBtn" class="btn btn-blue">📥 Import HTML</button>
+            <button id="importJsonBtn" class="btn btn-purple">🧩 Import JSON</button>
+            <button id="addSlideBtn" class="btn btn-green"><i class="fa fa-plus"></i> Add Slide</button>
+        </div>
+        <div class="grid-2" style="margin-top: 8px;">
+            <button id="copyCodeBtn" class="btn btn-purple"><i class="fa fa-copy"></i> Copy JSON/Data</button>
+            <button id="clearBtn" class="btn btn-red"><i class="fa fa-trash"></i> Clear All</button>
         </div>
 
         <label>Slide Margins (px)</label>
@@ -102,7 +108,7 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
             <div><label style="margin-top:5px; font-size:0.9em;">Right</label><input type="number" id="rightM" value="90"></div>
         </div>
 
-        <label>Text Colors (HTML Notes)</label>
+        <label>Text Customization & Colors</label>
         <div class="grid-5">
             <div><label style="margin-top:5px; font-size:0.8em;">H1</label><input type="color" id="h1Color" value="#ffeb3b"></div>
             <div><label style="margin-top:5px; font-size:0.8em;">H2</label><input type="color" id="h2Color" value="#00e676"></div>
@@ -111,10 +117,10 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
             <div><label style="margin-top:5px; font-size:0.8em;">Normal</label><input type="color" id="optColor" value="#ffffff"></div>
         </div>
 
-        <label>MCQ Colors (JSON Data)</label>
+        <label>MCQ Colors</label>
         <div class="grid-2">
-            <div><label style="margin-top:5px; font-size:0.8em;">MCQ Question Color</label><input type="color" id="mcqQColor" value="#ffeb3b"></div>
-            <div><label style="margin-top:5px; font-size:0.8em;">MCQ Option Color</label><input type="color" id="mcqOptColor" value="#ffffff"></div>
+            <div><label style="margin-top:5px; font-size:0.8em;">Question Color</label><input type="color" id="mcqQColor" value="#ffeb3b"></div>
+            <div><label style="margin-top:5px; font-size:0.8em;">Option Color</label><input type="color" id="mcqOptColor" value="#ffffff"></div>
         </div>
 
         <label>Master Background Setup</label>
@@ -128,7 +134,7 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
     </div>
 
     <div class="right-panel">
-        <h3 style="margin-top:0; color:var(--text-main); font-size:1.8em; border-bottom:1px solid var(--border); padding-bottom:10px;">👁️ Live Slide Preview</h3>
+        <h3 style="margin-top:0; color:var(--text-main); font-size:1.8em; border-bottom:1px solid var(--border); padding-bottom:10px;">👁️ Live Slide Previews (<span id="slideCountBadge">0 Slides</span>)</h3>
         <div id="preview" class="preview-list"></div>
     </div>
 </div>
@@ -174,9 +180,7 @@ $('bgImgUpload').onchange = (e) => {
     reader.readAsDataURL(file);
 };
 
-// ==============================================
-// SMART HTML PARSER 
-// ==============================================
+// Clean HTML for parsing
 function cleanHtmlForCanvas(htmlStr) {
     let str = htmlStr.replace(/<strong[^>]*>/gi, '<b>').replace(/<\/strong>/gi, '</b>')
                      .replace(/<b\s[^>]*>/gi, '<b>').replace(/<br\s*[\/]?>/gi, '\n');
@@ -185,9 +189,48 @@ function cleanHtmlForCanvas(htmlStr) {
     return txt.value.trim();
 }
 
+// Add Blank Slide Manually
+$('addSlideBtn').onclick = () => {
+    DATA.push([
+        { type: 'h2', text: `Slide ${DATA.length + 1} Title` },
+        { type: 'p', text: 'यहाँ अपनी जानकारी या टेक्स्ट टाइप करें...' }
+    ]);
+    renderPreview(); saveState();
+};
+
+// Copy JSON / Content Code
+$('copyCodeBtn').onclick = () => {
+    if(DATA.length === 0) return alert("कोई डेटा उपलब्ध नहीं है!");
+    navigator.clipboard.writeText(JSON.stringify(DATA, null, 2)).then(() => {
+        alert("✅ सारा डेटा/JSON कोड क्लिपबोर्ड पर कॉपी हो गया!");
+    });
+};
+
+// ==============================================
+// SMART HTML & AUTO-SPLIT PARSER 
+// ==============================================
 $('importBtn').onclick = () => { 
     let rawHtml = $('htmlArea').value.trim();
-    if(!rawHtml) return alert("Please paste HTML code!");
+    if(!rawHtml) return alert("Please paste HTML code or text!");
+
+    // If text does not contain HTML tags, treat paragraphs / lines as separate sections
+    if(!/<[a-z][\s\S]*>/i.test(rawHtml)) {
+        let lines = rawHtml.split('\n').filter(l => l.trim() !== '');
+        let slidesData = [];
+        let currentSlide = [];
+        lines.forEach((line, idx) => {
+            if(idx % 4 === 0) {
+                if(currentSlide.length > 0) slidesData.push(currentSlide);
+                currentSlide = [{ type: 'h2', text: line }];
+            } else {
+                currentSlide.push({ type: 'p', text: line });
+            }
+        });
+        if(currentSlide.length > 0) slidesData.push(currentSlide);
+        DATA = slidesData;
+        renderPreview(); saveState();
+        return;
+    }
 
     let slidesData = [];
     let currentSlide = [];
@@ -225,9 +268,11 @@ $('importBtn').onclick = () => {
     });
 
     if (currentSlide.length > 0) slidesData.push(currentSlide);
-    if (slidesData.length === 0) return alert("No valid HTML tags found! Use <h2>, <ul>, <li>, <p>, <table> etc.");
-
-    DATA = slidesData;
+    if (slidesData.length === 0) {
+        DATA = [[{ type: 'p', text: cleanHtmlForCanvas(rawHtml) }]];
+    } else {
+        DATA = slidesData;
+    }
     renderPreview(); saveState();
 };
 
@@ -246,14 +291,16 @@ $('importJsonBtn').onclick = () => {
         const alphabet = ['A', 'B', 'C', 'D', 'E', 'F'];
 
         jsonArr.forEach((item, index) => {
-            if(!item.question) return; // Skip if no question
+            if(!item.question && !item.module) return; 
             
             let currentSlide = [];
+            if(item.module) {
+                currentSlide.push({ type: 'h3', text: `[${item.module}]` });
+            }
+            if(item.question) {
+                currentSlide.push({ type: 'mcq-q', text: `Q${index + 1}. ` + item.question });
+            }
             
-            // Extract Question
-            currentSlide.push({ type: 'mcq-q', text: `Q${index + 1}. ` + item.question });
-            
-            // Extract Options (handles both "option" and "options" key)
             let opts = item.option || item.options || [];
             if(Array.isArray(opts)) {
                 opts.forEach((optText, i) => {
@@ -262,8 +309,21 @@ $('importJsonBtn').onclick = () => {
                 });
             }
 
-            // Note: Purposely ignoring answer, solution, module, etc.
-            slidesData.push(currentSlide);
+            // Optional solution / explanation pagination check
+            if(item.solution || item.explanation) {
+                let expText = item.solution || item.explanation;
+                slidesData.push(currentSlide); // Push question slide
+                
+                // Create explanation slide automatically
+                let expSlide = [
+                    { type: 'h3', text: `Q${index + 1}. Explanation / Answer` },
+                    { type: 'p', text: `Correct Answer: ${item.answer || 'N/A'}` },
+                    { type: 'p', text: expText }
+                ];
+                slidesData.push(expSlide);
+            } else {
+                slidesData.push(currentSlide);
+            }
         });
 
         if (slidesData.length === 0) return alert("No valid questions found in JSON!");
@@ -276,7 +336,7 @@ $('importJsonBtn').onclick = () => {
     }
 };
 
-$('clearBtn').onclick = () => { if(confirm("Clear all data?")) { DATA = []; $('htmlArea').value = ""; localStorage.removeItem('htmlPptStateFinalX2'); renderPreview(); } };
+$('clearBtn').onclick = () => { if(confirm("Clear all data?")) { DATA = []; $('htmlArea').value = ""; localStorage.removeItem('htmlPptStateFinalX3'); renderPreview(); } };
 
 function saveState() {
     const state = {
@@ -288,11 +348,11 @@ function saveState() {
         },
         bg: $('bgSelect').value, theme: isLightMode, customBg: customBgDataUrl, htmlBox: $('htmlArea').value
     };
-    localStorage.setItem('htmlPptStateFinalX2', JSON.stringify(state));
+    localStorage.setItem('htmlPptStateFinalX3', JSON.stringify(state));
 }
 
 function loadState() {
-    const saved = localStorage.getItem('htmlPptStateFinalX2');
+    const saved = localStorage.getItem('htmlPptStateFinalX3');
     if(saved) {
         const state = JSON.parse(saved); DATA = state.data || [];
         $('htmlArea').value = state.htmlBox || "";
@@ -318,7 +378,9 @@ function formatPreviewText(text, boldHex) { if(!text) return ""; return text.rep
 
 function renderPreview() {
     const box = $("preview"); box.innerHTML = "";
-    if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted); padding:20px; text-align:center;'>No data. Paste HTML or JSON code and click Load.</p>"; return; }
+    $('slideCountBadge').innerText = `${DATA.length} Slides`;
+
+    if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted); padding:20px; text-align:center;'>No slides. Import HTML/JSON or click 'Add Slide'.</p>"; return; }
 
     const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
     const mcqQc = $('mcqQColor').value, mcqOc = $('mcqOptColor').value;
@@ -327,6 +389,12 @@ function renderPreview() {
     DATA.forEach((slideElements, sIdx) => {
         const div = document.createElement("div"); div.className = "slide-card";
         if(bgUrl) div.style.background = `url('${bgUrl}') center/cover no-repeat`; else div.style.backgroundColor = isLightMode ? "#ffffff" : "#000000";
+        
+        // Header Bar for individual slide control (Delete / Move)
+        const headerBar = document.createElement("div"); headerBar.className = "slide-header-bar";
+        headerBar.innerHTML = `<span>Slide #${sIdx + 1}</span> <button class="btn btn-red" style="width:auto; padding:2px 8px; font-size:0.8em;" onclick="deleteSlide(${sIdx})"><i class="fa fa-trash"></i> Delete</button>`;
+        div.appendChild(headerBar);
+
         const contentWrap = document.createElement("div"); contentWrap.className = "slide-content";
 
         slideElements.forEach((el, eIdx) => {
@@ -376,6 +444,11 @@ function renderPreview() {
         div.appendChild(contentWrap); box.appendChild(div);
     });
 }
+
+window.deleteSlide = (index) => {
+    DATA.splice(index, 1);
+    renderPreview(); saveState();
+};
 
 // ==============================================
 // ADVANCED GENERATOR WITH AUTO-PAGINATION
