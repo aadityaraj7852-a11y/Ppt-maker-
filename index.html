@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Ultimate PPT Maker - Auto Pagination & MCQ Pro</title>
+<title>Ultimate PPT Maker - Auto Pagination & MCQ</title>
 <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
 <style>
@@ -39,14 +39,14 @@ textarea, input[type="number"], select { width: 100%; padding: 10px; border-radi
 textarea:focus, input:focus, select:focus { outline: none; border-color: var(--accent); }
 input[type="color"] { width: 100%; height: 40px; padding: 2px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; background: var(--input-bg); }
 
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
 .grid-5 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 5px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
 .btn { width: 100%; padding: 10px 5px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Kalam', cursive; font-weight: 700; font-size: 1em; transition: 0.2s; color: #fff; text-align: center; }
 .btn:hover { opacity: 0.9; transform: translateY(-2px); }
-.btn-blue { background: #2563eb; } .btn-purple { background: #8b5cf6; } .btn-red { background: #e11d48; } .btn-green { background: #10b981; }
+.btn-blue { background: #2563eb; } .btn-purple { background: #8b5cf6; } .btn-red { background: #e11d48; } .btn-cyan { background: #0891b2; }
 .btn-generate { background: linear-gradient(135deg, #10b981, #059669); font-size: 1.3em; padding: 15px; margin-top: 20px; width: 100%; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
 
 /* --- Preview Styles --- */
@@ -56,19 +56,20 @@ input[type="color"] { width: 100%; height: 40px; padding: 2px; border-radius: 8p
 body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
 
 .slide-content { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
-.slide-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px; font-size: 0.9em; color: var(--text-muted); }
+.slide-number-badge { position: absolute; top: 10px; right: 15px; background: rgba(0,0,0,0.6); color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 0.9em; z-index: 2; }
 
 /* Typography */
 [contenteditable="true"] { outline: none; border: 1px dashed transparent; transition: 0.2s; display: block; }
 [contenteditable="true"]:hover { border-color: rgba(150,150,150,0.5); background: rgba(128,128,128,0.1); }
-.p-h1 { font-size: 2.2em; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid rgba(150,150,150,0.3); padding-bottom: 5px; clear: both; }
-.p-h2 { font-size: 1.6em; font-weight: bold; margin-bottom: 8px; margin-top: 10px; }
-.p-h3 { font-size: 1.4em; font-weight: bold; margin-bottom: 8px; margin-top: 5px; }
-.p-text, .p-li { font-size: 1.3em; margin-bottom: 8px; line-height: 1.5; white-space: pre-wrap; }
+.p-h1 { color: var(--accent); font-size: 2.2em; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid rgba(150,150,150,0.3); padding-bottom: 5px; clear: both; }
+.p-h2 { color: var(--sub-accent); font-size: 1.6em; font-weight: bold; margin-bottom: 8px; margin-top: 10px; }
+.p-h3 { color: var(--h3-accent); font-size: 1.4em; font-weight: bold; margin-bottom: 8px; margin-top: 5px; }
+.p-text, .p-li { font-size: 1.3em; margin-bottom: 8px; line-height: 1.5; white-space: pre-wrap; color: var(--text-main); }
 
-/* MCQ specific preview classes */
-.p-mcq-q { font-size: 1.8em; font-weight: bold; margin-bottom: 20px; line-height: 1.4; white-space: pre-wrap; }
-.p-mcq-opt { font-size: 1.5em; margin-bottom: 12px; line-height: 1.4; white-space: pre-wrap; padding-left: 20px; }
+/* MCQ & Explanation Preview */
+.p-mcq-q { font-size: 1.6em; font-weight: bold; margin-bottom: 15px; line-height: 1.4; white-space: pre-wrap; }
+.p-mcq-opt { font-size: 1.3em; margin-bottom: 8px; line-height: 1.3; white-space: pre-wrap; padding-left: 20px; }
+.p-exp-box { background: rgba(59, 130, 246, 0.15); border-left: 5px solid #3b82f6; padding: 10px 15px; margin-top: 10px; border-radius: 4px; font-size: 1.2em; }
 
 /* Attractive HTML Table Preview */
 .preview-table-wrap { width: 100%; margin: 15px 0; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
@@ -83,21 +84,25 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
 <div class="main-wrapper">
     <div class="left-panel">
         <div class="header-row">
-            <h2>🎓 PPT & MCQ Studio</h2>
+            <h2>🎓 HTML & MCQ PPT</h2>
             <button id="themeToggle" class="theme-btn">🌙 Dark Mode</button>
         </div>
 
-        <label>Data Input (HTML / Auto-Split / JSON)</label>
-        <textarea id="htmlArea" rows="6" placeholder='Paste HTML Notes, MCQ JSON, or normal text. Headings (H1, H2, H3) will auto-split slides!'></textarea>
+        <label>Data Input (HTML Code OR JSON Array)</label>
+        <textarea id="htmlArea" rows="6" placeholder='Paste HTML Notes OR MCQ JSON Data here...'></textarea>
         
         <div class="grid-3" style="margin-top: 10px;">
-            <button id="importBtn" class="btn btn-blue">📥 Import HTML</button>
-            <button id="importJsonBtn" class="btn btn-purple">🧩 Import JSON</button>
-            <button id="addSlideBtn" class="btn btn-green"><i class="fa fa-plus"></i> Add Slide</button>
+            <button id="importBtn" class="btn btn-blue" title="HTML नोट्स प्रोसेस करें">📥 HTML</button>
+            <button id="importJsonBtn" class="btn btn-purple" title="MCQ JSON प्रोसेस करें">🧩 JSON</button>
+            <button id="addSlideBtn" class="btn btn-cyan" title="नई स्लाइड जोड़ें">➕ Add Slide</button>
         </div>
-        <div class="grid-2" style="margin-top: 8px;">
-            <button id="copyCodeBtn" class="btn btn-purple"><i class="fa fa-copy"></i> Copy JSON/Data</button>
-            <button id="clearBtn" class="btn btn-red"><i class="fa fa-trash"></i> Clear All</button>
+
+        <div style="margin-top: 8px;">
+            <button id="copyCodeBtn" class="btn btn-blue" style="background: #0d9488;"><i class="fa fa-copy"></i> Copy Input Code</button>
+        </div>
+        
+        <div style="margin-top: 5px;">
+            <button id="clearBtn" class="btn btn-red" title="सब डिलीट करें">🗑️ Clear All Data</button>
         </div>
 
         <label>Slide Margins (px)</label>
@@ -108,7 +113,7 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
             <div><label style="margin-top:5px; font-size:0.9em;">Right</label><input type="number" id="rightM" value="90"></div>
         </div>
 
-        <label>Text Customization & Colors</label>
+        <label>Text Colors Customizer</label>
         <div class="grid-5">
             <div><label style="margin-top:5px; font-size:0.8em;">H1</label><input type="color" id="h1Color" value="#ffeb3b"></div>
             <div><label style="margin-top:5px; font-size:0.8em;">H2</label><input type="color" id="h2Color" value="#00e676"></div>
@@ -117,10 +122,11 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
             <div><label style="margin-top:5px; font-size:0.8em;">Normal</label><input type="color" id="optColor" value="#ffffff"></div>
         </div>
 
-        <label>MCQ Colors</label>
-        <div class="grid-2">
-            <div><label style="margin-top:5px; font-size:0.8em;">Question Color</label><input type="color" id="mcqQColor" value="#ffeb3b"></div>
-            <div><label style="margin-top:5px; font-size:0.8em;">Option Color</label><input type="color" id="mcqOptColor" value="#ffffff"></div>
+        <label>MCQ & Explanation Colors</label>
+        <div class="grid-3">
+            <div><label style="margin-top:5px; font-size:0.8em;">Question</label><input type="color" id="mcqQColor" value="#ffeb3b"></div>
+            <div><label style="margin-top:5px; font-size:0.8em;">Options</label><input type="color" id="mcqOptColor" value="#ffffff"></div>
+            <div><label style="margin-top:5px; font-size:0.8em;">Explanation</label><input type="color" id="expColor" value="#3b82f6"></div>
         </div>
 
         <label>Master Background Setup</label>
@@ -134,7 +140,7 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
     </div>
 
     <div class="right-panel">
-        <h3 style="margin-top:0; color:var(--text-main); font-size:1.8em; border-bottom:1px solid var(--border); padding-bottom:10px;">👁️ Live Slide Previews (<span id="slideCountBadge">0 Slides</span>)</h3>
+        <h3 style="margin-top:0; color:var(--text-main); font-size:1.8em; border-bottom:1px solid var(--border); padding-bottom:10px;">👁️ Live Slide Previews</h3>
         <div id="preview" class="preview-list"></div>
     </div>
 </div>
@@ -180,7 +186,25 @@ $('bgImgUpload').onchange = (e) => {
     reader.readAsDataURL(file);
 };
 
-// Clean HTML for parsing
+// Copy code button
+$('copyCodeBtn').onclick = () => {
+    const text = $('htmlArea').value;
+    if(!text) return alert("No code to copy!");
+    navigator.clipboard.writeText(text).then(() => alert("Input code copied successfully!"));
+};
+
+// Add Manual Slide Option
+$('addSlideBtn').onclick = () => {
+    DATA.push([
+        { type: 'h2', text: 'नई स्लाइड शीर्षक (Heading)' },
+        { type: 'p', text: 'यहाँ अपनी स्लाइड का मुख्य विवरण या टेक्स्ट लिखें।' }
+    ]);
+    renderPreview(); saveState();
+};
+
+// ==============================================
+// SMART HTML PARSER 
+// ==============================================
 function cleanHtmlForCanvas(htmlStr) {
     let str = htmlStr.replace(/<strong[^>]*>/gi, '<b>').replace(/<\/strong>/gi, '</b>')
                      .replace(/<b\s[^>]*>/gi, '<b>').replace(/<br\s*[\/]?>/gi, '\n');
@@ -189,48 +213,9 @@ function cleanHtmlForCanvas(htmlStr) {
     return txt.value.trim();
 }
 
-// Add Blank Slide Manually
-$('addSlideBtn').onclick = () => {
-    DATA.push([
-        { type: 'h2', text: `Slide ${DATA.length + 1} Title` },
-        { type: 'p', text: 'यहाँ अपनी जानकारी या टेक्स्ट टाइप करें...' }
-    ]);
-    renderPreview(); saveState();
-};
-
-// Copy JSON / Content Code
-$('copyCodeBtn').onclick = () => {
-    if(DATA.length === 0) return alert("कोई डेटा उपलब्ध नहीं है!");
-    navigator.clipboard.writeText(JSON.stringify(DATA, null, 2)).then(() => {
-        alert("✅ सारा डेटा/JSON कोड क्लिपबोर्ड पर कॉपी हो गया!");
-    });
-};
-
-// ==============================================
-// SMART HTML & AUTO-SPLIT PARSER 
-// ==============================================
 $('importBtn').onclick = () => { 
     let rawHtml = $('htmlArea').value.trim();
-    if(!rawHtml) return alert("Please paste HTML code or text!");
-
-    // If text does not contain HTML tags, treat paragraphs / lines as separate sections
-    if(!/<[a-z][\s\S]*>/i.test(rawHtml)) {
-        let lines = rawHtml.split('\n').filter(l => l.trim() !== '');
-        let slidesData = [];
-        let currentSlide = [];
-        lines.forEach((line, idx) => {
-            if(idx % 4 === 0) {
-                if(currentSlide.length > 0) slidesData.push(currentSlide);
-                currentSlide = [{ type: 'h2', text: line }];
-            } else {
-                currentSlide.push({ type: 'p', text: line });
-            }
-        });
-        if(currentSlide.length > 0) slidesData.push(currentSlide);
-        DATA = slidesData;
-        renderPreview(); saveState();
-        return;
-    }
+    if(!rawHtml) return alert("Please paste HTML code!");
 
     let slidesData = [];
     let currentSlide = [];
@@ -268,16 +253,14 @@ $('importBtn').onclick = () => {
     });
 
     if (currentSlide.length > 0) slidesData.push(currentSlide);
-    if (slidesData.length === 0) {
-        DATA = [[{ type: 'p', text: cleanHtmlForCanvas(rawHtml) }]];
-    } else {
-        DATA = slidesData;
-    }
+    if (slidesData.length === 0) return alert("No valid HTML tags found!");
+
+    DATA = slidesData;
     renderPreview(); saveState();
 };
 
 // ==============================================
-// SMART JSON MCQ PARSER 
+// SMART JSON MCQ & EXPLANATION PARSER 
 // ==============================================
 $('importJsonBtn').onclick = () => {
     let rawJson = $('htmlArea').value.trim();
@@ -291,15 +274,10 @@ $('importJsonBtn').onclick = () => {
         const alphabet = ['A', 'B', 'C', 'D', 'E', 'F'];
 
         jsonArr.forEach((item, index) => {
-            if(!item.question && !item.module) return; 
+            if(!item.question) return;
             
             let currentSlide = [];
-            if(item.module) {
-                currentSlide.push({ type: 'h3', text: `[${item.module}]` });
-            }
-            if(item.question) {
-                currentSlide.push({ type: 'mcq-q', text: `Q${index + 1}. ` + item.question });
-            }
+            currentSlide.push({ type: 'mcq-q', text: `Q${index + 1}. ` + item.question });
             
             let opts = item.option || item.options || [];
             if(Array.isArray(opts)) {
@@ -309,21 +287,13 @@ $('importJsonBtn').onclick = () => {
                 });
             }
 
-            // Optional solution / explanation pagination check
-            if(item.solution || item.explanation) {
-                let expText = item.solution || item.explanation;
-                slidesData.push(currentSlide); // Push question slide
-                
-                // Create explanation slide automatically
-                let expSlide = [
-                    { type: 'h3', text: `Q${index + 1}. Explanation / Answer` },
-                    { type: 'p', text: `Correct Answer: ${item.answer || 'N/A'}` },
-                    { type: 'p', text: expText }
-                ];
-                slidesData.push(expSlide);
-            } else {
-                slidesData.push(currentSlide);
+            // Automatically route explanation or solution to next/same slide structure
+            let explanation = item.solution || item.explanation || item.exp || "";
+            if(explanation) {
+                currentSlide.push({ type: 'mcq-exp', text: "💡 स्पष्टीकरण: " + explanation });
             }
+
+            slidesData.push(currentSlide);
         });
 
         if (slidesData.length === 0) return alert("No valid questions found in JSON!");
@@ -336,7 +306,7 @@ $('importJsonBtn').onclick = () => {
     }
 };
 
-$('clearBtn').onclick = () => { if(confirm("Clear all data?")) { DATA = []; $('htmlArea').value = ""; localStorage.removeItem('htmlPptStateFinalX3'); renderPreview(); } };
+$('clearBtn').onclick = () => { if(confirm("Clear all data?")) { DATA = []; $('htmlArea').value = ""; localStorage.removeItem('htmlPptStateUltimateFinal'); renderPreview(); } };
 
 function saveState() {
     const state = {
@@ -344,15 +314,15 @@ function saveState() {
         colors: { 
             h1: $('h1Color').value, h2: $('h2Color').value, h3: $('h3Color').value, 
             bold: $('boldColor').value, opt: $('optColor').value, 
-            mcqQ: $('mcqQColor').value, mcqOpt: $('mcqOptColor').value 
+            mcqQ: $('mcqQColor').value, mcqOpt: $('mcqOptColor').value, exp: $('expColor').value 
         },
         bg: $('bgSelect').value, theme: isLightMode, customBg: customBgDataUrl, htmlBox: $('htmlArea').value
     };
-    localStorage.setItem('htmlPptStateFinalX3', JSON.stringify(state));
+    localStorage.setItem('htmlPptStateUltimateFinal', JSON.stringify(state));
 }
 
 function loadState() {
-    const saved = localStorage.getItem('htmlPptStateFinalX3');
+    const saved = localStorage.getItem('htmlPptStateUltimateFinal');
     if(saved) {
         const state = JSON.parse(saved); DATA = state.data || [];
         $('htmlArea').value = state.htmlBox || "";
@@ -362,6 +332,7 @@ function loadState() {
         $('optColor').value = state.colors.opt; 
         if(state.colors.mcqQ) $('mcqQColor').value = state.colors.mcqQ;
         if(state.colors.mcqOpt) $('mcqOptColor').value = state.colors.mcqOpt;
+        if(state.colors.exp) $('expColor').value = state.colors.exp;
         
         $('bgSelect').value = state.bg;
         customBgDataUrl = state.customBg || null;
@@ -372,28 +343,24 @@ function loadState() {
     renderPreview();
 }
 
-['topM', 'bottomM', 'leftM', 'rightM', 'h1Color', 'h2Color', 'h3Color', 'boldColor', 'optColor', 'mcqQColor', 'mcqOptColor'].forEach(id => { $(id).addEventListener('change', () => { renderPreview(); saveState(); }); });
+['topM', 'bottomM', 'leftM', 'rightM', 'h1Color', 'h2Color', 'h3Color', 'boldColor', 'optColor', 'mcqQColor', 'mcqOptColor', 'expColor'].forEach(id => { $(id).addEventListener('change', () => { renderPreview(); saveState(); }); });
 
 function formatPreviewText(text, boldHex) { if(!text) return ""; return text.replace(/<b>(.*?)<\/b>/g, `<span style="color:${boldHex}; font-weight:bold;">$1</span>`); }
 
 function renderPreview() {
     const box = $("preview"); box.innerHTML = "";
-    $('slideCountBadge').innerText = `${DATA.length} Slides`;
-
-    if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted); padding:20px; text-align:center;'>No slides. Import HTML/JSON or click 'Add Slide'.</p>"; return; }
+    if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted); padding:20px; text-align:center;'>No slides. Paste HTML/JSON or click 'Add Slide'.</p>"; return; }
 
     const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
-    const mcqQc = $('mcqQColor').value, mcqOc = $('mcqOptColor').value;
+    const mcqQc = $('mcqQColor').value, mcqOc = $('mcqOptColor').value, expc = $('expColor').value;
     const bgUrl = getBgUrl();
 
     DATA.forEach((slideElements, sIdx) => {
         const div = document.createElement("div"); div.className = "slide-card";
         if(bgUrl) div.style.background = `url('${bgUrl}') center/cover no-repeat`; else div.style.backgroundColor = isLightMode ? "#ffffff" : "#000000";
         
-        // Header Bar for individual slide control (Delete / Move)
-        const headerBar = document.createElement("div"); headerBar.className = "slide-header-bar";
-        headerBar.innerHTML = `<span>Slide #${sIdx + 1}</span> <button class="btn btn-red" style="width:auto; padding:2px 8px; font-size:0.8em;" onclick="deleteSlide(${sIdx})"><i class="fa fa-trash"></i> Delete</button>`;
-        div.appendChild(headerBar);
+        const badge = document.createElement("div"); badge.className = "slide-number-badge"; badge.innerText = `Slide #${sIdx + 1}`;
+        div.appendChild(badge);
 
         const contentWrap = document.createElement("div"); contentWrap.className = "slide-content";
 
@@ -427,6 +394,11 @@ function renderPreview() {
                 node.contentEditable = "true"; node.innerHTML = formatPreviewText(el.text, bc);
                 node.onblur = e => { DATA[sIdx][eIdx].text = e.target.innerText; saveState(); }; contentWrap.appendChild(node);
             }
+            else if (el.type === 'mcq-exp') {
+                const node = document.createElement("div"); node.className = "p-exp-box"; node.style.color = expc;
+                node.contentEditable = "true"; node.innerHTML = formatPreviewText(el.text, bc);
+                node.onblur = e => { DATA[sIdx][eIdx].text = e.target.innerText; saveState(); }; contentWrap.appendChild(node);
+            }
             else if (el.type === 'table') {
                 const tableWrap = document.createElement("div"); tableWrap.className = "preview-table-wrap";
                 const table = document.createElement("table"); table.className = "preview-table";
@@ -445,11 +417,6 @@ function renderPreview() {
     });
 }
 
-window.deleteSlide = (index) => {
-    DATA.splice(index, 1);
-    renderPreview(); saveState();
-};
-
 // ==============================================
 // ADVANCED GENERATOR WITH AUTO-PAGINATION
 // ==============================================
@@ -465,10 +432,9 @@ $('generateBtn').onclick = async () => {
         let bgUrl = getBgUrl();
         await document.fonts.load("30px Kalam"); await document.fonts.load("bold 30px Kalam"); 
         await document.fonts.load("bold 34px Kalam"); await document.fonts.load("bold 44px Kalam");
-        await document.fonts.load("bold 40px Kalam"); await document.fonts.load("34px Kalam");
 
         const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
-        const mcqQc = $('mcqQColor').value, mcqOc = $('mcqOptColor').value;
+        const mcqQc = $('mcqQColor').value, mcqOc = $('mcqOptColor').value, expc = $('expColor').value;
 
         for (const slideElements of DATA) {
             
@@ -519,7 +485,7 @@ $('generateBtn').onclick = async () => {
                 });
             };
 
-            // Process each element
+            // Process each element inside slide
             slideElements.forEach((el) => {
                 if ((el.type === 'h1' || el.type === 'h2') && y > m.top) triggerPagination();
 
@@ -534,15 +500,19 @@ $('generateBtn').onclick = async () => {
                     el.items.forEach(li => { drawSmartText("• " + li, "30px Kalam", "bold 30px Kalam", oc, bc, 42, 20); y+=5; });
                     y+=5; 
                 }
-                // --- MCQ Elements ---
+                // --- MCQ & Explanation ---
                 else if(el.type === 'mcq-q'){ 
-                    drawSmartText(el.text, "bold 40px Kalam", "bold 40px Kalam", mcqQc, mcqQc, 52); y+=20; 
+                    drawSmartText(el.text, "bold 36px Kalam", "bold 36px Kalam", mcqQc, mcqQc, 48); y+=15; 
                 }
                 else if(el.type === 'mcq-opt'){ 
-                    drawSmartText(el.text, "34px Kalam", "bold 34px Kalam", mcqOc, mcqOc, 46, 30); y+=10; 
+                    drawSmartText(el.text, "30px Kalam", "bold 30px Kalam", mcqOc, mcqOc, 40, 20); y+=8; 
+                }
+                else if(el.type === 'mcq-exp'){ 
+                    if (y + 80 > bottomLimit && y > m.top) triggerPagination();
+                    drawSmartText(el.text, "bold 28px Kalam", "bold 28px Kalam", expc, expc, 38, 10); y+=10; 
                 }
                 else if(el.type === 'table'){
-                    let estTableHeight = (el.rows.length * 55) + 30;
+                    let estTableHeight = (el.rows.length * 50) + 30;
                     if (y + estTableHeight > bottomLimit && y > m.top) triggerPagination();
 
                     let pptRows = el.rows.map((rowArr, rIdx) => {
@@ -553,15 +523,15 @@ $('generateBtn').onclick = async () => {
                                 options: { 
                                     color: isHead ? 'FFFFFF' : (isLightMode ? '000000' : 'FFFFFF'), 
                                     bold: isHead || cellHtml.includes('<b>'),
-                                    fontFace: 'Kalam', fontSize: 22, 
+                                    fontFace: 'Kalam', fontSize: 20, 
                                     fill: isHead ? '2563EB' : (isLightMode ? 'F8FAFC' : '1A2234'), 
-                                    align: 'center', valign: 'middle', margin: [8, 8, 8, 8] 
+                                    align: 'center', valign: 'middle', margin: [6, 6, 6, 6] 
                                 }
                             };
                         });
                     });
-                    s.addTable(pptRows, { x: m.left/96, y: y/96, w: maxW/96, border: { pt: 1.5, color: isLightMode ? 'CBD5E1' : '334155' } });
-                    y += estTableHeight + 20; 
+                    s.addTable(pptRows, { x: m.left/96, y: y/96, w: maxW/96, border: { pt: 1, color: isLightMode ? 'CBD5E1' : '334155' } });
+                    y += estTableHeight + 15; 
                 }
             });
 
