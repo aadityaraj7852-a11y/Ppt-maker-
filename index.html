@@ -3,210 +3,408 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Ultimate PPT Maker Pro - 20+ Features</title>
+<title>Ultimate PPT Maker Pro MAX - 60+ Features</title>
 <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
 <style>
-/* --- CSS Variables & Themes --- */
-:root { 
-    --accent: #ffeb3b; --sub-accent: #00e676; --h3-accent: #00bcd4; --bold-color: #ff9800; 
-    --btn-blue: #3b82f6; --btn-purple: #8b5cf6; --btn-green: #10b981; --btn-red: #ef4444;
+:root {
+    --accent: #ffeb3b; --sub-accent: #00e676; --h3-accent: #00bcd4; --bold-color: #ff9800;
+    --btn-blue: #3b82f6; --btn-purple: #8b5cf6; --btn-green: #10b981; --btn-red: #ef4444; --btn-orange:#f59e0b;
     --bg-main: #0f172a; --card-bg: #1e293b; --text-main: #f8fafc; --text-muted: #94a3b8;
     --border: #334155; --input-bg: #0b1220; --slide-bg: #000000; --hover-bg: #27354f;
 }
-
 body.light-mode {
-    --accent: #d97706; --sub-accent: #16a34a; --h3-accent: #0284c7; --bold-color: #dc2626; 
-    --btn-blue: #2563eb; --btn-purple: #7c3aed; --btn-green: #059669; --btn-red: #dc2626;
+    --accent: #d97706; --sub-accent: #16a34a; --h3-accent: #0284c7; --bold-color: #dc2626;
+    --btn-blue: #2563eb; --btn-purple: #7c3aed; --btn-green: #059669; --btn-red: #dc2626; --btn-orange:#d97706;
     --bg-main: #f1f5f9; --card-bg: #ffffff; --text-main: #0f172a; --text-muted: #475569;
     --border: #cbd5e1; --input-bg: #f8fafc; --slide-bg: #ffffff; --hover-bg: #e2e8f0;
 }
-
-body { font-family: 'Kalam', cursive; background: var(--bg-main); color: var(--text-main); margin: 0; padding: 15px; transition: 0.3s; }
+body { font-family: var(--live-font, 'Kalam'), cursive; background: var(--bg-main); color: var(--text-main); margin: 0; padding: 15px; transition: 0.3s; }
 * { box-sizing: border-box; }
-
-/* Desktop Layout */
-.main-wrapper { display: flex; gap: 20px; max-width: 1800px; margin: auto; align-items: flex-start; height: 95vh; }
-.left-panel { flex: 0 0 450px; background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; height: 100%; overflow-y: auto; }
+.main-wrapper { display: flex; gap: 20px; max-width: 1900px; margin: auto; align-items: flex-start; height: 95vh; }
+.left-panel { flex: 0 0 460px; background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; height: 100%; overflow-y: auto; }
 .right-panel { flex: 1; background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.1); height: 100%; overflow-y: auto; display: flex; flex-direction: column; }
 @media (max-width: 1100px) { .main-wrapper { flex-direction: column; height: auto; } .left-panel, .right-panel { flex: auto; width: 100%; height: auto; } }
 
-/* Inputs & Buttons */
 .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 10px; }
-.header-row h2 { margin: 0; color: var(--accent); font-size: 1.8em; }
+.header-row h2 { margin: 0; color: var(--accent); font-size: 1.6em; }
 .theme-btn { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px; cursor: pointer; font-family: 'Kalam'; font-weight: bold; transition: 0.3s; }
 
-label { color: var(--text-muted); font-weight: 700; margin-top: 10px; display: block; font-size: 1em; }
-textarea, input[type="number"], select { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text-main); font-family: 'Kalam', cursive; margin-top: 4px; font-size: 1.1em; transition: 0.3s; }
+label { color: var(--text-muted); font-weight: 700; margin-top: 10px; display: block; font-size: 0.95em; }
+textarea, input[type="number"], input[type="text"], select { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text-main); font-family: 'Kalam', cursive; margin-top: 4px; font-size: 1.05em; transition: 0.3s; }
 textarea:focus, input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 5px rgba(255,235,59,0.3); }
+input[type="range"]{ width:100%; margin-top:6px; }
 
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
 
-.btn { width: 100%; padding: 10px 5px; border: none; border-radius: 6px; cursor: pointer; font-family: 'Kalam', cursive; font-weight: 700; font-size: 1em; transition: 0.2s; color: #fff; text-align: center; display: flex; align-items: center; justify-content: center; gap: 5px; }
+.btn { width: 100%; padding: 9px 5px; border: none; border-radius: 6px; cursor: pointer; font-family: 'Kalam', cursive; font-weight: 700; font-size: 0.95em; transition: 0.2s; color: #fff; text-align: center; display: flex; align-items: center; justify-content: center; gap: 5px; }
 .btn:hover { opacity: 0.85; transform: translateY(-1px); }
 .btn:active { transform: translateY(1px); }
-.btn-blue { background: var(--btn-blue); } .btn-purple { background: var(--btn-purple); } 
-.btn-green { background: var(--btn-green); } .btn-red { background: var(--btn-red); }
+.btn-blue { background: var(--btn-blue); } .btn-purple { background: var(--btn-purple); }
+.btn-green { background: var(--btn-green); } .btn-red { background: var(--btn-red); } .btn-orange{background:var(--btn-orange);}
 .btn-gray { background: var(--border); color: var(--text-main); }
-.btn-generate { background: linear-gradient(135deg, #10b981, #059669); font-size: 1.2em; padding: 12px; margin-top: 15px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
+.btn-generate { background: linear-gradient(135deg, #10b981, #059669); font-size: 1.15em; padding: 12px; margin-top: 15px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
 
 .feature-box { background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-top: 15px; }
-.toggle-switch { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 1.1em; color: var(--accent); font-weight: bold; margin-top: 10px; }
+.feature-box > label:first-child{ margin-top:0; }
+.toggle-switch { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 1.0em; color: var(--accent); font-weight: bold; margin-top: 10px; }
 .toggle-switch input { width: 20px; height: 20px; cursor: pointer; }
+details.section { margin-top:15px; border:1px solid var(--border); border-radius:8px; background: var(--input-bg); }
+details.section summary { cursor:pointer; padding:10px 12px; font-weight:700; color: var(--accent); list-style: none; display:flex; align-items:center; gap:8px;}
+details.section summary::-webkit-details-marker{ display:none; }
+details.section .inner{ padding: 5px 12px 12px 12px; }
 
-/* --- Preview Styles (Slides) --- */
+.stats-bar{ display:flex; gap:14px; flex-wrap:wrap; font-size:0.85em; color:var(--text-muted); margin-left:auto; }
+.stats-bar b{ color:var(--text-main); }
+
 .preview-list { display: flex; flex-direction: column; gap: 40px; padding-bottom: 50px; }
 .slide-wrapper { position: relative; }
-.slide-toolbar { display: flex; justify-content: space-between; background: var(--border); padding: 8px 15px; border-radius: 8px 8px 0 0; align-items: center; }
-.slide-toolbar .s-title { font-weight: bold; color: var(--text-main); font-size: 1.2em; }
-.slide-actions { display: flex; gap: 5px; }
+.slide-wrapper.dragging{ opacity:0.4; }
+.slide-toolbar { display: flex; justify-content: space-between; background: var(--border); padding: 8px 15px; border-radius: 8px 8px 0 0; align-items: center; flex-wrap:wrap; gap:6px; }
+.slide-toolbar .s-title { font-weight: bold; color: var(--text-main); font-size: 1.1em; display:flex; align-items:center; gap:8px; }
+.slide-actions { display: flex; gap: 5px; flex-wrap:wrap; align-items:center; }
 .action-icon { background: var(--card-bg); color: var(--text-main); border: none; width: 30px; height: 30px; border-radius: 5px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
 .action-icon:hover { background: var(--hover-bg); color: var(--accent); }
+.action-icon.active{ background: var(--accent); color:#000; }
+.mini-input{ width:60px !important; padding:4px !important; margin:0 !important; font-size:0.8em !important; }
+.mini-select{ width:auto !important; padding:4px !important; margin:0 !important; font-size:0.8em !important; }
+.mini-color{ width:26px !important; height:26px; padding:0 !important; margin:0 !important; border-radius:50%; border:none; cursor:pointer; }
+
+.slide-meta-row{ display:flex; gap:8px; align-items:center; background:var(--border); padding:6px 15px; font-size:0.85em; flex-wrap:wrap; }
+.slide-meta-row label{ margin:0; color:var(--text-main); font-weight:600; }
+.slide-meta-row textarea{ min-height:32px; margin:0; font-size:0.9em; }
 
 .slide-card { background-color: var(--slide-bg); background-size: cover !important; background-position: center !important; border: 2px solid var(--border); border-top: none; padding: 30px; border-radius: 0 0 8px 8px; position: relative; aspect-ratio: 16 / 9; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); overflow: hidden; display: flex; flex-direction: column; }
-.slide-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 0; }
-body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
-
+.slide-card.grayscale{ filter: grayscale(100%); }
+.slide-overlay{ position:absolute; inset:0; z-index:0; pointer-events:none; }
 .slide-content { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; }
+.hud-text{ position:absolute; z-index:2; font-size:0.8em; opacity:0.8; pointer-events:none; font-family: var(--live-font,'Kalam'); }
 
-/* Add New Slide Separator */
 .add-slide-separator { display: flex; align-items: center; justify-content: center; position: relative; margin: -15px 0; z-index: 10; opacity: 0.5; transition: 0.3s; }
 .add-slide-separator:hover { opacity: 1; }
 .add-slide-separator::before { content: ''; position: absolute; width: 100%; height: 2px; background: var(--border); z-index: -1; }
 .add-slide-btn { background: var(--btn-blue); color: #fff; border: none; padding: 5px 15px; border-radius: 20px; font-family: 'Kalam'; font-weight: bold; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
 
-/* --- Element Block Styles (Live Edit & Color) --- */
 .el-block { position: relative; border: 1px dashed transparent; transition: 0.2s; padding: 2px 5px; border-radius: 5px; margin-bottom: 5px; }
 .el-block:hover { border-color: rgba(150,150,150,0.5); background: rgba(128,128,128,0.1); }
-.el-toolbar { position: absolute; top: -30px; right: 0; background: var(--card-bg); border: 1px solid var(--border); border-radius: 5px; display: none; gap: 5px; padding: 3px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); z-index: 50; }
+.el-block.locked{ border-color: rgba(239,68,68,0.6) !important; }
+.el-toolbar { position: absolute; top: -34px; right: 0; background: var(--card-bg); border: 1px solid var(--border); border-radius: 5px; display: none; gap: 4px; padding: 3px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); z-index: 50; flex-wrap:wrap; max-width: 420px; }
 .el-block:hover .el-toolbar { display: flex; }
-.el-toolbar button, .el-toolbar input { background: transparent; border: none; color: var(--text-main); cursor: pointer; padding: 2px 5px; }
-.el-toolbar input[type="color"] { width: 25px; height: 25px; padding: 0; border-radius: 50%; border: none; overflow: hidden; }
+.el-toolbar button, .el-toolbar input, .el-toolbar select { background: transparent; border: none; color: var(--text-main); cursor: pointer; padding: 2px 5px; font-size:0.85em; }
+.el-toolbar button:hover{ color: var(--accent); }
+.el-toolbar button.active{ color: var(--sub-accent); }
+.el-toolbar input[type="color"] { width: 22px; height: 22px; padding: 0; border-radius: 50%; border: none; overflow: hidden; }
+.el-toolbar input[type="number"]{ width:45px; }
 
-/* Typography */
 [contenteditable="true"] { outline: none; display: block; }
 .p-h1 { font-size: 2.2em; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid rgba(150,150,150,0.3); padding-bottom: 5px; }
 .p-h2 { font-size: 1.6em; font-weight: bold; margin-bottom: 8px; margin-top: 10px; }
 .p-h3 { font-size: 1.4em; font-weight: bold; margin-bottom: 8px; margin-top: 5px; }
-.p-text, .p-li { font-size: 1.3em; margin-bottom: 8px; line-height: 1.5; white-space: pre-wrap; }
+.p-text, .p-li, .p-p { font-size: 1.3em; margin-bottom: 8px; line-height: 1.5; white-space: pre-wrap; }
+.p-quote{ font-size:1.2em; font-style: italic; border-left: 4px solid var(--accent); padding: 4px 0 4px 16px; margin: 8px 0; white-space: pre-wrap; }
+.p-link{ font-size:1.2em; text-decoration: underline; cursor:pointer; white-space: pre-wrap; }
+.p-icon{ font-size: 3em; text-align:center; white-space: pre-wrap; }
 
-/* MCQ specific preview classes */
 .p-mcq-q { font-size: 1.8em; font-weight: bold; margin-bottom: 20px; line-height: 1.4; white-space: pre-wrap; }
 .p-mcq-opt { font-size: 1.4em; margin-bottom: 12px; line-height: 1.4; white-space: pre-wrap; padding-left: 20px; }
 .p-mcq-ans { font-size: 1.5em; font-weight: bold; margin-top: 15px; color: #10b981; }
 .p-mcq-sol { font-size: 1.3em; margin-top: 5px; font-style: italic; }
 
-/* Attractive HTML Table Preview */
 .preview-table-wrap { width: 100%; margin: 10px 0; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
-.preview-table { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.4); font-size: 1.1em; }
-.preview-table th, .preview-table td { padding: 10px 12px; text-align: left; border: 1px solid rgba(150,150,150,0.4); }
+.preview-table { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.4); font-size: 1.05em; }
+.preview-table th, .preview-table td { padding: 9px 11px; text-align: left; border: 1px solid rgba(150,150,150,0.4); }
 .preview-table th { background: #2563eb; color: #fff; font-weight: bold; }
+.preview-table tr.striped{ background: rgba(255,255,255,0.05); }
 body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
+.table-controls{ display:flex; gap:6px; margin-top:6px; flex-wrap:wrap; }
+.table-controls button{ font-size:0.75em; padding:3px 8px; border-radius:4px; border:1px solid var(--border); background:var(--card-bg); color:var(--text-main); cursor:pointer; }
 
-/* Add Element Panel */
+.p-image-wrap{ display:flex; margin: 8px 0; }
+.p-image-wrap img{ border-radius:6px; max-width:100%; display:block; }
+.p-shape{ margin: 8px 0; }
+
 .add-element-bar { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 15px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; justify-content: center;}
-.add-el-btn { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border); padding: 5px 10px; border-radius: 5px; font-size: 0.9em; cursor: pointer; transition: 0.2s;}
+.add-el-btn { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border); padding: 5px 10px; border-radius: 5px; font-size: 0.85em; cursor: pointer; transition: 0.2s;}
 .add-el-btn:hover { background: var(--accent); color: #000; }
+
+.modal-overlay{ position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:999; }
+.modal-box{ background:var(--card-bg); border:1px solid var(--border); border-radius:12px; padding:20px; max-width:600px; width:90%; max-height:80vh; overflow-y:auto; }
+.modal-box h3{ margin-top:0; color:var(--accent); }
+.modal-box ul{ padding-left:20px; line-height:1.9; }
+.modal-close{ float:right; background:var(--btn-red); color:#fff; border:none; border-radius:5px; padding:4px 10px; cursor:pointer; }
+.theme-swatch{ width:32px; height:32px; border-radius:50%; cursor:pointer; border:2px solid var(--border); display:inline-block; }
+.autosave-indicator{ font-size:0.75em; color:var(--text-muted); text-align:right; margin-top:4px; }
 </style>
 </head>
 <body>
 
 <div class="main-wrapper">
-    <!-- LEFT PANEL: CONTROLS & IMPORT -->
+    <!-- LEFT PANEL: CONTROLS -->
     <div class="left-panel">
         <div class="header-row">
-            <h2>🎓 PPT Maker Pro</h2>
+            <h2>🎓 PPT Maker Pro MAX</h2>
             <button id="themeToggle" class="theme-btn"><i class="fas fa-moon"></i> Dark</button>
         </div>
 
-        <!-- 1. Demos & Copy Code -->
-        <div class="grid-3" style="margin-bottom: 15px;">
-            <button id="demoHtmlBtn" class="btn btn-gray" style="font-size: 0.85em;"><i class="fab fa-html5"></i> Demo Notes</button>
-            <button id="demoJsonBtn" class="btn btn-gray" style="font-size: 0.85em;"><i class="fas fa-brackets-curly"></i> Demo MCQ</button>
-            <button id="copyCodeBtn" class="btn btn-blue" style="font-size: 0.85em;"><i class="fas fa-copy"></i> Copy Data</button>
+        <div class="grid-4" style="margin-bottom: 10px;">
+            <button id="demoHtmlBtn" class="btn btn-gray" style="font-size: 0.75em;"><i class="fab fa-html5"></i> Demo Notes</button>
+            <button id="demoJsonBtn" class="btn btn-gray" style="font-size: 0.75em;"><i class="fas fa-list-ol"></i> Demo MCQ</button>
+            <button id="copyCodeBtn" class="btn btn-blue" style="font-size: 0.75em;"><i class="fas fa-copy"></i> Copy JSON</button>
+            <button id="featureListBtn" class="btn btn-purple" style="font-size: 0.75em;"><i class="fas fa-star"></i> Features</button>
         </div>
 
         <label><i class="fas fa-database"></i> Data Input (HTML OR JSON)</label>
-        <textarea id="dataArea" rows="6" placeholder='Paste your HTML Notes OR MCQ JSON Data here...'></textarea>
-        
-        <!-- Smart Split Feature -->
+        <textarea id="dataArea" rows="5" placeholder='Paste your HTML Notes OR MCQ JSON Data here...'></textarea>
+
         <label class="toggle-switch">
             <input type="checkbox" id="splitAnswerToggle" checked>
             <span><i class="fas fa-magic"></i> Put MCQ Answer on Next Slide</span>
         </label>
 
-        <div class="grid-3" style="margin-top: 15px;">
+        <div class="grid-3" style="margin-top: 10px;">
             <button id="importHtmlBtn" class="btn btn-purple"><i class="fas fa-file-code"></i> Load HTML</button>
             <button id="importJsonBtn" class="btn btn-green"><i class="fas fa-list-ol"></i> Load JSON</button>
             <button id="clearAllBtn" class="btn btn-red"><i class="fas fa-trash"></i> Clear</button>
         </div>
 
-        <div class="feature-box">
-            <label style="margin-top:0;"><i class="fas fa-expand"></i> Slide Margins (px)</label>
-            <div class="grid-4">
-                <div><label style="font-size:0.8em;">Top</label><input type="number" id="topM" value="110"></div>
-                <div><label style="font-size:0.8em;">Bottom</label><input type="number" id="bottomM" value="70"></div>
-                <div><label style="font-size:0.8em;">Left</label><input type="number" id="leftM" value="90"></div>
-                <div><label style="font-size:0.8em;">Right</label><input type="number" id="rightM" value="90"></div>
+        <!-- Undo/Redo/Save/Import-Export -->
+        <div class="grid-4" style="margin-top:10px;">
+            <button id="undoBtn" class="btn btn-gray" title="Ctrl+Z"><i class="fas fa-undo"></i></button>
+            <button id="redoBtn" class="btn btn-gray" title="Ctrl+Y"><i class="fas fa-redo"></i></button>
+            <button id="exportJsonFileBtn" class="btn btn-blue" style="font-size:0.75em;"><i class="fas fa-file-export"></i> Export</button>
+            <button id="importJsonFileBtn" class="btn btn-green" style="font-size:0.75em;"><i class="fas fa-file-import"></i> Import</button>
+        </div>
+        <input type="file" id="jsonFileInput" accept=".json" style="display:none;">
+
+        <details class="section" open>
+            <summary><i class="fas fa-info-circle"></i> Presentation Info</summary>
+            <div class="inner">
+                <label>Title</label><input type="text" id="metaTitle" placeholder="Presentation title">
+                <label>Author</label><input type="text" id="metaAuthor" placeholder="Author name">
+                <label>Subject</label><input type="text" id="metaSubject" placeholder="Subject">
             </div>
+        </details>
+
+        <details class="section">
+            <summary><i class="fas fa-expand"></i> Slide Margins (px)</summary>
+            <div class="inner">
+                <div class="grid-4">
+                    <div><label style="font-size:0.75em;">Top</label><input type="number" id="topM" value="110"></div>
+                    <div><label style="font-size:0.75em;">Bottom</label><input type="number" id="bottomM" value="70"></div>
+                    <div><label style="font-size:0.75em;">Left</label><input type="number" id="leftM" value="90"></div>
+                    <div><label style="font-size:0.75em;">Right</label><input type="number" id="rightM" value="90"></div>
+                </div>
+            </div>
+        </details>
+
+        <details class="section">
+            <summary><i class="fas fa-palette"></i> Colors &amp; Theme Presets</summary>
+            <div class="inner">
+                <div class="grid-5">
+                    <div><label style="font-size:0.65em;">H1</label><input type="color" id="defH1" value="#ffeb3b"></div>
+                    <div><label style="font-size:0.65em;">H2</label><input type="color" id="defH2" value="#00e676"></div>
+                    <div><label style="font-size:0.65em;">P/Text</label><input type="color" id="defP" value="#ffffff"></div>
+                    <div><label style="font-size:0.65em;">MCQ(Q)</label><input type="color" id="defMQ" value="#ffeb3b"></div>
+                    <div><label style="font-size:0.65em;">MCQ(O)</label><input type="color" id="defMO" value="#ffffff"></div>
+                </div>
+                <label>Bold Highlight Color</label><input type="color" id="boldColor" value="#ff9800">
+                <label>Theme Presets</label>
+                <div id="themePresets" style="display:flex; gap:8px; margin-top:6px; flex-wrap:wrap;"></div>
+            </div>
+        </details>
+
+        <details class="section">
+            <summary><i class="fas fa-image"></i> Background &amp; Overlay</summary>
+            <div class="inner">
+                <label>Master Background</label>
+                <select id="bgSelect" style="margin-bottom: 5px;">
+                    <option value="none" selected>No Background (Solid)</option>
+                    <option value="custom">Upload Custom Background Image...</option>
+                </select>
+                <input type="file" id="bgImgUpload" accept="image/*" style="display:none;">
+                <label class="toggle-switch"><input type="checkbox" id="bgGrayscaleToggle"><span><i class="fas fa-adjust"></i> Grayscale Background Filter</span></label>
+                <label>Overlay Darkness/Opacity</label>
+                <input type="range" id="overlayOpacity" min="0" max="0.9" step="0.05" value="0.5">
+            </div>
+        </details>
+
+        <details class="section">
+            <summary><i class="fas fa-font"></i> Typography &amp; View</summary>
+            <div class="inner">
+                <label>Global Font Family (used in export too)</label>
+                <select id="fontFamilySel">
+                    <option value="Kalam">Kalam (Handwritten)</option>
+                    <option value="Arial">Arial (Sans)</option>
+                    <option value="Georgia">Georgia (Serif)</option>
+                    <option value="Courier New">Courier New (Mono)</option>
+                    <option value="Times New Roman">Times New Roman (Classic)</option>
+                </select>
+                <label>Default Line Height x<span id="lhVal">1</span></label>
+                <input type="range" id="lineHeightMult" min="0.8" max="1.6" step="0.1" value="1">
+                <label>Default Letter Spacing (px)</label>
+                <input type="range" id="letterSpacingGlobal" min="0" max="8" step="0.5" value="0">
+                <label class="toggle-switch"><input type="checkbox" id="rtlToggle"><span><i class="fas fa-align-right"></i> RTL Mode</span></label>
+                <label class="toggle-switch"><input type="checkbox" id="spellcheckToggle"><span><i class="fas fa-spell-check"></i> Spellcheck While Editing</span></label>
+                <label>Preview Zoom <span id="zoomVal">100</span>%</label>
+                <input type="range" id="zoomRange" min="50" max="150" step="10" value="100">
+            </div>
+        </details>
+
+        <details class="section">
+            <summary><i class="fas fa-heading"></i> Header / Footer / Watermark</summary>
+            <div class="inner">
+                <label class="toggle-switch"><input type="checkbox" id="headerToggle"><span>Show Header</span></label>
+                <input type="text" id="headerText" placeholder="Header text">
+                <label class="toggle-switch"><input type="checkbox" id="footerToggle"><span>Show Footer</span></label>
+                <input type="text" id="footerText" placeholder="Footer text">
+                <label class="toggle-switch"><input type="checkbox" id="slideNumToggle"><span>Show Slide Numbers</span></label>
+                <label class="toggle-switch"><input type="checkbox" id="dateToggle"><span>Show Date</span></label>
+                <label class="toggle-switch"><input type="checkbox" id="watermarkToggle"><span>Show Watermark</span></label>
+                <input type="text" id="watermarkText" placeholder="Watermark text">
+            </div>
+        </details>
+
+        <details class="section">
+            <summary><i class="fas fa-search"></i> Find &amp; Replace</summary>
+            <div class="inner">
+                <input type="text" id="findText" placeholder="Find...">
+                <input type="text" id="replaceText" placeholder="Replace with...">
+                <button id="findReplaceBtn" class="btn btn-blue" style="margin-top:8px;"><i class="fas fa-exchange-alt"></i> Replace All</button>
+            </div>
+        </details>
+
+        <details class="section">
+            <summary><i class="fas fa-layer-group"></i> Layout Templates</summary>
+            <div class="inner">
+                <div class="grid-2" style="gap:6px;">
+                    <button class="add-el-btn" onclick="insertTemplate('title')">Title Slide</button>
+                    <button class="add-el-btn" onclick="insertTemplate('titlecontent')">Title + Content</button>
+                    <button class="add-el-btn" onclick="insertTemplate('twocolumn')">Two Column</button>
+                    <button class="add-el-btn" onclick="insertTemplate('section')">Section Header</button>
+                    <button class="add-el-btn" onclick="insertTemplate('imagecaption')">Image + Caption</button>
+                </div>
+            </div>
+        </details>
+
+        <div class="grid-3" style="margin-top:15px;">
+            <button id="jumpGoBtn" class="btn btn-gray" style="font-size:0.75em;"><i class="fas fa-crosshairs"></i> Jump</button>
+            <input type="number" id="jumpSlideNum" class="mini-input" style="width:100% !important;" placeholder="#" min="1">
+            <button id="deleteSelectedBtn" class="btn btn-red" style="font-size:0.72em;"><i class="fas fa-trash"></i> Del Selected</button>
         </div>
 
-        <div class="feature-box">
-            <label style="margin-top:0;"><i class="fas fa-palette"></i> Default Global Colors</label>
-            <div class="grid-4" style="grid-template-columns: repeat(5, 1fr);">
-                <div><label style="font-size:0.7em;">H1</label><input type="color" id="defH1" value="#ffeb3b"></div>
-                <div><label style="font-size:0.7em;">H2</label><input type="color" id="defH2" value="#00e676"></div>
-                <div><label style="font-size:0.7em;">P/Text</label><input type="color" id="defP" value="#ffffff"></div>
-                <div><label style="font-size:0.7em;">MCQ(Q)</label><input type="color" id="defMQ" value="#ffeb3b"></div>
-                <div><label style="font-size:0.7em;">MCQ(O)</label><input type="color" id="defMO" value="#ffffff"></div>
-            </div>
+        <div class="grid-2" style="margin-top:10px;">
+            <button id="shortcutsBtn" class="btn btn-gray" style="font-size:0.8em;"><i class="fas fa-keyboard"></i> Shortcuts</button>
+            <button id="resetAllBtn" class="btn btn-red" style="font-size:0.8em;"><i class="fas fa-power-off"></i> Reset All</button>
         </div>
-
-        <label><i class="fas fa-image"></i> Master Background</label>
-        <select id="bgSelect" style="margin-bottom: 5px;">
-            <option value="none" selected>No Background (Solid Black/White)</option>
-            <option value="custom">Upload Custom Background Image...</option>
-        </select>
-        <input type="file" id="bgImgUpload" accept="image/*" style="display:none;">
 
         <button id="generateBtn" class="btn btn-generate"><i class="fas fa-download"></i> Generate PPTX File</button>
+        <div class="autosave-indicator" id="autosaveIndicator">Not saved yet</div>
     </div>
 
-    <!-- RIGHT PANEL: LIVE SLIDE EDITOR -->
+    <!-- RIGHT PANEL -->
     <div class="right-panel">
-        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom: 15px;">
-            <h3 style="margin:0; color:var(--text-main); font-size:1.6em;"><i class="fas fa-tv"></i> Live Slide Editor</h3>
-            <span style="color:var(--text-muted); font-size:0.9em;">Add slides, mix content, edit colors!</span>
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom: 15px; flex-wrap:wrap; gap:8px;">
+            <h3 style="margin:0; color:var(--text-main); font-size:1.4em;"><i class="fas fa-tv"></i> Live Slide Editor</h3>
+            <div class="stats-bar" id="statsBar"></div>
         </div>
-        
+
         <div id="preview" class="preview-list"></div>
-        
-        <!-- Bottom Add Slide -->
+
         <div class="add-slide-separator" style="margin-top: 30px;">
             <button class="add-slide-btn" onclick="addNewSlide(DATA.length)"><i class="fas fa-plus"></i> Add New Slide Here</button>
         </div>
     </div>
 </div>
 
+<div id="modalRoot"></div>
+
 <script>
 const $ = id => document.getElementById(id);
-let DATA = []; // Master State: Array of Slides. Each Slide is an Array of Elements.
+let DATA = [];
 let isLightMode = false;
 let customBgDataUrl = null;
+let grayBgCache = null;
+let undoStack = [], redoStack = [];
+let dragSrcIndex = null;
+
+const TEXT_TYPES = ['h1','h2','h3','p','mcq-q','mcq-opt','mcq-ans','mcq-sol','quote','link','icon'];
+const DEFAULT_SIZE = {h1:44,h2:34,h3:28,p:30,'mcq-q':40,'mcq-opt':34,'mcq-ans':36,'mcq-sol':30,quote:28,link:28,icon:60};
+const DEFAULT_LINEH = {h1:56,h2:46,h3:38,p:42,'mcq-q':52,'mcq-opt':46,'mcq-ans':48,'mcq-sol':42,quote:40,link:40,icon:74};
+
+const THEME_PRESETS = [
+    {name:'Classic', h1:'#ffeb3b', h2:'#00e676', p:'#ffffff', mq:'#ffeb3b', mo:'#ffffff'},
+    {name:'Ocean', h1:'#38bdf8', h2:'#22d3ee', p:'#e0f2fe', mq:'#38bdf8', mo:'#e0f2fe'},
+    {name:'Sunset', h1:'#fb923c', h2:'#f472b6', p:'#fff7ed', mq:'#fb923c', mo:'#fff7ed'},
+    {name:'Forest', h1:'#a3e635', h2:'#4ade80', p:'#f0fdf4', mq:'#a3e635', mo:'#f0fdf4'},
+    {name:'Royal', h1:'#c4b5fd', h2:'#f0abfc', p:'#faf5ff', mq:'#c4b5fd', mo:'#faf5ff'}
+];
+
+const SETTINGS = {
+    title:'', author:'', subject:'',
+    fontFamily:'Kalam',
+    headerText:'', footerText:'', showHeader:false, showFooter:false, showSlideNum:false, showDate:false,
+    watermarkText:'', showWatermark:false,
+    rtl:false, spellcheck:false,
+    lineHeightMult:1, letterSpacing:0,
+    overlayOpacity:0.5, bgGrayscale:false, zoom:100
+};
+
+const FEATURES = [
+"Undo (Ctrl+Z)","Redo (Ctrl+Y)","Presentation Title metadata","Author metadata","Subject metadata",
+"Export all data as JSON file","Import data from JSON file","Zoom slider for live preview (50-150%)",
+"Global Find & Replace across all slides","Live word count","Live character count","Live slide count",
+"5 Theme color presets","RTL (Right-to-Left) mode toggle","Spellcheck toggle while editing",
+"Global font family selector (also used in PPTX export)","Header text shown on every slide",
+"Footer text shown on every slide","Slide number toggle","Auto date toggle","Watermark text + toggle",
+"Reset All Settings button","Keyboard Shortcuts help modal","Full Feature List modal",
+"Auto-save indicator with last-saved time","Bulk-select slides with checkboxes","Delete selected slides in bulk",
+"Drag-and-drop slide reordering","Slide quick-jump by number","Global default line-height control",
+"Global default letter-spacing control","Background overlay darkness/opacity slider",
+"Background image grayscale filter toggle","5 Slide layout quick-templates",
+"Per-slide solid background color","Per-slide speaker notes (exported to PPTX)","Per-slide transition label",
+"Per-slide duration metadata","Slide lock to prevent edits","Bold toggle per element","Italic toggle per element",
+"Underline toggle per element","Strikethrough toggle per element","Text alignment cycle (left/center/right)",
+"Text case transform (Normal/UPPER/lower/Title)","Custom font size per element","Text highlight/background color",
+"Duplicate any element","Lock/unlock individual elements","Insert Image element","Insert Shape element (rectangle/circle)",
+"Insert Divider (HR) element","Insert Quote block element","Insert Numbered List element",
+"Insert Hyperlink (visual) element","Insert Emoji/Icon element","Table: add/remove row","Table: add/remove column",
+"Table header color customization","Table border color customization","Table striped rows toggle",
+"Dark / Light theme toggle","Custom background image upload"
+];
+
+function uid(){ return 'id_'+(Date.now().toString(36))+(Math.random().toString(36).slice(2,6)); }
+function newSlide(els){ return { id: uid(), els: els||[], bgColor:null, notes:'', transition:'None', duration:3, locked:false, selected:false }; }
 
 // ==========================================
-// 1. INITIALIZATION & THEMES
+// INIT THEME PRESET UI
+// ==========================================
+function buildThemePresets(){
+    const box = $('themePresets'); box.innerHTML='';
+    THEME_PRESETS.forEach(p=>{
+        const sw = document.createElement('div');
+        sw.className='theme-swatch'; sw.title=p.name;
+        sw.style.background = `linear-gradient(135deg, ${p.h1}, ${p.h2})`;
+        sw.onclick = ()=> applyThemePreset(p);
+        box.appendChild(sw);
+    });
+}
+function applyThemePreset(p){
+    $('defH1').value=p.h1; $('defH2').value=p.h2; $('defP').value=p.p; $('defMQ').value=p.mq; $('defMO').value=p.mo;
+    renderPreview(); saveState();
+}
+
+// ==========================================
+// THEME TOGGLE
 // ==========================================
 $('themeToggle').onclick = () => {
     isLightMode = !isLightMode;
     document.body.classList.toggle('light-mode', isLightMode);
     $('themeToggle').innerHTML = isLightMode ? '<i class="fas fa-sun"></i> Light' : '<i class="fas fa-moon"></i> Dark';
-    
-    // Auto adjust default text colors if they are pure white/black
     if(isLightMode) {
         if($('defP').value === "#ffffff") $('defP').value = "#000000";
         if($('defMO').value === "#ffffff") $('defMO').value = "#000000";
@@ -226,14 +424,47 @@ $('bgImgUpload').onchange = (e) => {
         img.onload = () => {
             const canvas = document.createElement("canvas"); canvas.width = 1300; canvas.height = 710;
             const ctx = canvas.getContext("2d"); ctx.drawImage(img, 0, 0, 1300, 710);
-            customBgDataUrl = canvas.toDataURL("image/jpeg", 0.7); 
+            customBgDataUrl = canvas.toDataURL("image/jpeg", 0.7);
+            grayBgCache = null;
             renderPreview(); saveState();
         }; img.src = event.target.result;
     }; reader.readAsDataURL(file);
 };
+$('bgGrayscaleToggle').onchange = e => { SETTINGS.bgGrayscale = e.target.checked; grayBgCache=null; renderPreview(); saveState(); };
+$('overlayOpacity').oninput = e => { SETTINGS.overlayOpacity = parseFloat(e.target.value); renderPreview(); saveState(); };
 
 // ==========================================
-// 2. DEMOS & COPY CODE
+// TYPOGRAPHY / VIEW SETTINGS
+// ==========================================
+$('fontFamilySel').onchange = e => { SETTINGS.fontFamily = e.target.value; document.documentElement.style.setProperty('--live-font', e.target.value); renderPreview(); saveState(); };
+$('lineHeightMult').oninput = e => { SETTINGS.lineHeightMult = parseFloat(e.target.value); $('lhVal').innerText = e.target.value; saveState(); };
+$('letterSpacingGlobal').oninput = e => { SETTINGS.letterSpacing = parseFloat(e.target.value); saveState(); };
+$('rtlToggle').onchange = e => { SETTINGS.rtl = e.target.checked; $('preview').style.direction = SETTINGS.rtl?'rtl':'ltr'; saveState(); };
+$('spellcheckToggle').onchange = e => { SETTINGS.spellcheck = e.target.checked; renderPreview(); saveState(); };
+$('zoomRange').oninput = e => { SETTINGS.zoom = parseInt(e.target.value); $('zoomVal').innerText = e.target.value; $('preview').style.zoom = (SETTINGS.zoom/100); saveState(); };
+
+// ==========================================
+// HEADER / FOOTER / WATERMARK
+// ==========================================
+['headerToggle','footerToggle','slideNumToggle','dateToggle','watermarkToggle'].forEach(id=>{
+    $(id).onchange = e => {
+        if(id==='headerToggle') SETTINGS.showHeader = e.target.checked;
+        if(id==='footerToggle') SETTINGS.showFooter = e.target.checked;
+        if(id==='slideNumToggle') SETTINGS.showSlideNum = e.target.checked;
+        if(id==='dateToggle') SETTINGS.showDate = e.target.checked;
+        if(id==='watermarkToggle') SETTINGS.showWatermark = e.target.checked;
+        renderPreview(); saveState();
+    };
+});
+$('headerText').oninput = e => { SETTINGS.headerText = e.target.value; renderPreview(); saveState(); };
+$('footerText').oninput = e => { SETTINGS.footerText = e.target.value; renderPreview(); saveState(); };
+$('watermarkText').oninput = e => { SETTINGS.watermarkText = e.target.value; renderPreview(); saveState(); };
+$('metaTitle').oninput = e => { SETTINGS.title = e.target.value; saveState(); };
+$('metaAuthor').oninput = e => { SETTINGS.author = e.target.value; saveState(); };
+$('metaSubject').oninput = e => { SETTINGS.subject = e.target.value; saveState(); };
+
+// ==========================================
+// DEMOS & COPY CODE
 // ==========================================
 $('demoHtmlBtn').onclick = () => {
     $('dataArea').value = `<h1>राजस्थान का भूगोल</h1>
@@ -241,7 +472,7 @@ $('demoHtmlBtn').onclick = () => {
 <p>राजस्थान भारत के उत्तर-पश्चिम में स्थित है। इसका कुल क्षेत्रफल <b>3,42,239 वर्ग किमी</b> है।</p>
 <h3>प्रमुख बिंदु:</h3>
 <ul>
-    <li>सबसे बड़ा जिला: जैसलमेर</li>
+    <li>सबसे बड़ा जिला: जैसलमेर</li>
     <li>सबसे छोटा जिला: धौलपुर</li>
 </ul>
 <table>
@@ -250,7 +481,6 @@ $('demoHtmlBtn').onclick = () => {
     <tr><td>जोधपुर</td><td>6</td></tr>
 </table>`;
 };
-
 $('demoJsonBtn').onclick = () => {
     $('dataArea').value = `[
   {
@@ -260,14 +490,13 @@ $('demoJsonBtn').onclick = () => {
     "solution": "गोडावण (Great Indian Bustard) राजस्थान का राज्य पक्षी है। इसे 1981 में राज्य पक्षी घोषित किया गया था।"
   },
   {
-    "question": "हल्दीघाटी का युद्ध कब लड़ा गया था?",
+    "question": "हल्दीघाटी का युद्ध कब लड़ा गया था?",
     "options": ["1576", "1526", "1191", "1192"],
     "answer": "A",
     "solution": "हल्दीघाटी का युद्ध 18 जून 1576 को महाराणा प्रताप और अकबर की सेना (मानसिंह) के बीच हुआ था।"
   }
 ]`;
 };
-
 $('copyCodeBtn').onclick = () => {
     if(DATA.length === 0) return alert("कोई डेटा नहीं है!");
     navigator.clipboard.writeText(JSON.stringify(DATA, null, 2));
@@ -275,7 +504,52 @@ $('copyCodeBtn').onclick = () => {
 };
 
 // ==========================================
-// 3. SMART HTML PARSER (Appends to DATA)
+// EXPORT / IMPORT JSON FILE
+// ==========================================
+$('exportJsonFileBtn').onclick = () => {
+    const payload = { DATA, SETTINGS, isLightMode };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'ppt-maker-data.json'; a.click();
+};
+$('importJsonFileBtn').onclick = () => $('jsonFileInput').click();
+$('jsonFileInput').onchange = (e) => {
+    const file = e.target.files[0]; if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        try{
+            const payload = JSON.parse(ev.target.result);
+            snapshot();
+            if(payload.DATA) DATA = payload.DATA; else if(Array.isArray(payload)) DATA = payload;
+            if(payload.SETTINGS) Object.assign(SETTINGS, payload.SETTINGS);
+            if(typeof payload.isLightMode === 'boolean'){ isLightMode = payload.isLightMode; document.body.classList.toggle('light-mode', isLightMode); }
+            renderPreview(); saveState();
+        }catch(err){ alert('Invalid JSON file: '+err.message); }
+    };
+    reader.readAsText(file);
+};
+
+// ==========================================
+// FIND & REPLACE
+// ==========================================
+$('findReplaceBtn').onclick = () => {
+    const find = $('findText').value; const rep = $('replaceText').value;
+    if(!find) return alert('Find text daaliye pehle!');
+    snapshot();
+    let count = 0;
+    DATA.forEach(slide => {
+        slide.els.forEach(el => {
+            if(el.text && el.text.includes(find)){ el.text = el.text.split(find).join(rep); count++; }
+            if(el.items) el.items = el.items.map(t=>{ if(t.includes(find)){count++;} return t.split(find).join(rep); });
+            if(el.rows) el.rows = el.rows.map(row => row.map(c=>{ if(c.includes(find)){count++;} return c.split(find).join(rep); }));
+        });
+    });
+    renderPreview(); saveState();
+    alert(`✅ ${count} jagah replace hui.`);
+};
+
+// ==========================================
+// SMART HTML PARSER
 // ==========================================
 function cleanHtml(str) {
     let txt = str.replace(/<strong[^>]*>/gi, '<b>').replace(/<\/strong>/gi, '</b>')
@@ -285,27 +559,27 @@ function cleanHtml(str) {
     return dummy.value.trim();
 }
 
-$('importHtmlBtn').onclick = () => { 
+$('importHtmlBtn').onclick = () => {
     let rawHtml = $('dataArea').value.trim();
     if(!rawHtml) return alert("Please paste HTML code!");
-
-    let newSlides = []; let currentSlide = [];
+    snapshot();
+    let newSlides = []; let currentEls = [];
     const parser = new DOMParser(); const doc = parser.parseFromString(rawHtml, 'text/html');
 
     Array.from(doc.body.children).forEach(el => {
         let t = el.tagName;
         if (t === 'H1' || t === 'H2') {
-            if (currentSlide.length > 0) newSlides.push(currentSlide);
-            currentSlide = [];
-            currentSlide.push({ id: uid(), type: t.toLowerCase(), text: cleanHtml(el.innerHTML) });
-        } 
-        else if (t === 'H3') currentSlide.push({ id: uid(), type: 'h3', text: cleanHtml(el.innerHTML) });
-        else if (t === 'P') { let text = cleanHtml(el.innerHTML); if(text) currentSlide.push({ id: uid(), type: 'p', text: text }); } 
+            if (currentEls.length > 0) newSlides.push(newSlide(currentEls));
+            currentEls = [];
+            currentEls.push({ id: uid(), type: t.toLowerCase(), text: cleanHtml(el.innerHTML) });
+        }
+        else if (t === 'H3') currentEls.push({ id: uid(), type: 'h3', text: cleanHtml(el.innerHTML) });
+        else if (t === 'P') { let text = cleanHtml(el.innerHTML); if(text) currentEls.push({ id: uid(), type: 'p', text: text }); }
         else if (t === 'UL' || t === 'OL') {
             let items = [];
             Array.from(el.children).forEach(li => { if (li.tagName === 'LI') items.push(cleanHtml(li.innerHTML)); });
-            if(items.length > 0) currentSlide.push({ id: uid(), type: 'ul', items: items });
-        } 
+            if(items.length > 0) currentEls.push({ id: uid(), type: t==='OL'?'ol':'ul', items: items });
+        }
         else if (t === 'TABLE') {
             let rows = [];
             Array.from(el.querySelectorAll('tr')).forEach(tr => {
@@ -313,58 +587,52 @@ $('importHtmlBtn').onclick = () => {
                 Array.from(tr.querySelectorAll('th, td')).forEach(td => cells.push(cleanHtml(td.innerHTML)));
                 if(cells.length > 0) rows.push(cells);
             });
-            if(rows.length > 0) currentSlide.push({ id: uid(), type: 'table', rows: rows });
+            if(rows.length > 0) currentEls.push({ id: uid(), type: 'table', rows: rows, headerColor:'2563EB', borderColor: isLightMode?'CBD5E1':'334155', striped:false });
         }
     });
 
-    if (currentSlide.length > 0) newSlides.push(currentSlide);
+    if (currentEls.length > 0) newSlides.push(newSlide(currentEls));
     if (newSlides.length === 0) return alert("No valid HTML tags found!");
 
-    DATA = DATA.concat(newSlides); // Append!
+    DATA = DATA.concat(newSlides);
     renderPreview(); saveState(); $('dataArea').value = "";
 };
 
 // ==========================================
-// 4. SMART MCQ JSON PARSER (Auto-Split Feature)
+// SMART MCQ JSON PARSER
 // ==========================================
 $('importJsonBtn').onclick = () => {
     let rawJson = $('dataArea').value.trim();
     if(!rawJson) return alert("Please paste MCQ JSON data!");
-    
-    let doSplit = $('splitAnswerToggle').checked; // Check Toggle
-
+    let doSplit = $('splitAnswerToggle').checked;
     try {
         let jsonArr = JSON.parse(rawJson);
         if(!Array.isArray(jsonArr)) return alert("JSON should be an Array!");
-        
+        snapshot();
         let newSlides = [];
         const alphabet = ['A', 'B', 'C', 'D', 'E', 'F'];
 
-        jsonArr.forEach((item, index) => {
-            if(!item.question) return; 
-            
-            let qSlide = [];
-            qSlide.push({ id: uid(), type: 'mcq-q', text: `Q${DATA.length + newSlides.length + 1}. ` + item.question });
-            
+        jsonArr.forEach((item) => {
+            if(!item.question) return;
+            let qEls = [];
+            qEls.push({ id: uid(), type: 'mcq-q', text: `Q${DATA.length + newSlides.length + 1}. ` + item.question });
             let opts = item.option || item.options || [];
             if(Array.isArray(opts)) {
                 opts.forEach((optText, i) => {
                     let label = alphabet[i] ? alphabet[i] + ") " : "";
-                    qSlide.push({ id: uid(), type: 'mcq-opt', text: label + optText });
+                    qEls.push({ id: uid(), type: 'mcq-opt', text: label + optText });
                 });
             }
-
-            // Logic for split or combined
             if(doSplit && (item.answer || item.solution)) {
-                newSlides.push(qSlide); // Push Question slide
-                let aSlide = []; // Create Answer Slide
-                if(item.answer) aSlide.push({ id: uid(), type: 'mcq-ans', text: `Answer: ${item.answer}` });
-                if(item.solution) aSlide.push({ id: uid(), type: 'mcq-sol', text: item.solution });
-                newSlides.push(aSlide);
+                newSlides.push(newSlide(qEls));
+                let aEls = [];
+                if(item.answer) aEls.push({ id: uid(), type: 'mcq-ans', text: `Answer: ${item.answer}` });
+                if(item.solution) aEls.push({ id: uid(), type: 'mcq-sol', text: item.solution });
+                newSlides.push(newSlide(aEls));
             } else {
-                if(item.answer) qSlide.push({ id: uid(), type: 'mcq-ans', text: `Answer: ${item.answer}` });
-                if(item.solution) qSlide.push({ id: uid(), type: 'mcq-sol', text: item.solution });
-                newSlides.push(qSlide);
+                if(item.answer) qEls.push({ id: uid(), type: 'mcq-ans', text: `Answer: ${item.answer}` });
+                if(item.solution) qEls.push({ id: uid(), type: 'mcq-sol', text: item.solution });
+                newSlides.push(newSlide(qEls));
             }
         });
 
@@ -373,68 +641,342 @@ $('importJsonBtn').onclick = () => {
     } catch (e) { alert("Invalid JSON! Error: " + e.message); }
 };
 
-$('clearAllBtn').onclick = () => { if(confirm("Clear ALL Slides?")) { DATA = []; saveState(); renderPreview(); } };
+$('clearAllBtn').onclick = () => { if(confirm("Clear ALL Slides?")) { snapshot(); DATA = []; saveState(); renderPreview(); } };
 
 // ==========================================
-// 5. SLIDE & ELEMENT MANAGEMENT (The 20+ Features Engine)
+// UNDO / REDO
 // ==========================================
-function uid(){ return 'id_'+(Date.now().toString(36))+(Math.random().toString(36).slice(2,6)); }
+function snapshot(){
+    undoStack.push(JSON.stringify(DATA));
+    if(undoStack.length>50) undoStack.shift();
+    redoStack = [];
+}
+function undo(){
+    if(undoStack.length===0) return;
+    redoStack.push(JSON.stringify(DATA));
+    DATA = JSON.parse(undoStack.pop());
+    renderPreview(); saveState();
+}
+function redo(){
+    if(redoStack.length===0) return;
+    undoStack.push(JSON.stringify(DATA));
+    DATA = JSON.parse(redoStack.pop());
+    renderPreview(); saveState();
+}
+$('undoBtn').onclick = undo; $('redoBtn').onclick = redo;
 
+document.addEventListener('keydown', (e)=>{
+    if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='z'){ e.preventDefault(); undo(); }
+    if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='y'){ e.preventDefault(); redo(); }
+    if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='s'){ e.preventDefault(); saveState(); flashSaved(); }
+});
+
+// ==========================================
+// MODALS
+// ==========================================
+function showModal(title, innerHtml){
+    $('modalRoot').innerHTML = `<div class="modal-overlay" onclick="if(event.target===this) this.remove()">
+        <div class="modal-box">
+            <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✕ Close</button>
+            <h3>${title}</h3>
+            ${innerHtml}
+        </div>
+    </div>`;
+}
+$('featureListBtn').onclick = () => {
+    showModal('⭐ '+FEATURES.length+'+ Features Included', '<ul>'+FEATURES.map(f=>`<li>${f}</li>`).join('')+'</ul>');
+};
+$('shortcutsBtn').onclick = () => {
+    showModal('⌨️ Keyboard Shortcuts', `<ul>
+        <li><b>Ctrl+Z</b> — Undo</li>
+        <li><b>Ctrl+Y</b> — Redo</li>
+        <li><b>Ctrl+S</b> — Save now</li>
+    </ul>`);
+};
+$('resetAllBtn').onclick = () => {
+    if(!confirm('Sab settings reset kare? Slides safe rahengi.')) return;
+    Object.assign(SETTINGS, {title:'',author:'',subject:'',fontFamily:'Kalam',headerText:'',footerText:'',showHeader:false,showFooter:false,showSlideNum:false,showDate:false,watermarkText:'',showWatermark:false,rtl:false,spellcheck:false,lineHeightMult:1,letterSpacing:0,overlayOpacity:0.5,bgGrayscale:false,zoom:100});
+    $('metaTitle').value=''; $('metaAuthor').value=''; $('metaSubject').value='';
+    $('fontFamilySel').value='Kalam'; $('headerText').value=''; $('footerText').value=''; $('watermarkText').value='';
+    $('headerToggle').checked=false; $('footerToggle').checked=false; $('slideNumToggle').checked=false; $('dateToggle').checked=false; $('watermarkToggle').checked=false;
+    $('rtlToggle').checked=false; $('spellcheckToggle').checked=false; $('lineHeightMult').value=1; $('lhVal').innerText='1';
+    $('letterSpacingGlobal').value=0; $('overlayOpacity').value=0.5; $('bgGrayscaleToggle').checked=false; $('zoomRange').value=100; $('zoomVal').innerText='100';
+    $('preview').style.zoom=1; $('preview').style.direction='ltr';
+    renderPreview(); saveState();
+};
+
+// ==========================================
+// SLIDE MANAGEMENT
+// ==========================================
 function getDefaultColor(type) {
     if(type==='h1') return $('defH1').value;
     if(type==='h2') return $('defH2').value;
     if(type==='mcq-q') return $('defMQ').value;
     if(type==='mcq-opt') return $('defMO').value;
-    return $('defP').value; // p, ul, h3, etc
+    return $('defP').value;
 }
 
-window.addNewSlide = (index) => { DATA.splice(index, 0, []); renderPreview(); saveState(); };
-window.deleteSlide = (index) => { if(confirm("Delete this slide?")) { DATA.splice(index, 1); renderPreview(); saveState(); } };
-window.duplicateSlide = (index) => { DATA.splice(index + 1, 0, JSON.parse(JSON.stringify(DATA[index]))); renderPreview(); saveState(); };
-window.moveSlide = (index, dir) => { 
+window.addNewSlide = (index) => { snapshot(); DATA.splice(index, 0, newSlide([])); renderPreview(); saveState(); };
+window.deleteSlide = (index) => { if(confirm("Delete this slide?")) { snapshot(); DATA.splice(index, 1); renderPreview(); saveState(); } };
+window.duplicateSlide = (index) => { snapshot(); DATA.splice(index + 1, 0, JSON.parse(JSON.stringify(DATA[index]))); renderPreview(); saveState(); };
+window.moveSlide = (index, dir) => {
+    snapshot();
     if(dir==='up' && index > 0) { let t = DATA[index]; DATA[index] = DATA[index-1]; DATA[index-1] = t; }
     if(dir==='down' && index < DATA.length-1) { let t = DATA[index]; DATA[index] = DATA[index+1]; DATA[index+1] = t; }
     renderPreview(); saveState();
 };
+window.toggleSlideLock = (sIdx) => { snapshot(); DATA[sIdx].locked = !DATA[sIdx].locked; renderPreview(); saveState(); };
+window.toggleSlideSelect = (sIdx, checked) => { DATA[sIdx].selected = checked; };
+window.setSlideBgColor = (sIdx, color) => { DATA[sIdx].bgColor = color; renderPreview(); saveState(); };
+window.clearSlideBgColor = (sIdx) => { DATA[sIdx].bgColor = null; renderPreview(); saveState(); };
+window.setSlideNotes = (sIdx, val) => { DATA[sIdx].notes = val; saveState(); };
+window.setSlideTransition = (sIdx, val) => { DATA[sIdx].transition = val; saveState(); };
+window.setSlideDuration = (sIdx, val) => { DATA[sIdx].duration = parseFloat(val)||3; saveState(); };
 
-window.addElement = (sIdx, type) => {
-    let el = { id: uid(), type: type, text: 'New ' + type, color: getDefaultColor(type) };
-    if(type === 'ul') el = { id: uid(), type: 'ul', items: ['Item 1', 'Item 2'], color: getDefaultColor('p') };
-    if(type === 'table') el = { id: uid(), type: 'table', rows: [['H1', 'H2'], ['D1', 'D2']] };
-    DATA[sIdx].push(el); renderPreview(); saveState();
+$('deleteSelectedBtn').onclick = () => {
+    const sel = DATA.filter(s=>s.selected).length;
+    if(sel===0) return alert('Koi slide select nahi hai (checkbox use karein).');
+    if(!confirm(`${sel} selected slides delete karein?`)) return;
+    snapshot();
+    DATA = DATA.filter(s=>!s.selected);
+    renderPreview(); saveState();
+};
+$('jumpGoBtn').onclick = () => {
+    const n = parseInt($('jumpSlideNum').value);
+    if(!n || n<1 || n>DATA.length) return alert('Valid slide number daalein.');
+    const target = document.querySelectorAll('.slide-wrapper')[n-1];
+    if(target) target.scrollIntoView({behavior:'smooth', block:'center'});
 };
 
-window.deleteEl = (sIdx, eIdx) => { DATA[sIdx].splice(eIdx, 1); renderPreview(); saveState(); };
+// Drag & drop reorder
+function attachDrag(wrap, idx){
+    wrap.draggable = true;
+    wrap.ondragstart = () => { dragSrcIndex = idx; wrap.classList.add('dragging'); };
+    wrap.ondragend = () => wrap.classList.remove('dragging');
+    wrap.ondragover = (e) => e.preventDefault();
+    wrap.ondrop = (e) => {
+        e.preventDefault();
+        if(dragSrcIndex===null || dragSrcIndex===idx) return;
+        snapshot();
+        const moved = DATA.splice(dragSrcIndex,1)[0];
+        DATA.splice(idx,0,moved);
+        dragSrcIndex = null;
+        renderPreview(); saveState();
+    };
+}
+
+// ==========================================
+// LAYOUT TEMPLATES
+// ==========================================
+window.insertTemplate = (name) => {
+    snapshot();
+    let els = [];
+    if(name==='title') els = [
+        {id:uid(), type:'h1', text:'Presentation Title', align:'center'},
+        {id:uid(), type:'p', text:'Subtitle / Tagline goes here', align:'center'}
+    ];
+    else if(name==='titlecontent') els = [
+        {id:uid(), type:'h1', text:'Slide Title'},
+        {id:uid(), type:'ul', items:['Point one','Point two','Point three']}
+    ];
+    else if(name==='twocolumn') els = [
+        {id:uid(), type:'h2', text:'Column A'},
+        {id:uid(), type:'ul', items:['A - point 1','A - point 2']},
+        {id:uid(), type:'hr', color:'#888888'},
+        {id:uid(), type:'h2', text:'Column B'},
+        {id:uid(), type:'ul', items:['B - point 1','B - point 2']}
+    ];
+    else if(name==='section') els = [
+        {id:uid(), type:'h1', text:'Section Title', align:'center', fontSize:50}
+    ];
+    else if(name==='imagecaption') els = [
+        {id:uid(), type:'p', text:'(Use "+ Image" button below to upload a picture)', align:'center'},
+        {id:uid(), type:'quote', text:'Caption text describing the image', align:'center'}
+    ];
+    DATA.push(newSlide(els));
+    renderPreview(); saveState();
+};
+
+// ==========================================
+// ELEMENT MANAGEMENT
+// ==========================================
+window.addElement = (sIdx, type) => {
+    snapshot();
+    let el = { id: uid(), type: type, text: 'New ' + type, color: getDefaultColor(type), bold:false, italic:false, underline:false, strike:false, align:'left', case:'none', fontSize:null, highlight:null, locked:false };
+    if(type === 'ul' || type==='ol') el = { id: uid(), type: type, items: ['Item 1', 'Item 2'], color: getDefaultColor('p'), bold:false, italic:false, underline:false, strike:false, align:'left', case:'none', fontSize:null, highlight:null, locked:false };
+    if(type === 'table') el = { id: uid(), type: 'table', rows: [['H1', 'H2'], ['D1', 'D2']], headerColor:'2563EB', borderColor: isLightMode?'CBD5E1':'334155', striped:false, color: getDefaultColor('p') };
+    if(type === 'icon') el.text = '⭐';
+    if(type === 'quote') el.text = 'Quote text here...';
+    if(type === 'link') { el.text = 'Click here'; el.url = 'https://example.com'; }
+    if(type === 'hr') el = { id: uid(), type:'hr', color: '#888888', locked:false };
+    if(type === 'shape-rect' || type === 'shape-circle') el = { id: uid(), type:type, color: getDefaultColor('h2'), w:200, h:100, align:'center', locked:false };
+    if(type === 'image') {
+        const inp = document.createElement('input'); inp.type='file'; inp.accept='image/*';
+        inp.onchange = (e)=>{
+            const file = e.target.files[0]; if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev)=>{
+                const img = new Image();
+                img.onload = ()=>{
+                    const c = document.createElement('canvas'); const maxW=900;
+                    const scale = Math.min(1, maxW/img.width);
+                    c.width = img.width*scale; c.height = img.height*scale;
+                    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+                    el.src = c.toDataURL('image/jpeg',0.8); el.width='medium'; el.align='center';
+                    DATA[sIdx].els.push(el);
+                    renderPreview(); saveState();
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+        inp.click();
+        return;
+    }
+    DATA[sIdx].els.push(el); renderPreview(); saveState();
+};
+
+window.deleteEl = (sIdx, eIdx) => { snapshot(); DATA[sIdx].els.splice(eIdx, 1); renderPreview(); saveState(); };
+window.duplicateEl = (sIdx, eIdx) => { snapshot(); const copy = JSON.parse(JSON.stringify(DATA[sIdx].els[eIdx])); copy.id = uid(); DATA[sIdx].els.splice(eIdx+1,0,copy); renderPreview(); saveState(); };
+window.toggleLockEl = (sIdx, eIdx) => { snapshot(); DATA[sIdx].els[eIdx].locked = !DATA[sIdx].els[eIdx].locked; renderPreview(); saveState(); };
 window.moveEl = (sIdx, eIdx, dir) => {
-    let arr = DATA[sIdx];
+    snapshot();
+    let arr = DATA[sIdx].els;
     if(dir==='up' && eIdx > 0) { let t = arr[eIdx]; arr[eIdx] = arr[eIdx-1]; arr[eIdx-1] = t; }
     if(dir==='down' && eIdx < arr.length-1) { let t = arr[eIdx]; arr[eIdx] = arr[eIdx+1]; arr[eIdx+1] = t; }
     renderPreview(); saveState();
 };
-window.updateElColor = (sIdx, eIdx, color) => { DATA[sIdx][eIdx].color = color; renderPreview(); saveState(); };
+window.updateElColor = (sIdx, eIdx, color) => { DATA[sIdx].els[eIdx].color = color; renderPreview(); saveState(); };
+window.toggleBoldEl = (sIdx, eIdx) => { snapshot(); DATA[sIdx].els[eIdx].bold = !DATA[sIdx].els[eIdx].bold; renderPreview(); saveState(); };
+window.toggleItalicEl = (sIdx, eIdx) => { snapshot(); DATA[sIdx].els[eIdx].italic = !DATA[sIdx].els[eIdx].italic; renderPreview(); saveState(); };
+window.toggleUnderlineEl = (sIdx, eIdx) => { snapshot(); DATA[sIdx].els[eIdx].underline = !DATA[sIdx].els[eIdx].underline; renderPreview(); saveState(); };
+window.toggleStrikeEl = (sIdx, eIdx) => { snapshot(); DATA[sIdx].els[eIdx].strike = !DATA[sIdx].els[eIdx].strike; renderPreview(); saveState(); };
+window.cycleAlignEl = (sIdx, eIdx) => {
+    snapshot();
+    const order = ['left','center','right']; const cur = DATA[sIdx].els[eIdx].align||'left';
+    DATA[sIdx].els[eIdx].align = order[(order.indexOf(cur)+1)%order.length];
+    renderPreview(); saveState();
+};
+window.cycleCaseEl = (sIdx, eIdx) => {
+    snapshot();
+    const order = ['none','upper','lower','title']; const cur = DATA[sIdx].els[eIdx].case||'none';
+    DATA[sIdx].els[eIdx].case = order[(order.indexOf(cur)+1)%order.length];
+    renderPreview(); saveState();
+};
+window.setFontSizeEl = (sIdx, eIdx, val) => { DATA[sIdx].els[eIdx].fontSize = val ? parseInt(val) : null; renderPreview(); saveState(); };
+window.setHighlightEl = (sIdx, eIdx, color) => { DATA[sIdx].els[eIdx].highlight = color; renderPreview(); saveState(); };
+window.setLinkUrl = (sIdx, eIdx) => {
+    const el = DATA[sIdx].els[eIdx];
+    const url = prompt('Enter URL:', el.url||'https://');
+    if(url!==null){ el.url = url; saveState(); }
+};
+
+// Table controls
+window.addTableRow = (sIdx, eIdx) => { snapshot(); const el = DATA[sIdx].els[eIdx]; const cols = el.rows[0].length; el.rows.push(new Array(cols).fill('New')); renderPreview(); saveState(); };
+window.removeTableRow = (sIdx, eIdx) => { snapshot(); const el = DATA[sIdx].els[eIdx]; if(el.rows.length>1) el.rows.pop(); renderPreview(); saveState(); };
+window.addTableCol = (sIdx, eIdx) => { snapshot(); const el = DATA[sIdx].els[eIdx]; el.rows.forEach(r=>r.push('New')); renderPreview(); saveState(); };
+window.removeTableCol = (sIdx, eIdx) => { snapshot(); const el = DATA[sIdx].els[eIdx]; if(el.rows[0].length>1) el.rows.forEach(r=>r.pop()); renderPreview(); saveState(); };
+window.setTableHeaderColor = (sIdx, eIdx, hex) => { DATA[sIdx].els[eIdx].headerColor = hex.replace('#',''); renderPreview(); saveState(); };
+window.setTableBorderColor = (sIdx, eIdx, hex) => { DATA[sIdx].els[eIdx].borderColor = hex.replace('#',''); renderPreview(); saveState(); };
+window.toggleTableStriped = (sIdx, eIdx) => { snapshot(); DATA[sIdx].els[eIdx].striped = !DATA[sIdx].els[eIdx].striped; renderPreview(); saveState(); };
+
+// Image / shape controls
+window.setImageWidth = (sIdx, eIdx, val) => { DATA[sIdx].els[eIdx].width = val; renderPreview(); saveState(); };
+window.setImageAlign = (sIdx, eIdx, val) => { DATA[sIdx].els[eIdx].align = val; renderPreview(); saveState(); };
+window.setShapeColor = (sIdx, eIdx, val) => { DATA[sIdx].els[eIdx].color = val; renderPreview(); saveState(); };
+window.setShapeSize = (sIdx, eIdx, dim, val) => { DATA[sIdx].els[eIdx][dim] = parseInt(val)||50; renderPreview(); saveState(); };
+window.setShapeAlign = (sIdx, eIdx, val) => { DATA[sIdx].els[eIdx].align = val; renderPreview(); saveState(); };
+window.setHrColor = (sIdx, eIdx, val) => { DATA[sIdx].els[eIdx].color = val; renderPreview(); saveState(); };
 
 // ==========================================
-// 6. RENDER PREVIEW (Live Editable Engine)
+// CASE TRANSFORM HELPER
 // ==========================================
+function transformCase(str, mode){
+    if(!str) return str;
+    if(mode==='upper') return str.toUpperCase();
+    if(mode==='lower') return str.toLowerCase();
+    if(mode==='title') return str.replace(/\w\S*/g, t=>t[0].toUpperCase()+t.slice(1).toLowerCase());
+    return str;
+}
 function formatText(text) { if(!text) return ""; return text.replace(/<b>(.*?)<\/b>/g, `<strong style="color:var(--bold-color);">$1</strong>`); }
+
+// ==========================================
+// BUILD ELEMENT TOOLBAR (SHARED)
+// ==========================================
+function buildTextToolbar(sIdx, eIdx, el){
+    const colInput = `<input type="color" value="${el.color || getDefaultColor(el.type)}" onchange="updateElColor(${sIdx}, ${eIdx}, this.value)" title="Text Color">`;
+    const hlInput = `<input type="color" value="${el.highlight||'#000000'}" onchange="setHighlightEl(${sIdx}, ${eIdx}, this.value)" title="Highlight Color"><button onclick="setHighlightEl(${sIdx},${eIdx},null)" title="Remove Highlight"><i class="fas fa-eraser"></i></button>`;
+    const sizeInput = `<input type="number" class="mini-input" placeholder="${DEFAULT_SIZE[el.type]||30}" value="${el.fontSize||''}" onchange="setFontSizeEl(${sIdx},${eIdx},this.value)" title="Font Size">`;
+    let linkBtn = el.type==='link' ? `<button onclick="setLinkUrl(${sIdx},${eIdx})" title="Set URL"><i class="fas fa-link"></i></button>` : '';
+    return `
+        ${colInput}
+        <button class="${el.bold?'active':''}" onclick="toggleBoldEl(${sIdx},${eIdx})" title="Bold"><b>B</b></button>
+        <button class="${el.italic?'active':''}" onclick="toggleItalicEl(${sIdx},${eIdx})" title="Italic"><i>I</i></button>
+        <button class="${el.underline?'active':''}" onclick="toggleUnderlineEl(${sIdx},${eIdx})" title="Underline"><u>U</u></button>
+        <button class="${el.strike?'active':''}" onclick="toggleStrikeEl(${sIdx},${eIdx})" title="Strikethrough"><s>S</s></button>
+        <button onclick="cycleAlignEl(${sIdx},${eIdx})" title="Alignment: ${el.align||'left'}"><i class="fas fa-align-${el.align==='center'?'center':el.align==='right'?'right':'left'}"></i></button>
+        <button onclick="cycleCaseEl(${sIdx},${eIdx})" title="Case: ${el.case||'none'}"><i class="fas fa-font"></i></button>
+        ${sizeInput}
+        ${hlInput}
+        ${linkBtn}
+        <button onclick="duplicateEl(${sIdx},${eIdx})" title="Duplicate"><i class="fas fa-clone"></i></button>
+        <button class="${el.locked?'active':''}" onclick="toggleLockEl(${sIdx},${eIdx})" title="Lock/Unlock"><i class="fas fa-${el.locked?'lock':'lock-open'}"></i></button>
+        <button onclick="moveEl(${sIdx}, ${eIdx}, 'up')" title="Move Up"><i class="fas fa-caret-up"></i></button>
+        <button onclick="moveEl(${sIdx}, ${eIdx}, 'down')" title="Move Down"><i class="fas fa-caret-down"></i></button>
+        <button onclick="deleteEl(${sIdx}, ${eIdx})" style="color:#ef4444;" title="Delete"><i class="fas fa-times"></i></button>
+    `;
+}
+
+// ==========================================
+// RENDER PREVIEW
+// ==========================================
+function getBgUrl() {
+    let base = null;
+    if($('bgSelect').value === 'custom' && customBgDataUrl) base = customBgDataUrl;
+    if(!base) return null;
+    if(!SETTINGS.bgGrayscale) return base;
+    if(grayBgCache) return grayBgCache;
+    return base; // grayscale for export is computed at generate-time (async), preview uses CSS filter instead
+}
+
+function updateCounts(){
+    let words=0, chars=0;
+    DATA.forEach(s=>s.els.forEach(el=>{
+        if(el.text){ words += el.text.trim().split(/\s+/).filter(Boolean).length; chars += el.text.length; }
+        if(el.items) el.items.forEach(t=>{ words += t.trim().split(/\s+/).filter(Boolean).length; chars += t.length; });
+        if(el.rows) el.rows.forEach(r=>r.forEach(c=>{ words += c.trim().split(/\s+/).filter(Boolean).length; chars += c.length; }));
+    }));
+    $('statsBar').innerHTML = `<span>Slides: <b>${DATA.length}</b></span><span>Words: <b>${words}</b></span><span>Characters: <b>${chars}</b></span>`;
+}
 
 function renderPreview() {
     const box = $("preview"); box.innerHTML = "";
-    if(DATA.length === 0) { box.innerHTML = "<div style='text-align:center; color:var(--text-muted); margin-top:50px;'><i class='fas fa-folder-open' style='font-size:3em; margin-bottom:10px;'></i><br>No Slides. Import data or Add a New Slide!</div>"; return; }
+    if(DATA.length === 0) { box.innerHTML = "<div style='text-align:center; color:var(--text-muted); margin-top:50px;'><i class='fas fa-folder-open' style='font-size:3em; margin-bottom:10px;'></i><br>No Slides. Import data or Add a New Slide!</div>"; updateCounts(); return; }
 
     const bgUrl = getBgUrl();
+    const total = DATA.length;
+    const todayStr = new Date().toLocaleDateString();
 
     DATA.forEach((slide, sIdx) => {
-        // Separator above slide
         box.innerHTML += `<div class="add-slide-separator"><button class="add-slide-btn" onclick="addNewSlide(${sIdx})"><i class="fas fa-plus"></i> Add New Slide Here</button></div>`;
 
         const wrap = document.createElement("div"); wrap.className = "slide-wrapper";
-        
-        // Slide Toolbar
+
         const toolBar = document.createElement("div"); toolBar.className = "slide-toolbar";
         toolBar.innerHTML = `
-            <div class="s-title">Slide ${sIdx + 1}</div>
+            <div class="s-title">
+                <input type="checkbox" ${slide.selected?'checked':''} onchange="toggleSlideSelect(${sIdx}, this.checked)" title="Select">
+                <i class="fas fa-grip-vertical" style="cursor:grab;" title="Drag to reorder"></i>
+                Slide ${sIdx + 1}
+                <input type="color" class="mini-color" value="${slide.bgColor||'#000000'}" onchange="setSlideBgColor(${sIdx}, this.value)" title="Slide Background Color">
+                <button class="action-icon" title="Clear BG Color" onclick="clearSlideBgColor(${sIdx})"><i class="fas fa-ban"></i></button>
+                <select class="mini-select" onchange="setSlideTransition(${sIdx}, this.value)" title="Transition (reference only)">
+                    ${['None','Fade','Slide','Zoom','Wipe'].map(t=>`<option value="${t}" ${slide.transition===t?'selected':''}>${t}</option>`).join('')}
+                </select>
+                <input type="number" class="mini-input" value="${slide.duration}" min="1" step="0.5" onchange="setSlideDuration(${sIdx}, this.value)" title="Duration (sec, reference only)">
+            </div>
             <div class="slide-actions">
+                <button class="action-icon ${slide.locked?'active':''}" title="Lock/Unlock Slide" onclick="toggleSlideLock(${sIdx})"><i class="fas fa-${slide.locked?'lock':'lock-open'}"></i></button>
                 <button class="action-icon" title="Move Up" onclick="moveSlide(${sIdx},'up')"><i class="fas fa-arrow-up"></i></button>
                 <button class="action-icon" title="Move Down" onclick="moveSlide(${sIdx},'down')"><i class="fas fa-arrow-down"></i></button>
                 <button class="action-icon" title="Duplicate" onclick="duplicateSlide(${sIdx})"><i class="fas fa-copy"></i></button>
@@ -443,83 +985,204 @@ function renderPreview() {
         `;
         wrap.appendChild(toolBar);
 
-        // Slide Card
-        const div = document.createElement("div"); div.className = "slide-card";
-        if(bgUrl) div.style.background = `url('${bgUrl}') center/cover no-repeat`; else div.style.backgroundColor = isLightMode ? "#ffffff" : "#000000";
-        
+        const metaRow = document.createElement('div'); metaRow.className='slide-meta-row';
+        metaRow.innerHTML = `<label><i class="fas fa-sticky-note"></i> Notes:</label><textarea placeholder="Speaker notes..." onblur="setSlideNotes(${sIdx}, this.value)">${slide.notes||''}</textarea>`;
+        wrap.appendChild(metaRow);
+
+        const div = document.createElement("div"); div.className = "slide-card" + (SETTINGS.bgGrayscale ? ' grayscale' : '');
+        if(slide.bgColor) div.style.backgroundColor = slide.bgColor;
+        else if(bgUrl) div.style.background = `url('${bgUrl}') center/cover no-repeat`;
+        else div.style.backgroundColor = isLightMode ? "#ffffff" : "#000000";
+
+        // overlay
+        const overlay = document.createElement('div'); overlay.className='slide-overlay';
+        const overlayBase = isLightMode ? '255,255,255' : '0,0,0';
+        overlay.style.background = (bgUrl && !slide.bgColor) ? `rgba(${overlayBase},${SETTINGS.overlayOpacity})` : 'transparent';
+        div.appendChild(overlay);
+
         const content = document.createElement("div"); content.className = "slide-content";
 
-        // Render Elements
-        slide.forEach((el, eIdx) => {
-            const elBlock = document.createElement("div"); elBlock.className = "el-block";
-            
-            // Element Mini Toolbar (Color & Controls)
-            let colInput = el.type !== 'table' ? `<input type="color" value="${el.color || getDefaultColor(el.type)}" onchange="updateElColor(${sIdx}, ${eIdx}, this.value)" title="Change Text Color">` : '';
-            elBlock.innerHTML = `
-                <div class="el-toolbar">
-                    ${colInput}
-                    <button onclick="moveEl(${sIdx}, ${eIdx}, 'up')" title="Move Up"><i class="fas fa-caret-up"></i></button>
-                    <button onclick="moveEl(${sIdx}, ${eIdx}, 'down')" title="Move Down"><i class="fas fa-caret-down"></i></button>
-                    <button onclick="deleteEl(${sIdx}, ${eIdx})" style="color:#ef4444;" title="Delete"><i class="fas fa-times"></i></button>
-                </div>
+        if(!slide.locked){
+            slide.els.forEach((el, eIdx) => {
+                const elBlock = document.createElement("div"); elBlock.className = "el-block" + (el.locked?' locked':'');
+                let node;
+
+                if (TEXT_TYPES.includes(el.type)) {
+                    elBlock.innerHTML = `<div class="el-toolbar">${el.locked?`<button onclick="toggleLockEl(${sIdx},${eIdx})" title="Unlock"><i class="fas fa-lock"></i></button><button onclick="deleteEl(${sIdx},${eIdx})" title="Delete"><i class="fas fa-times"></i></button>`:buildTextToolbar(sIdx,eIdx,el)}</div>`;
+                    node = document.createElement("div"); node.className = "p-" + el.type;
+                    node.style.color = el.color || getDefaultColor(el.type);
+                    node.style.fontWeight = el.bold ? '700':'';
+                    node.style.fontStyle = el.italic ? 'italic':'';
+                    node.style.textDecoration = [el.underline?'underline':'', el.strike?'line-through':''].filter(Boolean).join(' ');
+                    node.style.textAlign = el.align || 'left';
+                    node.style.textTransform = el.case==='upper'?'uppercase':el.case==='lower'?'lowercase':el.case==='title'?'capitalize':'none';
+                    if(el.fontSize) node.style.fontSize = el.fontSize+'px';
+                    if(el.highlight) { node.style.background = el.highlight; node.style.display='inline-block'; node.style.padding='2px 6px'; }
+                    node.style.letterSpacing = SETTINGS.letterSpacing+'px';
+                    node.style.lineHeight = (1.4*SETTINGS.lineHeightMult);
+                    node.contentEditable = !el.locked ? "true" : "false";
+                    node.spellcheck = SETTINGS.spellcheck;
+                    node.dir = SETTINGS.rtl ? 'rtl':'ltr';
+                    node.innerHTML = formatText(el.text);
+                    node.onblur = e => { DATA[sIdx].els[eIdx].text = e.target.innerText; saveState(); };
+                }
+                else if (el.type === 'ul' || el.type==='ol') {
+                    elBlock.innerHTML = `<div class="el-toolbar">${el.locked?`<button onclick="toggleLockEl(${sIdx},${eIdx})" title="Unlock"><i class="fas fa-lock"></i></button><button onclick="deleteEl(${sIdx},${eIdx})" title="Delete"><i class="fas fa-times"></i></button>`:buildTextToolbar(sIdx,eIdx,el)}</div>`;
+                    node = document.createElement("div");
+                    el.items.forEach((itemText, iIdx) => {
+                        const liNode = document.createElement("div"); liNode.className = "p-li";
+                        liNode.style.color = el.color || getDefaultColor('p');
+                        liNode.style.fontWeight = el.bold?'700':''; liNode.style.fontStyle = el.italic?'italic':'';
+                        liNode.style.textDecoration = [el.underline?'underline':'', el.strike?'line-through':''].filter(Boolean).join(' ');
+                        liNode.style.textAlign = el.align||'left';
+                        liNode.style.textTransform = el.case==='upper'?'uppercase':el.case==='lower'?'lowercase':el.case==='title'?'capitalize':'none';
+                        if(el.fontSize) liNode.style.fontSize = el.fontSize+'px';
+                        liNode.contentEditable = !el.locked ? "true":"false";
+                        liNode.spellcheck = SETTINGS.spellcheck;
+                        const prefix = el.type==='ol' ? (iIdx+1)+". " : "• ";
+                        liNode.innerHTML = prefix + formatText(itemText);
+                        liNode.onblur = e => { DATA[sIdx].els[eIdx].items[iIdx] = e.target.innerText.replace(/^(\d+\.|•)\s*/, ""); saveState(); };
+                        node.appendChild(liNode);
+                    });
+                }
+                else if (el.type === 'table') {
+                    elBlock.innerHTML = `<div class="el-toolbar">
+                        <input type="color" value="#${el.headerColor||'2563EB'}" onchange="setTableHeaderColor(${sIdx},${eIdx},this.value)" title="Header Color">
+                        <input type="color" value="#${el.borderColor||'334155'}" onchange="setTableBorderColor(${sIdx},${eIdx},this.value)" title="Border Color">
+                        <button class="${el.striped?'active':''}" onclick="toggleTableStriped(${sIdx},${eIdx})" title="Striped Rows"><i class="fas fa-bars"></i></button>
+                        <button onclick="duplicateEl(${sIdx},${eIdx})" title="Duplicate"><i class="fas fa-clone"></i></button>
+                        <button onclick="moveEl(${sIdx}, ${eIdx}, 'up')" title="Move Up"><i class="fas fa-caret-up"></i></button>
+                        <button onclick="moveEl(${sIdx}, ${eIdx}, 'down')" title="Move Down"><i class="fas fa-caret-down"></i></button>
+                        <button onclick="deleteEl(${sIdx}, ${eIdx})" style="color:#ef4444;" title="Delete"><i class="fas fa-times"></i></button>
+                    </div>`;
+                    node = document.createElement("div"); node.className = "preview-table-wrap";
+                    const table = document.createElement("table"); table.className = "preview-table";
+                    el.rows.forEach((row, rIdx) => {
+                        const tr = document.createElement("tr");
+                        if(el.striped && rIdx>0 && rIdx%2===0) tr.classList.add('striped');
+                        row.forEach((cell, cIdx) => {
+                            const td = document.createElement(rIdx === 0 ? "th" : "td");
+                            td.style.borderColor = '#'+(el.borderColor||'334155');
+                            if(rIdx === 0) td.style.background = '#'+(el.headerColor||'2563EB');
+                            if(rIdx!==0) td.style.color = el.color || getDefaultColor('p');
+                            td.contentEditable = "true"; td.innerHTML = formatText(cell);
+                            td.onblur = e => { DATA[sIdx].els[eIdx].rows[rIdx][cIdx] = e.target.innerText; saveState(); }; tr.appendChild(td);
+                        }); table.appendChild(tr);
+                    }); node.appendChild(table);
+                    const tc = document.createElement('div'); tc.className='table-controls';
+                    tc.innerHTML = `<button onclick="addTableRow(${sIdx},${eIdx})">+ Row</button><button onclick="removeTableRow(${sIdx},${eIdx})">- Row</button><button onclick="addTableCol(${sIdx},${eIdx})">+ Col</button><button onclick="removeTableCol(${sIdx},${eIdx})">- Col</button>`;
+                    node.appendChild(tc);
+                }
+                else if (el.type === 'hr') {
+                    elBlock.innerHTML = `<div class="el-toolbar"><input type="color" value="${el.color||'#888888'}" onchange="setHrColor(${sIdx},${eIdx},this.value)" title="Line Color"><button onclick="moveEl(${sIdx},${eIdx},'up')"><i class="fas fa-caret-up"></i></button><button onclick="moveEl(${sIdx},${eIdx},'down')"><i class="fas fa-caret-down"></i></button><button onclick="deleteEl(${sIdx},${eIdx})" style="color:#ef4444;"><i class="fas fa-times"></i></button></div>`;
+                    node = document.createElement('hr'); node.style.border='none'; node.style.borderTop = `2px solid ${el.color||'#888888'}`; node.style.margin='10px 0';
+                }
+                else if (el.type === 'image') {
+                    const widthMap = {small:'25%', medium:'50%', large:'85%'};
+                    elBlock.innerHTML = `<div class="el-toolbar">
+                        <select class="mini-select" onchange="setImageWidth(${sIdx},${eIdx},this.value)" title="Size">
+                            ${['small','medium','large'].map(w=>`<option value="${w}" ${el.width===w?'selected':''}>${w}</option>`).join('')}
+                        </select>
+                        <select class="mini-select" onchange="setImageAlign(${sIdx},${eIdx},this.value)" title="Align">
+                            ${['left','center','right'].map(a=>`<option value="${a}" ${el.align===a?'selected':''}>${a}</option>`).join('')}
+                        </select>
+                        <button onclick="duplicateEl(${sIdx},${eIdx})" title="Duplicate"><i class="fas fa-clone"></i></button>
+                        <button onclick="moveEl(${sIdx}, ${eIdx}, 'up')"><i class="fas fa-caret-up"></i></button>
+                        <button onclick="moveEl(${sIdx}, ${eIdx}, 'down')"><i class="fas fa-caret-down"></i></button>
+                        <button onclick="deleteEl(${sIdx}, ${eIdx})" style="color:#ef4444;"><i class="fas fa-times"></i></button>
+                    </div>`;
+                    node = document.createElement('div'); node.className='p-image-wrap';
+                    node.style.justifyContent = el.align==='center'?'center':el.align==='right'?'flex-end':'flex-start';
+                    const img = document.createElement('img'); img.src = el.src; img.style.width = widthMap[el.width]||'50%';
+                    node.appendChild(img);
+                }
+                else if (el.type === 'shape-rect' || el.type === 'shape-circle') {
+                    elBlock.innerHTML = `<div class="el-toolbar">
+                        <input type="color" value="${el.color}" onchange="setShapeColor(${sIdx},${eIdx},this.value)" title="Color">
+                        <input type="number" class="mini-input" value="${el.w}" onchange="setShapeSize(${sIdx},${eIdx},'w',this.value)" title="Width">
+                        <input type="number" class="mini-input" value="${el.h}" onchange="setShapeSize(${sIdx},${eIdx},'h',this.value)" title="Height">
+                        <select class="mini-select" onchange="setShapeAlign(${sIdx},${eIdx},this.value)">
+                            ${['left','center','right'].map(a=>`<option value="${a}" ${el.align===a?'selected':''}>${a}</option>`).join('')}
+                        </select>
+                        <button onclick="duplicateEl(${sIdx},${eIdx})"><i class="fas fa-clone"></i></button>
+                        <button onclick="moveEl(${sIdx}, ${eIdx}, 'up')"><i class="fas fa-caret-up"></i></button>
+                        <button onclick="moveEl(${sIdx}, ${eIdx}, 'down')"><i class="fas fa-caret-down"></i></button>
+                        <button onclick="deleteEl(${sIdx}, ${eIdx})" style="color:#ef4444;"><i class="fas fa-times"></i></button>
+                    </div>`;
+                    node = document.createElement('div'); node.className='p-shape';
+                    node.style.display='flex'; node.style.justifyContent = el.align==='center'?'center':el.align==='right'?'flex-end':'flex-start';
+                    const shapeDiv = document.createElement('div');
+                    shapeDiv.style.width = el.w+'px'; shapeDiv.style.height = el.h+'px'; shapeDiv.style.background = el.color;
+                    if(el.type==='shape-circle') shapeDiv.style.borderRadius = '50%';
+                    node.appendChild(shapeDiv);
+                }
+
+                if(node) elBlock.appendChild(node);
+                content.appendChild(elBlock);
+            });
+
+            const addBar = document.createElement("div"); addBar.className = "add-element-bar";
+            addBar.innerHTML = `
+                <button class="add-el-btn" onclick="addElement(${sIdx}, 'h1')">+ H1</button>
+                <button class="add-el-btn" onclick="addElement(${sIdx}, 'h2')">+ H2</button>
+                <button class="add-el-btn" onclick="addElement(${sIdx}, 'p')">+ Text</button>
+                <button class="add-el-btn" onclick="addElement(${sIdx}, 'ul')">+ Bullet</button>
+                <button class="add-el-btn" onclick="addElement(${sIdx}, 'ol')">+ Numbered</button>
+                <button class="add-el-btn" onclick="addElement(${sIdx}, 'quote')">+ Quote</button>
+                <button class="add-el-btn" onclick="addElement(${sIdx}, 'link')">+ Link</button>
+                <button class="add-el-btn" onclick="addElement(${sIdx}, 'icon')">+ Emoji/Icon</button>
+                <button class="add-el-btn" onclick="addElement(${sIdx}, 'image')">+ Image</button>
+                <button class="add-el-btn" onclick="addElement(${sIdx}, 'shape-rect')">+ Rectangle</button>
+                <button class="add-el-btn" onclick="addElement(${sIdx}, 'shape-circle')">+ Circle</button>
+                <button class="add-el-btn" onclick="addElement(${sIdx}, 'hr')">+ Divider</button>
+                <button class="add-el-btn" onclick="addElement(${sIdx}, 'mcq-q')">+ MCQ Question</button>
+                <button class="add-el-btn" onclick="addElement(${sIdx}, 'mcq-opt')">+ MCQ Option</button>
+                <button class="add-el-btn" onclick="addElement(${sIdx}, 'mcq-ans')">+ Answer</button>
+                <button class="add-el-btn" onclick="addElement(${sIdx}, 'table')">+ Table</button>
             `;
+            content.appendChild(addBar);
+        } else {
+            const lockMsg = document.createElement('div');
+            lockMsg.style.cssText = 'text-align:center;color:var(--text-muted);padding:20px;';
+            lockMsg.innerHTML = '<i class="fas fa-lock"></i> Slide locked. Click the lock icon in the toolbar to edit.';
+            content.appendChild(lockMsg);
+        }
 
-            // Element Content
-            let node;
-            if (['h1','h2','h3','p','mcq-q','mcq-opt','mcq-ans','mcq-sol'].includes(el.type)) {
-                node = document.createElement("div"); node.className = "p-" + el.type;
-                node.style.color = el.color || getDefaultColor(el.type);
-                node.contentEditable = "true"; node.innerHTML = formatText(el.text);
-                node.onblur = e => { DATA[sIdx][eIdx].text = e.target.innerText; saveState(); }; 
-            } 
-            else if (el.type === 'ul') {
-                node = document.createElement("div");
-                el.items.forEach((itemText, iIdx) => {
-                    const liNode = document.createElement("div"); liNode.className = "p-li"; 
-                    liNode.style.color = el.color || getDefaultColor('p');
-                    liNode.contentEditable = "true"; liNode.innerHTML = "• " + formatText(itemText);
-                    liNode.onblur = e => { DATA[sIdx][eIdx].items[iIdx] = e.target.innerText.replace(/^•\s*/, ""); saveState(); };
-                    node.appendChild(liNode);
-                });
-            }
-            else if (el.type === 'table') {
-                node = document.createElement("div"); node.className = "preview-table-wrap";
-                const table = document.createElement("table"); table.className = "preview-table";
-                el.rows.forEach((row, rIdx) => {
-                    const tr = document.createElement("tr");
-                    row.forEach((cell, cIdx) => {
-                        const td = document.createElement(rIdx === 0 ? "th" : "td");
-                        if(rIdx!==0) td.style.color = el.color || getDefaultColor('p');
-                        td.contentEditable = "true"; td.innerHTML = formatText(cell);
-                        td.onblur = e => { DATA[sIdx][eIdx].rows[rIdx][cIdx] = e.target.innerText; saveState(); }; tr.appendChild(td);
-                    }); table.appendChild(tr);
-                }); node.appendChild(table);
-            }
-
-            if(node) elBlock.appendChild(node);
-            content.appendChild(elBlock);
-        });
-
-        // Add Element Buttons at bottom of slide
-        const addBar = document.createElement("div"); addBar.className = "add-element-bar";
-        addBar.innerHTML = `
-            <button class="add-el-btn" onclick="addElement(${sIdx}, 'h1')">+ H1</button>
-            <button class="add-el-btn" onclick="addElement(${sIdx}, 'p')">+ Text</button>
-            <button class="add-el-btn" onclick="addElement(${sIdx}, 'ul')">+ Bullet</button>
-            <button class="add-el-btn" onclick="addElement(${sIdx}, 'mcq-q')">+ MCQ Question</button>
-            <button class="add-el-btn" onclick="addElement(${sIdx}, 'mcq-opt')">+ MCQ Option</button>
-            <button class="add-el-btn" onclick="addElement(${sIdx}, 'mcq-ans')">+ Answer</button>
-            <button class="add-el-btn" onclick="addElement(${sIdx}, 'table')">+ Table</button>
-        `;
-        content.appendChild(addBar);
+        // HUD overlays (header/footer/watermark/date/slide number) - preview only
+        if(SETTINGS.showHeader && SETTINGS.headerText) { const h=document.createElement('div'); h.className='hud-text'; h.style.top='6px'; h.style.left='50%'; h.style.transform='translateX(-50%)'; h.style.color= isLightMode?'#000':'#fff'; h.innerText=SETTINGS.headerText; div.appendChild(h); }
+        if(SETTINGS.showFooter && SETTINGS.footerText) { const f=document.createElement('div'); f.className='hud-text'; f.style.bottom='6px'; f.style.left='50%'; f.style.transform='translateX(-50%)'; f.style.color= isLightMode?'#000':'#fff'; f.innerText=SETTINGS.footerText; div.appendChild(f); }
+        if(SETTINGS.showSlideNum) { const n=document.createElement('div'); n.className='hud-text'; n.style.bottom='6px'; n.style.right='10px'; n.style.color= isLightMode?'#000':'#fff'; n.innerText=`${sIdx+1}/${total}`; div.appendChild(n); }
+        if(SETTINGS.showDate) { const d=document.createElement('div'); d.className='hud-text'; d.style.bottom='6px'; d.style.left='10px'; d.style.color= isLightMode?'#000':'#fff'; d.innerText=todayStr; div.appendChild(d); }
+        if(SETTINGS.showWatermark && SETTINGS.watermarkText) { const w=document.createElement('div'); w.className='hud-text'; w.style.top='50%'; w.style.left='50%'; w.style.transform='translate(-50%,-50%) rotate(-25deg)'; w.style.fontSize='2.5em'; w.style.opacity='0.15'; w.style.color= isLightMode?'#000':'#fff'; w.innerText=SETTINGS.watermarkText; div.appendChild(w); }
 
         div.appendChild(content); wrap.appendChild(div); box.appendChild(wrap);
+        attachDrag(wrap, sIdx);
     });
+
+    updateCounts();
 }
 
 // ==========================================
-// 7. GENERATE PPTX (Draw to Canvas)
+// GENERATE PPTX
 // ==========================================
+function makeGrayscale(dataUrl){
+    return new Promise((resolve)=>{
+        const img = new Image();
+        img.onload = ()=>{
+            const c = document.createElement('canvas'); c.width=img.width; c.height=img.height;
+            const ctx = c.getContext('2d'); ctx.drawImage(img,0,0);
+            const imgData = ctx.getImageData(0,0,c.width,c.height);
+            for(let i=0;i<imgData.data.length;i+=4){
+                const avg = (imgData.data[i]+imgData.data[i+1]+imgData.data[i+2])/3;
+                imgData.data[i]=avg; imgData.data[i+1]=avg; imgData.data[i+2]=avg;
+            }
+            ctx.putImageData(imgData,0,0);
+            resolve(c.toDataURL('image/jpeg',0.8));
+        };
+        img.src = dataUrl;
+    });
+}
+
 $('generateBtn').onclick = async () => {
     if (DATA.length === 0) return alert("No Data! Please import HTML/JSON or Add slides.");
     const btn = $('generateBtn'); btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Generating PPTX..."; btn.disabled = true;
@@ -528,130 +1191,253 @@ $('generateBtn').onclick = async () => {
         const pxW = 1300, pxH = 710;
         const m = { top:parseInt($('topM').value), bottom:parseInt($('bottomM').value), left:parseInt($('leftM').value), right:parseInt($('rightM').value) };
         const ppt = new PptxGenJS(); ppt.defineLayout({ name:"S", width:pxW/96, height:pxH/96 }); ppt.layout = "S";
+        if(SETTINGS.title) ppt.title = SETTINGS.title;
+        if(SETTINGS.author) ppt.author = SETTINGS.author;
+        if(SETTINGS.subject) ppt.subject = SETTINGS.subject;
 
         let bgUrl = getBgUrl();
-        await document.fonts.load("30px Kalam"); await document.fonts.load("bold 30px Kalam"); 
-        await document.fonts.load("bold 34px Kalam"); await document.fonts.load("bold 44px Kalam");
+        if(bgUrl && SETTINGS.bgGrayscale) { bgUrl = await makeGrayscale(bgUrl); }
+
+        const fam = SETTINGS.fontFamily || 'Kalam';
+        if(fam === 'Kalam'){
+            await document.fonts.load("30px Kalam"); await document.fonts.load("bold 30px Kalam");
+            await document.fonts.load("bold 34px Kalam"); await document.fonts.load("bold 44px Kalam");
+            await document.fonts.load("italic 30px Kalam"); await document.fonts.load("italic bold 30px Kalam");
+        }
         const bHex = $('boldColor').value;
+        const total = DATA.length;
+        const todayStr = new Date().toLocaleDateString();
+        const supportsLS = 'letterSpacing' in CanvasRenderingContext2D.prototype;
 
-        for (const slideElements of DATA) {
+        let slideCounter = 0;
+        for (const slide of DATA) {
+            slideCounter++;
             let s = ppt.addSlide();
-            if (bgUrl) s.background = { data: bgUrl }; else s.background = { color: isLightMode ? "FFFFFF" : "000000" };
+            const slideBgUrl = slide.bgColor ? null : bgUrl;
+            if(slide.bgColor) s.background = { color: slide.bgColor.replace('#','') };
+            else if (slideBgUrl) s.background = { data: slideBgUrl };
+            else s.background = { color: isLightMode ? "FFFFFF" : "000000" };
+            if(slide.notes) s.addNotes(slide.notes);
 
-            let c = document.createElement("canvas"); c.width = pxW; c.height = pxH; 
-            let ctx = c.getContext("2d"); ctx.textBaseline = "top"; 
-            
+            let c = document.createElement("canvas"); c.width = pxW; c.height = pxH;
+            let ctx = c.getContext("2d"); ctx.textBaseline = "top";
+            if(supportsLS) ctx.letterSpacing = SETTINGS.letterSpacing + 'px';
+
+            // bake overlay for readability when there is a background image (and no solid slide color override)
+            if(slideBgUrl){
+                ctx.fillStyle = isLightMode ? `rgba(255,255,255,${SETTINGS.overlayOpacity})` : `rgba(0,0,0,${SETTINGS.overlayOpacity})`;
+                ctx.fillRect(0,0,pxW,pxH);
+            }
+
             let y = m.top; const maxW = pxW - m.left - m.right;
             const bottomLimit = pxH - m.bottom;
 
-            const triggerPagination = () => {
-                s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
-                s = ppt.addSlide();
-                if (bgUrl) s.background = { data: bgUrl }; else s.background = { color: isLightMode ? "FFFFFF" : "000000" };
-                c = document.createElement("canvas"); c.width = pxW; c.height = pxH;
-                ctx = c.getContext("2d"); ctx.textBaseline = "top"; y = m.top;
+            const drawHud = (targetCtx) => {
+                targetCtx.save();
+                targetCtx.fillStyle = isLightMode ? '#000000' : '#ffffff';
+                targetCtx.font = `20px ${fam}`;
+                if(SETTINGS.showHeader && SETTINGS.headerText){ targetCtx.textAlign='center'; targetCtx.fillText(SETTINGS.headerText, pxW/2, 15); }
+                if(SETTINGS.showFooter && SETTINGS.footerText){ targetCtx.textAlign='center'; targetCtx.fillText(SETTINGS.footerText, pxW/2, pxH-35); }
+                if(SETTINGS.showSlideNum){ targetCtx.textAlign='right'; targetCtx.fillText(`${slideCounter}/${total}`, pxW-15, pxH-35); }
+                if(SETTINGS.showDate){ targetCtx.textAlign='left'; targetCtx.fillText(todayStr, 15, pxH-35); }
+                if(SETTINGS.showWatermark && SETTINGS.watermarkText){
+                    targetCtx.globalAlpha = 0.15; targetCtx.font = `bold 60px ${fam}`; targetCtx.textAlign='center';
+                    targetCtx.translate(pxW/2, pxH/2); targetCtx.rotate(-Math.PI/8);
+                    targetCtx.fillText(SETTINGS.watermarkText, 0, 0);
+                }
+                targetCtx.restore();
+                targetCtx.textAlign = 'left';
             };
 
-            const drawSmartText = (text, normalFont, boldFont, normalCol, lineH, leftIndent = 0) => {
+            const triggerPagination = () => {
+                drawHud(ctx);
+                s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
+                s = ppt.addSlide();
+                if(slide.bgColor) s.background = { color: slide.bgColor.replace('#','') };
+                else if (slideBgUrl) s.background = { data: slideBgUrl };
+                else s.background = { color: isLightMode ? "FFFFFF" : "000000" };
+                c = document.createElement("canvas"); c.width = pxW; c.height = pxH;
+                ctx = c.getContext("2d"); ctx.textBaseline = "top";
+                if(supportsLS) ctx.letterSpacing = SETTINGS.letterSpacing + 'px';
+                if(slideBgUrl){ ctx.fillStyle = isLightMode ? `rgba(255,255,255,${SETTINGS.overlayOpacity})` : `rgba(0,0,0,${SETTINGS.overlayOpacity})`; ctx.fillRect(0,0,pxW,pxH); }
+                y = m.top;
+            };
+
+            const drawSmartText = (text, size, isBoldDefault, normalCol, lineH, opts = {}) => {
                 if(!text) return;
+                const { leftIndent = 0, align='left', italic=false, underline=false, strike=false, highlight=null, caseMode='none' } = opts;
+                const styleStr = italic ? 'italic ' : '';
+                const normalFont = `${styleStr}${size}px ${fam}`;
+                const boldFont = `${styleStr}bold ${size}px ${fam}`;
                 const paras = text.split("\n");
                 paras.forEach(para => {
                     if(!para.trim()) { y += lineH/2; return; }
                     let parts = para.split(/(<b>.*?<\/b>)/g); let words = [];
                     parts.forEach(part => {
-                        if(part.startsWith('<b>') && part.endsWith('</b>')) part.slice(3, -4).split(' ').forEach(w => { if(w) words.push({t: w, b: true}); });
-                        else part.split(' ').forEach(w => { if(w) words.push({t: w, b: false}); });
+                        if(part.startsWith('<b>') && part.endsWith('</b>')) part.slice(3, -4).split(' ').forEach(w => { if(w) words.push({t: transformCase(w,caseMode), b: true}); });
+                        else part.split(' ').forEach(w => { if(w) words.push({t: transformCase(w,caseMode), b: isBoldDefault}); });
                     });
-                    
-                    let currentX = m.left + leftIndent; let endX = pxW - m.right;
-                    if (y + lineH > bottomLimit && y > m.top) triggerPagination();
 
-                    for(let i=0; i<words.length; i++) {
-                        let w = words[i]; ctx.font = w.b ? boldFont : normalFont; ctx.fillStyle = w.b ? bHex : normalCol;
-                        let metric = ctx.measureText(w.t + " ");
-                        
-                        if (currentX + metric.width > endX && currentX !== m.left + leftIndent) { 
-                            y += lineH; currentX = m.left + leftIndent; 
-                            if (y + lineH > bottomLimit && y > m.top) triggerPagination();
-                        }
-                        ctx.fillText(w.t + " ", currentX, y); currentX += metric.width;
-                    }
-                    y += lineH;
+                    ctx.font = normalFont;
+                    const spaceW = ctx.measureText(' ').width;
+                    let lines = []; let cur = []; let curW = 0;
+                    words.forEach(w=>{
+                        ctx.font = w.b? boldFont : normalFont;
+                        let ww = ctx.measureText(w.t).width;
+                        if(curW + ww > (maxW-leftIndent) && cur.length>0){ lines.push({words:cur, width:curW-spaceW}); cur=[]; curW=0; }
+                        cur.push(w); curW += ww + spaceW;
+                    });
+                    if(cur.length) lines.push({words:cur, width:curW-spaceW});
+
+                    lines.forEach(line=>{
+                        if (y + lineH > bottomLimit && y > m.top) triggerPagination();
+                        let startX = m.left+leftIndent;
+                        if(align==='center') startX = m.left+leftIndent + Math.max(0,(maxW-leftIndent-line.width)/2);
+                        else if(align==='right') startX = m.left+leftIndent + Math.max(0,(maxW-leftIndent-line.width));
+                        if(highlight){ ctx.fillStyle = highlight; ctx.fillRect(startX-4, y-2, line.width+8, lineH-4); }
+                        let cx = startX;
+                        line.words.forEach(w=>{
+                            ctx.font = w.b? boldFont: normalFont; ctx.fillStyle = w.b? bHex : normalCol;
+                            ctx.fillText(w.t, cx, y);
+                            let ww = ctx.measureText(w.t).width;
+                            if(underline){ ctx.strokeStyle=normalCol; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(cx, y+lineH*0.8); ctx.lineTo(cx+ww, y+lineH*0.8); ctx.stroke(); }
+                            if(strike){ ctx.strokeStyle=normalCol; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(cx, y+lineH*0.5); ctx.lineTo(cx+ww, y+lineH*0.5); ctx.stroke(); }
+                            cx += ww + spaceW;
+                        });
+                        y += lineH;
+                    });
                 });
             };
 
-            slideElements.forEach((el) => {
+            for (const el of slide.els) {
                 let col = el.color || getDefaultColor(el.type);
+                const baseSize = el.fontSize || DEFAULT_SIZE[el.type] || 30;
+                const baseLineH = (DEFAULT_LINEH[el.type] || 42) * (SETTINGS.lineHeightMult||1);
+                const commonOpts = { align: el.align||'left', italic: !!el.italic, underline: !!el.underline, strike: !!el.strike, highlight: el.highlight||null, caseMode: el.case||'none' };
+
                 if ((el.type === 'h1' || el.type === 'h2') && y > m.top) triggerPagination();
 
-                if(el.type === 'h1'){ drawSmartText(el.text, "bold 44px Kalam", "bold 44px Kalam", col, 56); y+=10; }
-                else if(el.type === 'h2'){ drawSmartText(el.text, "bold 34px Kalam", "bold 34px Kalam", col, 46); y+=10; }
-                else if(el.type === 'h3'){ 
-                    if (y + 50 > bottomLimit && y > m.top) triggerPagination();
-                    drawSmartText(el.text, "bold 28px Kalam", "bold 28px Kalam", col, 38); y+=5; 
+                if(el.type==='h1'){ drawSmartText(el.text, baseSize, true, col, baseLineH, commonOpts); y+=10; }
+                else if(el.type==='h2'){ drawSmartText(el.text, baseSize, true, col, baseLineH, commonOpts); y+=10; }
+                else if(el.type==='h3'){ if (y + 50 > bottomLimit && y > m.top) triggerPagination(); drawSmartText(el.text, baseSize, true, col, baseLineH, commonOpts); y+=5; }
+                else if(el.type==='p'){ drawSmartText(el.text, baseSize, !!el.bold, col, baseLineH, commonOpts); y+=8; }
+                else if(el.type==='quote'){ drawSmartText(el.text, baseSize, !!el.bold, col, baseLineH, {...commonOpts, italic:true, leftIndent:15}); y+=8; }
+                else if(el.type==='link'){ drawSmartText(el.text, baseSize, !!el.bold, col, baseLineH, {...commonOpts, underline:true}); y+=8; }
+                else if(el.type==='icon'){ drawSmartText(el.text, el.fontSize||60, false, col, (el.fontSize||60)+14, {...commonOpts, align: el.align||'center'}); y+=8; }
+                else if(el.type==='ul'){ el.items.forEach(li => { drawSmartText("• " + li, baseSize, !!el.bold, col, baseLineH, {...commonOpts, leftIndent:20}); y+=5; }); y+=5; }
+                else if(el.type==='ol'){ el.items.forEach((li,i) => { drawSmartText((i+1)+". " + li, baseSize, !!el.bold, col, baseLineH, {...commonOpts, leftIndent:20}); y+=5; }); y+=5; }
+                else if(el.type==='mcq-q'){ drawSmartText(el.text, baseSize, true, col, baseLineH, commonOpts); y+=20; }
+                else if(el.type==='mcq-opt'){ drawSmartText(el.text, baseSize, !!el.bold, col, baseLineH, {...commonOpts, leftIndent:30}); y+=10; }
+                else if(el.type==='mcq-ans'){ drawSmartText(el.text, baseSize, true, "#10b981", baseLineH, commonOpts); y+=10; }
+                else if(el.type==='mcq-sol'){ drawSmartText(el.text, baseSize, !!el.bold, col, baseLineH, {...commonOpts, italic:true}); y+=10; }
+                else if(el.type==='hr'){
+                    if (y + 20 > bottomLimit && y > m.top) triggerPagination();
+                    ctx.strokeStyle = el.color||'#888888'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(m.left, y+10); ctx.lineTo(pxW-m.right, y+10); ctx.stroke(); y += 25;
                 }
-                else if(el.type === 'p'){ drawSmartText(el.text, "30px Kalam", "bold 30px Kalam", col, 42); y+=8; }
-                else if(el.type === 'ul'){ 
-                    el.items.forEach(li => { drawSmartText("• " + li, "30px Kalam", "bold 30px Kalam", col, 42, 20); y+=5; }); y+=5; 
+                else if(el.type==='shape-rect' || el.type==='shape-circle'){
+                    let h = el.h||100;
+                    if (y + h + 10 > bottomLimit && y > m.top) triggerPagination();
+                    let sx = m.left; const w = el.w||200;
+                    if(el.align==='center') sx = m.left + (maxW-w)/2; else if(el.align==='right') sx = m.left + (maxW-w);
+                    ctx.fillStyle = el.color;
+                    if(el.type==='shape-circle'){ ctx.beginPath(); ctx.ellipse(sx+w/2, y+h/2, w/2, h/2, 0, 0, Math.PI*2); ctx.fill(); }
+                    else ctx.fillRect(sx, y, w, h);
+                    y += h + 15;
                 }
-                else if(el.type === 'mcq-q'){ drawSmartText(el.text, "bold 40px Kalam", "bold 40px Kalam", col, 52); y+=20; }
-                else if(el.type === 'mcq-opt'){ drawSmartText(el.text, "34px Kalam", "bold 34px Kalam", col, 46, 30); y+=10; }
-                else if(el.type === 'mcq-ans'){ drawSmartText(el.text, "bold 36px Kalam", "bold 36px Kalam", "#10b981", 48); y+=10; }
-                else if(el.type === 'mcq-sol'){ drawSmartText(el.text, "30px Kalam", "bold 30px Kalam", col, 42); y+=10; }
-                else if(el.type === 'table'){
+                else if(el.type==='image' && el.src){
+                    const widthPct = {small:0.25, medium:0.5, large:0.85}[el.width]||0.5;
+                    const imgEl = await new Promise(res=>{ const im=new Image(); im.onload=()=>res(im); im.src=el.src; });
+                    const dw = maxW*widthPct; const dh = dw*(imgEl.height/imgEl.width);
+                    if (y + dh > bottomLimit && y > m.top) triggerPagination();
+                    let sx = m.left;
+                    if(el.align==='center') sx = m.left + (maxW-dw)/2; else if(el.align==='right') sx = m.left+(maxW-dw);
+                    ctx.drawImage(imgEl, sx, y, dw, dh);
+                    y += dh + 15;
+                }
+                else if(el.type==='table'){
                     let estH = (el.rows.length * 55) + 30;
                     if (y + estH > bottomLimit && y > m.top) triggerPagination();
                     let pptRows = el.rows.map((rowArr, rIdx) => {
                         return rowArr.map(cellHtml => {
                             let isHead = (rIdx === 0);
                             return {
-                                text: cellHtml.replace(/<b>|<\/b>/g, ''), 
-                                options: { 
-                                    color: isHead ? 'FFFFFF' : (el.color ? el.color.replace('#','') : (isLightMode ? '000000' : 'FFFFFF')), 
+                                text: cellHtml.replace(/<b>|<\/b>/g, ''),
+                                options: {
+                                    color: isHead ? 'FFFFFF' : (el.color ? el.color.replace('#','') : (isLightMode ? '000000' : 'FFFFFF')),
                                     bold: isHead || cellHtml.includes('<b>'),
-                                    fontFace: 'Kalam', fontSize: 22, 
-                                    fill: isHead ? '2563EB' : (isLightMode ? 'F8FAFC' : '1A2234'), 
-                                    align: 'center', valign: 'middle', margin: [8, 8, 8, 8] 
+                                    fontFace: fam, fontSize: 22,
+                                    fill: isHead ? (el.headerColor||'2563EB') : (el.striped && rIdx%2===0 ? (isLightMode?'EEF2F7':'26324A') : (isLightMode ? 'F8FAFC' : '1A2234')),
+                                    align: 'center', valign: 'middle', margin: [8, 8, 8, 8]
                                 }
                             };
                         });
                     });
-                    s.addTable(pptRows, { x: m.left/96, y: y/96, w: maxW/96, border: { pt: 1, color: isLightMode ? 'CBD5E1' : '334155' } });
-                    y += estH + 20; 
+                    s.addTable(pptRows, { x: m.left/96, y: y/96, w: maxW/96, border: { pt: 1, color: el.borderColor || (isLightMode ? 'CBD5E1' : '334155') } });
+                    y += estH + 20;
                 }
-            });
+            }
 
+            drawHud(ctx);
             s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
         }
-        
-        ppt.writeFile({ fileName: "Ultimate_Notes_PPT.pptx" }).then(() => { 
-            btn.innerHTML = "✅ Download Successful!"; 
-            setTimeout(()=>btn.innerHTML="<i class='fas fa-download'></i> Generate PPTX File", 3000); 
-            btn.disabled = false; 
+
+        ppt.writeFile({ fileName: (SETTINGS.title ? SETTINGS.title.replace(/[^a-z0-9]/gi,'_') : "Ultimate_Notes_PPT") + ".pptx" }).then(() => {
+            btn.innerHTML = "✅ Download Successful!";
+            setTimeout(()=>btn.innerHTML="<i class='fas fa-download'></i> Generate PPTX File", 3000);
+            btn.disabled = false;
         });
     }, 100);
 };
 
 // ==========================================
-// 8. STORAGE (Save State to LocalStorage)
+// STORAGE
 // ==========================================
+function flashSaved(){ $('autosaveIndicator').innerText = 'Saved at ' + new Date().toLocaleTimeString(); }
 function saveState() {
-    const s = { data: DATA, margins: { t: $('topM').value, b: $('bottomM').value, l: $('leftM').value, r: $('rightM').value }, theme: isLightMode, bg: $('bgSelect').value, customBg: customBgDataUrl, split: $('splitAnswerToggle').checked, colors: {h1:$('defH1').value, h2:$('defH2').value, p:$('defP').value, mq:$('defMQ').value, mo:$('defMO').value} };
-    localStorage.setItem('pptProState_V1', JSON.stringify(s));
+    const st = {
+        data: DATA,
+        margins: { t: $('topM').value, b: $('bottomM').value, l: $('leftM').value, r: $('rightM').value },
+        theme: isLightMode, bg: $('bgSelect').value, customBg: customBgDataUrl,
+        split: $('splitAnswerToggle').checked,
+        colors: {h1:$('defH1').value, h2:$('defH2').value, p:$('defP').value, mq:$('defMQ').value, mo:$('defMO').value},
+        boldColor: $('boldColor').value,
+        settings: SETTINGS
+    };
+    try{ localStorage.setItem('pptProState_V2', JSON.stringify(st)); flashSaved(); }catch(e){ $('autosaveIndicator').innerText = 'Save failed (storage full?)'; }
 }
 
 function loadState() {
-    const saved = localStorage.getItem('pptProState_V1');
+    const saved = localStorage.getItem('pptProState_V2');
     if(saved) {
-        const s = JSON.parse(saved); DATA = s.data || [];
-        $('topM').value = s.margins.t; $('bottomM').value = s.margins.b; $('leftM').value = s.margins.l; $('rightM').value = s.margins.r;
-        $('splitAnswerToggle').checked = s.split;
-        if(s.colors) { $('defH1').value=s.colors.h1; $('defH2').value=s.colors.h2; $('defP').value=s.colors.p; $('defMQ').value=s.colors.mq; $('defMO').value=s.colors.mo; }
-        $('bgSelect').value = s.bg; customBgDataUrl = s.customBg || null;
-        if(s.bg === 'custom') $('bgImgUpload').style.display = 'block';
-        isLightMode = s.theme || false;
-        if(isLightMode) { document.body.classList.add('light-mode'); $('themeToggle').innerHTML = '<i class="fas fa-sun"></i> Light'; }
+        try{
+            const s = JSON.parse(saved);
+            DATA = (s.data||[]).map(sl => sl.els ? sl : newSlide(Array.isArray(sl)?sl:[])); // migrate old format
+            $('topM').value = s.margins.t; $('bottomM').value = s.margins.b; $('leftM').value = s.margins.l; $('rightM').value = s.margins.r;
+            $('splitAnswerToggle').checked = s.split;
+            if(s.colors) { $('defH1').value=s.colors.h1; $('defH2').value=s.colors.h2; $('defP').value=s.colors.p; $('defMQ').value=s.colors.mq; $('defMO').value=s.colors.mo; }
+            if(s.boldColor) $('boldColor').value = s.boldColor;
+            $('bgSelect').value = s.bg||'none'; customBgDataUrl = s.customBg || null;
+            if(s.bg === 'custom') $('bgImgUpload').style.display = 'block';
+            isLightMode = s.theme || false;
+            if(isLightMode) { document.body.classList.add('light-mode'); $('themeToggle').innerHTML = '<i class="fas fa-sun"></i> Light'; }
+            if(s.settings) Object.assign(SETTINGS, s.settings);
+        }catch(e){ console.warn('Load failed', e); }
     }
+    // sync UI with SETTINGS
+    $('metaTitle').value = SETTINGS.title||''; $('metaAuthor').value = SETTINGS.author||''; $('metaSubject').value = SETTINGS.subject||'';
+    $('fontFamilySel').value = SETTINGS.fontFamily||'Kalam'; document.documentElement.style.setProperty('--live-font', SETTINGS.fontFamily||'Kalam');
+    $('headerToggle').checked = !!SETTINGS.showHeader; $('headerText').value = SETTINGS.headerText||'';
+    $('footerToggle').checked = !!SETTINGS.showFooter; $('footerText').value = SETTINGS.footerText||'';
+    $('slideNumToggle').checked = !!SETTINGS.showSlideNum; $('dateToggle').checked = !!SETTINGS.showDate;
+    $('watermarkToggle').checked = !!SETTINGS.showWatermark; $('watermarkText').value = SETTINGS.watermarkText||'';
+    $('rtlToggle').checked = !!SETTINGS.rtl; $('spellcheckToggle').checked = !!SETTINGS.spellcheck;
+    $('lineHeightMult').value = SETTINGS.lineHeightMult||1; $('lhVal').innerText = SETTINGS.lineHeightMult||1;
+    $('letterSpacingGlobal').value = SETTINGS.letterSpacing||0;
+    $('overlayOpacity').value = SETTINGS.overlayOpacity!=null?SETTINGS.overlayOpacity:0.5;
+    $('bgGrayscaleToggle').checked = !!SETTINGS.bgGrayscale;
+    $('zoomRange').value = SETTINGS.zoom||100; $('zoomVal').innerText = SETTINGS.zoom||100; $('preview').style.zoom = (SETTINGS.zoom||100)/100;
+    $('preview').style.direction = SETTINGS.rtl ? 'rtl':'ltr';
+    buildThemePresets();
     renderPreview();
 }
 
