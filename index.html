@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Ultimate PPT Maker Pro MAX - 60+ Features</title>
-<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Noto+Sans+Devanagari:wght@400;500;700;900&family=Noto+Serif+Devanagari:wght@400;700&family=Hind:wght@400;600;700&family=Mukta:wght@400;600;700&family=Baloo+2:wght@400;600;700&family=Tiro+Devanagari+Hindi:ital@0;1&family=Laila:wght@400;600;700&family=Poppins:wght@400;600;700&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
@@ -110,14 +110,16 @@ details.section .inner{ padding: 5px 12px 12px 12px; }
 .p-link{ font-size:1.2em; text-decoration: underline; cursor:pointer; white-space: pre-wrap; }
 .p-icon{ font-size: 3em; text-align:center; white-space: pre-wrap; }
 
-.p-mcq-q { font-size: 1.8em; font-weight: bold; margin-bottom: 20px; line-height: 1.4; white-space: pre-wrap; }
-.p-mcq-opt { font-size: 1.4em; margin-bottom: 12px; line-height: 1.4; white-space: pre-wrap; padding-left: 20px; }
-.p-mcq-ans { font-size: 1.5em; font-weight: bold; margin-top: 15px; color: #10b981; }
-.p-mcq-sol { font-size: 1.3em; margin-top: 5px; font-style: italic; }
+.p-mcq-q { font-size: 1.8em; font-weight: bold; margin: 0 0 10px 0; line-height: 1.3; white-space: pre-wrap; }
+.p-mcq-opt { font-size: 1.4em; margin: 0 0 6px 0; line-height: 1.3; white-space: pre-wrap; padding-left: 20px; }
+.p-mcq-ans { font-size: 1.5em; font-weight: bold; margin-top: 10px; margin-bottom: 0; color: #10b981; }
+.p-mcq-sol { font-size: 1.3em; margin-top: 4px; margin-bottom: 0; font-style: italic; }
 
 .preview-table-wrap { width: 100%; margin: 10px 0; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
-.preview-table { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.4); font-size: 1.05em; }
-.preview-table th, .preview-table td { padding: 9px 11px; text-align: left; border: 1px solid rgba(150,150,150,0.4); }
+.preview-table { width: 100%; border-collapse: collapse; table-layout: fixed; background: rgba(0,0,0,0.4); font-size: 1.05em; line-height: 1.25; }
+.preview-table th, .preview-table td { padding: 9px 11px; text-align: left; vertical-align: middle; border: 1px solid rgba(150,150,150,0.4); line-height: 1.25; word-break: break-word; }
+.preview-table th *, .preview-table td * { margin: 0; padding: 0; line-height: inherit; }
+.preview-table.compact th, .preview-table.compact td { padding: 4px 8px; font-size: 0.92em; line-height: 1.15; }
 .preview-table th { background: #2563eb; color: #fff; font-weight: bold; }
 .preview-table tr.striped{ background: rgba(255,255,255,0.05); }
 body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
@@ -139,6 +141,15 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
 .modal-close{ float:right; background:var(--btn-red); color:#fff; border:none; border-radius:5px; padding:4px 10px; cursor:pointer; }
 .theme-swatch{ width:32px; height:32px; border-radius:50%; cursor:pointer; border:2px solid var(--border); display:inline-block; }
 .autosave-indicator{ font-size:0.75em; color:var(--text-muted); text-align:right; margin-top:4px; }
+.overflow-badge{ font-size:0.85em; }
+@media print {
+  .left-panel, .slide-toolbar, .slide-meta-row, .add-slide-separator, .el-toolbar, .add-element-bar, .table-controls, .autosave-indicator, .stats-bar, #modalRoot { display:none !important; }
+  .right-panel{ box-shadow:none; border:none; padding:0; height:auto; overflow:visible; }
+  .main-wrapper{ height:auto; display:block; }
+  .slide-wrapper{ page-break-after: always; }
+  .slide-card{ border:none !important; box-shadow:none !important; border-radius:0 !important; width:100%; }
+  body{ padding:0; background:#fff; }
+}
 </style>
 </head>
 <body>
@@ -238,12 +249,30 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
             <div class="inner">
                 <label>Global Font Family (used in export too)</label>
                 <select id="fontFamilySel">
-                    <option value="Kalam">Kalam (Handwritten)</option>
-                    <option value="Arial">Arial (Sans)</option>
-                    <option value="Georgia">Georgia (Serif)</option>
-                    <option value="Courier New">Courier New (Mono)</option>
-                    <option value="Times New Roman">Times New Roman (Classic)</option>
+                    <optgroup label="हिंदी / देवनागरी">
+                        <option value="Kalam">Kalam (हस्तलिखित)</option>
+                        <option value="Noto Sans Devanagari">Noto Sans Devanagari (साफ़)</option>
+                        <option value="Noto Serif Devanagari">Noto Serif Devanagari (क्लासिक)</option>
+                        <option value="Hind">Hind (सिंपल)</option>
+                        <option value="Mukta">Mukta (मॉडर्न)</option>
+                        <option value="Baloo 2">Baloo 2 (मोटा/राउंड)</option>
+                        <option value="Tiro Devanagari Hindi">Tiro Devanagari Hindi</option>
+                        <option value="Laila">Laila</option>
+                        <option value="Rozha One">Rozha One (हेडिंग स्टाइल)</option>
+                        <option value="Yatra One">Yatra One (डेकोरेटिव)</option>
+                    </optgroup>
+                    <optgroup label="English / Latin">
+                        <option value="Poppins">Poppins (Modern Sans)</option>
+                        <option value="Arial">Arial (Sans)</option>
+                        <option value="Georgia">Georgia (Serif)</option>
+                        <option value="Courier New">Courier New (Mono)</option>
+                        <option value="Times New Roman">Times New Roman (Classic)</option>
+                    </optgroup>
                 </select>
+                <div style="font-size:0.75em;color:var(--text-muted);margin-top:4px;line-height:1.5;">
+                    ⓘ ये सभी Unicode फॉन्ट हैं — टाइप करने का तरीका नहीं बदलता, बस दिखावट/स्टाइल बदलती है। पुराने ASCII फॉन्ट (जैसे <b>Kruti Dev / DevLys</b>, जिनमें अलग की-बोर्ड मैपिंग से टाइप करना पड़ता है) यहाँ काम नहीं करेंगे — Unicode न होने के कारण PPTX में सही नहीं दिखेंगे। हमेशा सीधे यूनिकोड हिंदी में टाइप करें, फॉन्ट सिर्फ स्टाइल बदलेगा।
+                </div>
+                <label class="toggle-switch"><input type="checkbox" id="tableCompactToggle"><span><i class="fas fa-table"></i> Compact Table Rows (kam line-gap)</span></label>
                 <label>Default Line Height x<span id="lhVal">1</span></label>
                 <input type="range" id="lineHeightMult" min="0.8" max="1.6" step="0.1" value="1">
                 <label>Default Letter Spacing (px)</label>
@@ -302,6 +331,14 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
             <button id="resetAllBtn" class="btn btn-red" style="font-size:0.8em;"><i class="fas fa-power-off"></i> Reset All</button>
         </div>
 
+        <button id="autoSplitBtn" class="btn btn-orange" style="margin-top:10px;"><i class="fas fa-arrows-split-up-and-left"></i> Auto-Split Overflowing Slides</button>
+        <div style="font-size:0.7em;color:var(--text-muted);margin-top:4px;">जब किसी slide में डेटा ज़्यादा हो (⚠ badge दिखे) तो यह बटन दबाएँ — अतिरिक्त content अपने-आप अगली slide में चला जाएगा।</div>
+
+        <div class="grid-2" style="margin-top:10px;">
+            <button id="presentModeBtn" class="btn btn-purple" style="font-size:0.85em;"><i class="fas fa-play"></i> Present Mode</button>
+            <button id="printPdfBtn" class="btn btn-blue" style="font-size:0.85em;"><i class="fas fa-print"></i> Print / Save PDF</button>
+        </div>
+
         <button id="generateBtn" class="btn btn-generate"><i class="fas fa-download"></i> Generate PPTX File</button>
         <div class="autosave-indicator" id="autosaveIndicator">Not saved yet</div>
     </div>
@@ -351,8 +388,13 @@ const SETTINGS = {
     watermarkText:'', showWatermark:false,
     rtl:false, spellcheck:false,
     lineHeightMult:1, letterSpacing:0,
-    overlayOpacity:0.5, bgGrayscale:false, zoom:100
+    overlayOpacity:0.5, bgGrayscale:false, zoom:100,
+    tableCompact:false
 };
+
+// Fonts that are loaded via Google Fonts <link> in <head> and must be
+// preloaded into document.fonts before canvas/pptx export uses them.
+const WEB_FONTS = ['Kalam','Noto Sans Devanagari','Noto Serif Devanagari','Hind','Mukta','Baloo 2','Tiro Devanagari Hindi','Laila','Poppins','Rozha One','Yatra One'];
 
 const FEATURES = [
 "Undo (Ctrl+Z)","Redo (Ctrl+Y)","Presentation Title metadata","Author metadata","Subject metadata",
@@ -374,7 +416,17 @@ const FEATURES = [
 "Insert Divider (HR) element","Insert Quote block element","Insert Numbered List element",
 "Insert Hyperlink (visual) element","Insert Emoji/Icon element","Table: add/remove row","Table: add/remove column",
 "Table header color customization","Table border color customization","Table striped rows toggle",
-"Dark / Light theme toggle","Custom background image upload"
+"Dark / Light theme toggle","Custom background image upload",
+// New in this update:
+"10 real Unicode Devanagari + Latin font choices (Noto Sans/Serif Devanagari, Hind, Mukta, Baloo 2, Tiro Devanagari, Laila, Rozha One, Yatra One, Poppins, Kalam)",
+"Compact Table Rows toggle (tighter line-height, less gap in tables)",
+"Tightened MCQ Question↔Option spacing so options sit close to the question",
+"Overflow warning badge (⚠) shown on any slide whose content is taller than the box",
+"One-click Auto-Split Overflowing Slides — moves extra content onto new slides automatically",
+"Auto-split runs automatically right after HTML/JSON import, so big pasted notes/tables no longer get stuck on one slide",
+"Long tables are auto-split row-wise across multiple slides with the header row repeated",
+"Present Mode — full-screen slide viewer with Next/Prev buttons and arrow-key/space navigation",
+"Print / Save as PDF button using a dedicated print stylesheet (one slide per page)"
 ];
 
 function uid(){ return 'id_'+(Date.now().toString(36))+(Math.random().toString(36).slice(2,6)); }
@@ -437,6 +489,7 @@ $('overlayOpacity').oninput = e => { SETTINGS.overlayOpacity = parseFloat(e.targ
 // TYPOGRAPHY / VIEW SETTINGS
 // ==========================================
 $('fontFamilySel').onchange = e => { SETTINGS.fontFamily = e.target.value; document.documentElement.style.setProperty('--live-font', e.target.value); renderPreview(); saveState(); };
+$('tableCompactToggle').onchange = e => { SETTINGS.tableCompact = e.target.checked; renderPreview(); saveState(); };
 $('lineHeightMult').oninput = e => { SETTINGS.lineHeightMult = parseFloat(e.target.value); $('lhVal').innerText = e.target.value; saveState(); };
 $('letterSpacingGlobal').oninput = e => { SETTINGS.letterSpacing = parseFloat(e.target.value); saveState(); };
 $('rtlToggle').onchange = e => { SETTINGS.rtl = e.target.checked; $('preview').style.direction = SETTINGS.rtl?'rtl':'ltr'; saveState(); };
@@ -595,7 +648,7 @@ $('importHtmlBtn').onclick = () => {
     if (newSlides.length === 0) return alert("No valid HTML tags found!");
 
     DATA = DATA.concat(newSlides);
-    renderPreview(); saveState(); $('dataArea').value = "";
+    renderPreview(); autoPaginate(true); saveState(); $('dataArea').value = "";
 };
 
 // ==========================================
@@ -637,7 +690,7 @@ $('importJsonBtn').onclick = () => {
         });
 
         DATA = DATA.concat(newSlides);
-        renderPreview(); saveState(); $('dataArea').value = "";
+        renderPreview(); autoPaginate(true); saveState(); $('dataArea').value = "";
     } catch (e) { alert("Invalid JSON! Error: " + e.message); }
 };
 
@@ -695,7 +748,7 @@ $('shortcutsBtn').onclick = () => {
 };
 $('resetAllBtn').onclick = () => {
     if(!confirm('Sab settings reset kare? Slides safe rahengi.')) return;
-    Object.assign(SETTINGS, {title:'',author:'',subject:'',fontFamily:'Kalam',headerText:'',footerText:'',showHeader:false,showFooter:false,showSlideNum:false,showDate:false,watermarkText:'',showWatermark:false,rtl:false,spellcheck:false,lineHeightMult:1,letterSpacing:0,overlayOpacity:0.5,bgGrayscale:false,zoom:100});
+    Object.assign(SETTINGS, {title:'',author:'',subject:'',fontFamily:'Kalam',headerText:'',footerText:'',showHeader:false,showFooter:false,showSlideNum:false,showDate:false,watermarkText:'',showWatermark:false,rtl:false,spellcheck:false,lineHeightMult:1,letterSpacing:0,overlayOpacity:0.5,bgGrayscale:false,zoom:100,tableCompact:false});
     $('metaTitle').value=''; $('metaAuthor').value=''; $('metaSubject').value='';
     $('fontFamilySel').value='Kalam'; $('headerText').value=''; $('footerText').value=''; $('watermarkText').value='';
     $('headerToggle').checked=false; $('footerToggle').checked=false; $('slideNumToggle').checked=false; $('dateToggle').checked=false; $('watermarkToggle').checked=false;
@@ -1056,7 +1109,7 @@ function renderPreview() {
                         <button onclick="deleteEl(${sIdx}, ${eIdx})" style="color:#ef4444;" title="Delete"><i class="fas fa-times"></i></button>
                     </div>`;
                     node = document.createElement("div"); node.className = "preview-table-wrap";
-                    const table = document.createElement("table"); table.className = "preview-table";
+                    const table = document.createElement("table"); table.className = "preview-table" + (SETTINGS.tableCompact ? ' compact' : '');
                     el.rows.forEach((row, rIdx) => {
                         const tr = document.createElement("tr");
                         if(el.striped && rIdx>0 && rIdx%2===0) tr.classList.add('striped');
@@ -1160,7 +1213,127 @@ function renderPreview() {
     });
 
     updateCounts();
+    flagOverflowingSlides();
 }
+
+// ==========================================
+// OVERFLOW DETECTION + AUTO-SPLIT TO NEXT SLIDE
+// ==========================================
+function getUsableCardHeight(cardEl){
+    const cs = getComputedStyle(cardEl);
+    const padTop = parseFloat(cs.paddingTop)||0, padBot = parseFloat(cs.paddingBottom)||0;
+    return cardEl.clientHeight - padTop - padBot;
+}
+
+// Non-destructive: just paints a ⚠ badge on any slide whose content is taller than the box.
+function flagOverflowingSlides(){
+    document.querySelectorAll('.slide-wrapper').forEach((wrap) => {
+        const cardEl = wrap.querySelector('.slide-card');
+        const contentEl = wrap.querySelector('.slide-content');
+        const titleEl = wrap.querySelector('.s-title');
+        if(!cardEl || !contentEl || !titleEl) return;
+        const avail = getUsableCardHeight(cardEl) - 10;
+        let badge = titleEl.querySelector('.overflow-badge');
+        if(contentEl.scrollHeight > avail){
+            if(!badge){
+                badge = document.createElement('span'); badge.className='overflow-badge'; badge.style.color='#ef4444';
+                badge.title = 'Content is taller than the slide — click "Auto-Split Overflowing Slides"';
+                badge.innerHTML = ' <i class="fas fa-triangle-exclamation"></i>';
+                titleEl.appendChild(badge);
+            }
+        } else if(badge) badge.remove();
+    });
+}
+
+// Destructive/actual fix: moves overflowing trailing elements onto new slides
+// (and, for a lone oversized table, splits its rows across slides) until nothing overflows.
+function autoPaginate(silent){
+    let changed = true, passes = 0, anyChange = false; const MAX_PASSES = 60;
+    while(changed && passes < MAX_PASSES){
+        changed = false; passes++;
+        const cards = document.querySelectorAll('.slide-card');
+        for(let i = 0; i < DATA.length; i++){
+            const slide = DATA[i];
+            if(slide.locked) continue;
+            const cardEl = cards[i]; if(!cardEl) continue;
+            const contentEl = cardEl.querySelector('.slide-content'); if(!contentEl) continue;
+            const avail = getUsableCardHeight(cardEl) - 15;
+            if(contentEl.scrollHeight <= avail) continue;
+
+            if(slide.els.length <= 1){
+                const el0 = slide.els[0];
+                if(el0 && el0.type === 'table' && el0.rows.length > 2){
+                    const headerRow = el0.rows[0];
+                    let keep = Math.max(2, el0.rows.length - 1);
+                    const moved = el0.rows.slice(keep);
+                    el0.rows = el0.rows.slice(0, keep);
+                    const contEl = { id: uid(), type:'table', rows: [headerRow, ...moved], headerColor: el0.headerColor, borderColor: el0.borderColor, striped: el0.striped, color: el0.color };
+                    DATA.splice(i+1, 0, { id: uid(), els:[contEl], bgColor: slide.bgColor, notes:'', transition: slide.transition, duration: slide.duration, locked:false, selected:false });
+                    changed = true;
+                }
+                continue; // single non-table element too big — can't auto-split further
+            }
+            const movedEl = slide.els.pop();
+            DATA.splice(i+1, 0, { id: uid(), els: [movedEl], bgColor: slide.bgColor, notes:'', transition: slide.transition, duration: slide.duration, locked:false, selected:false });
+            changed = true;
+        }
+        if(changed){ anyChange = true; renderPreview(); }
+    }
+    saveState();
+    flagOverflowingSlides();
+    if(!silent) alert(anyChange ? '✅ Overflow theek kar diya — content ab agli slide(s) me split ho gaya hai.' : 'ℹ️ Koi overflow nahi mila, sab slides theek fit hain.');
+    return anyChange;
+}
+$('autoSplitBtn').onclick = () => { snapshot(); autoPaginate(false); };
+
+// ==========================================
+// PRESENT MODE (full-screen viewer)
+// ==========================================
+let presentIndex = 0;
+function presentKeyHandler(e){
+    if(e.key === 'Escape') closePresentMode();
+    else if(e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); $('presNext') && $('presNext').click(); }
+    else if(e.key === 'ArrowLeft') { $('presPrev') && $('presPrev').click(); }
+}
+function closePresentMode(){
+    const ov = $('presentOverlay'); if(ov) ov.remove();
+    document.removeEventListener('keydown', presentKeyHandler);
+}
+function openPresentMode(startIdx){
+    if(DATA.length === 0) return alert('Koi slide nahi hai!');
+    presentIndex = startIdx || 0;
+    const overlay = document.createElement('div');
+    overlay.id = 'presentOverlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:#000;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;';
+    overlay.innerHTML = `
+      <div id="presentStage" style="width:92vw;max-width:1300px;aspect-ratio:16/9;position:relative;overflow:hidden;border-radius:10px;"></div>
+      <div style="margin-top:14px;display:flex;gap:14px;align-items:center;color:#fff;font-family:'Kalam',cursive;">
+        <button id="presPrev" class="btn btn-gray" style="width:auto;padding:8px 16px;"><i class="fas fa-chevron-left"></i></button>
+        <span id="presCounter"></span>
+        <button id="presNext" class="btn btn-gray" style="width:auto;padding:8px 16px;"><i class="fas fa-chevron-right"></i></button>
+        <button id="presClose" class="btn btn-red" style="width:auto;padding:8px 16px;">✕ Close (Esc)</button>
+      </div>`;
+    document.body.appendChild(overlay);
+    function renderStage(){
+        const cardEl = document.querySelectorAll('.slide-card')[presentIndex];
+        const stage = $('presentStage'); stage.innerHTML = '';
+        if(cardEl){
+            const clone = cardEl.cloneNode(true);
+            clone.querySelectorAll('.el-toolbar, .add-element-bar, .table-controls').forEach(n => n.remove());
+            clone.querySelectorAll('[contenteditable]').forEach(n => n.removeAttribute('contenteditable'));
+            clone.style.width = '100%'; clone.style.height = '100%'; clone.style.aspectRatio = 'auto'; clone.style.border = 'none';
+            stage.appendChild(clone);
+        }
+        $('presCounter').innerText = (presentIndex + 1) + ' / ' + DATA.length;
+    }
+    renderStage();
+    $('presPrev').onclick = () => { presentIndex = (presentIndex - 1 + DATA.length) % DATA.length; renderStage(); };
+    $('presNext').onclick = () => { presentIndex = (presentIndex + 1) % DATA.length; renderStage(); };
+    $('presClose').onclick = closePresentMode;
+    document.addEventListener('keydown', presentKeyHandler);
+}
+$('presentModeBtn').onclick = () => openPresentMode(0);
+$('printPdfBtn').onclick = () => window.print();
 
 // ==========================================
 // GENERATE PPTX
@@ -1199,10 +1372,16 @@ $('generateBtn').onclick = async () => {
         if(bgUrl && SETTINGS.bgGrayscale) { bgUrl = await makeGrayscale(bgUrl); }
 
         const fam = SETTINGS.fontFamily || 'Kalam';
-        if(fam === 'Kalam'){
-            await document.fonts.load("30px Kalam"); await document.fonts.load("bold 30px Kalam");
-            await document.fonts.load("bold 34px Kalam"); await document.fonts.load("bold 44px Kalam");
-            await document.fonts.load("italic 30px Kalam"); await document.fonts.load("italic bold 30px Kalam");
+        if(WEB_FONTS.includes(fam)){
+            const sizes = [22,26,28,30,34,36,40,44,60];
+            try{
+                for(const sz of sizes){
+                    await document.fonts.load(`${sz}px "${fam}"`);
+                    await document.fonts.load(`bold ${sz}px "${fam}"`);
+                    await document.fonts.load(`italic ${sz}px "${fam}"`);
+                    await document.fonts.load(`italic bold ${sz}px "${fam}"`);
+                }
+            }catch(e){ console.warn('Font preload issue', e); }
         }
         const bHex = $('boldColor').value;
         const total = DATA.length;
@@ -1431,6 +1610,7 @@ function loadState() {
     $('slideNumToggle').checked = !!SETTINGS.showSlideNum; $('dateToggle').checked = !!SETTINGS.showDate;
     $('watermarkToggle').checked = !!SETTINGS.showWatermark; $('watermarkText').value = SETTINGS.watermarkText||'';
     $('rtlToggle').checked = !!SETTINGS.rtl; $('spellcheckToggle').checked = !!SETTINGS.spellcheck;
+    $('tableCompactToggle').checked = !!SETTINGS.tableCompact;
     $('lineHeightMult').value = SETTINGS.lineHeightMult||1; $('lhVal').innerText = SETTINGS.lineHeightMult||1;
     $('letterSpacingGlobal').value = SETTINGS.letterSpacing||0;
     $('overlayOpacity').value = SETTINGS.overlayOpacity!=null?SETTINGS.overlayOpacity:0.5;
