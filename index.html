@@ -3,173 +3,221 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Ultimate PPT Maker - Auto Pagination & MCQ</title>
+<title>Ultimate PPT Maker Pro - 20+ Features</title>
 <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
 <style>
 /* --- CSS Variables & Themes --- */
 :root { 
-    --accent: #ffeb3b; --sub-accent: #00e676; --h3-accent: #00bcd4; --bold-color: #ff9800; --btn-blue: #2563eb; 
+    --accent: #ffeb3b; --sub-accent: #00e676; --h3-accent: #00bcd4; --bold-color: #ff9800; 
+    --btn-blue: #3b82f6; --btn-purple: #8b5cf6; --btn-green: #10b981; --btn-red: #ef4444;
     --bg-main: #0f172a; --card-bg: #1e293b; --text-main: #f8fafc; --text-muted: #94a3b8;
-    --border: #334155; --input-bg: #0b1220; --slide-bg: #000000;
+    --border: #334155; --input-bg: #0b1220; --slide-bg: #000000; --hover-bg: #27354f;
 }
 
 body.light-mode {
-    --accent: #d97706; --sub-accent: #16a34a; --h3-accent: #0284c7; --bold-color: #dc2626; --btn-blue: #1d4ed8;
+    --accent: #d97706; --sub-accent: #16a34a; --h3-accent: #0284c7; --bold-color: #dc2626; 
+    --btn-blue: #2563eb; --btn-purple: #7c3aed; --btn-green: #059669; --btn-red: #dc2626;
     --bg-main: #f1f5f9; --card-bg: #ffffff; --text-main: #0f172a; --text-muted: #475569;
-    --border: #cbd5e1; --input-bg: #f8fafc; --slide-bg: #ffffff;
+    --border: #cbd5e1; --input-bg: #f8fafc; --slide-bg: #ffffff; --hover-bg: #e2e8f0;
 }
 
-body { font-family: 'Kalam', cursive; background: var(--bg-main); color: var(--text-main); margin: 0; padding: 20px; transition: 0.3s; }
+body { font-family: 'Kalam', cursive; background: var(--bg-main); color: var(--text-main); margin: 0; padding: 15px; transition: 0.3s; }
+* { box-sizing: border-box; }
 
 /* Desktop Layout */
-.main-wrapper { display: flex; gap: 30px; max-width: 1600px; margin: auto; align-items: flex-start; }
-.left-panel { flex: 0 0 480px; background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: sticky; top: 20px; max-height: calc(100vh - 40px); overflow-y: auto; }
-.right-panel { flex: 1; background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.1); min-height: calc(100vh - 40px); }
-@media (max-width: 1050px) { .main-wrapper { flex-direction: column; } .left-panel { position: static; flex: auto; width: 100%; max-height: none; } }
+.main-wrapper { display: flex; gap: 20px; max-width: 1800px; margin: auto; align-items: flex-start; height: 95vh; }
+.left-panel { flex: 0 0 450px; background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; height: 100%; overflow-y: auto; }
+.right-panel { flex: 1; background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.1); height: 100%; overflow-y: auto; display: flex; flex-direction: column; }
+@media (max-width: 1100px) { .main-wrapper { flex-direction: column; height: auto; } .left-panel, .right-panel { flex: auto; width: 100%; height: auto; } }
 
-.header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid var(--border); padding-bottom: 15px; }
+/* Inputs & Buttons */
+.header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 10px; }
 .header-row h2 { margin: 0; color: var(--accent); font-size: 1.8em; }
-.theme-btn { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border); padding: 8px 15px; border-radius: 8px; cursor: pointer; font-family: 'Kalam'; font-weight: bold; transition: 0.3s; }
+.theme-btn { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px; cursor: pointer; font-family: 'Kalam'; font-weight: bold; transition: 0.3s; }
 
-label { color: var(--text-muted); font-weight: 700; margin-top: 15px; display: block; font-size: 1.1em; }
-textarea, input[type="number"], select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text-main); font-family: 'Kalam', cursive; margin-top: 5px; box-sizing: border-box; font-size: 1.1em; }
-textarea:focus, input:focus, select:focus { outline: none; border-color: var(--accent); }
-input[type="color"] { width: 100%; height: 40px; padding: 2px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; background: var(--input-bg); }
+label { color: var(--text-muted); font-weight: 700; margin-top: 10px; display: block; font-size: 1em; }
+textarea, input[type="number"], select { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text-main); font-family: 'Kalam', cursive; margin-top: 4px; font-size: 1.1em; transition: 0.3s; }
+textarea:focus, input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 5px rgba(255,235,59,0.3); }
 
-.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
-.grid-5 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 5px; }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 
-.btn { width: 100%; padding: 10px 5px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Kalam', cursive; font-weight: 700; font-size: 1em; transition: 0.2s; color: #fff; text-align: center; }
-.btn:hover { opacity: 0.9; transform: translateY(-2px); }
-.btn-blue { background: #2563eb; } .btn-purple { background: #8b5cf6; } .btn-red { background: #e11d48; } .btn-cyan { background: #0891b2; }
-.btn-generate { background: linear-gradient(135deg, #10b981, #059669); font-size: 1.3em; padding: 15px; margin-top: 20px; width: 100%; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
+.btn { width: 100%; padding: 10px 5px; border: none; border-radius: 6px; cursor: pointer; font-family: 'Kalam', cursive; font-weight: 700; font-size: 1em; transition: 0.2s; color: #fff; text-align: center; display: flex; align-items: center; justify-content: center; gap: 5px; }
+.btn:hover { opacity: 0.85; transform: translateY(-1px); }
+.btn:active { transform: translateY(1px); }
+.btn-blue { background: var(--btn-blue); } .btn-purple { background: var(--btn-purple); } 
+.btn-green { background: var(--btn-green); } .btn-red { background: var(--btn-red); }
+.btn-gray { background: var(--border); color: var(--text-main); }
+.btn-generate { background: linear-gradient(135deg, #10b981, #059669); font-size: 1.2em; padding: 12px; margin-top: 15px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
 
-/* --- Preview Styles --- */
-.preview-list { display: flex; flex-direction: column; gap: 30px; }
-.slide-card { background-color: var(--slide-bg); background-size: cover !important; background-position: center !important; border: 2px solid var(--border); padding: 30px; border-radius: 8px; position: relative; aspect-ratio: 16 / 9; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); overflow: hidden; display: flex; flex-direction: column; }
+.feature-box { background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-top: 15px; }
+.toggle-switch { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 1.1em; color: var(--accent); font-weight: bold; margin-top: 10px; }
+.toggle-switch input { width: 20px; height: 20px; cursor: pointer; }
+
+/* --- Preview Styles (Slides) --- */
+.preview-list { display: flex; flex-direction: column; gap: 40px; padding-bottom: 50px; }
+.slide-wrapper { position: relative; }
+.slide-toolbar { display: flex; justify-content: space-between; background: var(--border); padding: 8px 15px; border-radius: 8px 8px 0 0; align-items: center; }
+.slide-toolbar .s-title { font-weight: bold; color: var(--text-main); font-size: 1.2em; }
+.slide-actions { display: flex; gap: 5px; }
+.action-icon { background: var(--card-bg); color: var(--text-main); border: none; width: 30px; height: 30px; border-radius: 5px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+.action-icon:hover { background: var(--hover-bg); color: var(--accent); }
+
+.slide-card { background-color: var(--slide-bg); background-size: cover !important; background-position: center !important; border: 2px solid var(--border); border-top: none; padding: 30px; border-radius: 0 0 8px 8px; position: relative; aspect-ratio: 16 / 9; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); overflow: hidden; display: flex; flex-direction: column; }
 .slide-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 0; }
 body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
 
-.slide-content { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
-.slide-number-badge { position: absolute; top: 10px; right: 15px; background: rgba(0,0,0,0.6); color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 0.9em; z-index: 2; }
+.slide-content { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; }
+
+/* Add New Slide Separator */
+.add-slide-separator { display: flex; align-items: center; justify-content: center; position: relative; margin: -15px 0; z-index: 10; opacity: 0.5; transition: 0.3s; }
+.add-slide-separator:hover { opacity: 1; }
+.add-slide-separator::before { content: ''; position: absolute; width: 100%; height: 2px; background: var(--border); z-index: -1; }
+.add-slide-btn { background: var(--btn-blue); color: #fff; border: none; padding: 5px 15px; border-radius: 20px; font-family: 'Kalam'; font-weight: bold; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+
+/* --- Element Block Styles (Live Edit & Color) --- */
+.el-block { position: relative; border: 1px dashed transparent; transition: 0.2s; padding: 2px 5px; border-radius: 5px; margin-bottom: 5px; }
+.el-block:hover { border-color: rgba(150,150,150,0.5); background: rgba(128,128,128,0.1); }
+.el-toolbar { position: absolute; top: -30px; right: 0; background: var(--card-bg); border: 1px solid var(--border); border-radius: 5px; display: none; gap: 5px; padding: 3px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); z-index: 50; }
+.el-block:hover .el-toolbar { display: flex; }
+.el-toolbar button, .el-toolbar input { background: transparent; border: none; color: var(--text-main); cursor: pointer; padding: 2px 5px; }
+.el-toolbar input[type="color"] { width: 25px; height: 25px; padding: 0; border-radius: 50%; border: none; overflow: hidden; }
 
 /* Typography */
-[contenteditable="true"] { outline: none; border: 1px dashed transparent; transition: 0.2s; display: block; }
-[contenteditable="true"]:hover { border-color: rgba(150,150,150,0.5); background: rgba(128,128,128,0.1); }
-.p-h1 { color: var(--accent); font-size: 2.2em; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid rgba(150,150,150,0.3); padding-bottom: 5px; clear: both; }
-.p-h2 { color: var(--sub-accent); font-size: 1.6em; font-weight: bold; margin-bottom: 8px; margin-top: 10px; }
-.p-h3 { color: var(--h3-accent); font-size: 1.4em; font-weight: bold; margin-bottom: 8px; margin-top: 5px; }
-.p-text, .p-li { font-size: 1.3em; margin-bottom: 8px; line-height: 1.5; white-space: pre-wrap; color: var(--text-main); }
+[contenteditable="true"] { outline: none; display: block; }
+.p-h1 { font-size: 2.2em; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid rgba(150,150,150,0.3); padding-bottom: 5px; }
+.p-h2 { font-size: 1.6em; font-weight: bold; margin-bottom: 8px; margin-top: 10px; }
+.p-h3 { font-size: 1.4em; font-weight: bold; margin-bottom: 8px; margin-top: 5px; }
+.p-text, .p-li { font-size: 1.3em; margin-bottom: 8px; line-height: 1.5; white-space: pre-wrap; }
 
-/* MCQ & Explanation Preview */
-.p-mcq-q { font-size: 1.6em; font-weight: bold; margin-bottom: 15px; line-height: 1.4; white-space: pre-wrap; }
-.p-mcq-opt { font-size: 1.3em; margin-bottom: 8px; line-height: 1.3; white-space: pre-wrap; padding-left: 20px; }
-.p-exp-box { background: rgba(59, 130, 246, 0.15); border-left: 5px solid #3b82f6; padding: 10px 15px; margin-top: 10px; border-radius: 4px; font-size: 1.2em; }
+/* MCQ specific preview classes */
+.p-mcq-q { font-size: 1.8em; font-weight: bold; margin-bottom: 20px; line-height: 1.4; white-space: pre-wrap; }
+.p-mcq-opt { font-size: 1.4em; margin-bottom: 12px; line-height: 1.4; white-space: pre-wrap; padding-left: 20px; }
+.p-mcq-ans { font-size: 1.5em; font-weight: bold; margin-top: 15px; color: #10b981; }
+.p-mcq-sol { font-size: 1.3em; margin-top: 5px; font-style: italic; }
 
 /* Attractive HTML Table Preview */
-.preview-table-wrap { width: 100%; margin: 15px 0; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
-.preview-table { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.4); color: var(--text-main); font-size: 1.1em; }
-.preview-table th, .preview-table td { padding: 10px 12px; text-align: left; border: 1px solid rgba(150,150,150,0.4); line-height: 1.4; }
+.preview-table-wrap { width: 100%; margin: 10px 0; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+.preview-table { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.4); font-size: 1.1em; }
+.preview-table th, .preview-table td { padding: 10px 12px; text-align: left; border: 1px solid rgba(150,150,150,0.4); }
 .preview-table th { background: #2563eb; color: #fff; font-weight: bold; }
 body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
+
+/* Add Element Panel */
+.add-element-bar { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 15px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; justify-content: center;}
+.add-el-btn { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border); padding: 5px 10px; border-radius: 5px; font-size: 0.9em; cursor: pointer; transition: 0.2s;}
+.add-el-btn:hover { background: var(--accent); color: #000; }
 </style>
 </head>
 <body>
 
 <div class="main-wrapper">
+    <!-- LEFT PANEL: CONTROLS & IMPORT -->
     <div class="left-panel">
         <div class="header-row">
-            <h2>🎓 HTML & MCQ PPT</h2>
-            <button id="themeToggle" class="theme-btn">🌙 Dark Mode</button>
+            <h2>🎓 PPT Maker Pro</h2>
+            <button id="themeToggle" class="theme-btn"><i class="fas fa-moon"></i> Dark</button>
         </div>
 
-        <label>Data Input (HTML Code OR JSON Array)</label>
-        <textarea id="htmlArea" rows="6" placeholder='Paste HTML Notes OR MCQ JSON Data here...'></textarea>
+        <!-- 1. Demos & Copy Code -->
+        <div class="grid-3" style="margin-bottom: 15px;">
+            <button id="demoHtmlBtn" class="btn btn-gray" style="font-size: 0.85em;"><i class="fab fa-html5"></i> Demo Notes</button>
+            <button id="demoJsonBtn" class="btn btn-gray" style="font-size: 0.85em;"><i class="fas fa-brackets-curly"></i> Demo MCQ</button>
+            <button id="copyCodeBtn" class="btn btn-blue" style="font-size: 0.85em;"><i class="fas fa-copy"></i> Copy Data</button>
+        </div>
+
+        <label><i class="fas fa-database"></i> Data Input (HTML OR JSON)</label>
+        <textarea id="dataArea" rows="6" placeholder='Paste your HTML Notes OR MCQ JSON Data here...'></textarea>
         
-        <div class="grid-3" style="margin-top: 10px;">
-            <button id="importBtn" class="btn btn-blue" title="HTML नोट्स प्रोसेस करें">📥 HTML</button>
-            <button id="importJsonBtn" class="btn btn-purple" title="MCQ JSON प्रोसेस करें">🧩 JSON</button>
-            <button id="addSlideBtn" class="btn btn-cyan" title="नई स्लाइड जोड़ें">➕ Add Slide</button>
+        <!-- Smart Split Feature -->
+        <label class="toggle-switch">
+            <input type="checkbox" id="splitAnswerToggle" checked>
+            <span><i class="fas fa-magic"></i> Put MCQ Answer on Next Slide</span>
+        </label>
+
+        <div class="grid-3" style="margin-top: 15px;">
+            <button id="importHtmlBtn" class="btn btn-purple"><i class="fas fa-file-code"></i> Load HTML</button>
+            <button id="importJsonBtn" class="btn btn-green"><i class="fas fa-list-ol"></i> Load JSON</button>
+            <button id="clearAllBtn" class="btn btn-red"><i class="fas fa-trash"></i> Clear</button>
         </div>
 
-        <div style="margin-top: 8px;">
-            <button id="copyCodeBtn" class="btn btn-blue" style="background: #0d9488;"><i class="fa fa-copy"></i> Copy Input Code</button>
-        </div>
-        
-        <div style="margin-top: 5px;">
-            <button id="clearBtn" class="btn btn-red" title="सब डिलीट करें">🗑️ Clear All Data</button>
-        </div>
-
-        <label>Slide Margins (px)</label>
-        <div class="grid-4">
-            <div><label style="margin-top:5px; font-size:0.9em;">Top</label><input type="number" id="topM" value="110"></div>
-            <div><label style="margin-top:5px; font-size:0.9em;">Bottom</label><input type="number" id="bottomM" value="70"></div>
-            <div><label style="margin-top:5px; font-size:0.9em;">Left</label><input type="number" id="leftM" value="90"></div>
-            <div><label style="margin-top:5px; font-size:0.9em;">Right</label><input type="number" id="rightM" value="90"></div>
+        <div class="feature-box">
+            <label style="margin-top:0;"><i class="fas fa-expand"></i> Slide Margins (px)</label>
+            <div class="grid-4">
+                <div><label style="font-size:0.8em;">Top</label><input type="number" id="topM" value="110"></div>
+                <div><label style="font-size:0.8em;">Bottom</label><input type="number" id="bottomM" value="70"></div>
+                <div><label style="font-size:0.8em;">Left</label><input type="number" id="leftM" value="90"></div>
+                <div><label style="font-size:0.8em;">Right</label><input type="number" id="rightM" value="90"></div>
+            </div>
         </div>
 
-        <label>Text Colors Customizer</label>
-        <div class="grid-5">
-            <div><label style="margin-top:5px; font-size:0.8em;">H1</label><input type="color" id="h1Color" value="#ffeb3b"></div>
-            <div><label style="margin-top:5px; font-size:0.8em;">H2</label><input type="color" id="h2Color" value="#00e676"></div>
-            <div><label style="margin-top:5px; font-size:0.8em;">H3</label><input type="color" id="h3Color" value="#00bcd4"></div>
-            <div><label style="margin-top:5px; font-size:0.8em;"><b>Bold</b></label><input type="color" id="boldColor" value="#ff9800"></div>
-            <div><label style="margin-top:5px; font-size:0.8em;">Normal</label><input type="color" id="optColor" value="#ffffff"></div>
+        <div class="feature-box">
+            <label style="margin-top:0;"><i class="fas fa-palette"></i> Default Global Colors</label>
+            <div class="grid-4" style="grid-template-columns: repeat(5, 1fr);">
+                <div><label style="font-size:0.7em;">H1</label><input type="color" id="defH1" value="#ffeb3b"></div>
+                <div><label style="font-size:0.7em;">H2</label><input type="color" id="defH2" value="#00e676"></div>
+                <div><label style="font-size:0.7em;">P/Text</label><input type="color" id="defP" value="#ffffff"></div>
+                <div><label style="font-size:0.7em;">MCQ(Q)</label><input type="color" id="defMQ" value="#ffeb3b"></div>
+                <div><label style="font-size:0.7em;">MCQ(O)</label><input type="color" id="defMO" value="#ffffff"></div>
+            </div>
         </div>
 
-        <label>MCQ & Explanation Colors</label>
-        <div class="grid-3">
-            <div><label style="margin-top:5px; font-size:0.8em;">Question</label><input type="color" id="mcqQColor" value="#ffeb3b"></div>
-            <div><label style="margin-top:5px; font-size:0.8em;">Options</label><input type="color" id="mcqOptColor" value="#ffffff"></div>
-            <div><label style="margin-top:5px; font-size:0.8em;">Explanation</label><input type="color" id="expColor" value="#3b82f6"></div>
-        </div>
-
-        <label>Master Background Setup</label>
-        <select id="bgSelect" style="margin-bottom: 10px;">
-            <option value="none" selected>No Background (Solid Color)</option>
-            <option value="custom">Upload Custom Background...</option>
+        <label><i class="fas fa-image"></i> Master Background</label>
+        <select id="bgSelect" style="margin-bottom: 5px;">
+            <option value="none" selected>No Background (Solid Black/White)</option>
+            <option value="custom">Upload Custom Background Image...</option>
         </select>
         <input type="file" id="bgImgUpload" accept="image/*" style="display:none;">
 
-        <button id="generateBtn" class="btn btn-generate">💾 Generate PPTX File</button>
+        <button id="generateBtn" class="btn btn-generate"><i class="fas fa-download"></i> Generate PPTX File</button>
     </div>
 
+    <!-- RIGHT PANEL: LIVE SLIDE EDITOR -->
     <div class="right-panel">
-        <h3 style="margin-top:0; color:var(--text-main); font-size:1.8em; border-bottom:1px solid var(--border); padding-bottom:10px;">👁️ Live Slide Previews</h3>
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom: 15px;">
+            <h3 style="margin:0; color:var(--text-main); font-size:1.6em;"><i class="fas fa-tv"></i> Live Slide Editor</h3>
+            <span style="color:var(--text-muted); font-size:0.9em;">Add slides, mix content, edit colors!</span>
+        </div>
+        
         <div id="preview" class="preview-list"></div>
+        
+        <!-- Bottom Add Slide -->
+        <div class="add-slide-separator" style="margin-top: 30px;">
+            <button class="add-slide-btn" onclick="addNewSlide(DATA.length)"><i class="fas fa-plus"></i> Add New Slide Here</button>
+        </div>
     </div>
 </div>
 
 <script>
 const $ = id => document.getElementById(id);
-let DATA = [];
+let DATA = []; // Master State: Array of Slides. Each Slide is an Array of Elements.
 let isLightMode = false;
 let customBgDataUrl = null;
 
-function getBgUrl() { let val = $('bgSelect').value; return val === 'custom' ? customBgDataUrl : null; }
-
+// ==========================================
+// 1. INITIALIZATION & THEMES
+// ==========================================
 $('themeToggle').onclick = () => {
     isLightMode = !isLightMode;
     document.body.classList.toggle('light-mode', isLightMode);
-    $('themeToggle').innerText = isLightMode ? "☀️ Light Mode" : "🌙 Dark Mode";
+    $('themeToggle').innerHTML = isLightMode ? '<i class="fas fa-sun"></i> Light' : '<i class="fas fa-moon"></i> Dark';
     
+    // Auto adjust default text colors if they are pure white/black
     if(isLightMode) {
-        if($('optColor').value === "#ffffff") $('optColor').value = "#000000";
-        if($('mcqOptColor').value === "#ffffff") $('mcqOptColor').value = "#000000";
+        if($('defP').value === "#ffffff") $('defP').value = "#000000";
+        if($('defMO').value === "#ffffff") $('defMO').value = "#000000";
     } else {
-        if($('optColor').value === "#000000") $('optColor').value = "#ffffff";
-        if($('mcqOptColor').value === "#000000") $('mcqOptColor').value = "#ffffff";
+        if($('defP').value === "#000000") $('defP').value = "#ffffff";
+        if($('defMO').value === "#000000") $('defMO').value = "#ffffff";
     }
     renderPreview(); saveState();
 };
 
 $('bgSelect').onchange = (e) => { $('bgImgUpload').style.display = e.target.value === 'custom' ? 'block' : 'none'; renderPreview(); saveState(); };
-
 $('bgImgUpload').onchange = (e) => {
     const file = e.target.files[0]; if (!file) return;
     const reader = new FileReader();
@@ -180,249 +228,301 @@ $('bgImgUpload').onchange = (e) => {
             const ctx = canvas.getContext("2d"); ctx.drawImage(img, 0, 0, 1300, 710);
             customBgDataUrl = canvas.toDataURL("image/jpeg", 0.7); 
             renderPreview(); saveState();
-        };
-        img.src = event.target.result;
-    };
-    reader.readAsDataURL(file);
+        }; img.src = event.target.result;
+    }; reader.readAsDataURL(file);
 };
 
-// Copy code button
+// ==========================================
+// 2. DEMOS & COPY CODE
+// ==========================================
+$('demoHtmlBtn').onclick = () => {
+    $('dataArea').value = `<h1>राजस्थान का भूगोल</h1>
+<h2>1. स्थिति एवं विस्तार</h2>
+<p>राजस्थान भारत के उत्तर-पश्चिम में स्थित है। इसका कुल क्षेत्रफल <b>3,42,239 वर्ग किमी</b> है।</p>
+<h3>प्रमुख बिंदु:</h3>
+<ul>
+    <li>सबसे बड़ा जिला: जैसलमेर</li>
+    <li>सबसे छोटा जिला: धौलपुर</li>
+</ul>
+<table>
+    <tr><th>संभाग</th><th>जिले</th></tr>
+    <tr><td>जयपुर</td><td>7</td></tr>
+    <tr><td>जोधपुर</td><td>6</td></tr>
+</table>`;
+};
+
+$('demoJsonBtn').onclick = () => {
+    $('dataArea').value = `[
+  {
+    "question": "राजस्थान का राज्य पक्षी कौन-सा है?",
+    "option": ["मोर", "गोडावण", "तोता", "कबूतर"],
+    "answer": "B",
+    "solution": "गोडावण (Great Indian Bustard) राजस्थान का राज्य पक्षी है। इसे 1981 में राज्य पक्षी घोषित किया गया था।"
+  },
+  {
+    "question": "हल्दीघाटी का युद्ध कब लड़ा गया था?",
+    "options": ["1576", "1526", "1191", "1192"],
+    "answer": "A",
+    "solution": "हल्दीघाटी का युद्ध 18 जून 1576 को महाराणा प्रताप और अकबर की सेना (मानसिंह) के बीच हुआ था।"
+  }
+]`;
+};
+
 $('copyCodeBtn').onclick = () => {
-    const text = $('htmlArea').value;
-    if(!text) return alert("No code to copy!");
-    navigator.clipboard.writeText(text).then(() => alert("Input code copied successfully!"));
+    if(DATA.length === 0) return alert("कोई डेटा नहीं है!");
+    navigator.clipboard.writeText(JSON.stringify(DATA, null, 2));
+    alert("✅ पूरा स्लाइड डेटा (JSON) कॉपी हो गया!");
 };
 
-// Add Manual Slide Option
-$('addSlideBtn').onclick = () => {
-    DATA.push([
-        { type: 'h2', text: 'नई स्लाइड शीर्षक (Heading)' },
-        { type: 'p', text: 'यहाँ अपनी स्लाइड का मुख्य विवरण या टेक्स्ट लिखें।' }
-    ]);
-    renderPreview(); saveState();
-};
-
-// ==============================================
-// SMART HTML PARSER 
-// ==============================================
-function cleanHtmlForCanvas(htmlStr) {
-    let str = htmlStr.replace(/<strong[^>]*>/gi, '<b>').replace(/<\/strong>/gi, '</b>')
-                     .replace(/<b\s[^>]*>/gi, '<b>').replace(/<br\s*[\/]?>/gi, '\n');
-    str = str.replace(/<\/?(?!(b)\b)[a-z](?:[^>"']|"[^"]*"|'[^']*')*>/gi, '');
-    const txt = document.createElement("textarea"); txt.innerHTML = str;
-    return txt.value.trim();
+// ==========================================
+// 3. SMART HTML PARSER (Appends to DATA)
+// ==========================================
+function cleanHtml(str) {
+    let txt = str.replace(/<strong[^>]*>/gi, '<b>').replace(/<\/strong>/gi, '</b>')
+                 .replace(/<b\s[^>]*>/gi, '<b>').replace(/<br\s*[\/]?>/gi, '\n');
+    txt = txt.replace(/<\/?(?!(b)\b)[a-z](?:[^>"']|"[^"]*"|'[^']*')*>/gi, '');
+    const dummy = document.createElement("textarea"); dummy.innerHTML = txt;
+    return dummy.value.trim();
 }
 
-$('importBtn').onclick = () => { 
-    let rawHtml = $('htmlArea').value.trim();
+$('importHtmlBtn').onclick = () => { 
+    let rawHtml = $('dataArea').value.trim();
     if(!rawHtml) return alert("Please paste HTML code!");
 
-    let slidesData = [];
-    let currentSlide = [];
-
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(rawHtml, 'text/html');
+    let newSlides = []; let currentSlide = [];
+    const parser = new DOMParser(); const doc = parser.parseFromString(rawHtml, 'text/html');
 
     Array.from(doc.body.children).forEach(el => {
-        if (el.tagName === 'H1' || el.tagName === 'H2') {
-            if (currentSlide.length > 0) slidesData.push(currentSlide);
+        let t = el.tagName;
+        if (t === 'H1' || t === 'H2') {
+            if (currentSlide.length > 0) newSlides.push(currentSlide);
             currentSlide = [];
-            currentSlide.push({ type: el.tagName.toLowerCase(), text: cleanHtmlForCanvas(el.innerHTML) });
+            currentSlide.push({ id: uid(), type: t.toLowerCase(), text: cleanHtml(el.innerHTML) });
         } 
-        else if (el.tagName === 'H3') {
-            currentSlide.push({ type: 'h3', text: cleanHtmlForCanvas(el.innerHTML) });
-        } 
-        else if (el.tagName === 'P') {
-            let text = cleanHtmlForCanvas(el.innerHTML);
-            if(text) currentSlide.push({ type: 'p', text: text });
-        } 
-        else if (el.tagName === 'UL' || el.tagName === 'OL') {
+        else if (t === 'H3') currentSlide.push({ id: uid(), type: 'h3', text: cleanHtml(el.innerHTML) });
+        else if (t === 'P') { let text = cleanHtml(el.innerHTML); if(text) currentSlide.push({ id: uid(), type: 'p', text: text }); } 
+        else if (t === 'UL' || t === 'OL') {
             let items = [];
-            Array.from(el.children).forEach(li => { if (li.tagName === 'LI') items.push(cleanHtmlForCanvas(li.innerHTML)); });
-            if(items.length > 0) currentSlide.push({ type: 'ul', items: items });
+            Array.from(el.children).forEach(li => { if (li.tagName === 'LI') items.push(cleanHtml(li.innerHTML)); });
+            if(items.length > 0) currentSlide.push({ id: uid(), type: 'ul', items: items });
         } 
-        else if (el.tagName === 'TABLE') {
+        else if (t === 'TABLE') {
             let rows = [];
             Array.from(el.querySelectorAll('tr')).forEach(tr => {
                 let cells = [];
-                Array.from(tr.querySelectorAll('th, td')).forEach(td => cells.push(cleanHtmlForCanvas(td.innerHTML)));
+                Array.from(tr.querySelectorAll('th, td')).forEach(td => cells.push(cleanHtml(td.innerHTML)));
                 if(cells.length > 0) rows.push(cells);
             });
-            if(rows.length > 0) currentSlide.push({ type: 'table', rows: rows });
+            if(rows.length > 0) currentSlide.push({ id: uid(), type: 'table', rows: rows });
         }
     });
 
-    if (currentSlide.length > 0) slidesData.push(currentSlide);
-    if (slidesData.length === 0) return alert("No valid HTML tags found!");
+    if (currentSlide.length > 0) newSlides.push(currentSlide);
+    if (newSlides.length === 0) return alert("No valid HTML tags found!");
 
-    DATA = slidesData;
-    renderPreview(); saveState();
+    DATA = DATA.concat(newSlides); // Append!
+    renderPreview(); saveState(); $('dataArea').value = "";
 };
 
-// ==============================================
-// SMART JSON MCQ & EXPLANATION PARSER 
-// ==============================================
+// ==========================================
+// 4. SMART MCQ JSON PARSER (Auto-Split Feature)
+// ==========================================
 $('importJsonBtn').onclick = () => {
-    let rawJson = $('htmlArea').value.trim();
+    let rawJson = $('dataArea').value.trim();
     if(!rawJson) return alert("Please paste MCQ JSON data!");
+    
+    let doSplit = $('splitAnswerToggle').checked; // Check Toggle
 
     try {
         let jsonArr = JSON.parse(rawJson);
-        if(!Array.isArray(jsonArr)) return alert("JSON should be an Array starting with [");
+        if(!Array.isArray(jsonArr)) return alert("JSON should be an Array!");
         
-        let slidesData = [];
+        let newSlides = [];
         const alphabet = ['A', 'B', 'C', 'D', 'E', 'F'];
 
         jsonArr.forEach((item, index) => {
-            if(!item.question) return;
+            if(!item.question) return; 
             
-            let currentSlide = [];
-            currentSlide.push({ type: 'mcq-q', text: `Q${index + 1}. ` + item.question });
+            let qSlide = [];
+            qSlide.push({ id: uid(), type: 'mcq-q', text: `Q${DATA.length + newSlides.length + 1}. ` + item.question });
             
             let opts = item.option || item.options || [];
             if(Array.isArray(opts)) {
                 opts.forEach((optText, i) => {
                     let label = alphabet[i] ? alphabet[i] + ") " : "";
-                    currentSlide.push({ type: 'mcq-opt', text: label + optText });
+                    qSlide.push({ id: uid(), type: 'mcq-opt', text: label + optText });
                 });
             }
 
-            // Automatically route explanation or solution to next/same slide structure
-            let explanation = item.solution || item.explanation || item.exp || "";
-            if(explanation) {
-                currentSlide.push({ type: 'mcq-exp', text: "💡 स्पष्टीकरण: " + explanation });
+            // Logic for split or combined
+            if(doSplit && (item.answer || item.solution)) {
+                newSlides.push(qSlide); // Push Question slide
+                let aSlide = []; // Create Answer Slide
+                if(item.answer) aSlide.push({ id: uid(), type: 'mcq-ans', text: `Answer: ${item.answer}` });
+                if(item.solution) aSlide.push({ id: uid(), type: 'mcq-sol', text: item.solution });
+                newSlides.push(aSlide);
+            } else {
+                if(item.answer) qSlide.push({ id: uid(), type: 'mcq-ans', text: `Answer: ${item.answer}` });
+                if(item.solution) qSlide.push({ id: uid(), type: 'mcq-sol', text: item.solution });
+                newSlides.push(qSlide);
             }
-
-            slidesData.push(currentSlide);
         });
 
-        if (slidesData.length === 0) return alert("No valid questions found in JSON!");
-        
-        DATA = slidesData;
-        renderPreview(); saveState();
-
-    } catch (e) {
-        alert("Invalid JSON format! Error: " + e.message);
-    }
+        DATA = DATA.concat(newSlides);
+        renderPreview(); saveState(); $('dataArea').value = "";
+    } catch (e) { alert("Invalid JSON! Error: " + e.message); }
 };
 
-$('clearBtn').onclick = () => { if(confirm("Clear all data?")) { DATA = []; $('htmlArea').value = ""; localStorage.removeItem('htmlPptStateUltimateFinal'); renderPreview(); } };
+$('clearAllBtn').onclick = () => { if(confirm("Clear ALL Slides?")) { DATA = []; saveState(); renderPreview(); } };
 
-function saveState() {
-    const state = {
-        data: DATA, margins: { t: $('topM').value, b: $('bottomM').value, l: $('leftM').value, r: $('rightM').value },
-        colors: { 
-            h1: $('h1Color').value, h2: $('h2Color').value, h3: $('h3Color').value, 
-            bold: $('boldColor').value, opt: $('optColor').value, 
-            mcqQ: $('mcqQColor').value, mcqOpt: $('mcqOptColor').value, exp: $('expColor').value 
-        },
-        bg: $('bgSelect').value, theme: isLightMode, customBg: customBgDataUrl, htmlBox: $('htmlArea').value
-    };
-    localStorage.setItem('htmlPptStateUltimateFinal', JSON.stringify(state));
+// ==========================================
+// 5. SLIDE & ELEMENT MANAGEMENT (The 20+ Features Engine)
+// ==========================================
+function uid(){ return 'id_'+(Date.now().toString(36))+(Math.random().toString(36).slice(2,6)); }
+
+function getDefaultColor(type) {
+    if(type==='h1') return $('defH1').value;
+    if(type==='h2') return $('defH2').value;
+    if(type==='mcq-q') return $('defMQ').value;
+    if(type==='mcq-opt') return $('defMO').value;
+    return $('defP').value; // p, ul, h3, etc
 }
 
-function loadState() {
-    const saved = localStorage.getItem('htmlPptStateUltimateFinal');
-    if(saved) {
-        const state = JSON.parse(saved); DATA = state.data || [];
-        $('htmlArea').value = state.htmlBox || "";
-        $('topM').value = state.margins.t; $('bottomM').value = state.margins.b; $('leftM').value = state.margins.l; $('rightM').value = state.margins.r;
-        $('h1Color').value = state.colors.h1; $('h2Color').value = state.colors.h2; 
-        if(state.colors.h3) $('h3Color').value = state.colors.h3; if(state.colors.bold) $('boldColor').value = state.colors.bold;
-        $('optColor').value = state.colors.opt; 
-        if(state.colors.mcqQ) $('mcqQColor').value = state.colors.mcqQ;
-        if(state.colors.mcqOpt) $('mcqOptColor').value = state.colors.mcqOpt;
-        if(state.colors.exp) $('expColor').value = state.colors.exp;
-        
-        $('bgSelect').value = state.bg;
-        customBgDataUrl = state.customBg || null;
-        if(state.bg === 'custom') $('bgImgUpload').style.display = 'block';
-        isLightMode = state.theme || false;
-        if(isLightMode) { document.body.classList.add('light-mode'); $('themeToggle').innerText = "☀️ Light Mode"; }
-    }
-    renderPreview();
-}
+window.addNewSlide = (index) => { DATA.splice(index, 0, []); renderPreview(); saveState(); };
+window.deleteSlide = (index) => { if(confirm("Delete this slide?")) { DATA.splice(index, 1); renderPreview(); saveState(); } };
+window.duplicateSlide = (index) => { DATA.splice(index + 1, 0, JSON.parse(JSON.stringify(DATA[index]))); renderPreview(); saveState(); };
+window.moveSlide = (index, dir) => { 
+    if(dir==='up' && index > 0) { let t = DATA[index]; DATA[index] = DATA[index-1]; DATA[index-1] = t; }
+    if(dir==='down' && index < DATA.length-1) { let t = DATA[index]; DATA[index] = DATA[index+1]; DATA[index+1] = t; }
+    renderPreview(); saveState();
+};
 
-['topM', 'bottomM', 'leftM', 'rightM', 'h1Color', 'h2Color', 'h3Color', 'boldColor', 'optColor', 'mcqQColor', 'mcqOptColor', 'expColor'].forEach(id => { $(id).addEventListener('change', () => { renderPreview(); saveState(); }); });
+window.addElement = (sIdx, type) => {
+    let el = { id: uid(), type: type, text: 'New ' + type, color: getDefaultColor(type) };
+    if(type === 'ul') el = { id: uid(), type: 'ul', items: ['Item 1', 'Item 2'], color: getDefaultColor('p') };
+    if(type === 'table') el = { id: uid(), type: 'table', rows: [['H1', 'H2'], ['D1', 'D2']] };
+    DATA[sIdx].push(el); renderPreview(); saveState();
+};
 
-function formatPreviewText(text, boldHex) { if(!text) return ""; return text.replace(/<b>(.*?)<\/b>/g, `<span style="color:${boldHex}; font-weight:bold;">$1</span>`); }
+window.deleteEl = (sIdx, eIdx) => { DATA[sIdx].splice(eIdx, 1); renderPreview(); saveState(); };
+window.moveEl = (sIdx, eIdx, dir) => {
+    let arr = DATA[sIdx];
+    if(dir==='up' && eIdx > 0) { let t = arr[eIdx]; arr[eIdx] = arr[eIdx-1]; arr[eIdx-1] = t; }
+    if(dir==='down' && eIdx < arr.length-1) { let t = arr[eIdx]; arr[eIdx] = arr[eIdx+1]; arr[eIdx+1] = t; }
+    renderPreview(); saveState();
+};
+window.updateElColor = (sIdx, eIdx, color) => { DATA[sIdx][eIdx].color = color; renderPreview(); saveState(); };
+
+// ==========================================
+// 6. RENDER PREVIEW (Live Editable Engine)
+// ==========================================
+function formatText(text) { if(!text) return ""; return text.replace(/<b>(.*?)<\/b>/g, `<strong style="color:var(--bold-color);">$1</strong>`); }
 
 function renderPreview() {
     const box = $("preview"); box.innerHTML = "";
-    if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted); padding:20px; text-align:center;'>No slides. Paste HTML/JSON or click 'Add Slide'.</p>"; return; }
+    if(DATA.length === 0) { box.innerHTML = "<div style='text-align:center; color:var(--text-muted); margin-top:50px;'><i class='fas fa-folder-open' style='font-size:3em; margin-bottom:10px;'></i><br>No Slides. Import data or Add a New Slide!</div>"; return; }
 
-    const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
-    const mcqQc = $('mcqQColor').value, mcqOc = $('mcqOptColor').value, expc = $('expColor').value;
     const bgUrl = getBgUrl();
 
-    DATA.forEach((slideElements, sIdx) => {
+    DATA.forEach((slide, sIdx) => {
+        // Separator above slide
+        box.innerHTML += `<div class="add-slide-separator"><button class="add-slide-btn" onclick="addNewSlide(${sIdx})"><i class="fas fa-plus"></i> Add New Slide Here</button></div>`;
+
+        const wrap = document.createElement("div"); wrap.className = "slide-wrapper";
+        
+        // Slide Toolbar
+        const toolBar = document.createElement("div"); toolBar.className = "slide-toolbar";
+        toolBar.innerHTML = `
+            <div class="s-title">Slide ${sIdx + 1}</div>
+            <div class="slide-actions">
+                <button class="action-icon" title="Move Up" onclick="moveSlide(${sIdx},'up')"><i class="fas fa-arrow-up"></i></button>
+                <button class="action-icon" title="Move Down" onclick="moveSlide(${sIdx},'down')"><i class="fas fa-arrow-down"></i></button>
+                <button class="action-icon" title="Duplicate" onclick="duplicateSlide(${sIdx})"><i class="fas fa-copy"></i></button>
+                <button class="action-icon" title="Delete Slide" onclick="deleteSlide(${sIdx})" style="color:var(--btn-red)"><i class="fas fa-trash"></i></button>
+            </div>
+        `;
+        wrap.appendChild(toolBar);
+
+        // Slide Card
         const div = document.createElement("div"); div.className = "slide-card";
         if(bgUrl) div.style.background = `url('${bgUrl}') center/cover no-repeat`; else div.style.backgroundColor = isLightMode ? "#ffffff" : "#000000";
         
-        const badge = document.createElement("div"); badge.className = "slide-number-badge"; badge.innerText = `Slide #${sIdx + 1}`;
-        div.appendChild(badge);
+        const content = document.createElement("div"); content.className = "slide-content";
 
-        const contentWrap = document.createElement("div"); contentWrap.className = "slide-content";
+        // Render Elements
+        slide.forEach((el, eIdx) => {
+            const elBlock = document.createElement("div"); elBlock.className = "el-block";
+            
+            // Element Mini Toolbar (Color & Controls)
+            let colInput = el.type !== 'table' ? `<input type="color" value="${el.color || getDefaultColor(el.type)}" onchange="updateElColor(${sIdx}, ${eIdx}, this.value)" title="Change Text Color">` : '';
+            elBlock.innerHTML = `
+                <div class="el-toolbar">
+                    ${colInput}
+                    <button onclick="moveEl(${sIdx}, ${eIdx}, 'up')" title="Move Up"><i class="fas fa-caret-up"></i></button>
+                    <button onclick="moveEl(${sIdx}, ${eIdx}, 'down')" title="Move Down"><i class="fas fa-caret-down"></i></button>
+                    <button onclick="deleteEl(${sIdx}, ${eIdx})" style="color:#ef4444;" title="Delete"><i class="fas fa-times"></i></button>
+                </div>
+            `;
 
-        slideElements.forEach((el, eIdx) => {
-            if (el.type === 'h1' || el.type === 'h2' || el.type === 'h3') {
-                const node = document.createElement("div"); node.className = "p-" + el.type;
-                node.style.color = el.type === 'h1' ? h1c : (el.type === 'h2' ? h2c : h3c);
-                node.contentEditable = "true"; node.innerHTML = formatPreviewText(el.text, bc);
-                node.onblur = e => { DATA[sIdx][eIdx].text = e.target.innerText; saveState(); }; contentWrap.appendChild(node);
-            } 
-            else if (el.type === 'p') {
-                const node = document.createElement("div"); node.className = "p-text"; node.style.color = oc;
-                node.contentEditable = "true"; node.innerHTML = formatPreviewText(el.text, bc);
-                node.onblur = e => { DATA[sIdx][eIdx].text = e.target.innerText; saveState(); }; contentWrap.appendChild(node);
+            // Element Content
+            let node;
+            if (['h1','h2','h3','p','mcq-q','mcq-opt','mcq-ans','mcq-sol'].includes(el.type)) {
+                node = document.createElement("div"); node.className = "p-" + el.type;
+                node.style.color = el.color || getDefaultColor(el.type);
+                node.contentEditable = "true"; node.innerHTML = formatText(el.text);
+                node.onblur = e => { DATA[sIdx][eIdx].text = e.target.innerText; saveState(); }; 
             } 
             else if (el.type === 'ul') {
+                node = document.createElement("div");
                 el.items.forEach((itemText, iIdx) => {
-                    const liNode = document.createElement("div"); liNode.className = "p-li"; liNode.style.color = oc;
-                    liNode.contentEditable = "true"; liNode.innerHTML = "• " + formatPreviewText(itemText, bc);
+                    const liNode = document.createElement("div"); liNode.className = "p-li"; 
+                    liNode.style.color = el.color || getDefaultColor('p');
+                    liNode.contentEditable = "true"; liNode.innerHTML = "• " + formatText(itemText);
                     liNode.onblur = e => { DATA[sIdx][eIdx].items[iIdx] = e.target.innerText.replace(/^•\s*/, ""); saveState(); };
-                    contentWrap.appendChild(liNode);
+                    node.appendChild(liNode);
                 });
             }
-            else if (el.type === 'mcq-q') {
-                const node = document.createElement("div"); node.className = "p-mcq-q"; node.style.color = mcqQc;
-                node.contentEditable = "true"; node.innerHTML = formatPreviewText(el.text, bc);
-                node.onblur = e => { DATA[sIdx][eIdx].text = e.target.innerText; saveState(); }; contentWrap.appendChild(node);
-            }
-            else if (el.type === 'mcq-opt') {
-                const node = document.createElement("div"); node.className = "p-mcq-opt"; node.style.color = mcqOc;
-                node.contentEditable = "true"; node.innerHTML = formatPreviewText(el.text, bc);
-                node.onblur = e => { DATA[sIdx][eIdx].text = e.target.innerText; saveState(); }; contentWrap.appendChild(node);
-            }
-            else if (el.type === 'mcq-exp') {
-                const node = document.createElement("div"); node.className = "p-exp-box"; node.style.color = expc;
-                node.contentEditable = "true"; node.innerHTML = formatPreviewText(el.text, bc);
-                node.onblur = e => { DATA[sIdx][eIdx].text = e.target.innerText; saveState(); }; contentWrap.appendChild(node);
-            }
             else if (el.type === 'table') {
-                const tableWrap = document.createElement("div"); tableWrap.className = "preview-table-wrap";
+                node = document.createElement("div"); node.className = "preview-table-wrap";
                 const table = document.createElement("table"); table.className = "preview-table";
                 el.rows.forEach((row, rIdx) => {
                     const tr = document.createElement("tr");
                     row.forEach((cell, cIdx) => {
                         const td = document.createElement(rIdx === 0 ? "th" : "td");
-                        td.contentEditable = "true"; td.innerHTML = formatPreviewText(cell, bc);
+                        if(rIdx!==0) td.style.color = el.color || getDefaultColor('p');
+                        td.contentEditable = "true"; td.innerHTML = formatText(cell);
                         td.onblur = e => { DATA[sIdx][eIdx].rows[rIdx][cIdx] = e.target.innerText; saveState(); }; tr.appendChild(td);
                     }); table.appendChild(tr);
-                });
-                tableWrap.appendChild(table); contentWrap.appendChild(tableWrap);
+                }); node.appendChild(table);
             }
+
+            if(node) elBlock.appendChild(node);
+            content.appendChild(elBlock);
         });
-        div.appendChild(contentWrap); box.appendChild(div);
+
+        // Add Element Buttons at bottom of slide
+        const addBar = document.createElement("div"); addBar.className = "add-element-bar";
+        addBar.innerHTML = `
+            <button class="add-el-btn" onclick="addElement(${sIdx}, 'h1')">+ H1</button>
+            <button class="add-el-btn" onclick="addElement(${sIdx}, 'p')">+ Text</button>
+            <button class="add-el-btn" onclick="addElement(${sIdx}, 'ul')">+ Bullet</button>
+            <button class="add-el-btn" onclick="addElement(${sIdx}, 'mcq-q')">+ MCQ Question</button>
+            <button class="add-el-btn" onclick="addElement(${sIdx}, 'mcq-opt')">+ MCQ Option</button>
+            <button class="add-el-btn" onclick="addElement(${sIdx}, 'mcq-ans')">+ Answer</button>
+            <button class="add-el-btn" onclick="addElement(${sIdx}, 'table')">+ Table</button>
+        `;
+        content.appendChild(addBar);
+
+        div.appendChild(content); wrap.appendChild(div); box.appendChild(wrap);
     });
 }
 
-// ==============================================
-// ADVANCED GENERATOR WITH AUTO-PAGINATION
-// ==============================================
+// ==========================================
+// 7. GENERATE PPTX (Draw to Canvas)
+// ==========================================
 $('generateBtn').onclick = async () => {
-    if (DATA.length === 0) return alert("No Data! Please import HTML or JSON first.");
-    const btn = $('generateBtn'); btn.innerHTML = "⏳ Generating PPTX..."; btn.disabled = true;
+    if (DATA.length === 0) return alert("No Data! Please import HTML/JSON or Add slides.");
+    const btn = $('generateBtn'); btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Generating PPTX..."; btn.disabled = true;
 
     setTimeout(async () => {
         const pxW = 1300, pxH = 710;
@@ -432,12 +532,9 @@ $('generateBtn').onclick = async () => {
         let bgUrl = getBgUrl();
         await document.fonts.load("30px Kalam"); await document.fonts.load("bold 30px Kalam"); 
         await document.fonts.load("bold 34px Kalam"); await document.fonts.load("bold 44px Kalam");
-
-        const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
-        const mcqQc = $('mcqQColor').value, mcqOc = $('mcqOptColor').value, expc = $('expColor').value;
+        const bHex = $('boldColor').value;
 
         for (const slideElements of DATA) {
-            
             let s = ppt.addSlide();
             if (bgUrl) s.background = { data: bgUrl }; else s.background = { color: isLightMode ? "FFFFFF" : "000000" };
 
@@ -452,11 +549,10 @@ $('generateBtn').onclick = async () => {
                 s = ppt.addSlide();
                 if (bgUrl) s.background = { data: bgUrl }; else s.background = { color: isLightMode ? "FFFFFF" : "000000" };
                 c = document.createElement("canvas"); c.width = pxW; c.height = pxH;
-                ctx = c.getContext("2d"); ctx.textBaseline = "top";
-                y = m.top;
+                ctx = c.getContext("2d"); ctx.textBaseline = "top"; y = m.top;
             };
 
-            const drawSmartText = (text, normalFont, boldFont, normalCol, boldCol, lineH, leftIndent = 0) => {
+            const drawSmartText = (text, normalFont, boldFont, normalCol, lineH, leftIndent = 0) => {
                 if(!text) return;
                 const paras = text.split("\n");
                 paras.forEach(para => {
@@ -468,11 +564,10 @@ $('generateBtn').onclick = async () => {
                     });
                     
                     let currentX = m.left + leftIndent; let endX = pxW - m.right;
-
                     if (y + lineH > bottomLimit && y > m.top) triggerPagination();
 
                     for(let i=0; i<words.length; i++) {
-                        let w = words[i]; ctx.font = w.b ? boldFont : normalFont; ctx.fillStyle = w.b ? boldCol : normalCol;
+                        let w = words[i]; ctx.font = w.b ? boldFont : normalFont; ctx.fillStyle = w.b ? bHex : normalCol;
                         let metric = ctx.measureText(w.t + " ");
                         
                         if (currentX + metric.width > endX && currentX !== m.left + leftIndent) { 
@@ -485,62 +580,80 @@ $('generateBtn').onclick = async () => {
                 });
             };
 
-            // Process each element inside slide
             slideElements.forEach((el) => {
+                let col = el.color || getDefaultColor(el.type);
                 if ((el.type === 'h1' || el.type === 'h2') && y > m.top) triggerPagination();
 
-                if(el.type === 'h1'){ drawSmartText(el.text, "bold 44px Kalam", "bold 44px Kalam", h1c, h1c, 56); y+=10; }
-                else if(el.type === 'h2'){ drawSmartText(el.text, "bold 34px Kalam", "bold 34px Kalam", h2c, h2c, 46); y+=10; }
+                if(el.type === 'h1'){ drawSmartText(el.text, "bold 44px Kalam", "bold 44px Kalam", col, 56); y+=10; }
+                else if(el.type === 'h2'){ drawSmartText(el.text, "bold 34px Kalam", "bold 34px Kalam", col, 46); y+=10; }
                 else if(el.type === 'h3'){ 
                     if (y + 50 > bottomLimit && y > m.top) triggerPagination();
-                    drawSmartText(el.text, "bold 28px Kalam", "bold 28px Kalam", h3c, h3c, 38); y+=5; 
+                    drawSmartText(el.text, "bold 28px Kalam", "bold 28px Kalam", col, 38); y+=5; 
                 }
-                else if(el.type === 'p'){ drawSmartText(el.text, "30px Kalam", "bold 30px Kalam", oc, bc, 42); y+=8; }
+                else if(el.type === 'p'){ drawSmartText(el.text, "30px Kalam", "bold 30px Kalam", col, 42); y+=8; }
                 else if(el.type === 'ul'){ 
-                    el.items.forEach(li => { drawSmartText("• " + li, "30px Kalam", "bold 30px Kalam", oc, bc, 42, 20); y+=5; });
-                    y+=5; 
+                    el.items.forEach(li => { drawSmartText("• " + li, "30px Kalam", "bold 30px Kalam", col, 42, 20); y+=5; }); y+=5; 
                 }
-                // --- MCQ & Explanation ---
-                else if(el.type === 'mcq-q'){ 
-                    drawSmartText(el.text, "bold 36px Kalam", "bold 36px Kalam", mcqQc, mcqQc, 48); y+=15; 
-                }
-                else if(el.type === 'mcq-opt'){ 
-                    drawSmartText(el.text, "30px Kalam", "bold 30px Kalam", mcqOc, mcqOc, 40, 20); y+=8; 
-                }
-                else if(el.type === 'mcq-exp'){ 
-                    if (y + 80 > bottomLimit && y > m.top) triggerPagination();
-                    drawSmartText(el.text, "bold 28px Kalam", "bold 28px Kalam", expc, expc, 38, 10); y+=10; 
-                }
+                else if(el.type === 'mcq-q'){ drawSmartText(el.text, "bold 40px Kalam", "bold 40px Kalam", col, 52); y+=20; }
+                else if(el.type === 'mcq-opt'){ drawSmartText(el.text, "34px Kalam", "bold 34px Kalam", col, 46, 30); y+=10; }
+                else if(el.type === 'mcq-ans'){ drawSmartText(el.text, "bold 36px Kalam", "bold 36px Kalam", "#10b981", 48); y+=10; }
+                else if(el.type === 'mcq-sol'){ drawSmartText(el.text, "30px Kalam", "bold 30px Kalam", col, 42); y+=10; }
                 else if(el.type === 'table'){
-                    let estTableHeight = (el.rows.length * 50) + 30;
-                    if (y + estTableHeight > bottomLimit && y > m.top) triggerPagination();
-
+                    let estH = (el.rows.length * 55) + 30;
+                    if (y + estH > bottomLimit && y > m.top) triggerPagination();
                     let pptRows = el.rows.map((rowArr, rIdx) => {
                         return rowArr.map(cellHtml => {
                             let isHead = (rIdx === 0);
                             return {
                                 text: cellHtml.replace(/<b>|<\/b>/g, ''), 
                                 options: { 
-                                    color: isHead ? 'FFFFFF' : (isLightMode ? '000000' : 'FFFFFF'), 
+                                    color: isHead ? 'FFFFFF' : (el.color ? el.color.replace('#','') : (isLightMode ? '000000' : 'FFFFFF')), 
                                     bold: isHead || cellHtml.includes('<b>'),
-                                    fontFace: 'Kalam', fontSize: 20, 
+                                    fontFace: 'Kalam', fontSize: 22, 
                                     fill: isHead ? '2563EB' : (isLightMode ? 'F8FAFC' : '1A2234'), 
-                                    align: 'center', valign: 'middle', margin: [6, 6, 6, 6] 
+                                    align: 'center', valign: 'middle', margin: [8, 8, 8, 8] 
                                 }
                             };
                         });
                     });
                     s.addTable(pptRows, { x: m.left/96, y: y/96, w: maxW/96, border: { pt: 1, color: isLightMode ? 'CBD5E1' : '334155' } });
-                    y += estTableHeight + 15; 
+                    y += estH + 20; 
                 }
             });
 
             s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
         }
         
-        ppt.writeFile({ fileName: "Study_Notes_AutoPage.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
+        ppt.writeFile({ fileName: "Ultimate_Notes_PPT.pptx" }).then(() => { 
+            btn.innerHTML = "✅ Download Successful!"; 
+            setTimeout(()=>btn.innerHTML="<i class='fas fa-download'></i> Generate PPTX File", 3000); 
+            btn.disabled = false; 
+        });
     }, 100);
 };
+
+// ==========================================
+// 8. STORAGE (Save State to LocalStorage)
+// ==========================================
+function saveState() {
+    const s = { data: DATA, margins: { t: $('topM').value, b: $('bottomM').value, l: $('leftM').value, r: $('rightM').value }, theme: isLightMode, bg: $('bgSelect').value, customBg: customBgDataUrl, split: $('splitAnswerToggle').checked, colors: {h1:$('defH1').value, h2:$('defH2').value, p:$('defP').value, mq:$('defMQ').value, mo:$('defMO').value} };
+    localStorage.setItem('pptProState_V1', JSON.stringify(s));
+}
+
+function loadState() {
+    const saved = localStorage.getItem('pptProState_V1');
+    if(saved) {
+        const s = JSON.parse(saved); DATA = s.data || [];
+        $('topM').value = s.margins.t; $('bottomM').value = s.margins.b; $('leftM').value = s.margins.l; $('rightM').value = s.margins.r;
+        $('splitAnswerToggle').checked = s.split;
+        if(s.colors) { $('defH1').value=s.colors.h1; $('defH2').value=s.colors.h2; $('defP').value=s.colors.p; $('defMQ').value=s.colors.mq; $('defMO').value=s.colors.mo; }
+        $('bgSelect').value = s.bg; customBgDataUrl = s.customBg || null;
+        if(s.bg === 'custom') $('bgImgUpload').style.display = 'block';
+        isLightMode = s.theme || false;
+        if(isLightMode) { document.body.classList.add('light-mode'); $('themeToggle').innerHTML = '<i class="fas fa-sun"></i> Light'; }
+    }
+    renderPreview();
+}
 
 window.onload = () => loadState();
 </script>
