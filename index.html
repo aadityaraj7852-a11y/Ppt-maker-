@@ -3,437 +3,709 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Ultimate PPT Maker Pro MAX - 60+ Features</title>
-<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Noto+Sans+Devanagari:wght@400;500;700;900&family=Noto+Serif+Devanagari:wght@400;700&family=Hind:wght@400;600;700&family=Mukta:wght@400;600;700&family=Baloo+2:wght@400;600;700&family=Tiro+Devanagari+Hindi:ital@0;1&family=Laila:wght@400;600;700&family=Poppins:wght@400;600;700&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<title>Ultimate PPT Maker Pro (Mockrise Ribbon Edition)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Noto+Sans+Devanagari:wght@400;500;700;900&family=Noto+Serif+Devanagari:wght@400;700&family=Hind:wght@400;600;700&family=Mukta:wght@400;600;700&family=Baloo+2:wght@400;600;700&family=Tiro+Devanagari+Hindi:ital@0;1&family=Laila:wght@400;600;700&family=Poppins:wght@400;600;700&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
 
 <style>
-:root {
-    --accent: #ffeb3b; --sub-accent: #00e676; --h3-accent: #00bcd4; --bold-color: #ff9800;
-    --btn-blue: #3b82f6; --btn-purple: #8b5cf6; --btn-green: #10b981; --btn-red: #ef4444; --btn-orange:#f59e0b;
-    --bg-main: #0f172a; --card-bg: #1e293b; --text-main: #f8fafc; --text-muted: #94a3b8;
-    --border: #334155; --input-bg: #0b1220; --slide-bg: #000000; --hover-bg: #27354f;
-}
-body.light-mode {
-    --accent: #d97706; --sub-accent: #16a34a; --h3-accent: #0284c7; --bold-color: #dc2626;
-    --btn-blue: #2563eb; --btn-purple: #7c3aed; --btn-green: #059669; --btn-red: #dc2626; --btn-orange:#d97706;
-    --bg-main: #f1f5f9; --card-bg: #ffffff; --text-main: #0f172a; --text-muted: #475569;
-    --border: #cbd5e1; --input-bg: #f8fafc; --slide-bg: #ffffff; --hover-bg: #e2e8f0;
-}
-body { font-family: var(--live-font, 'Kalam'), cursive; background: var(--bg-main); color: var(--text-main); margin: 0; padding: 15px; transition: 0.3s; }
-* { box-sizing: border-box; }
-.main-wrapper { display: flex; gap: 20px; max-width: 1900px; margin: auto; align-items: flex-start; height: 95vh; }
-.left-panel { flex: 0 0 460px; background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; height: 100%; overflow-y: auto; }
-.right-panel { flex: 1; background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.1); height: 100%; overflow-y: auto; display: flex; flex-direction: column; }
-@media (max-width: 1100px) { .main-wrapper { flex-direction: column; height: auto; } .left-panel, .right-panel { flex: auto; width: 100%; height: auto; } }
+    /* 🔴 MOCKRISE MS WORD THEME VARIABLES 🔴 */
+    :root {
+        --bg-main: #c9cdd4;
+        --card-bg: #ffffff;
+        --text-main: #201f1e;
+        --text-muted: #605e5c;
+        --border: #c8c6c4;
+        --input-bg: #f3f2f1;
+        --slide-bg: #ffffff;
+        --hover-bg: #e1dfdd;
+        --word-blue: #2b579a;
+        --word-dark: #1e395b;
+        --success: #107c41;
+        --red-accent: #d13438;
+        --accent: #2b579a;
+        --bold-color: #d13438;
+        --ribbon-bg: #f5f6f7;
+        
+        /* ✅ ADDED DYNAMIC MARGIN VARIABLES */
+        --slide-pt: 40px;
+        --slide-pb: 40px;
+        --slide-pl: 50px;
+        --slide-pr: 50px;
+    }
 
-.header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 10px; }
-.header-row h2 { margin: 0; color: var(--accent); font-size: 1.6em; }
-.theme-btn { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px; cursor: pointer; font-family: 'Kalam'; font-weight: bold; transition: 0.3s; }
+    body.dark-mode {
+        --bg-main: #0f172a; --card-bg: #1e293b; --text-main: #f8fafc; --text-muted: #94a3b8;
+        --border: #334155; --input-bg: #0b1220; --slide-bg: #000000; --hover-bg: #27354f;
+        --word-blue: #3b82f6; --word-dark: #2563eb; --accent: #ffeb3b; --bold-color: #ff9800;
+        --ribbon-bg: #1e293b;
+    }
 
-label { color: var(--text-muted); font-weight: 700; margin-top: 10px; display: block; font-size: 0.95em; }
-textarea, input[type="number"], input[type="text"], select { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text-main); font-family: 'Kalam', cursive; margin-top: 4px; font-size: 1.05em; transition: 0.3s; }
-textarea:focus, input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 5px rgba(255,235,59,0.3); }
-input[type="range"]{ width:100%; margin-top:6px; }
+    /* 🔴 STRICT SQUARE CORNERS & FONT FIX 🔴 */
+    * { box-sizing: border-box; margin: 0; padding: 0; border-radius: 0 !important; }
+    body { font-family: 'Inter', sans-serif; display: flex; flex-direction: column; height: 100vh; background: var(--bg-main); color: var(--text-main); overflow: hidden; }
 
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-.grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+    /* ════ HEADER ════ */
+    header { background: var(--word-blue); color: white; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; position: relative; z-index: 10; height: 45px;}
+    .logo { font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 10px; letter-spacing: 0.5px; }
 
-.btn { width: 100%; padding: 9px 5px; border: none; border-radius: 6px; cursor: pointer; font-family: 'Kalam', cursive; font-weight: 700; font-size: 0.95em; transition: 0.2s; color: #fff; text-align: center; display: flex; align-items: center; justify-content: center; gap: 5px; }
-.btn:hover { opacity: 0.85; transform: translateY(-1px); }
-.btn:active { transform: translateY(1px); }
-.btn-blue { background: var(--btn-blue); } .btn-purple { background: var(--btn-purple); }
-.btn-green { background: var(--btn-green); } .btn-red { background: var(--btn-red); } .btn-orange{background:var(--btn-orange);}
-.btn-gray { background: var(--border); color: var(--text-main); }
-.btn-generate { background: linear-gradient(135deg, #10b981, #059669); font-size: 1.15em; padding: 12px; margin-top: 15px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
+    /* ════ RIBBON UI ════ */
+    .ribbon-wrapper { background: var(--ribbon-bg); border-bottom: 1px solid #9ba7b6; display: flex; flex-direction: column; flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); z-index: 5;}
+    .ribbon-tabs { display: flex; padding: 0 10px; margin-top: 5px; gap: 2px;}
+    
+    .r-tab { padding: 6px 18px; font-size: 0.85rem; font-weight: 500; color: var(--text-main); cursor: pointer; border: 1px solid transparent; border-bottom: none; transition: 0.2s;}
+    .r-tab:hover { background: var(--hover-bg); }
+    .r-tab.active { background: var(--card-bg); color: var(--word-blue); font-weight: bold; border-color: #9ba7b6; border-bottom-color: var(--card-bg); position: relative; top: 1px; border-top: 3px solid var(--word-blue) !important;}
+    
+    .ribbon-tools-container { background: var(--card-bg); border-top: 1px solid #9ba7b6; padding: 5px 0;}
+    .ribbon-tools { display: flex; padding: 5px 15px; gap: 15px; align-items: stretch; height: 95px;}
+    .tool-group { display: flex; flex-direction: column; align-items: center; border-right: 1px solid var(--border); padding-right: 15px; position: relative;}
+    
+    .tool-group-label { font-size: 0.65rem; color: var(--text-muted); text-align: center; width: 100%; margin-top: auto; padding-top: 4px; padding-bottom: 2px; font-weight: 600; text-transform: uppercase;}
+    
+    .tool-row { display: flex; gap: 4px; align-items: center;}
+    .r-btn { background: transparent; border: 1px solid transparent; padding: 4px 6px; cursor: pointer; font-size: 0.9rem; color: var(--text-main); transition: 0.1s; display: flex; align-items: center; justify-content: center;}
+    .r-btn:hover { background: #fdf4bf; border-color: #f2c811; color: #000; }
+    .r-btn.active-tool { background: #deecf9; border-color: var(--word-blue); color: var(--word-blue); }
+    .r-btn-large { flex-direction: column; padding: 4px 10px; min-width: 55px; font-size: 0.75rem; gap: 4px; height: 100%; justify-content: flex-start;}
+    .r-btn-large .icon-wrapper { height: 32px; display: flex; align-items: center; justify-content: center; margin-bottom: 2px;}
+    .r-btn-large .icon-wrapper i { font-size: 1.6rem; color: var(--word-blue); }
+    .r-btn-large .btn-text { font-size: 0.7rem; color: var(--text-main); display: flex; flex-direction: column; align-items: center; line-height: 1.1;}
+    
+    .ribbon-dropdown-container { position: relative; display: inline-block; height: 100%;}
+    .ribbon-menu { display: none; position: absolute; top: 100%; left: 0; background: var(--card-bg); border: 1px solid var(--border); box-shadow: 2px 2px 5px rgba(0,0,0,0.2); z-index: 100; min-width: 200px; padding: 10px;}
+    .ribbon-menu.show { display: block; }
+    
+    .r-select { border: 1px solid var(--border); padding: 4px; font-size: 0.8rem; outline: none; background: var(--input-bg); color: var(--text-main);}
+    .r-input { border: 1px solid var(--border); padding: 4px; font-size: 0.8rem; outline: none; background: var(--input-bg); color: var(--text-main); width: 100%; margin-bottom: 5px;}
 
-.feature-box { background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-top: 15px; }
-.feature-box > label:first-child{ margin-top:0; }
-.toggle-switch { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 1.0em; color: var(--accent); font-weight: bold; margin-top: 10px; }
-.toggle-switch input { width: 20px; height: 20px; cursor: pointer; }
-details.section { margin-top:15px; border:1px solid var(--border); border-radius:8px; background: var(--input-bg); }
-details.section summary { cursor:pointer; padding:10px 12px; font-weight:700; color: var(--accent); list-style: none; display:flex; align-items:center; gap:8px;}
-details.section summary::-webkit-details-marker{ display:none; }
-details.section .inner{ padding: 5px 12px 12px 12px; }
+    .btn-submit { background: var(--word-blue); color: white; border: none; padding: 8px 15px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-transform: uppercase; height: 100%; transition: 0.2s;}
+    .btn-submit:hover { background: var(--word-dark); }
 
-.stats-bar{ display:flex; gap:14px; flex-wrap:wrap; font-size:0.85em; color:var(--text-muted); margin-left:auto; }
-.stats-bar b{ color:var(--text-main); }
+    /* ════ WORKSPACE AREA ════ */
+    .workspace-area { flex: 1; background: var(--bg-main); overflow-y: auto; padding: 30px; position: relative; display: flex; flex-direction: column; align-items: center;}
+    
+    .stats-bar { display: flex; gap: 14px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; background: var(--card-bg); padding: 8px 15px; border: 1px solid var(--border); margin-bottom: 20px; width: 100%; max-width: 1000px;}
+    .stats-bar b { color: var(--word-blue); }
 
-.preview-list { display: flex; flex-direction: column; gap: 40px; padding-bottom: 50px; }
-.slide-wrapper { position: relative; }
-.slide-wrapper.dragging{ opacity:0.4; }
-.slide-toolbar { display: flex; justify-content: space-between; background: var(--border); padding: 8px 15px; border-radius: 8px 8px 0 0; align-items: center; flex-wrap:wrap; gap:6px; }
-.slide-toolbar .s-title { font-weight: bold; color: var(--text-main); font-size: 1.1em; display:flex; align-items:center; gap:8px; }
-.slide-actions { display: flex; gap: 5px; flex-wrap:wrap; align-items:center; }
-.action-icon { background: var(--card-bg); color: var(--text-main); border: none; width: 30px; height: 30px; border-radius: 5px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
-.action-icon:hover { background: var(--hover-bg); color: var(--accent); }
-.action-icon.active{ background: var(--accent); color:#000; }
-.mini-input{ width:60px !important; padding:4px !important; margin:0 !important; font-size:0.8em !important; }
-.mini-select{ width:auto !important; padding:4px !important; margin:0 !important; font-size:0.8em !important; }
-.mini-color{ width:26px !important; height:26px; padding:0 !important; margin:0 !important; border-radius:50%; border:none; cursor:pointer; }
+    /* ════ SLIDES ════ */
+    .preview-list { display: flex; flex-direction: column; gap: 30px; padding-bottom: 50px; width: 100%; max-width: 1000px; }
+    .slide-wrapper { width: 100%; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.1); background: var(--card-bg); transition: 0.2s; border: 2px solid transparent;}
+    .slide-wrapper.dragging { opacity: 0.4; }
+    
+    /* 🔴 ACTIVE SLIDE INDICATOR 🔴 */
+    .slide-wrapper.active-slide-ring { border-color: var(--word-blue); box-shadow: 0 0 0 4px rgba(43, 87, 154, 0.2); }
+    
+    .slide-toolbar { background: var(--input-bg); border-bottom: 1px solid var(--border); padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; }
+    .slide-toolbar .s-title { font-weight: bold; color: var(--word-dark); display: flex; align-items: center; gap: 8px; }
+    .slide-actions { display: flex; gap: 4px; align-items: center; }
+    
+    .action-icon { background: transparent; color: var(--text-muted); border: 1px solid transparent; width: 28px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; transition: 0.2s; }
+    .action-icon:hover { background: #fdf4bf; border-color: #f2c811; color: #000; }
+    
+    .slide-meta-row { background: var(--input-bg); border-bottom: 1px solid var(--border); padding: 6px 12px; display: flex; gap: 10px; align-items: center; font-size: 0.8rem; }
+    .slide-meta-row textarea { height: 26px; min-height: 26px; margin: 0; flex: 1; border: 1px solid var(--border); padding: 2px 6px; background: var(--card-bg); color: var(--text-main);}
 
-.slide-meta-row{ display:flex; gap:8px; align-items:center; background:var(--border); padding:6px 15px; font-size:0.85em; flex-wrap:wrap; }
-.slide-meta-row label{ margin:0; color:var(--text-main); font-weight:600; }
-.slide-meta-row textarea{ min-height:32px; margin:0; font-size:0.9em; }
+    .slide-card { aspect-ratio: 16/9; position: relative; overflow: hidden; display: flex; flex-direction: column; background: var(--slide-bg); background-size: cover !important; background-position: center !important; }
+    .slide-card.grayscale { filter: grayscale(100%); }
+    .slide-overlay { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+    
+    /* ✅ APPLIED DYNAMIC PADDING FROM VARIABLES */
+    .slide-content { padding: var(--slide-pt) var(--slide-pr) var(--slide-pb) var(--slide-pl); position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; }
+    .hud-text { position: absolute; z-index: 2; font-size: 0.8em; opacity: 0.8; pointer-events: none; font-family: var(--live-font, 'Kalam'); }
 
-.slide-card { background-color: var(--slide-bg); background-size: cover !important; background-position: center !important; border: 2px solid var(--border); border-top: none; padding: 30px; border-radius: 0 0 8px 8px; position: relative; aspect-ratio: 16 / 9; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); overflow: hidden; display: flex; flex-direction: column; }
-.slide-card.grayscale{ filter: grayscale(100%); }
-.slide-overlay{ position:absolute; inset:0; z-index:0; pointer-events:none; }
-.slide-content { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; }
-.hud-text{ position:absolute; z-index:2; font-size:0.8em; opacity:0.8; pointer-events:none; font-family: var(--live-font,'Kalam'); }
+    /* ==========================================
+   INLINE TEXT TOOLBAR - MOBILE SAFE
+   ========================================== */
 
-.add-slide-separator { display: flex; align-items: center; justify-content: center; position: relative; margin: -15px 0; z-index: 10; opacity: 0.5; transition: 0.3s; }
-.add-slide-separator:hover { opacity: 1; }
-.add-slide-separator::before { content: ''; position: absolute; width: 100%; height: 2px; background: var(--border); z-index: -1; }
-.add-slide-btn { background: var(--btn-blue); color: #fff; border: none; padding: 5px 15px; border-radius: 20px; font-family: 'Kalam'; font-weight: bold; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+    .el-block {
+        position: relative;
+        border: 1px dashed transparent;
+        transition: 0.1s;
+        padding: 4px 6px;
+        margin-bottom: 5px;
+    }
 
-.el-block { position: relative; border: 1px dashed transparent; transition: 0.2s; padding: 2px 5px; border-radius: 5px; margin-bottom: 5px; }
-.el-block:hover { border-color: rgba(150,150,150,0.5); background: rgba(128,128,128,0.1); }
-.el-block.locked{ border-color: rgba(239,68,68,0.6) !important; }
-.el-toolbar { position: absolute; top: -34px; right: 0; background: var(--card-bg); border: 1px solid var(--border); border-radius: 5px; display: none; gap: 4px; padding: 3px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); z-index: 50; flex-wrap:wrap; max-width: 420px; }
-.el-block:hover .el-toolbar { display: flex; }
-.el-toolbar button, .el-toolbar input, .el-toolbar select { background: transparent; border: none; color: var(--text-main); cursor: pointer; padding: 2px 5px; font-size:0.85em; }
-.el-toolbar button:hover{ color: var(--accent); }
-.el-toolbar button.active{ color: var(--sub-accent); }
-.el-toolbar input[type="color"] { width: 22px; height: 22px; padding: 0; border-radius: 50%; border: none; overflow: hidden; }
-.el-toolbar input[type="number"]{ width:45px; }
+    .el-block:hover,
+    .el-block.active-edit {
+        border-color: var(--word-blue);
+        background: rgba(43, 87, 154, 0.03);
+    }
 
-[contenteditable="true"] { outline: none; display: block; }
-.p-h1 { font-size: 2.2em; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid rgba(150,150,150,0.3); padding-bottom: 5px; }
-.p-h2 { font-size: 1.6em; font-weight: bold; margin-bottom: 8px; margin-top: 10px; }
-.p-h3 { font-size: 1.4em; font-weight: bold; margin-bottom: 8px; margin-top: 5px; }
-.p-text, .p-li, .p-p { font-size: 1.3em; margin-bottom: 8px; line-height: 1.5; white-space: pre-wrap; }
-.p-quote{ font-size:1.2em; font-style: italic; border-left: 4px solid var(--accent); padding: 4px 0 4px 16px; margin: 8px 0; white-space: pre-wrap; }
-.p-link{ font-size:1.2em; text-decoration: underline; cursor:pointer; white-space: pre-wrap; }
-.p-icon{ font-size: 3em; text-align:center; white-space: pre-wrap; }
+    .el-block.locked {
+        border-color: rgba(209, 52, 56, 0.5) !important;
+    }
 
-.p-mcq-q { font-size: 1.8em; font-weight: bold; margin: 0 0 10px 0; line-height: 1.3; white-space: pre-wrap; }
-.p-mcq-opt { font-size: 1.4em; margin: 0 0 6px 0; line-height: 1.3; white-space: pre-wrap; padding-left: 20px; }
-.p-mcq-ans { font-size: 1.5em; font-weight: bold; margin-top: 10px; margin-bottom: 0; color: #10b981; }
-.p-mcq-sol { font-size: 1.3em; margin-top: 4px; margin-bottom: 0; font-style: italic; }
+    .el-toolbar {
+        position: absolute;
+        top: -38px;
+        right: 0;
+        background: var(--card-bg);
+        color: var(--text-main);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        display: none;
+        align-items: center;
+        gap: 2px;
+        padding: 3px;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.18);
+        z-index: 9999;
+        flex-wrap: wrap;
+        max-width: min(96vw, 700px);
+        box-sizing: border-box;
+    }
 
-.preview-table-wrap { width: 100%; margin: 10px 0; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
-.preview-table { width: 100%; border-collapse: collapse; table-layout: fixed; background: rgba(0,0,0,0.4); font-size: 1.05em; line-height: 1.25; }
-.preview-table th, .preview-table td { padding: 9px 11px; text-align: left; vertical-align: middle; border: 1px solid rgba(150,150,150,0.4); line-height: 1.25; word-break: break-word; }
-.preview-table th *, .preview-table td * { margin: 0; padding: 0; line-height: inherit; }
-.preview-table.compact th, .preview-table.compact td { padding: 4px 8px; font-size: 0.92em; line-height: 1.15; }
-.preview-table th { background: #2563eb; color: #fff; font-weight: bold; }
-.preview-table tr.striped{ background: rgba(255,255,255,0.05); }
-body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
-.table-controls{ display:flex; gap:6px; margin-top:6px; flex-wrap:wrap; }
-.table-controls button{ font-size:0.75em; padding:3px 8px; border-radius:4px; border:1px solid var(--border); background:var(--card-bg); color:var(--text-main); cursor:pointer; }
+    .el-block.active-edit .el-toolbar, .el-block:hover .el-toolbar {
+        display: flex;
+    }
 
-.p-image-wrap{ display:flex; margin: 8px 0; }
-.p-image-wrap img{ border-radius:6px; max-width:100%; display:block; }
-.p-shape{ margin: 8px 0; }
+    .el-toolbar button {
+        background: transparent;
+        border: 1px solid transparent;
+        color: var(--text-main);
+        cursor: pointer;
+        padding: 4px 6px;
+        font-size: 0.9rem;
+        min-width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        flex: 0 0 auto;
+    }
 
-.add-element-bar { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 15px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; justify-content: center;}
-.add-el-btn { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border); padding: 5px 10px; border-radius: 5px; font-size: 0.85em; cursor: pointer; transition: 0.2s;}
-.add-el-btn:hover { background: var(--accent); color: #000; }
+    .el-toolbar button:hover {
+        background: #fdf4bf;
+        border-color: #f2c811;
+        color: #000;
+    }
 
-.modal-overlay{ position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:999; }
-.modal-box{ background:var(--card-bg); border:1px solid var(--border); border-radius:12px; padding:20px; max-width:600px; width:90%; max-height:80vh; overflow-y:auto; }
-.modal-box h3{ margin-top:0; color:var(--accent); }
-.modal-box ul{ padding-left:20px; line-height:1.9; }
-.modal-close{ float:right; background:var(--btn-red); color:#fff; border:none; border-radius:5px; padding:4px 10px; cursor:pointer; }
-.theme-swatch{ width:32px; height:32px; border-radius:50%; cursor:pointer; border:2px solid var(--border); display:inline-block; }
-.autosave-indicator{ font-size:0.75em; color:var(--text-muted); text-align:right; margin-top:4px; }
-.overflow-badge{ font-size:0.85em; }
-@media print {
-  .left-panel, .slide-toolbar, .slide-meta-row, .add-slide-separator, .el-toolbar, .add-element-bar, .table-controls, .autosave-indicator, .stats-bar, #modalRoot { display:none !important; }
-  .right-panel{ box-shadow:none; border:none; padding:0; height:auto; overflow:visible; }
-  .main-wrapper{ height:auto; display:block; }
-  .slide-wrapper{ page-break-after: always; }
-  .slide-card{ border:none !important; box-shadow:none !important; border-radius:0 !important; width:100%; }
-  body{ padding:0; background:#fff; }
-}
+    .el-toolbar button.active {
+        background: #deecf9;
+        border-color: var(--word-blue);
+        color: var(--word-blue);
+    }
+
+    .el-toolbar input[type="color"] {
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        border: none;
+        cursor: pointer;
+        flex: 0 0 auto;
+    }
+
+    @media (max-width: 700px) {
+        .el-toolbar {
+            position: fixed; top: auto; right: auto; left: 8px; bottom: auto;
+            max-width: calc(100vw - 16px); overflow-x: auto; overflow-y: hidden;
+            flex-wrap: nowrap; padding: 4px; -webkit-overflow-scrolling: touch; z-index: 100000;
+        }
+        .el-toolbar button { min-width: 32px; height: 32px; font-size: 14px; }
+        .el-toolbar input[type="color"] { width: 28px; height: 28px; }
+    }
+    
+    /* ✅ FONT AWESOME ICONS FIX (Excludes 'i' and '.fas' from font override) */
+    .slide-content *:not(i):not(.fas):not(.fa-solid):not(.fab):not(.far) { 
+        font-family: var(--live-font, 'Inter'), sans-serif; 
+    }
+    
+    [contenteditable="true"] { outline: none; display: block; }
+    
+    .p-h1, .p-h2, .p-h3, .p-text, .p-li, .p-p, .p-quote, .p-link, .p-mcq-q, .p-mcq-opt, .p-mcq-ans, .p-mcq-sol {
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        word-break: break-word !important;
+        white-space: pre-wrap;
+        max-width: 100%;
+    }
+
+    .p-h1 { font-size: 2.2em; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid rgba(150,150,150,0.3); padding-bottom: 5px; }
+    .p-h2 { font-size: 1.6em; font-weight: bold; margin-bottom: 8px; margin-top: 10px; }
+    .p-h3 { font-size: 1.4em; font-weight: bold; margin-bottom: 8px; margin-top: 5px; }
+    .p-text, .p-li, .p-p { font-size: 1.3em; margin-bottom: 8px; line-height: 1.5; }
+    .p-quote{ font-size:1.2em; font-style: italic; border-left: 4px solid var(--word-blue); padding: 4px 0 4px 16px; margin: 8px 0; background: rgba(43,87,154,0.05); }
+    .p-link{ font-size:1.2em; text-decoration: underline; cursor:pointer; color: var(--word-blue); }
+    .p-icon{ font-size: 3em; text-align:center; }
+    .p-mcq-q { font-size: 1.8em; font-weight: bold; margin: 0 0 10px 0; line-height: 1.3; }
+    .p-mcq-opt { font-size: 1.4em; margin: 0 0 6px 0; line-height: 1.3; padding-left: 20px; }
+    .p-mcq-ans { font-size: 1.5em; font-weight: bold; margin-top: 10px; margin-bottom: 0; color: var(--success); }
+    .p-mcq-sol { font-size: 1.3em; margin-top: 4px; margin-bottom: 0; font-style: italic; }
+
+    /* Tables */
+    .preview-table-wrap { width: 100%; margin: 10px 0; border: 1px solid var(--border); }
+    .preview-table { width: 100%; border-collapse: collapse; table-layout: fixed; background: rgba(0,0,0,0.02); font-size: 1.05em; line-height: 1.25; }
+    .preview-table th, .preview-table td { padding: 9px 11px; text-align: left; vertical-align: middle; border: 1px solid var(--border); line-height: 1.25; word-break: break-word; }
+    .preview-table.compact th, .preview-table.compact td { padding: 4px 8px; font-size: 0.92em; line-height: 1.15; }
+    .preview-table th { background: var(--word-blue); color: #fff; font-weight: bold; }
+    .preview-table tr.striped { background: rgba(0,0,0,0.05); }
+    body.dark-mode .preview-table tr.striped { background: rgba(255,255,255,0.05); }
+    
+    .table-controls { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
+    .table-controls button { font-size: 0.75em; padding: 4px 8px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); cursor: pointer; font-weight: 600; text-transform: uppercase; transition: 0.1s; }
+    .table-controls button:hover { background: #eef3f9; border-color: var(--word-blue); color: var(--word-blue); }
+
+    .p-image-wrap{ display:flex; margin: 8px 0; }
+    .p-image-wrap img{ max-width:100%; display:block; border: 1px solid var(--border); }
+    .p-shape{ margin: 8px 0; }
+
+    /* ════ MODALS ════ */
+    .modal-overlay{ position:fixed; inset:0; background:rgba(32,31,30,0.68); backdrop-filter: blur(3px); display:flex; align-items:center; justify-content:center; z-index:9999; }
+    .modal-box{ background:var(--card-bg); border:1px solid var(--border); padding:25px; max-width:650px; width:90%; max-height:80vh; overflow-y:auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    .modal-box h3{ margin-top:0; color:var(--word-dark); margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 10px; font-size: 1.2rem; text-transform: uppercase; }
+    .modal-close{ float:right; background:var(--red-accent); color:#fff; border:none; padding:6px 12px; cursor:pointer; font-weight: bold; text-transform: uppercase; transition: 0.2s; }
+    .modal-close:hover { background: #a8262a; }
+    
+    /* Toggle switch for modals */
+    .toggle-switch { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.85em; font-weight: 600; margin-top: 10px; color: var(--text-main); }
+    .toggle-switch input { width: 18px; height: 18px; cursor: pointer; }
+
+    /* Buttons */
+    .btn { padding: 8px 15px; font-weight: 600; border: 1px solid transparent; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.85rem; transition: 0.15s; text-transform: uppercase; }
+    .btn:hover { opacity: 0.9; }
+    .btn-blue { background: var(--word-blue); color: #fff; }
+    .btn-green { background: var(--success); color: #fff; }
+    
+    .theme-swatch{ width:26px; height:26px; cursor:pointer; border:1px solid var(--border); display:inline-block; transition: 0.2s; margin-right: 4px; margin-bottom: 4px;}
+    .theme-swatch:hover { transform: scale(1.1); border-color: var(--word-dark); }
+    .autosave-indicator{ font-size:0.75em; color:var(--text-muted); font-weight: 600; text-align: center; margin-top: 5px; }
+    .overflow-badge{ font-size:0.85em; margin-left: 6px; }
+
 </style>
 </head>
-<body>
+<body onclick="closeAllMenus(event)">
 
-<div class="main-wrapper">
-    <!-- LEFT PANEL: CONTROLS -->
-    <div class="left-panel">
-        <div class="header-row">
-            <h2>🎓 PPT Maker Pro MAX</h2>
-            <button id="themeToggle" class="theme-btn"><i class="fas fa-moon"></i> Dark</button>
-        </div>
-
-        <div class="grid-4" style="margin-bottom: 10px;">
-            <button id="demoHtmlBtn" class="btn btn-gray" style="font-size: 0.75em;"><i class="fab fa-html5"></i> Demo Notes</button>
-            <button id="demoJsonBtn" class="btn btn-gray" style="font-size: 0.75em;"><i class="fas fa-list-ol"></i> Demo MCQ</button>
-            <button id="copyCodeBtn" class="btn btn-blue" style="font-size: 0.75em;"><i class="fas fa-copy"></i> Copy JSON</button>
-            <button id="featureListBtn" class="btn btn-purple" style="font-size: 0.75em;"><i class="fas fa-star"></i> Features</button>
-        </div>
-
-        <label><i class="fas fa-database"></i> Data Input (HTML OR JSON)</label>
-        <textarea id="dataArea" rows="5" placeholder='Paste your HTML Notes OR MCQ JSON Data here...'></textarea>
-
-        <label class="toggle-switch">
-            <input type="checkbox" id="splitAnswerToggle" checked>
-            <span><i class="fas fa-magic"></i> Put MCQ Answer on Next Slide</span>
-        </label>
-
-        <div class="grid-3" style="margin-top: 10px;">
-            <button id="importHtmlBtn" class="btn btn-purple"><i class="fas fa-file-code"></i> Load HTML</button>
-            <button id="importJsonBtn" class="btn btn-green"><i class="fas fa-list-ol"></i> Load JSON</button>
-            <button id="clearAllBtn" class="btn btn-red"><i class="fas fa-trash"></i> Clear</button>
-        </div>
-
-        <!-- Undo/Redo/Save/Import-Export -->
-        <div class="grid-4" style="margin-top:10px;">
-            <button id="undoBtn" class="btn btn-gray" title="Ctrl+Z"><i class="fas fa-undo"></i></button>
-            <button id="redoBtn" class="btn btn-gray" title="Ctrl+Y"><i class="fas fa-redo"></i></button>
-            <button id="exportJsonFileBtn" class="btn btn-blue" style="font-size:0.75em;"><i class="fas fa-file-export"></i> Export</button>
-            <button id="importJsonFileBtn" class="btn btn-green" style="font-size:0.75em;"><i class="fas fa-file-import"></i> Import</button>
-        </div>
-        <input type="file" id="jsonFileInput" accept=".json" style="display:none;">
-
-        <details class="section" open>
-            <summary><i class="fas fa-info-circle"></i> Presentation Info</summary>
-            <div class="inner">
-                <label>Title</label><input type="text" id="metaTitle" placeholder="Presentation title">
-                <label>Author</label><input type="text" id="metaAuthor" placeholder="Author name">
-                <label>Subject</label><input type="text" id="metaSubject" placeholder="Subject">
-            </div>
-        </details>
-
-        <details class="section">
-            <summary><i class="fas fa-expand"></i> Slide Margins (px)</summary>
-            <div class="inner">
-                <div class="grid-4">
-                    <div><label style="font-size:0.75em;">Top</label><input type="number" id="topM" value="110"></div>
-                    <div><label style="font-size:0.75em;">Bottom</label><input type="number" id="bottomM" value="70"></div>
-                    <div><label style="font-size:0.75em;">Left</label><input type="number" id="leftM" value="90"></div>
-                    <div><label style="font-size:0.75em;">Right</label><input type="number" id="rightM" value="90"></div>
-                </div>
-            </div>
-        </details>
-
-        <details class="section">
-            <summary><i class="fas fa-palette"></i> Colors &amp; Theme Presets</summary>
-            <div class="inner">
-                <div class="grid-5">
-                    <div><label style="font-size:0.65em;">H1</label><input type="color" id="defH1" value="#ffeb3b"></div>
-                    <div><label style="font-size:0.65em;">H2</label><input type="color" id="defH2" value="#00e676"></div>
-                    <div><label style="font-size:0.65em;">P/Text</label><input type="color" id="defP" value="#ffffff"></div>
-                    <div><label style="font-size:0.65em;">MCQ(Q)</label><input type="color" id="defMQ" value="#ffeb3b"></div>
-                    <div><label style="font-size:0.65em;">MCQ(O)</label><input type="color" id="defMO" value="#ffffff"></div>
-                </div>
-                <label>Bold Highlight Color</label><input type="color" id="boldColor" value="#ff9800">
-                <label>Theme Presets</label>
-                <div id="themePresets" style="display:flex; gap:8px; margin-top:6px; flex-wrap:wrap;"></div>
-            </div>
-        </details>
-
-        <details class="section">
-            <summary><i class="fas fa-image"></i> Background &amp; Overlay</summary>
-            <div class="inner">
-                <label>Master Background</label>
-                <select id="bgSelect" style="margin-bottom: 5px;">
-                    <option value="none" selected>No Background (Solid)</option>
-                    <option value="custom">Upload Custom Background Image...</option>
-                </select>
-                <input type="file" id="bgImgUpload" accept="image/*" style="display:none;">
-                <label class="toggle-switch"><input type="checkbox" id="bgGrayscaleToggle"><span><i class="fas fa-adjust"></i> Grayscale Background Filter</span></label>
-                <label>Overlay Darkness/Opacity</label>
-                <input type="range" id="overlayOpacity" min="0" max="0.9" step="0.05" value="0.5">
-            </div>
-        </details>
-
-        <details class="section">
-            <summary><i class="fas fa-font"></i> Typography &amp; View</summary>
-            <div class="inner">
-                <label>Global Font Family (used in export too)</label>
-                <select id="fontFamilySel">
-                    <optgroup label="हिंदी / देवनागरी">
-                        <option value="Kalam">Kalam (हस्तलिखित)</option>
-                        <option value="Noto Sans Devanagari">Noto Sans Devanagari (साफ़)</option>
-                        <option value="Noto Serif Devanagari">Noto Serif Devanagari (क्लासिक)</option>
-                        <option value="Hind">Hind (सिंपल)</option>
-                        <option value="Mukta">Mukta (मॉडर्न)</option>
-                        <option value="Baloo 2">Baloo 2 (मोटा/राउंड)</option>
-                        <option value="Tiro Devanagari Hindi">Tiro Devanagari Hindi</option>
-                        <option value="Laila">Laila</option>
-                        <option value="Rozha One">Rozha One (हेडिंग स्टाइल)</option>
-                        <option value="Yatra One">Yatra One (डेकोरेटिव)</option>
-                    </optgroup>
-                    <optgroup label="English / Latin">
-                        <option value="Poppins">Poppins (Modern Sans)</option>
-                        <option value="Arial">Arial (Sans)</option>
-                        <option value="Georgia">Georgia (Serif)</option>
-                        <option value="Courier New">Courier New (Mono)</option>
-                        <option value="Times New Roman">Times New Roman (Classic)</option>
-                    </optgroup>
-                </select>
-                <div style="font-size:0.75em;color:var(--text-muted);margin-top:4px;line-height:1.5;">
-                    ⓘ ये सभी Unicode फॉन्ट हैं — टाइप करने का तरीका नहीं बदलता, बस दिखावट/स्टाइल बदलती है। पुराने ASCII फॉन्ट (जैसे <b>Kruti Dev / DevLys</b>, जिनमें अलग की-बोर्ड मैपिंग से टाइप करना पड़ता है) यहाँ काम नहीं करेंगे — Unicode न होने के कारण PPTX में सही नहीं दिखेंगे। हमेशा सीधे यूनिकोड हिंदी में टाइप करें, फॉन्ट सिर्फ स्टाइल बदलेगा।
-                </div>
-                <label class="toggle-switch"><input type="checkbox" id="tableCompactToggle"><span><i class="fas fa-table"></i> Compact Table Rows (kam line-gap)</span></label>
-                <label>Default Line Height x<span id="lhVal">1</span></label>
-                <input type="range" id="lineHeightMult" min="0.8" max="1.6" step="0.1" value="1">
-                <label>Default Letter Spacing (px)</label>
-                <input type="range" id="letterSpacingGlobal" min="0" max="8" step="0.5" value="0">
-                <label class="toggle-switch"><input type="checkbox" id="rtlToggle"><span><i class="fas fa-align-right"></i> RTL Mode</span></label>
-                <label class="toggle-switch"><input type="checkbox" id="spellcheckToggle"><span><i class="fas fa-spell-check"></i> Spellcheck While Editing</span></label>
-                <label>Preview Zoom <span id="zoomVal">100</span>%</label>
-                <input type="range" id="zoomRange" min="50" max="150" step="10" value="100">
-            </div>
-        </details>
-
-        <details class="section">
-            <summary><i class="fas fa-heading"></i> Header / Footer / Watermark</summary>
-            <div class="inner">
-                <label class="toggle-switch"><input type="checkbox" id="headerToggle"><span>Show Header</span></label>
-                <input type="text" id="headerText" placeholder="Header text">
-                <label class="toggle-switch"><input type="checkbox" id="footerToggle"><span>Show Footer</span></label>
-                <input type="text" id="footerText" placeholder="Footer text">
-                <label class="toggle-switch"><input type="checkbox" id="slideNumToggle"><span>Show Slide Numbers</span></label>
-                <label class="toggle-switch"><input type="checkbox" id="dateToggle"><span>Show Date</span></label>
-                <label class="toggle-switch"><input type="checkbox" id="watermarkToggle"><span>Show Watermark</span></label>
-                <input type="text" id="watermarkText" placeholder="Watermark text">
-            </div>
-        </details>
-
-        <details class="section">
-            <summary><i class="fas fa-search"></i> Find &amp; Replace</summary>
-            <div class="inner">
-                <input type="text" id="findText" placeholder="Find...">
-                <input type="text" id="replaceText" placeholder="Replace with...">
-                <button id="findReplaceBtn" class="btn btn-blue" style="margin-top:8px;"><i class="fas fa-exchange-alt"></i> Replace All</button>
-            </div>
-        </details>
-
-        <details class="section">
-            <summary><i class="fas fa-layer-group"></i> Layout Templates</summary>
-            <div class="inner">
-                <div class="grid-2" style="gap:6px;">
-                    <button class="add-el-btn" onclick="insertTemplate('title')">Title Slide</button>
-                    <button class="add-el-btn" onclick="insertTemplate('titlecontent')">Title + Content</button>
-                    <button class="add-el-btn" onclick="insertTemplate('twocolumn')">Two Column</button>
-                    <button class="add-el-btn" onclick="insertTemplate('section')">Section Header</button>
-                    <button class="add-el-btn" onclick="insertTemplate('imagecaption')">Image + Caption</button>
-                </div>
-            </div>
-        </details>
-
-        <div class="grid-3" style="margin-top:15px;">
-            <button id="jumpGoBtn" class="btn btn-gray" style="font-size:0.75em;"><i class="fas fa-crosshairs"></i> Jump</button>
-            <input type="number" id="jumpSlideNum" class="mini-input" style="width:100% !important;" placeholder="#" min="1">
-            <button id="deleteSelectedBtn" class="btn btn-red" style="font-size:0.72em;"><i class="fas fa-trash"></i> Del Selected</button>
-        </div>
-
-        <div class="grid-2" style="margin-top:10px;">
-            <button id="shortcutsBtn" class="btn btn-gray" style="font-size:0.8em;"><i class="fas fa-keyboard"></i> Shortcuts</button>
-            <button id="resetAllBtn" class="btn btn-red" style="font-size:0.8em;"><i class="fas fa-power-off"></i> Reset All</button>
-        </div>
-
-        <button id="autoSplitBtn" class="btn btn-orange" style="margin-top:10px;"><i class="fas fa-arrows-split-up-and-left"></i> Auto-Split Overflowing Slides</button>
-        <div style="font-size:0.7em;color:var(--text-muted);margin-top:4px;">जब किसी slide में डेटा ज़्यादा हो (⚠ badge दिखे) तो यह बटन दबाएँ — अतिरिक्त content अपने-आप अगली slide में चला जाएगा।</div>
-
-        <div class="grid-2" style="margin-top:10px;">
-            <button id="presentModeBtn" class="btn btn-purple" style="font-size:0.85em;"><i class="fas fa-play"></i> Present Mode</button>
-            <button id="printPdfBtn" class="btn btn-blue" style="font-size:0.85em;"><i class="fas fa-print"></i> Print / Save PDF</button>
-        </div>
-
-        <button id="generateBtn" class="btn btn-generate"><i class="fas fa-download"></i> Generate PPTX File</button>
-        <div class="autosave-indicator" id="autosaveIndicator">Not saved yet</div>
+<!-- HEADER -->
+<header>
+    <div class="logo"><i class="fas fa-file-powerpoint" style="color: #fff;"></i> PPT Maker Pro (Mockrise Ribbon)</div>
+    <div style="display: flex; gap: 10px;">
+        <button class="r-btn" onclick="toggleFullScreen()" title="Full Screen" style="color: white; border: 1px solid transparent; padding: 4px 8px;"><i class="fas fa-expand"></i></button>
     </div>
+</header>
 
-    <!-- RIGHT PANEL -->
-    <div class="right-panel">
-        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom: 15px; flex-wrap:wrap; gap:8px;">
-            <h3 style="margin:0; color:var(--text-main); font-size:1.4em;"><i class="fas fa-tv"></i> Live Slide Editor</h3>
-            <div class="stats-bar" id="statsBar"></div>
+<!-- RIBBON UI -->
+<div class="ribbon-wrapper">
+    <div class="ribbon-tabs">
+        <div class="r-tab active" id="btn-tab-home" onclick="switchTab('home')">Home</div>
+        <div class="r-tab" id="btn-tab-insert" onclick="switchTab('insert')">Insert</div>
+        <div class="r-tab" id="btn-tab-design" onclick="switchTab('design')">Design & Layout</div>
+        <!-- ✅ NEW PPT SETTINGS TAB BUTTON -->
+        <div class="r-tab" id="btn-tab-pptsettings" onclick="switchTab('pptsettings')" style="color:var(--word-blue); font-weight:600;"><i class="fas fa-cog"></i> PPT Settings</div>
+        <div class="r-tab" id="btn-tab-review" onclick="switchTab('review')">Review & Export</div>
+    </div>
+    
+    <div class="ribbon-tools-container">
+        
+        <!-- 🔴 HOME TAB 🔴 -->
+        <div class="ribbon-tools" id="tab-home">
+            
+            <div class="tool-group" style="flex-direction: row; gap: 4px;">
+                <button class="r-btn r-btn-large" onclick="openDataModal()">
+                    <div class="icon-wrapper"><i class="fas fa-paste" style="color: #e3a924; font-size: 1.4rem;"></i></div>
+                    <span class="btn-text">Import<br>Data</span>
+                </button>
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <button class="r-btn" style="justify-content: flex-start; font-size: 0.75rem;" onclick="$('jsonFileInput').click()"><i class="fas fa-file-import" style="width: 16px;"></i> Open File</button>
+                    <button class="r-btn" style="justify-content: flex-start; font-size: 0.75rem;" onclick="copyJson()"><i class="fas fa-copy" style="width: 16px;"></i> Copy JSON</button>
+                    <button class="r-btn" style="justify-content: flex-start; font-size: 0.75rem;" onclick="clearAllSlides()"><i class="fas fa-trash" style="width: 16px; color: var(--red-accent);"></i> Clear All</button>
+                </div>
+                <input type="file" id="jsonFileInput" accept=".json" style="display:none;">
+                <div class="tool-group-label" style="position: absolute; bottom: 0; left: 0;">DATA</div>
+            </div>
+
+            <div class="tool-group" style="flex-direction: row; gap: 4px;">
+                <button class="r-btn r-btn-large" onclick="addNewSlide(DATA.length)">
+                    <div class="icon-wrapper"><i class="fas fa-plus-square"></i></div>
+                    <span class="btn-text">New<br>Slide</span>
+                </button>
+                
+                <div class="ribbon-dropdown-container">
+                    <button class="r-btn r-btn-large" onclick="toggleMenu(event, 'menu-templates')">
+                        <div class="icon-wrapper"><i class="fas fa-layer-group"></i></div>
+                        <span class="btn-text">Templates <i class="fas fa-caret-down"></i></span>
+                    </button>
+                    <div class="ribbon-menu" id="menu-templates">
+                        <div style="display: flex; flex-direction: column; gap: 5px;">
+                            <button class="r-btn" style="justify-content: flex-start;" onclick="insertTemplate('title')">Title Slide</button>
+                            <button class="r-btn" style="justify-content: flex-start;" onclick="insertTemplate('titlecontent')">Title + Content</button>
+                            <button class="r-btn" style="justify-content: flex-start;" onclick="insertTemplate('twocolumn')">Two Column</button>
+                            <button class="r-btn" style="justify-content: flex-start;" onclick="insertTemplate('section')">Section Header</button>
+                            <button class="r-btn" style="justify-content: flex-start;" onclick="insertTemplate('imagecaption')">Image + Caption</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <button class="r-btn" style="justify-content: flex-start; font-size: 0.75rem;" onclick="undo()"><i class="fas fa-undo" style="width: 16px;"></i> Undo</button>
+                    <button class="r-btn" style="justify-content: flex-start; font-size: 0.75rem;" onclick="redo()"><i class="fas fa-redo" style="width: 16px;"></i> Redo</button>
+                    <button class="r-btn" style="justify-content: flex-start; font-size: 0.75rem;" onclick="deleteSelectedSlides()"><i class="fas fa-times" style="width: 16px; color: var(--red-accent);"></i> Del Selected</button>
+                </div>
+                <div class="tool-group-label" style="position: absolute; bottom: 0; left: 0;">SLIDES</div>
+            </div>
+
+            <div class="tool-group">
+                <div class="tool-row" style="margin-bottom: 4px;">
+                    <select class="r-select" style="width: 160px; font-weight: bold;" id="fontFamilySel" onchange="changeGlobalFont(this.value)">
+                        <optgroup label="English / Latin">
+                            <option value="Inter">Inter (Default)</option>
+                            <option value="Poppins">Poppins</option>
+                            <option value="Arial">Arial</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                        </optgroup>
+                        <optgroup label="हिंदी / देवनागरी">
+                            <option value="Kalam">Kalam (हस्तलिखित)</option>
+                            <option value="Noto Sans Devanagari">Noto Sans Devanagari</option>
+                            <option value="Hind">Hind</option>
+                            <option value="Baloo 2">Baloo 2</option>
+                            <option value="Rozha One">Rozha One</option>
+                        </optgroup>
+                    </select>
+                </div>
+                
+                <!-- HINDI TYPING TOGGLE -->
+                <div class="tool-row" style="margin-bottom: 4px;">
+                    <select class="r-select" style="width: 160px; border-color: var(--success);" id="typingLangSel" onchange="setTypingLanguage(this.value)" title="Press Space to convert Hinglish to Hindi">
+                        <option value="en">🅰️ English Typing</option>
+                        <option value="hi">अ Hindi (Hinglish+Space)</option>
+                    </select>
+                </div>
+
+                <div class="tool-row">
+                    <label style="font-size: 0.7rem; color: var(--text-muted); margin-right: 5px;">Bold Hilite:</label>
+                    <input type="color" id="boldColor" value="#d13438" class="mini-color" onchange="saveState()">
+                </div>
+                <div class="tool-group-label">FONT & LANGUAGE</div>
+            </div>
+
+            <div style="margin-left: auto; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <button class="btn-submit" id="generateBtnHome" onclick="generatePPTX()"><i class="fas fa-file-powerpoint"></i> Generate PPTX</button>
+                <div class="autosave-indicator" id="autosaveIndicator">Not saved yet</div>
+            </div>
         </div>
 
-        <div id="preview" class="preview-list"></div>
+        <!-- 🔴 INSERT TAB 🔴 -->
+        <div class="ribbon-tools" id="tab-insert" style="display:none;">
+            
+            <div class="tool-group" style="flex-direction: row; gap: 2px;">
+                <button class="r-btn r-btn-large" onclick="addElToActive('h1')"><div class="icon-wrapper"><b>H1</b></div><span class="btn-text">Title</span></button>
+                <button class="r-btn r-btn-large" onclick="addElToActive('h2')"><div class="icon-wrapper"><b>H2</b></div><span class="btn-text">Heading</span></button>
+                <button class="r-btn r-btn-large" onclick="addElToActive('p')"><div class="icon-wrapper"><i class="fas fa-font"></i></div><span class="btn-text">Text</span></button>
+                <button class="r-btn r-btn-large" onclick="addElToActive('ul')"><div class="icon-wrapper"><i class="fas fa-list-ul"></i></div><span class="btn-text">Bullets</span></button>
+                <button class="r-btn r-btn-large" onclick="addElToActive('ol')"><div class="icon-wrapper"><i class="fas fa-list-ol"></i></div><span class="btn-text">Numbers</span></button>
+                <button class="r-btn r-btn-large" onclick="addElToActive('quote')"><div class="icon-wrapper"><i class="fas fa-quote-right"></i></div><span class="btn-text">Quote</span></button>
+                <div class="tool-group-label" style="position: absolute; bottom: 0; left: 0;">TEXT & LISTS</div>
+            </div>
 
-        <div class="add-slide-separator" style="margin-top: 30px;">
-            <button class="add-slide-btn" onclick="addNewSlide(DATA.length)"><i class="fas fa-plus"></i> Add New Slide Here</button>
+            <div class="tool-group" style="flex-direction: row; gap: 2px;">
+                <button class="r-btn r-btn-large" onclick="addElToActive('mcq-q')"><div class="icon-wrapper"><b style="color:var(--word-blue)">Q</b></div><span class="btn-text">Question</span></button>
+                <button class="r-btn r-btn-large" onclick="addElToActive('mcq-opt')"><div class="icon-wrapper"><b>A)</b></div><span class="btn-text">Option</span></button>
+                <button class="r-btn r-btn-large" onclick="addElToActive('mcq-ans')"><div class="icon-wrapper"><i class="fas fa-check" style="color:var(--success)"></i></div><span class="btn-text">Answer</span></button>
+                <div class="tool-group-label" style="position: absolute; bottom: 0; left: 0;">MCQ FORMAT</div>
+            </div>
+
+            <div class="tool-group" style="flex-direction: row; gap: 2px;">
+                <button class="r-btn r-btn-large" onclick="addElToActive('table')"><div class="icon-wrapper"><i class="fas fa-table"></i></div><span class="btn-text">Table</span></button>
+                <button class="r-btn r-btn-large" onclick="addElToActive('image')"><div class="icon-wrapper"><i class="fas fa-image"></i></div><span class="btn-text">Image</span></button>
+                <button class="r-btn r-btn-large" onclick="addElToActive('hr')"><div class="icon-wrapper"><i class="fas fa-minus"></i></div><span class="btn-text">Line</span></button>
+                <div class="ribbon-dropdown-container">
+                    <button class="r-btn r-btn-large" onclick="toggleMenu(event, 'menu-shapes')">
+                        <div class="icon-wrapper"><i class="fas fa-shapes"></i></div>
+                        <span class="btn-text">Shapes <i class="fas fa-caret-down"></i></span>
+                    </button>
+                    <div class="ribbon-menu" id="menu-shapes">
+                        <button class="r-btn" style="width: 100%; justify-content: flex-start;" onclick="addElToActive('shape-rect')"><i class="fas fa-square" style="width:20px;"></i> Rectangle</button>
+                        <button class="r-btn" style="width: 100%; justify-content: flex-start;" onclick="addElToActive('shape-circle')"><i class="fas fa-circle" style="width:20px;"></i> Circle</button>
+                    </div>
+                </div>
+                <div class="tool-group-label" style="position: absolute; bottom: 0; left: 0;">MEDIA & SHAPES</div>
+            </div>
+            
+            <div class="tool-group">
+                <div class="ribbon-dropdown-container">
+                    <button class="r-btn r-btn-large" onclick="toggleMenu(event, 'menu-header-footer')">
+                        <div class="icon-wrapper"><i class="fas fa-heading"></i></div>
+                        <span class="btn-text">Header &<br>Footer <i class="fas fa-caret-down"></i></span>
+                    </button>
+                    <div class="ribbon-menu" id="menu-header-footer" style="padding: 15px; width: 250px;" onclick="event.stopPropagation()">
+                        <label class="toggle-switch"><input type="checkbox" id="headerToggle" onchange="updateHF()"><span>Show Header</span></label>
+                        <input type="text" class="r-input" id="headerText" placeholder="Header text..." oninput="updateHF()">
+                        
+                        <label class="toggle-switch"><input type="checkbox" id="footerToggle" onchange="updateHF()"><span>Show Footer</span></label>
+                        <input type="text" class="r-input" id="footerText" placeholder="Footer text..." oninput="updateHF()">
+                        
+                        <label class="toggle-switch"><input type="checkbox" id="watermarkToggle" onchange="updateHF()"><span>Show Watermark</span></label>
+                        <input type="text" class="r-input" id="watermarkText" placeholder="Watermark text..." oninput="updateHF()">
+                        
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <label class="toggle-switch"><input type="checkbox" id="slideNumToggle" onchange="updateHF()"><span>Slide #</span></label>
+                            <label class="toggle-switch"><input type="checkbox" id="dateToggle" onchange="updateHF()"><span>Date</span></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="tool-group-label">HUD</div>
+            </div>
+        </div>
+
+        <!-- 🔴 DESIGN & LAYOUT TAB 🔴 -->
+        <div class="ribbon-tools" id="tab-design" style="display:none;">
+            
+            <div class="tool-group">
+                <div class="tool-row" style="margin-bottom: 5px;">
+                    <button class="r-btn" onclick="toggleDarkMode()"><i class="fas fa-moon" style="margin-right:5px;"></i> UI Dark/Light</button>
+                </div>
+                <div class="tool-row" style="align-items: flex-start;">
+                    <div id="themePresets" style="display:flex; flex-wrap:wrap; width: 120px;"></div>
+                </div>
+                <div class="tool-group-label">THEMES</div>
+            </div>
+            
+            <div class="tool-group" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding-right: 15px;">
+                <div style="text-align: center;"><label style="font-size:0.65rem; margin:0;">H1</label><input type="color" id="defH1" value="#2b579a" class="mini-color" onchange="triggerPreviewSave()"></div>
+                <div style="text-align: center;"><label style="font-size:0.65rem; margin:0;">H2</label><input type="color" id="defH2" value="#1e395b" class="mini-color" onchange="triggerPreviewSave()"></div>
+                <div style="text-align: center;"><label style="font-size:0.65rem; margin:0;">Text</label><input type="color" id="defP" value="#201f1e" class="mini-color" onchange="triggerPreviewSave()"></div>
+                <div style="text-align: center;"><label style="font-size:0.65rem; margin:0;">MCQ(Q)</label><input type="color" id="defMQ" value="#2b579a" class="mini-color" onchange="triggerPreviewSave()"></div>
+                <div style="text-align: center;"><label style="font-size:0.65rem; margin:0;">MCQ(O)</label><input type="color" id="defMO" value="#201f1e" class="mini-color" onchange="triggerPreviewSave()"></div>
+                <div class="tool-group-label" style="grid-column: span 3; margin-top: 5px;">SLIDE COLORS</div>
+            </div>
+            
+            <div class="tool-group" style="flex-direction: row; gap: 4px;">
+                <div class="ribbon-dropdown-container">
+                    <button class="r-btn r-btn-large" onclick="toggleMenu(event, 'menu-bg')">
+                        <div class="icon-wrapper"><i class="fas fa-fill-drip"></i></div>
+                        <span class="btn-text">Background <i class="fas fa-caret-down"></i></span>
+                    </button>
+                    <div class="ribbon-menu" id="menu-bg" style="padding: 15px; width: 220px;" onclick="event.stopPropagation()">
+                        <label>Master Background</label>
+                        <select id="bgSelect" class="r-select" style="width: 100%; margin-bottom: 10px;" onchange="handleBgChange(this.value)">
+                            <option value="none" selected>No Image (Solid)</option>
+                            <option value="custom">Upload Custom Image...</option>
+                        </select>
+                        <input type="file" id="bgImgUpload" accept="image/*" style="display:none;">
+                        
+                        <label class="toggle-switch"><input type="checkbox" id="bgGrayscaleToggle" onchange="triggerPreviewSave()"><span>Grayscale Filter</span></label>
+                        
+                        <label style="margin-top: 10px;">Overlay Darkness</label>
+                        <input type="range" id="overlayOpacity" min="0" max="0.9" step="0.05" value="0.5" style="width: 100%;" oninput="triggerPreviewSave()">
+                    </div>
+                </div>
+                <div class="tool-group-label" style="position: absolute; bottom: 0; left: 0;">PAGE BACKDROP</div>
+            </div>
+            
+            <!-- MARGINS MOVED TO PPT SETTINGS TAB -->
+        </div>
+
+        <!-- 🔴 NEW: PPT SETTINGS TAB 🔴 -->
+        <div class="ribbon-tools" id="tab-pptsettings" style="display:none;">
+            <div class="tool-group">
+                <div style="font-weight:bold; font-size:0.8rem; margin-bottom:5px; color:var(--word-blue);">Adjust Slide Margins (px)</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <div style="display:flex; align-items:center; gap:5px;"><span style="font-size:0.7rem; width:45px;">Top:</span> <input type="number" id="topM" value="40" class="r-input" style="width:60px; margin:0;" onchange="updateCustomMargins()"></div>
+                    <div style="display:flex; align-items:center; gap:5px;"><span style="font-size:0.7rem; width:45px;">Bottom:</span> <input type="number" id="bottomM" value="40" class="r-input" style="width:60px; margin:0;" onchange="updateCustomMargins()"></div>
+                    <div style="display:flex; align-items:center; gap:5px;"><span style="font-size:0.7rem; width:45px;">Left:</span> <input type="number" id="leftM" value="50" class="r-input" style="width:60px; margin:0;" onchange="updateCustomMargins()"></div>
+                    <div style="display:flex; align-items:center; gap:5px;"><span style="font-size:0.7rem; width:45px;">Right:</span> <input type="number" id="rightM" value="50" class="r-input" style="width:60px; margin:0;" onchange="updateCustomMargins()"></div>
+                </div>
+                <div class="tool-group-label" style="position: absolute; bottom: 0; left: 0;">MARGIN CONTROL</div>
+            </div>
+            
+            <div class="tool-group">
+                <label style="font-size: 0.8rem; font-weight:600;">Line Height: <span id="lhVal">1</span></label>
+                <input type="range" id="lineHeightMult" min="0.8" max="1.6" step="0.1" value="1" style="width:120px;" oninput="updateLayoutVars()">
+                
+                <label style="font-size: 0.8rem; font-weight:600; margin-top:5px;">Letter Spacing</label>
+                <input type="range" id="letterSpacingGlobal" min="0" max="8" step="0.5" value="0" style="width:120px;" oninput="updateLayoutVars()">
+                <div class="tool-group-label" style="position: absolute; bottom: 0; left: 0;">SPACING</div>
+            </div>
+
+            <div class="tool-group" style="flex-direction: row; gap: 4px;">
+                <label class="toggle-switch"><input type="checkbox" id="tableCompactToggle" onchange="triggerPreviewSave()"><span>Compact Tables</span></label>
+                <label class="toggle-switch" style="margin-left: 10px;"><input type="checkbox" id="rtlToggle" onchange="updateLayoutVars()"><span>RTL Mode</span></label>
+                <div class="tool-group-label" style="position: absolute; bottom: 0; left: 0;">EXTRA OPTIONS</div>
+            </div>
+        </div>
+
+        <!-- 🔴 REVIEW & EXPORT TAB 🔴 -->
+        <div class="ribbon-tools" id="tab-review" style="display:none;">
+            
+            <div class="tool-group">
+                <div class="ribbon-dropdown-container">
+                    <button class="r-btn r-btn-large" onclick="toggleMenu(event, 'menu-metadata')">
+                        <div class="icon-wrapper"><i class="fas fa-info-circle"></i></div>
+                        <span class="btn-text">Metadata <i class="fas fa-caret-down"></i></span>
+                    </button>
+                    <div class="ribbon-menu" id="menu-metadata" style="padding: 15px; width: 250px;" onclick="event.stopPropagation()">
+                        <label>Title</label><input type="text" id="metaTitle" class="r-input" placeholder="Presentation title" oninput="saveState()">
+                        <label>Author</label><input type="text" id="metaAuthor" class="r-input" placeholder="Author name" oninput="saveState()">
+                        <label>Subject</label><input type="text" id="metaSubject" class="r-input" placeholder="Subject" oninput="saveState()">
+                    </div>
+                </div>
+                <div class="tool-group-label">INFO</div>
+            </div>
+            
+            <div class="tool-group">
+                <div class="ribbon-dropdown-container">
+                    <button class="r-btn r-btn-large" onclick="toggleMenu(event, 'menu-find')">
+                        <div class="icon-wrapper"><i class="fas fa-search"></i></div>
+                        <span class="btn-text">Find &<br>Replace <i class="fas fa-caret-down"></i></span>
+                    </button>
+                    <div class="ribbon-menu" id="menu-find" style="padding: 15px; width: 250px;" onclick="event.stopPropagation()">
+                        <input type="text" id="findText" class="r-input" placeholder="Find...">
+                        <input type="text" id="replaceText" class="r-input" placeholder="Replace with...">
+                        <button class="btn btn-blue" style="width: 100%; margin-top: 5px;" onclick="runFindReplace()">Replace All</button>
+                    </div>
+                </div>
+                <div class="tool-group-label">EDITING</div>
+            </div>
+
+            <div class="tool-group" style="flex-direction: row; gap: 4px;">
+                <button class="r-btn r-btn-large" onclick="openPresentMode(0)">
+                    <div class="icon-wrapper"><i class="fas fa-play" style="color: #5c2d91;"></i></div>
+                    <span class="btn-text">Present</span>
+                </button>
+                <button class="r-btn r-btn-large" onclick="window.print()">
+                    <div class="icon-wrapper"><i class="fas fa-print" style="color: var(--word-dark);"></i></div>
+                    <span class="btn-text">Print PDF</span>
+                </button>
+                <button class="r-btn r-btn-large" onclick="autoSplitSlides()">
+                    <div class="icon-wrapper"><i class="fas fa-arrows-split-up-and-left" style="color: #d83b01;"></i></div>
+                    <span class="btn-text">Fix<br>Overflow</span>
+                </button>
+                <div class="tool-group-label" style="position: absolute; bottom: 0; left: 0;">ACTIONS</div>
+            </div>
+
+            <div style="margin-left: auto; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <button class="btn-submit" id="generateBtnRev" onclick="generatePPTX()"><i class="fas fa-file-powerpoint"></i> Generate PPTX</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- WORKSPACE -->
+<div class="workspace-area" id="mainWorkspace">
+    <div class="stats-bar" style="display: flex; justify-content: space-between; align-items: center;">
+        <div id="statsBarContent"></div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <label style="margin:0; font-size: 0.8rem;">Zoom:</label>
+            <input type="range" id="zoomRange" min="50" max="150" step="10" value="100" oninput="updateZoom()">
+            <span id="zoomVal" style="width: 35px; text-align: right;">100%</span>
         </div>
     </div>
+    
+    <div id="preview" class="preview-list"></div>
 </div>
 
 <div id="modalRoot"></div>
 
+<!-- 🔴 DATA IMPORT MODAL TEMPLATE 🔴 -->
+<template id="importModalTpl">
+    <div>
+        <div class="grid-2" style="margin-bottom: 15px;">
+            <button class="btn btn-gray" onclick="$('dataAreaModal').value='<h1>Heading</h1><p>Demo HTML Text</p><ul><li>Point 1</li></ul>'"><i class="fab fa-html5"></i> Demo HTML</button>
+            <button class="btn btn-gray" onclick="$('dataAreaModal').value='[{\x22question\x22:\x22Demo Q?\x22, \x22options\x22:[\x22A\x22,\x22B\x22], \x22answer\x22:\x22A\x22}]'"><i class="fas fa-list-ol"></i> Demo JSON</button>
+        </div>
+        <textarea id="dataAreaModal" style="width: 100%; height: 250px; padding: 10px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text-main); font-family: monospace; font-size: 0.85rem;" placeholder="Paste HTML Notes OR MCQ JSON Data here..."></textarea>
+        <label class="toggle-switch" style="margin-top: 15px;">
+            <input type="checkbox" id="splitAnswerToggle" checked>
+            <span>Put MCQ Answer on Next Slide</span>
+        </label>
+        <div class="grid-2" style="margin-top: 20px;">
+            <button class="btn btn-purple" onclick="importData('html')"><i class="fas fa-file-code"></i> Load HTML</button>
+            <button class="btn btn-green" onclick="importData('json')"><i class="fas fa-list-ol"></i> Load JSON</button>
+        </div>
+    </div>
+</template>
+
 <script>
+// ==========================================
+// GLOBALS & STATE
+// ==========================================
 const $ = id => document.getElementById(id);
 let DATA = [];
-let isLightMode = false;
+let isDarkMode = false;
 let customBgDataUrl = null;
 let grayBgCache = null;
 let undoStack = [], redoStack = [];
 let dragSrcIndex = null;
+let activeSlideIdx = 0; 
+let typingLanguage = 'en'; // Added for Hindi Typing Tool
 
 const TEXT_TYPES = ['h1','h2','h3','p','mcq-q','mcq-opt','mcq-ans','mcq-sol','quote','link','icon'];
 const DEFAULT_SIZE = {h1:44,h2:34,h3:28,p:30,'mcq-q':40,'mcq-opt':34,'mcq-ans':36,'mcq-sol':30,quote:28,link:28,icon:60};
 const DEFAULT_LINEH = {h1:56,h2:46,h3:38,p:42,'mcq-q':52,'mcq-opt':46,'mcq-ans':48,'mcq-sol':42,quote:40,link:40,icon:74};
+const WEB_FONTS = ['Inter','Kalam','Noto Sans Devanagari','Noto Serif Devanagari','Hind','Mukta','Baloo 2','Tiro Devanagari Hindi','Laila','Poppins','Rozha One','Yatra One'];
 
 const THEME_PRESETS = [
-    {name:'Classic', h1:'#ffeb3b', h2:'#00e676', p:'#ffffff', mq:'#ffeb3b', mo:'#ffffff'},
-    {name:'Ocean', h1:'#38bdf8', h2:'#22d3ee', p:'#e0f2fe', mq:'#38bdf8', mo:'#e0f2fe'},
-    {name:'Sunset', h1:'#fb923c', h2:'#f472b6', p:'#fff7ed', mq:'#fb923c', mo:'#fff7ed'},
-    {name:'Forest', h1:'#a3e635', h2:'#4ade80', p:'#f0fdf4', mq:'#a3e635', mo:'#f0fdf4'},
-    {name:'Royal', h1:'#c4b5fd', h2:'#f0abfc', p:'#faf5ff', mq:'#c4b5fd', mo:'#faf5ff'}
+    {name:'Mockrise (Default)', h1:'#2b579a', h2:'#1e395b', p:'#201f1e', mq:'#2b579a', mo:'#201f1e'},
+    {name:'Ocean', h1:'#38bdf8', h2:'#22d3ee', p:'#0f172a', mq:'#38bdf8', mo:'#0f172a'},
+    {name:'Sunset', h1:'#fb923c', h2:'#f472b6', p:'#431407', mq:'#fb923c', mo:'#431407'},
+    {name:'Forest', h1:'#a3e635', h2:'#4ade80', p:'#052e16', mq:'#a3e635', mo:'#052e16'},
+    {name:'Royal', h1:'#c4b5fd', h2:'#f0abfc', p:'#3b0764', mq:'#c4b5fd', mo:'#3b0764'}
 ];
 
 const SETTINGS = {
     title:'', author:'', subject:'',
-    fontFamily:'Kalam',
+    fontFamily:'Inter',
     headerText:'', footerText:'', showHeader:false, showFooter:false, showSlideNum:false, showDate:false,
     watermarkText:'', showWatermark:false,
     rtl:false, spellcheck:false,
     lineHeightMult:1, letterSpacing:0,
     overlayOpacity:0.5, bgGrayscale:false, zoom:100,
-    tableCompact:false
+    tableCompact:false,
+    margins: { t: 40, b: 40, l: 50, r: 50 } // ✅ Default proper margins
 };
-
-// Fonts that are loaded via Google Fonts <link> in <head> and must be
-// preloaded into document.fonts before canvas/pptx export uses them.
-const WEB_FONTS = ['Kalam','Noto Sans Devanagari','Noto Serif Devanagari','Hind','Mukta','Baloo 2','Tiro Devanagari Hindi','Laila','Poppins','Rozha One','Yatra One'];
-
-const FEATURES = [
-"Undo (Ctrl+Z)","Redo (Ctrl+Y)","Presentation Title metadata","Author metadata","Subject metadata",
-"Export all data as JSON file","Import data from JSON file","Zoom slider for live preview (50-150%)",
-"Global Find & Replace across all slides","Live word count","Live character count","Live slide count",
-"5 Theme color presets","RTL (Right-to-Left) mode toggle","Spellcheck toggle while editing",
-"Global font family selector (also used in PPTX export)","Header text shown on every slide",
-"Footer text shown on every slide","Slide number toggle","Auto date toggle","Watermark text + toggle",
-"Reset All Settings button","Keyboard Shortcuts help modal","Full Feature List modal",
-"Auto-save indicator with last-saved time","Bulk-select slides with checkboxes","Delete selected slides in bulk",
-"Drag-and-drop slide reordering","Slide quick-jump by number","Global default line-height control",
-"Global default letter-spacing control","Background overlay darkness/opacity slider",
-"Background image grayscale filter toggle","5 Slide layout quick-templates",
-"Per-slide solid background color","Per-slide speaker notes (exported to PPTX)","Per-slide transition label",
-"Per-slide duration metadata","Slide lock to prevent edits","Bold toggle per element","Italic toggle per element",
-"Underline toggle per element","Strikethrough toggle per element","Text alignment cycle (left/center/right)",
-"Text case transform (Normal/UPPER/lower/Title)","Custom font size per element","Text highlight/background color",
-"Duplicate any element","Lock/unlock individual elements","Insert Image element","Insert Shape element (rectangle/circle)",
-"Insert Divider (HR) element","Insert Quote block element","Insert Numbered List element",
-"Insert Hyperlink (visual) element","Insert Emoji/Icon element","Table: add/remove row","Table: add/remove column",
-"Table header color customization","Table border color customization","Table striped rows toggle",
-"Dark / Light theme toggle","Custom background image upload",
-// New in this update:
-"10 real Unicode Devanagari + Latin font choices (Noto Sans/Serif Devanagari, Hind, Mukta, Baloo 2, Tiro Devanagari, Laila, Rozha One, Yatra One, Poppins, Kalam)",
-"Compact Table Rows toggle (tighter line-height, less gap in tables)",
-"Tightened MCQ Question↔Option spacing so options sit close to the question",
-"Overflow warning badge (⚠) shown on any slide whose content is taller than the box",
-"One-click Auto-Split Overflowing Slides — moves extra content onto new slides automatically",
-"Auto-split runs automatically right after HTML/JSON import, so big pasted notes/tables no longer get stuck on one slide",
-"Long tables are auto-split row-wise across multiple slides with the header row repeated",
-"Present Mode — full-screen slide viewer with Next/Prev buttons and arrow-key/space navigation",
-"Print / Save as PDF button using a dedicated print stylesheet (one slide per page)"
-];
 
 function uid(){ return 'id_'+(Date.now().toString(36))+(Math.random().toString(36).slice(2,6)); }
 function newSlide(els){ return { id: uid(), els: els||[], bgColor:null, notes:'', transition:'None', duration:3, locked:false, selected:false }; }
 
 // ==========================================
-// INIT THEME PRESET UI
+// RIBBON & UI LOGIC
+// ==========================================
+function switchTab(tabName) {
+    ['home', 'insert', 'design', 'pptsettings', 'review'].forEach(t => {
+        $('tab-' + t).style.display = 'none';
+        $('btn-tab-' + t).classList.remove('active');
+    });
+    $('tab-' + tabName).style.display = 'flex';
+    $('btn-tab-' + tabName).classList.add('active');
+}
+
+function closeAllMenus(e) {
+    if (!e.target.closest('.ribbon-dropdown-container')) {
+        document.querySelectorAll('.ribbon-menu').forEach(m => m.classList.remove('show'));
+    }
+}
+
+function toggleMenu(e, id) {
+    e.stopPropagation(); 
+    let targetMenu = document.getElementById(id);
+    let isShowing = targetMenu.classList.contains('show');
+    document.querySelectorAll('.ribbon-menu').forEach(m => m.classList.remove('show'));
+    if(!isShowing) targetMenu.classList.add('show');
+}
+
+function toggleFullScreen() { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(err=>console.log(err)); }
+
+// ==========================================
+// MODALS
+// ==========================================
+function showModal(title, innerHtml){
+    $('modalRoot').innerHTML = `<div class="modal-overlay" onclick="if(event.target===this) this.innerHTML=''">
+        <div class="modal-box">
+            <button class="modal-close" onclick="$('modalRoot').innerHTML=''">✕ Close</button>
+            <h3>${title}</h3>
+            ${innerHtml}
+        </div>
+    </div>`;
+}
+
+function openDataModal() {
+    showModal('<i class="fas fa-paste"></i> Import Data', $('importModalTpl').innerHTML);
+}
+
+// ==========================================
+// THEMES & LAYOUT VARS
 // ==========================================
 function buildThemePresets(){
     const box = $('themePresets'); box.innerHTML='';
@@ -447,27 +719,75 @@ function buildThemePresets(){
 }
 function applyThemePreset(p){
     $('defH1').value=p.h1; $('defH2').value=p.h2; $('defP').value=p.p; $('defMQ').value=p.mq; $('defMO').value=p.mo;
-    renderPreview(); saveState();
+    triggerPreviewSave();
+}
+function toggleDarkMode() {
+    isDarkMode = !isDarkMode;
+    document.body.classList.toggle('dark-mode', isDarkMode);
+    if(isDarkMode) {
+        if($('defP').value === "#201f1e") $('defP').value = "#ffffff";
+        if($('defMO').value === "#201f1e") $('defMO').value = "#ffffff";
+    } else {
+        if($('defP').value === "#ffffff") $('defP').value = "#201f1e";
+        if($('defMO').value === "#ffffff") $('defMO').value = "#201f1e";
+    }
+    triggerPreviewSave();
 }
 
-// ==========================================
-// THEME TOGGLE
-// ==========================================
-$('themeToggle').onclick = () => {
-    isLightMode = !isLightMode;
-    document.body.classList.toggle('light-mode', isLightMode);
-    $('themeToggle').innerHTML = isLightMode ? '<i class="fas fa-sun"></i> Light' : '<i class="fas fa-moon"></i> Dark';
-    if(isLightMode) {
-        if($('defP').value === "#ffffff") $('defP').value = "#000000";
-        if($('defMO').value === "#ffffff") $('defMO').value = "#000000";
-    } else {
-        if($('defP').value === "#000000") $('defP').value = "#ffffff";
-        if($('defMO').value === "#000000") $('defMO').value = "#ffffff";
-    }
-    renderPreview(); saveState();
-};
+function updateLayoutVars() {
+    SETTINGS.lineHeightMult = parseFloat($('lineHeightMult').value);
+    $('lhVal').innerText = SETTINGS.lineHeightMult;
+    SETTINGS.letterSpacing = parseFloat($('letterSpacingGlobal').value);
+    SETTINGS.rtl = $('rtlToggle').checked;
+    $('preview').style.direction = SETTINGS.rtl ? 'rtl':'ltr';
+    triggerPreviewSave();
+}
 
-$('bgSelect').onchange = (e) => { $('bgImgUpload').style.display = e.target.value === 'custom' ? 'block' : 'none'; renderPreview(); saveState(); };
+// ✅ NEW MARGIN CONTROL FUNCTION
+function updateCustomMargins() {
+    SETTINGS.margins.t = parseInt($('topM').value) || 40;
+    SETTINGS.margins.b = parseInt($('bottomM').value) || 40;
+    SETTINGS.margins.l = parseInt($('leftM').value) || 50;
+    SETTINGS.margins.r = parseInt($('rightM').value) || 50;
+    
+    document.documentElement.style.setProperty('--slide-pt', SETTINGS.margins.t + 'px');
+    document.documentElement.style.setProperty('--slide-pb', SETTINGS.margins.b + 'px');
+    document.documentElement.style.setProperty('--slide-pl', SETTINGS.margins.l + 'px');
+    document.documentElement.style.setProperty('--slide-pr', SETTINGS.margins.r + 'px');
+    
+    saveState();
+    setTimeout(flagOverflowingSlides, 100);
+}
+
+function updateZoom() {
+    SETTINGS.zoom = parseInt($('zoomRange').value);
+    $('zoomVal').innerText = SETTINGS.zoom + '%';
+    $('preview').style.zoom = (SETTINGS.zoom/100);
+    saveState();
+}
+
+function updateHF() {
+    SETTINGS.showHeader = $('headerToggle').checked; SETTINGS.headerText = $('headerText').value;
+    SETTINGS.showFooter = $('footerToggle').checked; SETTINGS.footerText = $('footerText').value;
+    SETTINGS.showSlideNum = $('slideNumToggle').checked; SETTINGS.showDate = $('dateToggle').checked;
+    SETTINGS.showWatermark = $('watermarkToggle').checked; SETTINGS.watermarkText = $('watermarkText').value;
+    triggerPreviewSave();
+}
+
+function changeGlobalFont(val) {
+    SETTINGS.fontFamily = val;
+    document.documentElement.style.setProperty('--live-font', val);
+    triggerPreviewSave();
+}
+
+function setTypingLanguage(val) {
+    typingLanguage = val;
+}
+
+function handleBgChange(val) {
+    if(val === 'custom') $('bgImgUpload').click();
+    else triggerPreviewSave();
+}
 $('bgImgUpload').onchange = (e) => {
     const file = e.target.files[0]; if (!file) return;
     const reader = new FileReader();
@@ -478,131 +798,21 @@ $('bgImgUpload').onchange = (e) => {
             const ctx = canvas.getContext("2d"); ctx.drawImage(img, 0, 0, 1300, 710);
             customBgDataUrl = canvas.toDataURL("image/jpeg", 0.7);
             grayBgCache = null;
-            renderPreview(); saveState();
+            $('bgSelect').value = 'custom';
+            triggerPreviewSave();
         }; img.src = event.target.result;
     }; reader.readAsDataURL(file);
 };
-$('bgGrayscaleToggle').onchange = e => { SETTINGS.bgGrayscale = e.target.checked; grayBgCache=null; renderPreview(); saveState(); };
-$('overlayOpacity').oninput = e => { SETTINGS.overlayOpacity = parseFloat(e.target.value); renderPreview(); saveState(); };
 
-// ==========================================
-// TYPOGRAPHY / VIEW SETTINGS
-// ==========================================
-$('fontFamilySel').onchange = e => { SETTINGS.fontFamily = e.target.value; document.documentElement.style.setProperty('--live-font', e.target.value); renderPreview(); saveState(); };
-$('tableCompactToggle').onchange = e => { SETTINGS.tableCompact = e.target.checked; renderPreview(); saveState(); };
-$('lineHeightMult').oninput = e => { SETTINGS.lineHeightMult = parseFloat(e.target.value); $('lhVal').innerText = e.target.value; saveState(); };
-$('letterSpacingGlobal').oninput = e => { SETTINGS.letterSpacing = parseFloat(e.target.value); saveState(); };
-$('rtlToggle').onchange = e => { SETTINGS.rtl = e.target.checked; $('preview').style.direction = SETTINGS.rtl?'rtl':'ltr'; saveState(); };
-$('spellcheckToggle').onchange = e => { SETTINGS.spellcheck = e.target.checked; renderPreview(); saveState(); };
-$('zoomRange').oninput = e => { SETTINGS.zoom = parseInt(e.target.value); $('zoomVal').innerText = e.target.value; $('preview').style.zoom = (SETTINGS.zoom/100); saveState(); };
-
-// ==========================================
-// HEADER / FOOTER / WATERMARK
-// ==========================================
-['headerToggle','footerToggle','slideNumToggle','dateToggle','watermarkToggle'].forEach(id=>{
-    $(id).onchange = e => {
-        if(id==='headerToggle') SETTINGS.showHeader = e.target.checked;
-        if(id==='footerToggle') SETTINGS.showFooter = e.target.checked;
-        if(id==='slideNumToggle') SETTINGS.showSlideNum = e.target.checked;
-        if(id==='dateToggle') SETTINGS.showDate = e.target.checked;
-        if(id==='watermarkToggle') SETTINGS.showWatermark = e.target.checked;
-        renderPreview(); saveState();
-    };
-});
-$('headerText').oninput = e => { SETTINGS.headerText = e.target.value; renderPreview(); saveState(); };
-$('footerText').oninput = e => { SETTINGS.footerText = e.target.value; renderPreview(); saveState(); };
-$('watermarkText').oninput = e => { SETTINGS.watermarkText = e.target.value; renderPreview(); saveState(); };
-$('metaTitle').oninput = e => { SETTINGS.title = e.target.value; saveState(); };
-$('metaAuthor').oninput = e => { SETTINGS.author = e.target.value; saveState(); };
-$('metaSubject').oninput = e => { SETTINGS.subject = e.target.value; saveState(); };
-
-// ==========================================
-// DEMOS & COPY CODE
-// ==========================================
-$('demoHtmlBtn').onclick = () => {
-    $('dataArea').value = `<h1>राजस्थान का भूगोल</h1>
-<h2>1. स्थिति एवं विस्तार</h2>
-<p>राजस्थान भारत के उत्तर-पश्चिम में स्थित है। इसका कुल क्षेत्रफल <b>3,42,239 वर्ग किमी</b> है।</p>
-<h3>प्रमुख बिंदु:</h3>
-<ul>
-    <li>सबसे बड़ा जिला: जैसलमेर</li>
-    <li>सबसे छोटा जिला: धौलपुर</li>
-</ul>
-<table>
-    <tr><th>संभाग</th><th>जिले</th></tr>
-    <tr><td>जयपुर</td><td>7</td></tr>
-    <tr><td>जोधपुर</td><td>6</td></tr>
-</table>`;
-};
-$('demoJsonBtn').onclick = () => {
-    $('dataArea').value = `[
-  {
-    "question": "राजस्थान का राज्य पक्षी कौन-सा है?",
-    "option": ["मोर", "गोडावण", "तोता", "कबूतर"],
-    "answer": "B",
-    "solution": "गोडावण (Great Indian Bustard) राजस्थान का राज्य पक्षी है। इसे 1981 में राज्य पक्षी घोषित किया गया था।"
-  },
-  {
-    "question": "हल्दीघाटी का युद्ध कब लड़ा गया था?",
-    "options": ["1576", "1526", "1191", "1192"],
-    "answer": "A",
-    "solution": "हल्दीघाटी का युद्ध 18 जून 1576 को महाराणा प्रताप और अकबर की सेना (मानसिंह) के बीच हुआ था।"
-  }
-]`;
-};
-$('copyCodeBtn').onclick = () => {
-    if(DATA.length === 0) return alert("कोई डेटा नहीं है!");
-    navigator.clipboard.writeText(JSON.stringify(DATA, null, 2));
-    alert("✅ पूरा स्लाइड डेटा (JSON) कॉपी हो गया!");
-};
-
-// ==========================================
-// EXPORT / IMPORT JSON FILE
-// ==========================================
-$('exportJsonFileBtn').onclick = () => {
-    const payload = { DATA, SETTINGS, isLightMode };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = 'ppt-maker-data.json'; a.click();
-};
-$('importJsonFileBtn').onclick = () => $('jsonFileInput').click();
-$('jsonFileInput').onchange = (e) => {
-    const file = e.target.files[0]; if(!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-        try{
-            const payload = JSON.parse(ev.target.result);
-            snapshot();
-            if(payload.DATA) DATA = payload.DATA; else if(Array.isArray(payload)) DATA = payload;
-            if(payload.SETTINGS) Object.assign(SETTINGS, payload.SETTINGS);
-            if(typeof payload.isLightMode === 'boolean'){ isLightMode = payload.isLightMode; document.body.classList.toggle('light-mode', isLightMode); }
-            renderPreview(); saveState();
-        }catch(err){ alert('Invalid JSON file: '+err.message); }
-    };
-    reader.readAsText(file);
-};
-
-// ==========================================
-// FIND & REPLACE
-// ==========================================
-$('findReplaceBtn').onclick = () => {
-    const find = $('findText').value; const rep = $('replaceText').value;
-    if(!find) return alert('Find text daaliye pehle!');
-    snapshot();
-    let count = 0;
-    DATA.forEach(slide => {
-        slide.els.forEach(el => {
-            if(el.text && el.text.includes(find)){ el.text = el.text.split(find).join(rep); count++; }
-            if(el.items) el.items = el.items.map(t=>{ if(t.includes(find)){count++;} return t.split(find).join(rep); });
-            if(el.rows) el.rows = el.rows.map(row => row.map(c=>{ if(c.includes(find)){count++;} return c.split(find).join(rep); }));
-        });
-    });
+function triggerPreviewSave() {
+    SETTINGS.bgGrayscale = $('bgGrayscaleToggle') ? $('bgGrayscaleToggle').checked : false;
+    SETTINGS.overlayOpacity = $('overlayOpacity') ? parseFloat($('overlayOpacity').value) : 0.5;
+    SETTINGS.tableCompact = $('tableCompactToggle') ? $('tableCompactToggle').checked : false;
     renderPreview(); saveState();
-    alert(`✅ ${count} jagah replace hui.`);
-};
+}
 
 // ==========================================
-// SMART HTML PARSER
+// IMPORT DATA & PARSING
 // ==========================================
 function cleanHtml(str) {
     let txt = str.replace(/<strong[^>]*>/gi, '<b>').replace(/<\/strong>/gi, '</b>')
@@ -612,170 +822,194 @@ function cleanHtml(str) {
     return dummy.value.trim();
 }
 
-$('importHtmlBtn').onclick = () => {
-    let rawHtml = $('dataArea').value.trim();
-    if(!rawHtml) return alert("Please paste HTML code!");
+function importData(type) {
+    const area = $('dataAreaModal');
+    let rawData = area ? area.value.trim() : '';
+    if(!rawData) return alert("Please paste data first!");
+    
     snapshot();
-    let newSlides = []; let currentEls = [];
-    const parser = new DOMParser(); const doc = parser.parseFromString(rawHtml, 'text/html');
-
-    Array.from(doc.body.children).forEach(el => {
-        let t = el.tagName;
-        if (t === 'H1' || t === 'H2') {
-            if (currentEls.length > 0) newSlides.push(newSlide(currentEls));
-            currentEls = [];
-            currentEls.push({ id: uid(), type: t.toLowerCase(), text: cleanHtml(el.innerHTML) });
-        }
-        else if (t === 'H3') currentEls.push({ id: uid(), type: 'h3', text: cleanHtml(el.innerHTML) });
-        else if (t === 'P') { let text = cleanHtml(el.innerHTML); if(text) currentEls.push({ id: uid(), type: 'p', text: text }); }
-        else if (t === 'UL' || t === 'OL') {
-            let items = [];
-            Array.from(el.children).forEach(li => { if (li.tagName === 'LI') items.push(cleanHtml(li.innerHTML)); });
-            if(items.length > 0) currentEls.push({ id: uid(), type: t==='OL'?'ol':'ul', items: items });
-        }
-        else if (t === 'TABLE') {
-            let rows = [];
-            Array.from(el.querySelectorAll('tr')).forEach(tr => {
-                let cells = [];
-                Array.from(tr.querySelectorAll('th, td')).forEach(td => cells.push(cleanHtml(td.innerHTML)));
-                if(cells.length > 0) rows.push(cells);
-            });
-            if(rows.length > 0) currentEls.push({ id: uid(), type: 'table', rows: rows, headerColor:'2563EB', borderColor: isLightMode?'CBD5E1':'334155', striped:false });
-        }
-    });
-
-    if (currentEls.length > 0) newSlides.push(newSlide(currentEls));
-    if (newSlides.length === 0) return alert("No valid HTML tags found!");
-
-    DATA = DATA.concat(newSlides);
-    renderPreview(); autoPaginate(true); saveState(); $('dataArea').value = "";
-};
-
-// ==========================================
-// SMART MCQ JSON PARSER
-// ==========================================
-$('importJsonBtn').onclick = () => {
-    let rawJson = $('dataArea').value.trim();
-    if(!rawJson) return alert("Please paste MCQ JSON data!");
-    let doSplit = $('splitAnswerToggle').checked;
-    try {
-        let jsonArr = JSON.parse(rawJson);
-        if(!Array.isArray(jsonArr)) return alert("JSON should be an Array!");
-        snapshot();
-        let newSlides = [];
-        const alphabet = ['A', 'B', 'C', 'D', 'E', 'F'];
-
-        jsonArr.forEach((item) => {
-            if(!item.question) return;
-            let qEls = [];
-            qEls.push({ id: uid(), type: 'mcq-q', text: `Q${DATA.length + newSlides.length + 1}. ` + item.question });
-            let opts = item.option || item.options || [];
-            if(Array.isArray(opts)) {
-                opts.forEach((optText, i) => {
-                    let label = alphabet[i] ? alphabet[i] + ") " : "";
-                    qEls.push({ id: uid(), type: 'mcq-opt', text: label + optText });
-                });
+    let newSlides = [];
+    
+    if (type === 'html') {
+        const parser = new DOMParser(); const doc = parser.parseFromString(rawData, 'text/html');
+        let currentEls = [];
+        Array.from(doc.body.children).forEach(el => {
+            let t = el.tagName;
+            if (t === 'H1' || t === 'H2') {
+                if (currentEls.length > 0) newSlides.push(newSlide(currentEls));
+                currentEls = [];
+                currentEls.push({ id: uid(), type: t.toLowerCase(), text: cleanHtml(el.innerHTML) });
             }
-            if(doSplit && (item.answer || item.solution)) {
-                newSlides.push(newSlide(qEls));
-                let aEls = [];
-                if(item.answer) aEls.push({ id: uid(), type: 'mcq-ans', text: `Answer: ${item.answer}` });
-                if(item.solution) aEls.push({ id: uid(), type: 'mcq-sol', text: item.solution });
-                newSlides.push(newSlide(aEls));
-            } else {
-                if(item.answer) qEls.push({ id: uid(), type: 'mcq-ans', text: `Answer: ${item.answer}` });
-                if(item.solution) qEls.push({ id: uid(), type: 'mcq-sol', text: item.solution });
-                newSlides.push(newSlide(qEls));
+            else if (t === 'H3') currentEls.push({ id: uid(), type: 'h3', text: cleanHtml(el.innerHTML) });
+            else if (t === 'P') { let text = cleanHtml(el.innerHTML); if(text) currentEls.push({ id: uid(), type: 'p', text: text }); }
+            else if (t === 'UL' || t === 'OL') {
+                let items = [];
+                Array.from(el.children).forEach(li => { if (li.tagName === 'LI') items.push(cleanHtml(li.innerHTML)); });
+                if(items.length > 0) currentEls.push({ id: uid(), type: t==='OL'?'ol':'ul', items: items });
+            }
+            else if (t === 'TABLE') {
+                let rows = [];
+                Array.from(el.querySelectorAll('tr')).forEach(tr => {
+                    let cells = [];
+                    Array.from(tr.querySelectorAll('th, td')).forEach(td => cells.push(cleanHtml(td.innerHTML)));
+                    if(cells.length > 0) rows.push(cells);
+                });
+                if(rows.length > 0) currentEls.push({ id: uid(), type: 'table', rows: rows, headerColor:'2b579a', borderColor: 'c8c6c4', striped:false });
             }
         });
+        if (currentEls.length > 0) newSlides.push(newSlide(currentEls));
+    } 
+    else if (type === 'json') {
+        let doSplit = $('splitAnswerToggle') ? $('splitAnswerToggle').checked : true;
+        try {
+            let jsonArr = JSON.parse(rawData);
+            if(!Array.isArray(jsonArr)) throw new Error("JSON should be an Array!");
+            const alphabet = ['A', 'B', 'C', 'D', 'E', 'F'];
+            jsonArr.forEach((item) => {
+                if(!item.question) return;
+                let qEls = [];
+                qEls.push({ id: uid(), type: 'mcq-q', text: `Q${DATA.length + newSlides.length + 1}. ` + item.question });
+                let opts = item.option || item.options || [];
+                if(Array.isArray(opts)) {
+                    opts.forEach((optText, i) => {
+                        let label = alphabet[i] ? alphabet[i] + ") " : "";
+                        qEls.push({ id: uid(), type: 'mcq-opt', text: label + optText });
+                    });
+                }
+                if(doSplit && (item.answer || item.solution)) {
+                    newSlides.push(newSlide(qEls));
+                    let aEls = [];
+                    if(item.answer) aEls.push({ id: uid(), type: 'mcq-ans', text: `Answer: ${item.answer}` });
+                    if(item.solution) aEls.push({ id: uid(), type: 'mcq-sol', text: item.solution });
+                    newSlides.push(newSlide(aEls));
+                } else {
+                    if(item.answer) qEls.push({ id: uid(), type: 'mcq-ans', text: `Answer: ${item.answer}` });
+                    if(item.solution) qEls.push({ id: uid(), type: 'mcq-sol', text: item.solution });
+                    newSlides.push(newSlide(qEls));
+                }
+            });
+        } catch (e) { return alert("Invalid JSON! Error: " + e.message); }
+    }
+    
+    if (newSlides.length === 0) return alert("No valid data found!");
+    DATA = DATA.concat(newSlides);
+    $('modalRoot').innerHTML = '';
+    renderPreview(); autoPaginate(true); saveState();
+}
 
-        DATA = DATA.concat(newSlides);
-        renderPreview(); autoPaginate(true); saveState(); $('dataArea').value = "";
-    } catch (e) { alert("Invalid JSON! Error: " + e.message); }
+function copyJson() {
+    if(DATA.length === 0) return alert("No Data!");
+    navigator.clipboard.writeText(JSON.stringify(DATA, null, 2));
+    alert("✅ Data copied!");
+}
+
+$('jsonFileInput').onchange = (e) => {
+    const file = e.target.files[0]; if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        try{
+            const payload = JSON.parse(ev.target.result);
+            snapshot();
+            if(payload.DATA) DATA = payload.DATA; else if(Array.isArray(payload)) DATA = payload;
+            if(payload.SETTINGS) Object.assign(SETTINGS, payload.SETTINGS);
+            if(typeof payload.isDarkMode === 'boolean'){ 
+                isDarkMode = payload.isDarkMode; 
+                document.body.classList.toggle('dark-mode', isDarkMode);
+            }
+            renderPreview(); saveState();
+        }catch(err){ alert('Invalid file: '+err.message); }
+    };
+    reader.readAsText(file);
 };
 
-$('clearAllBtn').onclick = () => { if(confirm("Clear ALL Slides?")) { snapshot(); DATA = []; saveState(); renderPreview(); } };
-
 // ==========================================
-// UNDO / REDO
+// UNDO / REDO / FIND REPLACE
 // ==========================================
-function snapshot(){
-    undoStack.push(JSON.stringify(DATA));
-    if(undoStack.length>50) undoStack.shift();
-    redoStack = [];
-}
-function undo(){
-    if(undoStack.length===0) return;
-    redoStack.push(JSON.stringify(DATA));
-    DATA = JSON.parse(undoStack.pop());
-    renderPreview(); saveState();
-}
-function redo(){
-    if(redoStack.length===0) return;
-    undoStack.push(JSON.stringify(DATA));
-    DATA = JSON.parse(redoStack.pop());
-    renderPreview(); saveState();
-}
-$('undoBtn').onclick = undo; $('redoBtn').onclick = redo;
-
+function snapshot(){ undoStack.push(JSON.stringify(DATA)); if(undoStack.length>50) undoStack.shift(); redoStack = []; }
+function undo(){ if(undoStack.length===0) return; redoStack.push(JSON.stringify(DATA)); DATA = JSON.parse(undoStack.pop()); renderPreview(); saveState(); }
+function redo(){ if(redoStack.length===0) return; undoStack.push(JSON.stringify(DATA)); DATA = JSON.parse(redoStack.pop()); renderPreview(); saveState(); }
 document.addEventListener('keydown', (e)=>{
     if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='z'){ e.preventDefault(); undo(); }
     if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='y'){ e.preventDefault(); redo(); }
     if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='s'){ e.preventDefault(); saveState(); flashSaved(); }
 });
 
-// ==========================================
-// MODALS
-// ==========================================
-function showModal(title, innerHtml){
-    $('modalRoot').innerHTML = `<div class="modal-overlay" onclick="if(event.target===this) this.remove()">
-        <div class="modal-box">
-            <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✕ Close</button>
-            <h3>${title}</h3>
-            ${innerHtml}
-        </div>
-    </div>`;
+// 🔴 TRANSLITERATION API (HINDI TYPING) 🔴
+document.addEventListener('keyup', async (e) => {
+    if(typingLanguage !== 'hi') return;
+    if(e.code === 'Space' || e.code === 'Enter') {
+        const selection = window.getSelection();
+        if (!selection.rangeCount) return;
+        const node = selection.focusNode;
+        if(node && node.nodeType === 3 && node.parentElement.isContentEditable) {
+            let text = node.textContent;
+            let cursor = selection.focusOffset;
+            let beforeCursor = text.substring(0, cursor);
+            let match = beforeCursor.match(/([a-zA-Z]+)(\s*)$/);
+            if(match) {
+                let word = match[1];
+                let trailing = match[2] || '';
+                try {
+                    let res = await fetch(`https://inputtools.google.com/request?text=${word}&itc=hi-t-i0-und&num=1&cp=0&cs=1&ie=utf-8&oe=utf-8&app=test`);
+                    let data = await res.json();
+                    if(data[0] === 'SUCCESS') {
+                        let hindiWord = data[1][0][1][0];
+                        let newText = beforeCursor.substring(0, match.index) + hindiWord + trailing + text.substring(cursor);
+                        node.textContent = newText;
+                        
+                        let newCursorPos = match.index + hindiWord.length + trailing.length;
+                        let range = document.createRange();
+                        range.setStart(node, newCursorPos);
+                        range.collapse(true);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                        
+                        clearTimeout(window.saveTimer);
+                        window.saveTimer = setTimeout(saveState, 500);
+                    }
+                } catch(err) { console.log("Transliteration failed", err); }
+            }
+        }
+    }
+});
+
+function runFindReplace() {
+    const find = $('findText').value; const rep = $('replaceText').value;
+    if(!find) return alert('Enter text to find!');
+    snapshot(); let count = 0;
+    DATA.forEach(slide => {
+        slide.els.forEach(el => {
+            if(el.text && el.text.includes(find)){ el.text = el.text.split(find).join(rep); count++; }
+            if(el.items) el.items = el.items.map(t=>{ if(t.includes(find)){count++;} return t.split(find).join(rep); });
+            if(el.rows) el.rows = el.rows.map(row => row.map(c=>{ if(c.includes(find)){count++;} return c.split(find).join(rep); }));
+        });
+    });
+    renderPreview(); saveState(); alert(`✅ ${count} replacements made.`);
 }
-$('featureListBtn').onclick = () => {
-    showModal('⭐ '+FEATURES.length+'+ Features Included', '<ul>'+FEATURES.map(f=>`<li>${f}</li>`).join('')+'</ul>');
-};
-$('shortcutsBtn').onclick = () => {
-    showModal('⌨️ Keyboard Shortcuts', `<ul>
-        <li><b>Ctrl+Z</b> — Undo</li>
-        <li><b>Ctrl+Y</b> — Redo</li>
-        <li><b>Ctrl+S</b> — Save now</li>
-    </ul>`);
-};
-$('resetAllBtn').onclick = () => {
-    if(!confirm('Sab settings reset kare? Slides safe rahengi.')) return;
-    Object.assign(SETTINGS, {title:'',author:'',subject:'',fontFamily:'Kalam',headerText:'',footerText:'',showHeader:false,showFooter:false,showSlideNum:false,showDate:false,watermarkText:'',showWatermark:false,rtl:false,spellcheck:false,lineHeightMult:1,letterSpacing:0,overlayOpacity:0.5,bgGrayscale:false,zoom:100,tableCompact:false});
-    $('metaTitle').value=''; $('metaAuthor').value=''; $('metaSubject').value='';
-    $('fontFamilySel').value='Kalam'; $('headerText').value=''; $('footerText').value=''; $('watermarkText').value='';
-    $('headerToggle').checked=false; $('footerToggle').checked=false; $('slideNumToggle').checked=false; $('dateToggle').checked=false; $('watermarkToggle').checked=false;
-    $('rtlToggle').checked=false; $('spellcheckToggle').checked=false; $('lineHeightMult').value=1; $('lhVal').innerText='1';
-    $('letterSpacingGlobal').value=0; $('overlayOpacity').value=0.5; $('bgGrayscaleToggle').checked=false; $('zoomRange').value=100; $('zoomVal').innerText='100';
-    $('preview').style.zoom=1; $('preview').style.direction='ltr';
-    renderPreview(); saveState();
-};
 
 // ==========================================
-// SLIDE MANAGEMENT
+// SLIDE & ELEMENT MANAGEMENT
 // ==========================================
-function getDefaultColor(type) {
-    if(type==='h1') return $('defH1').value;
-    if(type==='h2') return $('defH2').value;
-    if(type==='mcq-q') return $('defMQ').value;
-    if(type==='mcq-opt') return $('defMO').value;
-    return $('defP').value;
+function setActiveSlide(idx, event) {
+    if(event) { event.stopPropagation(); }
+    activeSlideIdx = idx;
+    if(activeSlideIdx >= DATA.length) activeSlideIdx = Math.max(0, DATA.length - 1);
+    
+    document.querySelectorAll('.slide-wrapper').forEach((w, i) => {
+        if(i === activeSlideIdx) w.classList.add('active-slide-ring');
+        else w.classList.remove('active-slide-ring');
+    });
 }
 
-window.addNewSlide = (index) => { snapshot(); DATA.splice(index, 0, newSlide([])); renderPreview(); saveState(); };
-window.deleteSlide = (index) => { if(confirm("Delete this slide?")) { snapshot(); DATA.splice(index, 1); renderPreview(); saveState(); } };
-window.duplicateSlide = (index) => { snapshot(); DATA.splice(index + 1, 0, JSON.parse(JSON.stringify(DATA[index]))); renderPreview(); saveState(); };
+function clearAllSlides() { if(confirm("Clear ALL Slides?")) { snapshot(); DATA = []; activeSlideIdx=0; renderPreview(); saveState(); } }
+
+window.addNewSlide = (index) => { snapshot(); DATA.splice(index, 0, newSlide([])); activeSlideIdx = index; renderPreview(); saveState(); };
+window.deleteSlide = (index) => { if(confirm("Delete this slide?")) { snapshot(); DATA.splice(index, 1); activeSlideIdx = Math.max(0, index-1); renderPreview(); saveState(); } };
+window.duplicateSlide = (index) => { snapshot(); DATA.splice(index + 1, 0, JSON.parse(JSON.stringify(DATA[index]))); activeSlideIdx = index + 1; renderPreview(); saveState(); };
 window.moveSlide = (index, dir) => {
     snapshot();
-    if(dir==='up' && index > 0) { let t = DATA[index]; DATA[index] = DATA[index-1]; DATA[index-1] = t; }
-    if(dir==='down' && index < DATA.length-1) { let t = DATA[index]; DATA[index] = DATA[index+1]; DATA[index+1] = t; }
+    if(dir==='up' && index > 0) { let t = DATA[index]; DATA[index] = DATA[index-1]; DATA[index-1] = t; activeSlideIdx = index-1; }
+    if(dir==='down' && index < DATA.length-1) { let t = DATA[index]; DATA[index] = DATA[index+1]; DATA[index+1] = t; activeSlideIdx = index+1; }
     renderPreview(); saveState();
 };
 window.toggleSlideLock = (sIdx) => { snapshot(); DATA[sIdx].locked = !DATA[sIdx].locked; renderPreview(); saveState(); };
@@ -786,22 +1020,13 @@ window.setSlideNotes = (sIdx, val) => { DATA[sIdx].notes = val; saveState(); };
 window.setSlideTransition = (sIdx, val) => { DATA[sIdx].transition = val; saveState(); };
 window.setSlideDuration = (sIdx, val) => { DATA[sIdx].duration = parseFloat(val)||3; saveState(); };
 
-$('deleteSelectedBtn').onclick = () => {
+function deleteSelectedSlides() {
     const sel = DATA.filter(s=>s.selected).length;
-    if(sel===0) return alert('Koi slide select nahi hai (checkbox use karein).');
-    if(!confirm(`${sel} selected slides delete karein?`)) return;
-    snapshot();
-    DATA = DATA.filter(s=>!s.selected);
-    renderPreview(); saveState();
-};
-$('jumpGoBtn').onclick = () => {
-    const n = parseInt($('jumpSlideNum').value);
-    if(!n || n<1 || n>DATA.length) return alert('Valid slide number daalein.');
-    const target = document.querySelectorAll('.slide-wrapper')[n-1];
-    if(target) target.scrollIntoView({behavior:'smooth', block:'center'});
-};
+    if(sel===0) return alert('Select slides first via checkboxes.');
+    if(!confirm(`Delete ${sel} selected slides?`)) return;
+    snapshot(); DATA = DATA.filter(s=>!s.selected); activeSlideIdx = 0; renderPreview(); saveState();
+}
 
-// Drag & drop reorder
 function attachDrag(wrap, idx){
     wrap.draggable = true;
     wrap.ondragstart = () => { dragSrcIndex = idx; wrap.classList.add('dragging'); };
@@ -813,55 +1038,27 @@ function attachDrag(wrap, idx){
         snapshot();
         const moved = DATA.splice(dragSrcIndex,1)[0];
         DATA.splice(idx,0,moved);
-        dragSrcIndex = null;
+        dragSrcIndex = null; activeSlideIdx = idx;
         renderPreview(); saveState();
     };
 }
 
-// ==========================================
-// LAYOUT TEMPLATES
-// ==========================================
-window.insertTemplate = (name) => {
-    snapshot();
-    let els = [];
-    if(name==='title') els = [
-        {id:uid(), type:'h1', text:'Presentation Title', align:'center'},
-        {id:uid(), type:'p', text:'Subtitle / Tagline goes here', align:'center'}
-    ];
-    else if(name==='titlecontent') els = [
-        {id:uid(), type:'h1', text:'Slide Title'},
-        {id:uid(), type:'ul', items:['Point one','Point two','Point three']}
-    ];
-    else if(name==='twocolumn') els = [
-        {id:uid(), type:'h2', text:'Column A'},
-        {id:uid(), type:'ul', items:['A - point 1','A - point 2']},
-        {id:uid(), type:'hr', color:'#888888'},
-        {id:uid(), type:'h2', text:'Column B'},
-        {id:uid(), type:'ul', items:['B - point 1','B - point 2']}
-    ];
-    else if(name==='section') els = [
-        {id:uid(), type:'h1', text:'Section Title', align:'center', fontSize:50}
-    ];
-    else if(name==='imagecaption') els = [
-        {id:uid(), type:'p', text:'(Use "+ Image" button below to upload a picture)', align:'center'},
-        {id:uid(), type:'quote', text:'Caption text describing the image', align:'center'}
-    ];
-    DATA.push(newSlide(els));
-    renderPreview(); saveState();
-};
-
-// ==========================================
-// ELEMENT MANAGEMENT
-// ==========================================
-window.addElement = (sIdx, type) => {
+// 🔴 THE NEW RIBBON-BASED ELEMENT INSERTER 🔴
+window.addElToActive = (type) => {
+    if(DATA.length === 0) {
+        addNewSlide(0);
+    }
+    if(activeSlideIdx >= DATA.length) activeSlideIdx = Math.max(0, DATA.length - 1);
+    
     snapshot();
     let el = { id: uid(), type: type, text: 'New ' + type, color: getDefaultColor(type), bold:false, italic:false, underline:false, strike:false, align:'left', case:'none', fontSize:null, highlight:null, locked:false };
+    
     if(type === 'ul' || type==='ol') el = { id: uid(), type: type, items: ['Item 1', 'Item 2'], color: getDefaultColor('p'), bold:false, italic:false, underline:false, strike:false, align:'left', case:'none', fontSize:null, highlight:null, locked:false };
-    if(type === 'table') el = { id: uid(), type: 'table', rows: [['H1', 'H2'], ['D1', 'D2']], headerColor:'2563EB', borderColor: isLightMode?'CBD5E1':'334155', striped:false, color: getDefaultColor('p') };
+    if(type === 'table') el = { id: uid(), type: 'table', rows: [['H1', 'H2'], ['D1', 'D2']], headerColor:'2b579a', borderColor: 'c8c6c4', striped:false, color: getDefaultColor('p') };
     if(type === 'icon') el.text = '⭐';
     if(type === 'quote') el.text = 'Quote text here...';
     if(type === 'link') { el.text = 'Click here'; el.url = 'https://example.com'; }
-    if(type === 'hr') el = { id: uid(), type:'hr', color: '#888888', locked:false };
+    if(type === 'hr') el = { id: uid(), type:'hr', color: '#c8c6c4', locked:false };
     if(type === 'shape-rect' || type === 'shape-circle') el = { id: uid(), type:type, color: getDefaultColor('h2'), w:200, h:100, align:'center', locked:false };
     if(type === 'image') {
         const inp = document.createElement('input'); inp.type='file'; inp.accept='image/*';
@@ -876,7 +1073,7 @@ window.addElement = (sIdx, type) => {
                     c.width = img.width*scale; c.height = img.height*scale;
                     c.getContext('2d').drawImage(img,0,0,c.width,c.height);
                     el.src = c.toDataURL('image/jpeg',0.8); el.width='medium'; el.align='center';
-                    DATA[sIdx].els.push(el);
+                    DATA[activeSlideIdx].els.push(el);
                     renderPreview(); saveState();
                 };
                 img.src = ev.target.result;
@@ -886,15 +1083,60 @@ window.addElement = (sIdx, type) => {
         inp.click();
         return;
     }
-    DATA[sIdx].els.push(el); renderPreview(); saveState();
+    
+    DATA[activeSlideIdx].els.push(el);
+    renderPreview(); saveState();
+    
+    // Auto scroll to active slide
+    const target = document.querySelectorAll('.slide-wrapper')[activeSlideIdx];
+    if(target) target.scrollIntoView({behavior:'smooth', block:'center'});
 };
 
+window.insertTemplate = (name) => {
+    snapshot();
+    let els = [];
+    if(name==='title') els = [
+        {id:uid(), type:'h1', text:'Presentation Title', align:'center'},
+        {id:uid(), type:'p', text:'Subtitle / Tagline goes here', align:'center'}
+    ];
+    else if(name==='titlecontent') els = [
+        {id:uid(), type:'h1', text:'Slide Title'},
+        {id:uid(), type:'ul', items:['Point one','Point two','Point three']}
+    ];
+    else if(name==='twocolumn') els = [
+        {id:uid(), type:'h2', text:'Column A'},
+        {id:uid(), type:'ul', items:['A - point 1','A - point 2']},
+        {id:uid(), type:'hr', color:'#c8c6c4'},
+        {id:uid(), type:'h2', text:'Column B'},
+        {id:uid(), type:'ul', items:['B - point 1','B - point 2']}
+    ];
+    else if(name==='section') els = [
+        {id:uid(), type:'h1', text:'Section Title', align:'center', fontSize:50}
+    ];
+    else if(name==='imagecaption') els = [
+        {id:uid(), type:'p', text:'(Use "+ Image" button below to upload a picture)', align:'center'},
+        {id:uid(), type:'quote', text:'Caption text describing the image', align:'center'}
+    ];
+    DATA.push(newSlide(els));
+    activeSlideIdx = DATA.length - 1;
+    renderPreview(); saveState();
+    document.getElementById('menu-templates').classList.remove('show');
+};
+
+function getDefaultColor(type) {
+    if(type==='h1') return $('defH1').value;
+    if(type==='h2') return $('defH2').value;
+    if(type==='mcq-q') return $('defMQ').value;
+    if(type==='mcq-opt') return $('defMO').value;
+    return $('defP').value;
+}
+
+// Inline formatting tools
 window.deleteEl = (sIdx, eIdx) => { snapshot(); DATA[sIdx].els.splice(eIdx, 1); renderPreview(); saveState(); };
 window.duplicateEl = (sIdx, eIdx) => { snapshot(); const copy = JSON.parse(JSON.stringify(DATA[sIdx].els[eIdx])); copy.id = uid(); DATA[sIdx].els.splice(eIdx+1,0,copy); renderPreview(); saveState(); };
 window.toggleLockEl = (sIdx, eIdx) => { snapshot(); DATA[sIdx].els[eIdx].locked = !DATA[sIdx].els[eIdx].locked; renderPreview(); saveState(); };
 window.moveEl = (sIdx, eIdx, dir) => {
-    snapshot();
-    let arr = DATA[sIdx].els;
+    snapshot(); let arr = DATA[sIdx].els;
     if(dir==='up' && eIdx > 0) { let t = arr[eIdx]; arr[eIdx] = arr[eIdx-1]; arr[eIdx-1] = t; }
     if(dir==='down' && eIdx < arr.length-1) { let t = arr[eIdx]; arr[eIdx] = arr[eIdx+1]; arr[eIdx+1] = t; }
     renderPreview(); saveState();
@@ -905,26 +1147,17 @@ window.toggleItalicEl = (sIdx, eIdx) => { snapshot(); DATA[sIdx].els[eIdx].itali
 window.toggleUnderlineEl = (sIdx, eIdx) => { snapshot(); DATA[sIdx].els[eIdx].underline = !DATA[sIdx].els[eIdx].underline; renderPreview(); saveState(); };
 window.toggleStrikeEl = (sIdx, eIdx) => { snapshot(); DATA[sIdx].els[eIdx].strike = !DATA[sIdx].els[eIdx].strike; renderPreview(); saveState(); };
 window.cycleAlignEl = (sIdx, eIdx) => {
-    snapshot();
-    const order = ['left','center','right']; const cur = DATA[sIdx].els[eIdx].align||'left';
-    DATA[sIdx].els[eIdx].align = order[(order.indexOf(cur)+1)%order.length];
-    renderPreview(); saveState();
+    snapshot(); const order = ['left','center','right']; const cur = DATA[sIdx].els[eIdx].align||'left';
+    DATA[sIdx].els[eIdx].align = order[(order.indexOf(cur)+1)%order.length]; renderPreview(); saveState();
 };
 window.cycleCaseEl = (sIdx, eIdx) => {
-    snapshot();
-    const order = ['none','upper','lower','title']; const cur = DATA[sIdx].els[eIdx].case||'none';
-    DATA[sIdx].els[eIdx].case = order[(order.indexOf(cur)+1)%order.length];
-    renderPreview(); saveState();
+    snapshot(); const order = ['none','upper','lower','title']; const cur = DATA[sIdx].els[eIdx].case||'none';
+    DATA[sIdx].els[eIdx].case = order[(order.indexOf(cur)+1)%order.length]; renderPreview(); saveState();
 };
 window.setFontSizeEl = (sIdx, eIdx, val) => { DATA[sIdx].els[eIdx].fontSize = val ? parseInt(val) : null; renderPreview(); saveState(); };
 window.setHighlightEl = (sIdx, eIdx, color) => { DATA[sIdx].els[eIdx].highlight = color; renderPreview(); saveState(); };
-window.setLinkUrl = (sIdx, eIdx) => {
-    const el = DATA[sIdx].els[eIdx];
-    const url = prompt('Enter URL:', el.url||'https://');
-    if(url!==null){ el.url = url; saveState(); }
-};
+window.setLinkUrl = (sIdx, eIdx) => { const el = DATA[sIdx].els[eIdx]; const url = prompt('Enter URL:', el.url||'https://'); if(url!==null){ el.url = url; saveState(); } };
 
-// Table controls
 window.addTableRow = (sIdx, eIdx) => { snapshot(); const el = DATA[sIdx].els[eIdx]; const cols = el.rows[0].length; el.rows.push(new Array(cols).fill('New')); renderPreview(); saveState(); };
 window.removeTableRow = (sIdx, eIdx) => { snapshot(); const el = DATA[sIdx].els[eIdx]; if(el.rows.length>1) el.rows.pop(); renderPreview(); saveState(); };
 window.addTableCol = (sIdx, eIdx) => { snapshot(); const el = DATA[sIdx].els[eIdx]; el.rows.forEach(r=>r.push('New')); renderPreview(); saveState(); };
@@ -933,7 +1166,6 @@ window.setTableHeaderColor = (sIdx, eIdx, hex) => { DATA[sIdx].els[eIdx].headerC
 window.setTableBorderColor = (sIdx, eIdx, hex) => { DATA[sIdx].els[eIdx].borderColor = hex.replace('#',''); renderPreview(); saveState(); };
 window.toggleTableStriped = (sIdx, eIdx) => { snapshot(); DATA[sIdx].els[eIdx].striped = !DATA[sIdx].els[eIdx].striped; renderPreview(); saveState(); };
 
-// Image / shape controls
 window.setImageWidth = (sIdx, eIdx, val) => { DATA[sIdx].els[eIdx].width = val; renderPreview(); saveState(); };
 window.setImageAlign = (sIdx, eIdx, val) => { DATA[sIdx].els[eIdx].align = val; renderPreview(); saveState(); };
 window.setShapeColor = (sIdx, eIdx, val) => { DATA[sIdx].els[eIdx].color = val; renderPreview(); saveState(); };
@@ -941,9 +1173,6 @@ window.setShapeSize = (sIdx, eIdx, dim, val) => { DATA[sIdx].els[eIdx][dim] = pa
 window.setShapeAlign = (sIdx, eIdx, val) => { DATA[sIdx].els[eIdx].align = val; renderPreview(); saveState(); };
 window.setHrColor = (sIdx, eIdx, val) => { DATA[sIdx].els[eIdx].color = val; renderPreview(); saveState(); };
 
-// ==========================================
-// CASE TRANSFORM HELPER
-// ==========================================
 function transformCase(str, mode){
     if(!str) return str;
     if(mode==='upper') return str.toUpperCase();
@@ -953,43 +1182,86 @@ function transformCase(str, mode){
 }
 function formatText(text) { if(!text) return ""; return text.replace(/<b>(.*?)<\/b>/g, `<strong style="color:var(--bold-color);">$1</strong>`); }
 
-// ==========================================
-// BUILD ELEMENT TOOLBAR (SHARED)
-// ==========================================
+// 🔴 UPDATED TOOLBAR WITH PROPER FONT AWESOME ICONS 🔴
 function buildTextToolbar(sIdx, eIdx, el){
-    const colInput = `<input type="color" value="${el.color || getDefaultColor(el.type)}" onchange="updateElColor(${sIdx}, ${eIdx}, this.value)" title="Text Color">`;
-    const hlInput = `<input type="color" value="${el.highlight||'#000000'}" onchange="setHighlightEl(${sIdx}, ${eIdx}, this.value)" title="Highlight Color"><button onclick="setHighlightEl(${sIdx},${eIdx},null)" title="Remove Highlight"><i class="fas fa-eraser"></i></button>`;
-    const sizeInput = `<input type="number" class="mini-input" placeholder="${DEFAULT_SIZE[el.type]||30}" value="${el.fontSize||''}" onchange="setFontSizeEl(${sIdx},${eIdx},this.value)" title="Font Size">`;
-    let linkBtn = el.type==='link' ? `<button onclick="setLinkUrl(${sIdx},${eIdx})" title="Set URL"><i class="fas fa-link"></i></button>` : '';
+
+    const textColor = `
+        <input type="color" class="toolbar-color text-color" value="${el.color || getDefaultColor(el.type)}"
+            onchange="updateElColor(${sIdx},${eIdx},this.value)" title="Text Color">
+    `;
+
+    const fontSize = `
+        <input type="number" class="toolbar-size" placeholder="${DEFAULT_SIZE[el.type] || 30}"
+            value="${el.fontSize || ''}" onchange="setFontSizeEl(${sIdx},${eIdx},this.value)" title="Font Size" style="width: 45px; border: 1px solid var(--border); border-radius: 4px; padding: 2px;">
+    `;
+
+    const highlight = `
+        <input type="color" class="toolbar-color highlight-color" value="${el.highlight || '#ffffff'}"
+            onchange="setHighlightEl(${sIdx},${eIdx},this.value)" title="Highlight Color">
+    `;
+
+    const linkBtn = el.type === 'link' ? `
+        <button class="toolbar-btn" onclick="setLinkUrl(${sIdx},${eIdx})" title="Insert Link"><i class="fas fa-link"></i></button>
+    ` : '';
+
     return `
-        ${colInput}
-        <button class="${el.bold?'active':''}" onclick="toggleBoldEl(${sIdx},${eIdx})" title="Bold"><b>B</b></button>
-        <button class="${el.italic?'active':''}" onclick="toggleItalicEl(${sIdx},${eIdx})" title="Italic"><i>I</i></button>
-        <button class="${el.underline?'active':''}" onclick="toggleUnderlineEl(${sIdx},${eIdx})" title="Underline"><u>U</u></button>
-        <button class="${el.strike?'active':''}" onclick="toggleStrikeEl(${sIdx},${eIdx})" title="Strikethrough"><s>S</s></button>
-        <button onclick="cycleAlignEl(${sIdx},${eIdx})" title="Alignment: ${el.align||'left'}"><i class="fas fa-align-${el.align==='center'?'center':el.align==='right'?'right':'left'}"></i></button>
-        <button onclick="cycleCaseEl(${sIdx},${eIdx})" title="Case: ${el.case||'none'}"><i class="fas fa-font"></i></button>
-        ${sizeInput}
-        ${hlInput}
+        <!-- TEXT COLOR -->
+        ${textColor}
+
+        <!-- BOLD -->
+        <button class="toolbar-btn ${el.bold?'active':''}" onclick="toggleBoldEl(${sIdx},${eIdx})" title="Bold"><i class="fas fa-bold"></i></button>
+
+        <!-- ITALIC -->
+        <button class="toolbar-btn ${el.italic?'active':''}" onclick="toggleItalicEl(${sIdx},${eIdx})" title="Italic"><i class="fas fa-italic"></i></button>
+
+        <!-- UNDERLINE -->
+        <button class="toolbar-btn ${el.underline?'active':''}" onclick="toggleUnderlineEl(${sIdx},${eIdx})" title="Underline"><i class="fas fa-underline"></i></button>
+
+        <!-- STRIKE -->
+        <button class="toolbar-btn ${el.strike?'active':''}" onclick="toggleStrikeEl(${sIdx},${eIdx})" title="Strikethrough"><i class="fas fa-strikethrough"></i></button>
+
+        <!-- ALIGNMENT -->
+        <button class="toolbar-btn" onclick="cycleAlignEl(${sIdx},${eIdx})" title="Alignment">
+            <i class="fas fa-align-${el.align==='center'?'center':el.align==='right'?'right':'left'}"></i>
+        </button>
+
+        <!-- CASE -->
+        <button class="toolbar-btn" onclick="cycleCaseEl(${sIdx},${eIdx})" title="Change Case"><i class="fas fa-font"></i></button>
+
+        <!-- FONT SIZE -->
+        ${fontSize}
+
+        <!-- HIGHLIGHT COLOR -->
+        ${highlight}
         ${linkBtn}
-        <button onclick="duplicateEl(${sIdx},${eIdx})" title="Duplicate"><i class="fas fa-clone"></i></button>
-        <button class="${el.locked?'active':''}" onclick="toggleLockEl(${sIdx},${eIdx})" title="Lock/Unlock"><i class="fas fa-${el.locked?'lock':'lock-open'}"></i></button>
-        <button onclick="moveEl(${sIdx}, ${eIdx}, 'up')" title="Move Up"><i class="fas fa-caret-up"></i></button>
-        <button onclick="moveEl(${sIdx}, ${eIdx}, 'down')" title="Move Down"><i class="fas fa-caret-down"></i></button>
-        <button onclick="deleteEl(${sIdx}, ${eIdx})" style="color:#ef4444;" title="Delete"><i class="fas fa-times"></i></button>
+
+        <!-- COPY / DUPLICATE -->
+        <button class="toolbar-btn" onclick="duplicateEl(${sIdx},${eIdx})" title="Duplicate"><i class="fas fa-clone"></i></button>
+
+        <!-- LOCK / OPEN -->
+        <button class="toolbar-btn ${el.locked?'active':''}" onclick="toggleLockEl(${sIdx},${eIdx})" title="${el.locked?'Unlock':'Lock'}">
+            <i class="fas ${el.locked ? 'fa-lock' : 'fa-unlock'}"></i>
+        </button>
+
+        <!-- MOVE UP -->
+        <button class="toolbar-btn" onclick="moveEl(${sIdx},${eIdx},'up')" title="Move Up"><i class="fas fa-arrow-up"></i></button>
+
+        <!-- MOVE DOWN -->
+        <button class="toolbar-btn" onclick="moveEl(${sIdx},${eIdx},'down')" title="Move Down"><i class="fas fa-arrow-down"></i></button>
+
+        <!-- DELETE -->
+        <button class="toolbar-btn delete-btn" onclick="deleteEl(${sIdx},${eIdx})" title="Delete" style="color:var(--red-accent);">
+            <i class="fas fa-trash"></i>
+        </button>
     `;
 }
-
-// ==========================================
-// RENDER PREVIEW
-// ==========================================
 function getBgUrl() {
     let base = null;
-    if($('bgSelect').value === 'custom' && customBgDataUrl) base = customBgDataUrl;
+    if($('bgSelect') && $('bgSelect').value === 'custom' && customBgDataUrl) base = customBgDataUrl;
     if(!base) return null;
     if(!SETTINGS.bgGrayscale) return base;
     if(grayBgCache) return grayBgCache;
-    return base; // grayscale for export is computed at generate-time (async), preview uses CSS filter instead
+    return base; 
 }
 
 function updateCounts(){
@@ -999,9 +1271,12 @@ function updateCounts(){
         if(el.items) el.items.forEach(t=>{ words += t.trim().split(/\s+/).filter(Boolean).length; chars += t.length; });
         if(el.rows) el.rows.forEach(r=>r.forEach(c=>{ words += c.trim().split(/\s+/).filter(Boolean).length; chars += c.length; }));
     }));
-    $('statsBar').innerHTML = `<span>Slides: <b>${DATA.length}</b></span><span>Words: <b>${words}</b></span><span>Characters: <b>${chars}</b></span>`;
+    $('statsBarContent').innerHTML = `<span>Slides: <b>${DATA.length}</b></span> &nbsp;|&nbsp; <span>Words: <b>${words}</b></span> &nbsp;|&nbsp; <span>Chars: <b>${chars}</b></span>`;
 }
 
+// ==========================================
+// RENDER & AUTO SPLIT
+// ==========================================
 function renderPreview() {
     const box = $("preview"); box.innerHTML = "";
     if(DATA.length === 0) { box.innerHTML = "<div style='text-align:center; color:var(--text-muted); margin-top:50px;'><i class='fas fa-folder-open' style='font-size:3em; margin-bottom:10px;'></i><br>No Slides. Import data or Add a New Slide!</div>"; updateCounts(); return; }
@@ -1011,45 +1286,47 @@ function renderPreview() {
     const todayStr = new Date().toLocaleDateString();
 
     DATA.forEach((slide, sIdx) => {
-        box.innerHTML += `<div class="add-slide-separator"><button class="add-slide-btn" onclick="addNewSlide(${sIdx})"><i class="fas fa-plus"></i> Add New Slide Here</button></div>`;
-
-        const wrap = document.createElement("div"); wrap.className = "slide-wrapper";
+        
+        const wrap = document.createElement("div"); 
+        wrap.className = "slide-wrapper";
+        wrap.onclick = (e) => setActiveSlide(sIdx, e);
+        
+        if (sIdx === activeSlideIdx) wrap.classList.add('active-slide-ring');
 
         const toolBar = document.createElement("div"); toolBar.className = "slide-toolbar";
         toolBar.innerHTML = `
             <div class="s-title">
-                <input type="checkbox" ${slide.selected?'checked':''} onchange="toggleSlideSelect(${sIdx}, this.checked)" title="Select">
-                <i class="fas fa-grip-vertical" style="cursor:grab;" title="Drag to reorder"></i>
+                <input type="checkbox" ${slide.selected?'checked':''} onchange="toggleSlideSelect(${sIdx}, this.checked)" title="Select" onclick="event.stopPropagation()">
+                <i class="fas fa-grip-vertical" style="cursor:grab; color: var(--text-muted);" title="Drag to reorder"></i>
                 Slide ${sIdx + 1}
-                <input type="color" class="mini-color" value="${slide.bgColor||'#000000'}" onchange="setSlideBgColor(${sIdx}, this.value)" title="Slide Background Color">
-                <button class="action-icon" title="Clear BG Color" onclick="clearSlideBgColor(${sIdx})"><i class="fas fa-ban"></i></button>
-                <select class="mini-select" onchange="setSlideTransition(${sIdx}, this.value)" title="Transition (reference only)">
+                <input type="color" class="mini-color" value="${slide.bgColor||'#ffffff'}" onchange="setSlideBgColor(${sIdx}, this.value)" title="Slide Background Color" onclick="event.stopPropagation()">
+                <button class="action-icon" title="Clear BG Color" onclick="clearSlideBgColor(${sIdx}); event.stopPropagation();"><i class="fas fa-ban"></i></button>
+                <select class="mini-select" onchange="setSlideTransition(${sIdx}, this.value)" title="Transition" onclick="event.stopPropagation()">
                     ${['None','Fade','Slide','Zoom','Wipe'].map(t=>`<option value="${t}" ${slide.transition===t?'selected':''}>${t}</option>`).join('')}
                 </select>
-                <input type="number" class="mini-input" value="${slide.duration}" min="1" step="0.5" onchange="setSlideDuration(${sIdx}, this.value)" title="Duration (sec, reference only)">
+                <input type="number" class="mini-input" value="${slide.duration}" min="1" step="0.5" onchange="setSlideDuration(${sIdx}, this.value)" title="Duration (sec)" onclick="event.stopPropagation()">
             </div>
             <div class="slide-actions">
-                <button class="action-icon ${slide.locked?'active':''}" title="Lock/Unlock Slide" onclick="toggleSlideLock(${sIdx})"><i class="fas fa-${slide.locked?'lock':'lock-open'}"></i></button>
-                <button class="action-icon" title="Move Up" onclick="moveSlide(${sIdx},'up')"><i class="fas fa-arrow-up"></i></button>
-                <button class="action-icon" title="Move Down" onclick="moveSlide(${sIdx},'down')"><i class="fas fa-arrow-down"></i></button>
-                <button class="action-icon" title="Duplicate" onclick="duplicateSlide(${sIdx})"><i class="fas fa-copy"></i></button>
-                <button class="action-icon" title="Delete Slide" onclick="deleteSlide(${sIdx})" style="color:var(--btn-red)"><i class="fas fa-trash"></i></button>
+                <button class="action-icon ${slide.locked?'active':''}" title="Lock/Unlock Slide" onclick="toggleSlideLock(${sIdx}); event.stopPropagation();"><i class="fas fa-${slide.locked?'lock':'lock-open'}"></i></button>
+                <button class="action-icon" title="Move Up" onclick="moveSlide(${sIdx},'up'); event.stopPropagation();"><i class="fas fa-arrow-up"></i></button>
+                <button class="action-icon" title="Move Down" onclick="moveSlide(${sIdx},'down'); event.stopPropagation();"><i class="fas fa-arrow-down"></i></button>
+                <button class="action-icon" title="Duplicate" onclick="duplicateSlide(${sIdx}); event.stopPropagation();"><i class="fas fa-copy"></i></button>
+                <button class="action-icon" title="Delete Slide" onclick="deleteSlide(${sIdx}); event.stopPropagation();" style="color:var(--red-accent)"><i class="fas fa-trash"></i></button>
             </div>
         `;
         wrap.appendChild(toolBar);
 
         const metaRow = document.createElement('div'); metaRow.className='slide-meta-row';
-        metaRow.innerHTML = `<label><i class="fas fa-sticky-note"></i> Notes:</label><textarea placeholder="Speaker notes..." onblur="setSlideNotes(${sIdx}, this.value)">${slide.notes||''}</textarea>`;
+        metaRow.innerHTML = `<label style="margin:0;"><i class="fas fa-sticky-note"></i> Notes:</label><textarea placeholder="Speaker notes..." onblur="setSlideNotes(${sIdx}, this.value)" onclick="event.stopPropagation()">${slide.notes||''}</textarea>`;
         wrap.appendChild(metaRow);
 
         const div = document.createElement("div"); div.className = "slide-card" + (SETTINGS.bgGrayscale ? ' grayscale' : '');
         if(slide.bgColor) div.style.backgroundColor = slide.bgColor;
         else if(bgUrl) div.style.background = `url('${bgUrl}') center/cover no-repeat`;
-        else div.style.backgroundColor = isLightMode ? "#ffffff" : "#000000";
+        else div.style.backgroundColor = !isDarkMode ? "#ffffff" : "#000000";
 
-        // overlay
         const overlay = document.createElement('div'); overlay.className='slide-overlay';
-        const overlayBase = isLightMode ? '255,255,255' : '0,0,0';
+        const overlayBase = !isDarkMode ? '255,255,255' : '0,0,0';
         overlay.style.background = (bgUrl && !slide.bgColor) ? `rgba(${overlayBase},${SETTINGS.overlayOpacity})` : 'transparent';
         div.appendChild(overlay);
 
@@ -1061,7 +1338,7 @@ function renderPreview() {
                 let node;
 
                 if (TEXT_TYPES.includes(el.type)) {
-                    elBlock.innerHTML = `<div class="el-toolbar">${el.locked?`<button onclick="toggleLockEl(${sIdx},${eIdx})" title="Unlock"><i class="fas fa-lock"></i></button><button onclick="deleteEl(${sIdx},${eIdx})" title="Delete"><i class="fas fa-times"></i></button>`:buildTextToolbar(sIdx,eIdx,el)}</div>`;
+                    elBlock.innerHTML = `<div class="el-toolbar" onclick="event.stopPropagation()">${el.locked?`<button onclick="toggleLockEl(${sIdx},${eIdx})" title="Unlock"><i class="fas fa-lock"></i></button><button onclick="deleteEl(${sIdx},${eIdx})" title="Delete"><i class="fas fa-times"></i></button>`:buildTextToolbar(sIdx,eIdx,el)}</div>`;
                     node = document.createElement("div"); node.className = "p-" + el.type;
                     node.style.color = el.color || getDefaultColor(el.type);
                     node.style.fontWeight = el.bold ? '700':'';
@@ -1080,7 +1357,7 @@ function renderPreview() {
                     node.onblur = e => { DATA[sIdx].els[eIdx].text = e.target.innerText; saveState(); };
                 }
                 else if (el.type === 'ul' || el.type==='ol') {
-                    elBlock.innerHTML = `<div class="el-toolbar">${el.locked?`<button onclick="toggleLockEl(${sIdx},${eIdx})" title="Unlock"><i class="fas fa-lock"></i></button><button onclick="deleteEl(${sIdx},${eIdx})" title="Delete"><i class="fas fa-times"></i></button>`:buildTextToolbar(sIdx,eIdx,el)}</div>`;
+                    elBlock.innerHTML = `<div class="el-toolbar" onclick="event.stopPropagation()">${el.locked?`<button onclick="toggleLockEl(${sIdx},${eIdx})" title="Unlock"><i class="fas fa-lock"></i></button><button onclick="deleteEl(${sIdx},${eIdx})" title="Delete"><i class="fas fa-times"></i></button>`:buildTextToolbar(sIdx,eIdx,el)}</div>`;
                     node = document.createElement("div");
                     el.items.forEach((itemText, iIdx) => {
                         const liNode = document.createElement("div"); liNode.className = "p-li";
@@ -1099,14 +1376,14 @@ function renderPreview() {
                     });
                 }
                 else if (el.type === 'table') {
-                    elBlock.innerHTML = `<div class="el-toolbar">
-                        <input type="color" value="#${el.headerColor||'2563EB'}" onchange="setTableHeaderColor(${sIdx},${eIdx},this.value)" title="Header Color">
-                        <input type="color" value="#${el.borderColor||'334155'}" onchange="setTableBorderColor(${sIdx},${eIdx},this.value)" title="Border Color">
+                    elBlock.innerHTML = `<div class="el-toolbar" onclick="event.stopPropagation()">
+                        <input type="color" value="#${el.headerColor||'2b579a'}" onchange="setTableHeaderColor(${sIdx},${eIdx},this.value)" title="Header Color">
+                        <input type="color" value="#${el.borderColor||'c8c6c4'}" onchange="setTableBorderColor(${sIdx},${eIdx},this.value)" title="Border Color">
                         <button class="${el.striped?'active':''}" onclick="toggleTableStriped(${sIdx},${eIdx})" title="Striped Rows"><i class="fas fa-bars"></i></button>
                         <button onclick="duplicateEl(${sIdx},${eIdx})" title="Duplicate"><i class="fas fa-clone"></i></button>
                         <button onclick="moveEl(${sIdx}, ${eIdx}, 'up')" title="Move Up"><i class="fas fa-caret-up"></i></button>
                         <button onclick="moveEl(${sIdx}, ${eIdx}, 'down')" title="Move Down"><i class="fas fa-caret-down"></i></button>
-                        <button onclick="deleteEl(${sIdx}, ${eIdx})" style="color:#ef4444;" title="Delete"><i class="fas fa-times"></i></button>
+                        <button onclick="deleteEl(${sIdx}, ${eIdx})" style="color:var(--red-accent);" title="Delete"><i class="fas fa-times"></i></button>
                     </div>`;
                     node = document.createElement("div"); node.className = "preview-table-wrap";
                     const table = document.createElement("table"); table.className = "preview-table" + (SETTINGS.tableCompact ? ' compact' : '');
@@ -1115,24 +1392,24 @@ function renderPreview() {
                         if(el.striped && rIdx>0 && rIdx%2===0) tr.classList.add('striped');
                         row.forEach((cell, cIdx) => {
                             const td = document.createElement(rIdx === 0 ? "th" : "td");
-                            td.style.borderColor = '#'+(el.borderColor||'334155');
-                            if(rIdx === 0) td.style.background = '#'+(el.headerColor||'2563EB');
+                            td.style.borderColor = '#'+(el.borderColor||'c8c6c4');
+                            if(rIdx === 0) td.style.background = '#'+(el.headerColor||'2b579a');
                             if(rIdx!==0) td.style.color = el.color || getDefaultColor('p');
                             td.contentEditable = "true"; td.innerHTML = formatText(cell);
                             td.onblur = e => { DATA[sIdx].els[eIdx].rows[rIdx][cIdx] = e.target.innerText; saveState(); }; tr.appendChild(td);
                         }); table.appendChild(tr);
                     }); node.appendChild(table);
                     const tc = document.createElement('div'); tc.className='table-controls';
-                    tc.innerHTML = `<button onclick="addTableRow(${sIdx},${eIdx})">+ Row</button><button onclick="removeTableRow(${sIdx},${eIdx})">- Row</button><button onclick="addTableCol(${sIdx},${eIdx})">+ Col</button><button onclick="removeTableCol(${sIdx},${eIdx})">- Col</button>`;
+                    tc.innerHTML = `<button onclick="addTableRow(${sIdx},${eIdx}); event.stopPropagation();">+ Row</button><button onclick="removeTableRow(${sIdx},${eIdx}); event.stopPropagation();">- Row</button><button onclick="addTableCol(${sIdx},${eIdx}); event.stopPropagation();">+ Col</button><button onclick="removeTableCol(${sIdx},${eIdx}); event.stopPropagation();">- Col</button>`;
                     node.appendChild(tc);
                 }
                 else if (el.type === 'hr') {
-                    elBlock.innerHTML = `<div class="el-toolbar"><input type="color" value="${el.color||'#888888'}" onchange="setHrColor(${sIdx},${eIdx},this.value)" title="Line Color"><button onclick="moveEl(${sIdx},${eIdx},'up')"><i class="fas fa-caret-up"></i></button><button onclick="moveEl(${sIdx},${eIdx},'down')"><i class="fas fa-caret-down"></i></button><button onclick="deleteEl(${sIdx},${eIdx})" style="color:#ef4444;"><i class="fas fa-times"></i></button></div>`;
-                    node = document.createElement('hr'); node.style.border='none'; node.style.borderTop = `2px solid ${el.color||'#888888'}`; node.style.margin='10px 0';
+                    elBlock.innerHTML = `<div class="el-toolbar" onclick="event.stopPropagation()"><input type="color" value="${el.color||'#c8c6c4'}" onchange="setHrColor(${sIdx},${eIdx},this.value)" title="Line Color"><button onclick="moveEl(${sIdx},${eIdx},'up')"><i class="fas fa-caret-up"></i></button><button onclick="moveEl(${sIdx},${eIdx},'down')"><i class="fas fa-caret-down"></i></button><button onclick="deleteEl(${sIdx},${eIdx})" style="color:var(--red-accent);"><i class="fas fa-times"></i></button></div>`;
+                    node = document.createElement('hr'); node.style.border='none'; node.style.borderTop = `2px solid ${el.color||'#c8c6c4'}`; node.style.margin='10px 0';
                 }
                 else if (el.type === 'image') {
                     const widthMap = {small:'25%', medium:'50%', large:'85%'};
-                    elBlock.innerHTML = `<div class="el-toolbar">
+                    elBlock.innerHTML = `<div class="el-toolbar" onclick="event.stopPropagation()">
                         <select class="mini-select" onchange="setImageWidth(${sIdx},${eIdx},this.value)" title="Size">
                             ${['small','medium','large'].map(w=>`<option value="${w}" ${el.width===w?'selected':''}>${w}</option>`).join('')}
                         </select>
@@ -1142,7 +1419,7 @@ function renderPreview() {
                         <button onclick="duplicateEl(${sIdx},${eIdx})" title="Duplicate"><i class="fas fa-clone"></i></button>
                         <button onclick="moveEl(${sIdx}, ${eIdx}, 'up')"><i class="fas fa-caret-up"></i></button>
                         <button onclick="moveEl(${sIdx}, ${eIdx}, 'down')"><i class="fas fa-caret-down"></i></button>
-                        <button onclick="deleteEl(${sIdx}, ${eIdx})" style="color:#ef4444;"><i class="fas fa-times"></i></button>
+                        <button onclick="deleteEl(${sIdx}, ${eIdx})" style="color:var(--red-accent);"><i class="fas fa-times"></i></button>
                     </div>`;
                     node = document.createElement('div'); node.className='p-image-wrap';
                     node.style.justifyContent = el.align==='center'?'center':el.align==='right'?'flex-end':'flex-start';
@@ -1150,7 +1427,7 @@ function renderPreview() {
                     node.appendChild(img);
                 }
                 else if (el.type === 'shape-rect' || el.type === 'shape-circle') {
-                    elBlock.innerHTML = `<div class="el-toolbar">
+                    elBlock.innerHTML = `<div class="el-toolbar" onclick="event.stopPropagation()">
                         <input type="color" value="${el.color}" onchange="setShapeColor(${sIdx},${eIdx},this.value)" title="Color">
                         <input type="number" class="mini-input" value="${el.w}" onchange="setShapeSize(${sIdx},${eIdx},'w',this.value)" title="Width">
                         <input type="number" class="mini-input" value="${el.h}" onchange="setShapeSize(${sIdx},${eIdx},'h',this.value)" title="Height">
@@ -1160,7 +1437,7 @@ function renderPreview() {
                         <button onclick="duplicateEl(${sIdx},${eIdx})"><i class="fas fa-clone"></i></button>
                         <button onclick="moveEl(${sIdx}, ${eIdx}, 'up')"><i class="fas fa-caret-up"></i></button>
                         <button onclick="moveEl(${sIdx}, ${eIdx}, 'down')"><i class="fas fa-caret-down"></i></button>
-                        <button onclick="deleteEl(${sIdx}, ${eIdx})" style="color:#ef4444;"><i class="fas fa-times"></i></button>
+                        <button onclick="deleteEl(${sIdx}, ${eIdx})" style="color:var(--red-accent);"><i class="fas fa-times"></i></button>
                     </div>`;
                     node = document.createElement('div'); node.className='p-shape';
                     node.style.display='flex'; node.style.justifyContent = el.align==='center'?'center':el.align==='right'?'flex-end':'flex-start';
@@ -1173,40 +1450,18 @@ function renderPreview() {
                 if(node) elBlock.appendChild(node);
                 content.appendChild(elBlock);
             });
-
-            const addBar = document.createElement("div"); addBar.className = "add-element-bar";
-            addBar.innerHTML = `
-                <button class="add-el-btn" onclick="addElement(${sIdx}, 'h1')">+ H1</button>
-                <button class="add-el-btn" onclick="addElement(${sIdx}, 'h2')">+ H2</button>
-                <button class="add-el-btn" onclick="addElement(${sIdx}, 'p')">+ Text</button>
-                <button class="add-el-btn" onclick="addElement(${sIdx}, 'ul')">+ Bullet</button>
-                <button class="add-el-btn" onclick="addElement(${sIdx}, 'ol')">+ Numbered</button>
-                <button class="add-el-btn" onclick="addElement(${sIdx}, 'quote')">+ Quote</button>
-                <button class="add-el-btn" onclick="addElement(${sIdx}, 'link')">+ Link</button>
-                <button class="add-el-btn" onclick="addElement(${sIdx}, 'icon')">+ Emoji/Icon</button>
-                <button class="add-el-btn" onclick="addElement(${sIdx}, 'image')">+ Image</button>
-                <button class="add-el-btn" onclick="addElement(${sIdx}, 'shape-rect')">+ Rectangle</button>
-                <button class="add-el-btn" onclick="addElement(${sIdx}, 'shape-circle')">+ Circle</button>
-                <button class="add-el-btn" onclick="addElement(${sIdx}, 'hr')">+ Divider</button>
-                <button class="add-el-btn" onclick="addElement(${sIdx}, 'mcq-q')">+ MCQ Question</button>
-                <button class="add-el-btn" onclick="addElement(${sIdx}, 'mcq-opt')">+ MCQ Option</button>
-                <button class="add-el-btn" onclick="addElement(${sIdx}, 'mcq-ans')">+ Answer</button>
-                <button class="add-el-btn" onclick="addElement(${sIdx}, 'table')">+ Table</button>
-            `;
-            content.appendChild(addBar);
         } else {
             const lockMsg = document.createElement('div');
-            lockMsg.style.cssText = 'text-align:center;color:var(--text-muted);padding:20px;';
-            lockMsg.innerHTML = '<i class="fas fa-lock"></i> Slide locked. Click the lock icon in the toolbar to edit.';
+            lockMsg.style.cssText = 'text-align:center;color:var(--text-muted);padding:30px;font-weight:600;';
+            lockMsg.innerHTML = '<i class="fas fa-lock" style="font-size:2rem;margin-bottom:10px;color:var(--word-blue);"></i><br>Slide locked. Click the lock icon in the toolbar to edit.';
             content.appendChild(lockMsg);
         }
 
-        // HUD overlays (header/footer/watermark/date/slide number) - preview only
-        if(SETTINGS.showHeader && SETTINGS.headerText) { const h=document.createElement('div'); h.className='hud-text'; h.style.top='6px'; h.style.left='50%'; h.style.transform='translateX(-50%)'; h.style.color= isLightMode?'#000':'#fff'; h.innerText=SETTINGS.headerText; div.appendChild(h); }
-        if(SETTINGS.showFooter && SETTINGS.footerText) { const f=document.createElement('div'); f.className='hud-text'; f.style.bottom='6px'; f.style.left='50%'; f.style.transform='translateX(-50%)'; f.style.color= isLightMode?'#000':'#fff'; f.innerText=SETTINGS.footerText; div.appendChild(f); }
-        if(SETTINGS.showSlideNum) { const n=document.createElement('div'); n.className='hud-text'; n.style.bottom='6px'; n.style.right='10px'; n.style.color= isLightMode?'#000':'#fff'; n.innerText=`${sIdx+1}/${total}`; div.appendChild(n); }
-        if(SETTINGS.showDate) { const d=document.createElement('div'); d.className='hud-text'; d.style.bottom='6px'; d.style.left='10px'; d.style.color= isLightMode?'#000':'#fff'; d.innerText=todayStr; div.appendChild(d); }
-        if(SETTINGS.showWatermark && SETTINGS.watermarkText) { const w=document.createElement('div'); w.className='hud-text'; w.style.top='50%'; w.style.left='50%'; w.style.transform='translate(-50%,-50%) rotate(-25deg)'; w.style.fontSize='2.5em'; w.style.opacity='0.15'; w.style.color= isLightMode?'#000':'#fff'; w.innerText=SETTINGS.watermarkText; div.appendChild(w); }
+        if(SETTINGS.showHeader && SETTINGS.headerText) { const h=document.createElement('div'); h.className='hud-text'; h.style.top='6px'; h.style.left='50%'; h.style.transform='translateX(-50%)'; h.style.color= !isDarkMode?'#000':'#fff'; h.innerText=SETTINGS.headerText; div.appendChild(h); }
+        if(SETTINGS.showFooter && SETTINGS.footerText) { const f=document.createElement('div'); f.className='hud-text'; f.style.bottom='6px'; f.style.left='50%'; f.style.transform='translateX(-50%)'; f.style.color= !isDarkMode?'#000':'#fff'; f.innerText=SETTINGS.footerText; div.appendChild(f); }
+        if(SETTINGS.showSlideNum) { const n=document.createElement('div'); n.className='hud-text'; n.style.bottom='6px'; n.style.right='10px'; n.style.color= !isDarkMode?'#000':'#fff'; n.innerText=`${sIdx+1}/${total}`; div.appendChild(n); }
+        if(SETTINGS.showDate) { const d=document.createElement('div'); d.className='hud-text'; d.style.bottom='6px'; d.style.left='10px'; d.style.color= !isDarkMode?'#000':'#fff'; d.innerText=todayStr; div.appendChild(d); }
+        if(SETTINGS.showWatermark && SETTINGS.watermarkText) { const w=document.createElement('div'); w.className='hud-text'; w.style.top='50%'; w.style.left='50%'; w.style.transform='translate(-50%,-50%) rotate(-25deg)'; w.style.fontSize='2.5em'; w.style.opacity='0.15'; w.style.color= !isDarkMode?'#000':'#fff'; w.innerText=SETTINGS.watermarkText; div.appendChild(w); }
 
         div.appendChild(content); wrap.appendChild(div); box.appendChild(wrap);
         attachDrag(wrap, sIdx);
@@ -1216,28 +1471,27 @@ function renderPreview() {
     flagOverflowingSlides();
 }
 
-// ==========================================
-// OVERFLOW DETECTION + AUTO-SPLIT TO NEXT SLIDE
-// ==========================================
 function getUsableCardHeight(cardEl){
     const cs = getComputedStyle(cardEl);
     const padTop = parseFloat(cs.paddingTop)||0, padBot = parseFloat(cs.paddingBottom)||0;
     return cardEl.clientHeight - padTop - padBot;
 }
 
-// Non-destructive: just paints a ⚠ badge on any slide whose content is taller than the box.
 function flagOverflowingSlides(){
     document.querySelectorAll('.slide-wrapper').forEach((wrap) => {
         const cardEl = wrap.querySelector('.slide-card');
         const contentEl = wrap.querySelector('.slide-content');
         const titleEl = wrap.querySelector('.s-title');
         if(!cardEl || !contentEl || !titleEl) return;
-        const avail = getUsableCardHeight(cardEl) - 10;
+        
+        // Using real content scroll height relative to full height
+        const isOverflow = contentEl.scrollHeight > cardEl.clientHeight;
+        
         let badge = titleEl.querySelector('.overflow-badge');
-        if(contentEl.scrollHeight > avail){
+        if(isOverflow){
             if(!badge){
-                badge = document.createElement('span'); badge.className='overflow-badge'; badge.style.color='#ef4444';
-                badge.title = 'Content is taller than the slide — click "Auto-Split Overflowing Slides"';
+                badge = document.createElement('span'); badge.className='overflow-badge'; badge.style.color='var(--red-accent)';
+                badge.title = 'Content is taller than the slide — click "Fix Overflow"';
                 badge.innerHTML = ' <i class="fas fa-triangle-exclamation"></i>';
                 titleEl.appendChild(badge);
             }
@@ -1245,10 +1499,9 @@ function flagOverflowingSlides(){
     });
 }
 
-// Destructive/actual fix: moves overflowing trailing elements onto new slides
-// (and, for a lone oversized table, splits its rows across slides) until nothing overflows.
-function autoPaginate(silent){
-    let changed = true, passes = 0, anyChange = false; const MAX_PASSES = 60;
+// 🔴 UPDATED: BETTER TEXT & LIST SPLITTING ALGORITHM 🔴
+function autoSplitSlides(){
+    snapshot(); let changed = true, passes = 0, anyChange = false; const MAX_PASSES = 60;
     while(changed && passes < MAX_PASSES){
         changed = false; passes++;
         const cards = document.querySelectorAll('.slide-card');
@@ -1257,38 +1510,63 @@ function autoPaginate(silent){
             if(slide.locked) continue;
             const cardEl = cards[i]; if(!cardEl) continue;
             const contentEl = cardEl.querySelector('.slide-content'); if(!contentEl) continue;
-            const avail = getUsableCardHeight(cardEl) - 15;
-            if(contentEl.scrollHeight <= avail) continue;
+            
+            if(contentEl.scrollHeight <= cardEl.clientHeight) continue;
 
-            if(slide.els.length <= 1){
+            if(slide.els.length === 1){
                 const el0 = slide.els[0];
-                if(el0 && el0.type === 'table' && el0.rows.length > 2){
+                
+                // 1) Split Lists (UL/OL)
+                if(el0.type === 'ul' || el0.type === 'ol') {
+                    if(el0.items.length > 2) {
+                        let mid = Math.floor(el0.items.length / 2);
+                        let movedItems = el0.items.slice(mid);
+                        el0.items = el0.items.slice(0, mid);
+                        let newEl = JSON.parse(JSON.stringify(el0)); newEl.id = uid(); newEl.items = movedItems;
+                        DATA.splice(i+1, 0, { id: uid(), els:[newEl], bgColor: slide.bgColor, notes:'', transition: slide.transition, duration: slide.duration, locked:false, selected:false });
+                        changed = true; continue;
+                    }
+                }
+                // 2) Split Large Paragraph Texts
+                else if (el0 && ['p', 'h1', 'h2', 'quote'].includes(el0.type) && el0.text) {
+                    let textArray = el0.text.split(' ');
+                    if(textArray.length > 3) {
+                        let mid = Math.floor(textArray.length / 2);
+                        let movedText = textArray.slice(mid).join(' ');
+                        el0.text = textArray.slice(0, mid).join(' ');
+                        
+                        let newEl = JSON.parse(JSON.stringify(el0)); 
+                        newEl.id = uid(); 
+                        newEl.text = movedText;
+                        
+                        DATA.splice(i+1, 0, { id: uid(), els:[newEl], bgColor: slide.bgColor, notes:'', transition: slide.transition, duration: slide.duration, locked:false, selected:false });
+                        changed = true; continue;
+                    }
+                }
+                // 3) Split Tables
+                else if(el0.type === 'table' && el0.rows.length > 2){
                     const headerRow = el0.rows[0];
                     let keep = Math.max(2, el0.rows.length - 1);
                     const moved = el0.rows.slice(keep);
                     el0.rows = el0.rows.slice(0, keep);
                     const contEl = { id: uid(), type:'table', rows: [headerRow, ...moved], headerColor: el0.headerColor, borderColor: el0.borderColor, striped: el0.striped, color: el0.color };
                     DATA.splice(i+1, 0, { id: uid(), els:[contEl], bgColor: slide.bgColor, notes:'', transition: slide.transition, duration: slide.duration, locked:false, selected:false });
-                    changed = true;
+                    changed = true; continue;
                 }
-                continue; // single non-table element too big — can't auto-split further
+            } 
+            
+            if(slide.els.length > 1) {
+                const movedEl = slide.els.pop();
+                DATA.splice(i+1, 0, { id: uid(), els: [movedEl], bgColor: slide.bgColor, notes:'', transition: slide.transition, duration: slide.duration, locked:false, selected:false });
+                changed = true;
             }
-            const movedEl = slide.els.pop();
-            DATA.splice(i+1, 0, { id: uid(), els: [movedEl], bgColor: slide.bgColor, notes:'', transition: slide.transition, duration: slide.duration, locked:false, selected:false });
-            changed = true;
         }
         if(changed){ anyChange = true; renderPreview(); }
     }
-    saveState();
-    flagOverflowingSlides();
-    if(!silent) alert(anyChange ? '✅ Overflow theek kar diya — content ab agli slide(s) me split ho gaya hai.' : 'ℹ️ Koi overflow nahi mila, sab slides theek fit hain.');
-    return anyChange;
+    saveState(); flagOverflowingSlides();
+    alert(anyChange ? '✅ Overflow fixed. Content intelligently split to new slide(s).' : 'ℹ️ No overflow detected.');
 }
-$('autoSplitBtn').onclick = () => { snapshot(); autoPaginate(false); };
 
-// ==========================================
-// PRESENT MODE (full-screen viewer)
-// ==========================================
 let presentIndex = 0;
 function presentKeyHandler(e){
     if(e.key === 'Escape') closePresentMode();
@@ -1300,17 +1578,17 @@ function closePresentMode(){
     document.removeEventListener('keydown', presentKeyHandler);
 }
 function openPresentMode(startIdx){
-    if(DATA.length === 0) return alert('Koi slide nahi hai!');
+    if(DATA.length === 0) return alert('No slides to present!');
     presentIndex = startIdx || 0;
     const overlay = document.createElement('div');
     overlay.id = 'presentOverlay';
-    overlay.style.cssText = 'position:fixed;inset:0;background:#000;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(32,31,30,0.95);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;';
     overlay.innerHTML = `
-      <div id="presentStage" style="width:92vw;max-width:1300px;aspect-ratio:16/9;position:relative;overflow:hidden;border-radius:10px;"></div>
-      <div style="margin-top:14px;display:flex;gap:14px;align-items:center;color:#fff;font-family:'Kalam',cursive;">
-        <button id="presPrev" class="btn btn-gray" style="width:auto;padding:8px 16px;"><i class="fas fa-chevron-left"></i></button>
+      <div id="presentStage" style="width:92vw;max-width:1300px;aspect-ratio:16/9;position:relative;overflow:hidden;border:1px solid #444;box-shadow:0 15px 40px rgba(0,0,0,0.5);"></div>
+      <div style="margin-top:20px;display:flex;gap:15px;align-items:center;color:#fff;font-family:'Inter',sans-serif;font-weight:600;">
+        <button id="presPrev" class="btn btn-gray" style="width:auto;padding:8px 16px;"><i class="fas fa-chevron-left"></i> Prev</button>
         <span id="presCounter"></span>
-        <button id="presNext" class="btn btn-gray" style="width:auto;padding:8px 16px;"><i class="fas fa-chevron-right"></i></button>
+        <button id="presNext" class="btn btn-gray" style="width:auto;padding:8px 16px;">Next <i class="fas fa-chevron-right"></i></button>
         <button id="presClose" class="btn btn-red" style="width:auto;padding:8px 16px;">✕ Close (Esc)</button>
       </div>`;
     document.body.appendChild(overlay);
@@ -1332,11 +1610,9 @@ function openPresentMode(startIdx){
     $('presClose').onclick = closePresentMode;
     document.addEventListener('keydown', presentKeyHandler);
 }
-$('presentModeBtn').onclick = () => openPresentMode(0);
-$('printPdfBtn').onclick = () => window.print();
 
 // ==========================================
-// GENERATE PPTX
+// PPTX EXPORT
 // ==========================================
 function makeGrayscale(dataUrl){
     return new Promise((resolve)=>{
@@ -1356,13 +1632,14 @@ function makeGrayscale(dataUrl){
     });
 }
 
-$('generateBtn').onclick = async () => {
+async function generatePPTX() {
     if (DATA.length === 0) return alert("No Data! Please import HTML/JSON or Add slides.");
-    const btn = $('generateBtn'); btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Generating PPTX..."; btn.disabled = true;
+    const btns = [$('generateBtnHome'), $('generateBtnRev')];
+    btns.forEach(b => { if(b) { b.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Generating..."; b.disabled = true; }});
 
     setTimeout(async () => {
         const pxW = 1300, pxH = 710;
-        const m = { top:parseInt($('topM').value), bottom:parseInt($('bottomM').value), left:parseInt($('leftM').value), right:parseInt($('rightM').value) };
+        const m = { top:parseInt($('topM')?$('topM').value:40), bottom:parseInt($('bottomM')?$('bottomM').value:40), left:parseInt($('leftM')?$('leftM').value:50), right:parseInt($('rightM')?$('rightM').value:50) };
         const ppt = new PptxGenJS(); ppt.defineLayout({ name:"S", width:pxW/96, height:pxH/96 }); ppt.layout = "S";
         if(SETTINGS.title) ppt.title = SETTINGS.title;
         if(SETTINGS.author) ppt.author = SETTINGS.author;
@@ -1371,7 +1648,7 @@ $('generateBtn').onclick = async () => {
         let bgUrl = getBgUrl();
         if(bgUrl && SETTINGS.bgGrayscale) { bgUrl = await makeGrayscale(bgUrl); }
 
-        const fam = SETTINGS.fontFamily || 'Kalam';
+        const fam = SETTINGS.fontFamily || 'Inter';
         if(WEB_FONTS.includes(fam)){
             const sizes = [22,26,28,30,34,36,40,44,60];
             try{
@@ -1383,7 +1660,7 @@ $('generateBtn').onclick = async () => {
                 }
             }catch(e){ console.warn('Font preload issue', e); }
         }
-        const bHex = $('boldColor').value;
+        const bHex = $('boldColor') ? $('boldColor').value : '#d13438';
         const total = DATA.length;
         const todayStr = new Date().toLocaleDateString();
         const supportsLS = 'letterSpacing' in CanvasRenderingContext2D.prototype;
@@ -1395,16 +1672,15 @@ $('generateBtn').onclick = async () => {
             const slideBgUrl = slide.bgColor ? null : bgUrl;
             if(slide.bgColor) s.background = { color: slide.bgColor.replace('#','') };
             else if (slideBgUrl) s.background = { data: slideBgUrl };
-            else s.background = { color: isLightMode ? "FFFFFF" : "000000" };
+            else s.background = { color: !isDarkMode ? "FFFFFF" : "000000" };
             if(slide.notes) s.addNotes(slide.notes);
 
             let c = document.createElement("canvas"); c.width = pxW; c.height = pxH;
             let ctx = c.getContext("2d"); ctx.textBaseline = "top";
             if(supportsLS) ctx.letterSpacing = SETTINGS.letterSpacing + 'px';
 
-            // bake overlay for readability when there is a background image (and no solid slide color override)
             if(slideBgUrl){
-                ctx.fillStyle = isLightMode ? `rgba(255,255,255,${SETTINGS.overlayOpacity})` : `rgba(0,0,0,${SETTINGS.overlayOpacity})`;
+                ctx.fillStyle = !isDarkMode ? `rgba(255,255,255,${SETTINGS.overlayOpacity})` : `rgba(0,0,0,${SETTINGS.overlayOpacity})`;
                 ctx.fillRect(0,0,pxW,pxH);
             }
 
@@ -1413,7 +1689,7 @@ $('generateBtn').onclick = async () => {
 
             const drawHud = (targetCtx) => {
                 targetCtx.save();
-                targetCtx.fillStyle = isLightMode ? '#000000' : '#ffffff';
+                targetCtx.fillStyle = !isDarkMode ? '#000000' : '#ffffff';
                 targetCtx.font = `20px ${fam}`;
                 if(SETTINGS.showHeader && SETTINGS.headerText){ targetCtx.textAlign='center'; targetCtx.fillText(SETTINGS.headerText, pxW/2, 15); }
                 if(SETTINGS.showFooter && SETTINGS.footerText){ targetCtx.textAlign='center'; targetCtx.fillText(SETTINGS.footerText, pxW/2, pxH-35); }
@@ -1434,11 +1710,11 @@ $('generateBtn').onclick = async () => {
                 s = ppt.addSlide();
                 if(slide.bgColor) s.background = { color: slide.bgColor.replace('#','') };
                 else if (slideBgUrl) s.background = { data: slideBgUrl };
-                else s.background = { color: isLightMode ? "FFFFFF" : "000000" };
+                else s.background = { color: !isDarkMode ? "FFFFFF" : "000000" };
                 c = document.createElement("canvas"); c.width = pxW; c.height = pxH;
                 ctx = c.getContext("2d"); ctx.textBaseline = "top";
                 if(supportsLS) ctx.letterSpacing = SETTINGS.letterSpacing + 'px';
-                if(slideBgUrl){ ctx.fillStyle = isLightMode ? `rgba(255,255,255,${SETTINGS.overlayOpacity})` : `rgba(0,0,0,${SETTINGS.overlayOpacity})`; ctx.fillRect(0,0,pxW,pxH); }
+                if(slideBgUrl){ ctx.fillStyle = !isDarkMode ? `rgba(255,255,255,${SETTINGS.overlayOpacity})` : `rgba(0,0,0,${SETTINGS.overlayOpacity})`; ctx.fillRect(0,0,pxW,pxH); }
                 y = m.top;
             };
 
@@ -1507,11 +1783,11 @@ $('generateBtn').onclick = async () => {
                 else if(el.type==='ol'){ el.items.forEach((li,i) => { drawSmartText((i+1)+". " + li, baseSize, !!el.bold, col, baseLineH, {...commonOpts, leftIndent:20}); y+=5; }); y+=5; }
                 else if(el.type==='mcq-q'){ drawSmartText(el.text, baseSize, true, col, baseLineH, commonOpts); y+=20; }
                 else if(el.type==='mcq-opt'){ drawSmartText(el.text, baseSize, !!el.bold, col, baseLineH, {...commonOpts, leftIndent:30}); y+=10; }
-                else if(el.type==='mcq-ans'){ drawSmartText(el.text, baseSize, true, "#10b981", baseLineH, commonOpts); y+=10; }
+                else if(el.type==='mcq-ans'){ drawSmartText(el.text, baseSize, true, "#107c41", baseLineH, commonOpts); y+=10; }
                 else if(el.type==='mcq-sol'){ drawSmartText(el.text, baseSize, !!el.bold, col, baseLineH, {...commonOpts, italic:true}); y+=10; }
                 else if(el.type==='hr'){
                     if (y + 20 > bottomLimit && y > m.top) triggerPagination();
-                    ctx.strokeStyle = el.color||'#888888'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(m.left, y+10); ctx.lineTo(pxW-m.right, y+10); ctx.stroke(); y += 25;
+                    ctx.strokeStyle = el.color||'#c8c6c4'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(m.left, y+10); ctx.lineTo(pxW-m.right, y+10); ctx.stroke(); y += 25;
                 }
                 else if(el.type==='shape-rect' || el.type==='shape-circle'){
                     let h = el.h||100;
@@ -1542,16 +1818,16 @@ $('generateBtn').onclick = async () => {
                             return {
                                 text: cellHtml.replace(/<b>|<\/b>/g, ''),
                                 options: {
-                                    color: isHead ? 'FFFFFF' : (el.color ? el.color.replace('#','') : (isLightMode ? '000000' : 'FFFFFF')),
+                                    color: isHead ? 'FFFFFF' : (el.color ? el.color.replace('#','') : (!isDarkMode ? '000000' : 'FFFFFF')),
                                     bold: isHead || cellHtml.includes('<b>'),
                                     fontFace: fam, fontSize: 22,
-                                    fill: isHead ? (el.headerColor||'2563EB') : (el.striped && rIdx%2===0 ? (isLightMode?'EEF2F7':'26324A') : (isLightMode ? 'F8FAFC' : '1A2234')),
+                                    fill: isHead ? (el.headerColor||'2b579a') : (el.striped && rIdx%2===0 ? (!isDarkMode?'EEF2F7':'26324A') : (!isDarkMode ? 'F8FAFC' : '1A2234')),
                                     align: 'center', valign: 'middle', margin: [8, 8, 8, 8]
                                 }
                             };
                         });
                     });
-                    s.addTable(pptRows, { x: m.left/96, y: y/96, w: maxW/96, border: { pt: 1, color: el.borderColor || (isLightMode ? 'CBD5E1' : '334155') } });
+                    s.addTable(pptRows, { x: m.left/96, y: y/96, w: maxW/96, border: { pt: 1, color: el.borderColor || (!isDarkMode ? 'CBD5E1' : '334155') } });
                     y += estH + 20;
                 }
             }
@@ -1560,64 +1836,85 @@ $('generateBtn').onclick = async () => {
             s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
         }
 
-        ppt.writeFile({ fileName: (SETTINGS.title ? SETTINGS.title.replace(/[^a-z0-9]/gi,'_') : "Ultimate_Notes_PPT") + ".pptx" }).then(() => {
-            btn.innerHTML = "✅ Download Successful!";
-            setTimeout(()=>btn.innerHTML="<i class='fas fa-download'></i> Generate PPTX File", 3000);
-            btn.disabled = false;
+        ppt.writeFile({ fileName: (SETTINGS.title ? SETTINGS.title.replace(/[^a-z0-9]/gi,'_') : "PPT_Maker_Mockrise") + ".pptx" }).then(() => {
+            btns.forEach(b => { if(b) { b.innerHTML = "<i class='fas fa-file-powerpoint'></i> Generate PPTX"; b.disabled = false; }});
         });
     }, 100);
-};
+}
 
 // ==========================================
-// STORAGE
+// STATE MANAGEMENT
 // ==========================================
 function flashSaved(){ $('autosaveIndicator').innerText = 'Saved at ' + new Date().toLocaleTimeString(); }
 function saveState() {
     const st = {
         data: DATA,
-        margins: { t: $('topM').value, b: $('bottomM').value, l: $('leftM').value, r: $('rightM').value },
-        theme: isLightMode, bg: $('bgSelect').value, customBg: customBgDataUrl,
-        split: $('splitAnswerToggle').checked,
-        colors: {h1:$('defH1').value, h2:$('defH2').value, p:$('defP').value, mq:$('defMQ').value, mo:$('defMO').value},
-        boldColor: $('boldColor').value,
+        margins: { t: $('topM')?$('topM').value:40, b: $('bottomM')?$('bottomM').value:40, l: $('leftM')?$('leftM').value:50, r: $('rightM')?$('rightM').value:50 },
+        theme: isDarkMode, bg: $('bgSelect')?$('bgSelect').value:'none', customBg: customBgDataUrl,
+        colors: {h1:$('defH1')?$('defH1').value:'#2b579a', h2:$('defH2')?$('defH2').value:'#1e395b', p:$('defP')?$('defP').value:'#201f1e', mq:$('defMQ')?$('defMQ').value:'#2b579a', mo:$('defMO')?$('defMO').value:'#201f1e'},
+        boldColor: $('boldColor')?$('boldColor').value:'#d13438',
         settings: SETTINGS
     };
-    try{ localStorage.setItem('pptProState_V2', JSON.stringify(st)); flashSaved(); }catch(e){ $('autosaveIndicator').innerText = 'Save failed (storage full?)'; }
+    try{ localStorage.setItem('pptProState_RibbonEdition', JSON.stringify(st)); flashSaved(); }catch(e){ $('autosaveIndicator').innerText = 'Save failed (storage full?)'; }
 }
 
 function loadState() {
-    const saved = localStorage.getItem('pptProState_V2');
+    const saved = localStorage.getItem('pptProState_RibbonEdition');
     if(saved) {
         try{
             const s = JSON.parse(saved);
-            DATA = (s.data||[]).map(sl => sl.els ? sl : newSlide(Array.isArray(sl)?sl:[])); // migrate old format
-            $('topM').value = s.margins.t; $('bottomM').value = s.margins.b; $('leftM').value = s.margins.l; $('rightM').value = s.margins.r;
-            $('splitAnswerToggle').checked = s.split;
-            if(s.colors) { $('defH1').value=s.colors.h1; $('defH2').value=s.colors.h2; $('defP').value=s.colors.p; $('defMQ').value=s.colors.mq; $('defMO').value=s.colors.mo; }
-            if(s.boldColor) $('boldColor').value = s.boldColor;
-            $('bgSelect').value = s.bg||'none'; customBgDataUrl = s.customBg || null;
-            if(s.bg === 'custom') $('bgImgUpload').style.display = 'block';
-            isLightMode = s.theme || false;
-            if(isLightMode) { document.body.classList.add('light-mode'); $('themeToggle').innerHTML = '<i class="fas fa-sun"></i> Light'; }
+            DATA = (s.data||[]).map(sl => sl.els ? sl : newSlide(Array.isArray(sl)?sl:[]));
+            if($('topM')) $('topM').value = s.margins.t; if($('bottomM')) $('bottomM').value = s.margins.b; 
+            if($('leftM')) $('leftM').value = s.margins.l; if($('rightM')) $('rightM').value = s.margins.r;
+            if(s.colors) { 
+                if($('defH1')) $('defH1').value=s.colors.h1; if($('defH2')) $('defH2').value=s.colors.h2; 
+                if($('defP')) $('defP').value=s.colors.p; if($('defMQ')) $('defMQ').value=s.colors.mq; 
+                if($('defMO')) $('defMO').value=s.colors.mo; 
+            }
+            if(s.boldColor && $('boldColor')) $('boldColor').value = s.boldColor;
+            if($('bgSelect')) $('bgSelect').value = s.bg||'none'; 
+            customBgDataUrl = s.customBg || null;
+            if(s.bg === 'custom' && $('bgImgUpload')) $('bgImgUpload').style.display = 'block';
+            
+            isDarkMode = s.theme || false;
+            if(isDarkMode) { document.body.classList.add('dark-mode'); }
+            
             if(s.settings) Object.assign(SETTINGS, s.settings);
         }catch(e){ console.warn('Load failed', e); }
     }
-    // sync UI with SETTINGS
-    $('metaTitle').value = SETTINGS.title||''; $('metaAuthor').value = SETTINGS.author||''; $('metaSubject').value = SETTINGS.subject||'';
-    $('fontFamilySel').value = SETTINGS.fontFamily||'Kalam'; document.documentElement.style.setProperty('--live-font', SETTINGS.fontFamily||'Kalam');
-    $('headerToggle').checked = !!SETTINGS.showHeader; $('headerText').value = SETTINGS.headerText||'';
-    $('footerToggle').checked = !!SETTINGS.showFooter; $('footerText').value = SETTINGS.footerText||'';
-    $('slideNumToggle').checked = !!SETTINGS.showSlideNum; $('dateToggle').checked = !!SETTINGS.showDate;
-    $('watermarkToggle').checked = !!SETTINGS.showWatermark; $('watermarkText').value = SETTINGS.watermarkText||'';
-    $('rtlToggle').checked = !!SETTINGS.rtl; $('spellcheckToggle').checked = !!SETTINGS.spellcheck;
-    $('tableCompactToggle').checked = !!SETTINGS.tableCompact;
-    $('lineHeightMult').value = SETTINGS.lineHeightMult||1; $('lhVal').innerText = SETTINGS.lineHeightMult||1;
-    $('letterSpacingGlobal').value = SETTINGS.letterSpacing||0;
-    $('overlayOpacity').value = SETTINGS.overlayOpacity!=null?SETTINGS.overlayOpacity:0.5;
-    $('bgGrayscaleToggle').checked = !!SETTINGS.bgGrayscale;
-    $('zoomRange').value = SETTINGS.zoom||100; $('zoomVal').innerText = SETTINGS.zoom||100; $('preview').style.zoom = (SETTINGS.zoom||100)/100;
-    $('preview').style.direction = SETTINGS.rtl ? 'rtl':'ltr';
+    
+    if($('metaTitle')) $('metaTitle').value = SETTINGS.title||''; 
+    if($('metaAuthor')) $('metaAuthor').value = SETTINGS.author||''; 
+    if($('metaSubject')) $('metaSubject').value = SETTINGS.subject||'';
+    
+    if($('fontFamilySel')) $('fontFamilySel').value = SETTINGS.fontFamily||'Inter'; 
+    document.documentElement.style.setProperty('--live-font', SETTINGS.fontFamily||'Inter');
+    
+    if($('headerToggle')) $('headerToggle').checked = !!SETTINGS.showHeader; 
+    if($('headerText')) $('headerText').value = SETTINGS.headerText||'';
+    if($('footerToggle')) $('footerToggle').checked = !!SETTINGS.showFooter; 
+    if($('footerText')) $('footerText').value = SETTINGS.footerText||'';
+    if($('slideNumToggle')) $('slideNumToggle').checked = !!SETTINGS.showSlideNum; 
+    if($('dateToggle')) $('dateToggle').checked = !!SETTINGS.showDate;
+    if($('watermarkToggle')) $('watermarkToggle').checked = !!SETTINGS.showWatermark; 
+    if($('watermarkText')) $('watermarkText').value = SETTINGS.watermarkText||'';
+    
+    if($('rtlToggle')) $('rtlToggle').checked = !!SETTINGS.rtl; 
+    if($('spellcheckToggle')) $('spellcheckToggle').checked = !!SETTINGS.spellcheck;
+    if($('tableCompactToggle')) $('tableCompactToggle').checked = !!SETTINGS.tableCompact;
+    if($('lineHeightMult')) $('lineHeightMult').value = SETTINGS.lineHeightMult||1; 
+    if($('lhVal')) $('lhVal').innerText = SETTINGS.lineHeightMult||1;
+    if($('letterSpacingGlobal')) $('letterSpacingGlobal').value = SETTINGS.letterSpacing||0;
+    if($('overlayOpacity')) $('overlayOpacity').value = SETTINGS.overlayOpacity!=null?SETTINGS.overlayOpacity:0.5;
+    if($('bgGrayscaleToggle')) $('bgGrayscaleToggle').checked = !!SETTINGS.bgGrayscale;
+    
+    if($('zoomRange')) $('zoomRange').value = SETTINGS.zoom||100; 
+    if($('zoomVal')) $('zoomVal').innerText = (SETTINGS.zoom||100) + '%'; 
+    if($('preview')) $('preview').style.zoom = (SETTINGS.zoom||100)/100;
+    if($('preview')) $('preview').style.direction = SETTINGS.rtl ? 'rtl':'ltr';
+    
     buildThemePresets();
+    updateCustomMargins(); // ✅ Ensure margins are applied correctly on reload
     renderPreview();
 }
 
