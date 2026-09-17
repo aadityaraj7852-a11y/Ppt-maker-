@@ -83,13 +83,308 @@
     .btn-submit:hover { background: var(--word-dark); }
 
     /* ════ WORKSPACE AREA ════ */
-    .workspace-area { flex: 1; background: var(--bg-main); overflow-y: auto; padding: 30px; position: relative; display: flex; flex-direction: column; align-items: center;}
+    .workspace-area { flex:1; background:var(--bg-main); overflow:hidden; padding:14px 18px 20px; position:relative; display:flex; flex-direction:column; align-items:stretch; min-height:0;}
     
-    .stats-bar { display: flex; gap: 14px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; background: var(--card-bg); padding: 8px 15px; border: 1px solid var(--border); margin-bottom: 20px; width: 100%; max-width: 1000px;}
+    .stats-bar { display:flex; gap:14px; font-size:.85rem; color:var(--text-muted); font-weight:600; background:var(--card-bg); padding:8px 15px; border:1px solid var(--border); margin-bottom:10px; width:100%; flex:0 0 auto;}
     .stats-bar b { color: var(--word-blue); }
 
     /* ════ SLIDES ════ */
-    .preview-list { display: flex; flex-direction: column; gap: 30px; padding-bottom: 50px; width: 100%; max-width: 1000px; }
+    
+.preview-list {
+    display:flex;
+    flex-direction:row;
+    gap:18px;
+    padding:0 0 40px 0;
+    width:100%;
+    max-width:1400px;
+    min-height:calc(100vh - 180px);
+    align-items:stretch;
+}
+.ppt-thumb-rail{
+    width:190px;
+    min-width:190px;
+    max-height:calc(100vh - 210px);
+    overflow-y:auto;
+    overflow-x:hidden;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    padding:6px 8px 20px 2px;
+    background:var(--input-bg);
+    border:1px solid var(--border);
+}
+.ppt-thumb-rail .slide-wrapper{
+    width:160px;
+    min-width:160px;
+    margin:0 auto;
+    cursor:pointer;
+    box-shadow:0 2px 8px rgba(0,0,0,.12);
+}
+.ppt-thumb-rail .slide-toolbar,
+.ppt-thumb-rail .slide-meta-row{display:none!important;}
+.ppt-thumb-rail .slide-card{width:100%;height:auto;aspect-ratio:16/9;}
+.ppt-thumb-rail .slide-content{padding:18px!important; transform-origin:top left;}
+.ppt-thumb-rail .el-toolbar,
+.ppt-thumb-rail .resize-handles,
+.ppt-thumb-rail .el-move-handle{display:none!important;}
+.ppt-main-stage{
+    flex:1;
+    min-width:0;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    overflow:auto;
+    padding:8px 10px 40px;
+}
+.ppt-main-stage .slide-wrapper{
+    width:min(100%,1100px);
+    flex:0 0 auto;
+}
+.ppt-main-stage .slide-card{width:100%;}
+.ppt-stage-label{
+    position:absolute;
+    top:8px;
+    left:10px;
+    z-index:4;
+    font-size:11px;
+    color:var(--text-muted);
+    background:var(--card-bg);
+    border:1px solid var(--border);
+    padding:3px 7px;
+}
+@media(max-width:800px){
+    .preview-list{gap:8px;min-height:0;}
+    .ppt-thumb-rail{width:92px;min-width:92px;gap:8px;padding:4px;}
+    .ppt-thumb-rail .slide-wrapper{width:78px;min-width:78px;}
+    .ppt-thumb-rail .slide-content{padding:8px!important;}
+    .ppt-main-stage{padding:4px 2px 30px;}
+    .ppt-main-stage .slide-wrapper{width:100%;}
+}
+
+
+    /* =========================================================
+       PPT-LIKE WORKSPACE V3
+       - All thumbnails stay in the left rail
+       - Active slide stays in the main editor
+       - Real resize handles
+       - Positioned text/image boxes
+       - Ribbon never wraps its labels
+       ========================================================= */
+
+    .ribbon-tabs{
+        overflow-x:auto;
+        overflow-y:hidden;
+        scrollbar-width:thin;
+        white-space:nowrap;
+        flex-wrap:nowrap;
+    }
+    .r-tab{
+        flex:0 0 auto;
+        white-space:nowrap;
+        word-break:keep-all;
+        overflow-wrap:normal;
+    }
+    .ribbon-tools-container{overflow:hidden;}
+    .ribbon-tools{
+        overflow-x:auto;
+        overflow-y:hidden;
+        scrollbar-width:thin;
+        flex-wrap:nowrap;
+    }
+    .tool-group{flex:0 0 auto; min-width:max-content;}
+    .r-btn,.r-btn-large,.btn-text,.tool-group-label{white-space:nowrap;word-break:keep-all;overflow-wrap:normal;}
+
+    .workspace-area{padding:10px 12px 14px;}
+    .preview-list{
+        width:100%;
+        max-width:none;
+        min-height:0;
+        height:100%;
+        display:flex;
+        flex-direction:row;
+        gap:10px;
+        align-items:stretch;
+        overflow:hidden;
+    }
+
+    .ppt-thumb-rail{
+        width:180px;
+        min-width:180px;
+        height:100%;
+        max-height:none;
+        overflow-y:auto;
+        overflow-x:hidden;
+        padding:10px 8px 24px;
+        gap:10px;
+        background:var(--input-bg);
+        border:1px solid var(--border);
+    }
+
+    .ppt-thumb-item{
+        position:relative;
+        width:100%;
+        min-height:0;
+        padding:5px 4px 7px;
+        border:2px solid transparent;
+        background:var(--card-bg);
+        cursor:pointer;
+        user-select:none;
+        transition:.12s;
+    }
+    .ppt-thumb-item:hover{border-color:#9bb7dc;}
+    .ppt-thumb-item.active{
+        border-color:var(--word-blue);
+        box-shadow:0 0 0 2px rgba(43,87,154,.15);
+    }
+    .ppt-thumb-number{
+        display:flex;
+        align-items:center;
+        gap:5px;
+        height:20px;
+        font-size:11px;
+        font-weight:700;
+        color:var(--text-muted);
+    }
+    .ppt-thumb-grip{
+        cursor:grab;
+        color:var(--text-muted);
+        padding:2px 4px;
+        touch-action:none;
+    }
+    .ppt-thumb-grip:active{cursor:grabbing;}
+    .ppt-thumb-preview{
+        width:100%;
+        aspect-ratio:16/9;
+        position:relative;
+        overflow:hidden;
+        border:1px solid var(--border);
+        background:var(--slide-bg);
+    }
+    .ppt-thumb-preview .slide-card{
+        width:100%!important;
+        height:100%!important;
+        min-height:0!important;
+        aspect-ratio:auto!important;
+    }
+    .ppt-thumb-preview .slide-toolbar,
+    .ppt-thumb-preview .slide-meta-row,
+    .ppt-thumb-preview .el-toolbar,
+    .ppt-thumb-preview .resize-handles,
+    .ppt-thumb-preview .el-move-handle,
+    .ppt-thumb-preview .table-controls{
+        display:none!important;
+    }
+    .ppt-thumb-preview .slide-content{
+        padding:5%!important;
+        transform-origin:top left;
+    }
+    .ppt-thumb-preview .el-block{
+        border:none!important;
+        background:transparent!important;
+        padding:1px!important;
+        margin-bottom:2px!important;
+    }
+    .ppt-thumb-preview [contenteditable]{pointer-events:none;}
+
+    .ppt-main-stage{
+        flex:1;
+        min-width:0;
+        min-height:0;
+        display:flex;
+        align-items:flex-start;
+        justify-content:center;
+        overflow:auto;
+        padding:10px 16px 30px;
+        position:relative;
+        background:rgba(255,255,255,.05);
+    }
+    .ppt-main-stage>.slide-wrapper{
+        width:min(100%,1200px);
+        flex:0 0 auto;
+    }
+
+    /* Actual editable objects behave like PowerPoint objects. */
+    .slide-content{position:relative!important;}
+    .el-block.positioned-element{
+        position:absolute!important;
+        box-sizing:border-box!important;
+        margin:0!important;
+        min-width:40px;
+        min-height:28px;
+        z-index:5;
+        cursor:move;
+        overflow:visible!important;
+    }
+    .el-block.positioned-element:hover,
+    .el-block.positioned-element.active-edit{
+        border:1px solid var(--word-blue)!important;
+        background:rgba(43,87,154,.025);
+    }
+
+    .resize-handles{
+        position:absolute;
+        inset:0;
+        pointer-events:none;
+        z-index:10000;
+    }
+    .resize-handle{
+        position:absolute;
+        width:9px;
+        height:9px;
+        background:#fff;
+        border:2px solid var(--word-blue);
+        pointer-events:auto;
+        z-index:10001;
+        box-shadow:0 0 0 1px rgba(0,0,0,.12);
+    }
+    .rh-nw{left:-5px;top:-5px;cursor:nwse-resize;}
+    .rh-n{left:50%;top:-5px;transform:translateX(-50%);cursor:ns-resize;}
+    .rh-ne{right:-5px;top:-5px;cursor:nesw-resize;}
+    .rh-e{right:-5px;top:50%;transform:translateY(-50%);cursor:ew-resize;}
+    .rh-se{right:-5px;bottom:-5px;cursor:nwse-resize;}
+    .rh-s{left:50%;bottom:-5px;transform:translateX(-50%);cursor:ns-resize;}
+    .rh-sw{left:-5px;bottom:-5px;cursor:nesw-resize;}
+    .rh-w{left:-5px;top:50%;transform:translateY(-50%);cursor:ew-resize;}
+
+    .el-move-handle{
+        position:absolute;
+        left:4px;
+        top:4px;
+        width:22px;
+        height:22px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:#fff;
+        color:var(--word-blue);
+        border:1px solid var(--word-blue);
+        cursor:move;
+        z-index:10002;
+        opacity:0;
+        pointer-events:auto;
+        box-shadow:0 1px 4px rgba(0,0,0,.15);
+    }
+    .el-block.positioned-element:hover .el-move-handle,
+    .el-block.positioned-element.active-edit .el-move-handle{
+        opacity:1;
+    }
+
+    @media(max-width:800px){
+        .workspace-area{padding:6px;}
+        .preview-list{gap:6px;}
+        .ppt-thumb-rail{
+            width:108px;
+            min-width:108px;
+            padding:7px 5px 18px;
+        }
+        .ppt-main-stage{padding:6px 5px 20px;}
+        .ppt-main-stage>.slide-wrapper{width:100%;}
+        .ribbon-tools{height:86px;padding:4px 8px;gap:8px;}
+        .r-tab{padding:6px 12px;font-size:.78rem;}
+        .r-btn-large{min-width:48px;padding:3px 7px;}
+        .r-btn-large .icon-wrapper i{font-size:1.35rem;}
+    }
+
     .slide-wrapper { width: 100%; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.1); background: var(--card-bg); transition: 0.2s; border: 2px solid transparent;}
     .slide-wrapper.dragging { opacity: 0.4; }
     
@@ -212,6 +507,8 @@
     }
     
     [contenteditable="true"] { outline: none; display: block; }
+[contenteditable="true"] b,[contenteditable="true"] strong { font-weight:700; }
+.el-toolbar button,.el-toolbar input[type="color"] { user-select:none; }
     
     .p-h1, .p-h2, .p-h3, .p-text, .p-li, .p-p, .p-quote, .p-link, .p-mcq-q, .p-mcq-opt, .p-mcq-ans, .p-mcq-sol {
         word-wrap: break-word !important;
@@ -272,6 +569,60 @@
     .autosave-indicator{ font-size:0.75em; color:var(--text-muted); font-weight: 600; text-align: center; margin-top: 5px; }
     .overflow-badge{ font-size:0.85em; margin-left: 6px; }
 
+
+/* V4 visual corrections */
+.color-preset-group{min-width:245px;padding:5px 14px 5px 2px!important;}
+.color-preset-title,.ppt-setting-title{font-weight:700;font-size:.72rem;color:var(--word-blue);white-space:nowrap;margin-bottom:5px;}
+.color-preset-grid{display:grid;grid-template-columns:repeat(5,minmax(38px,1fr));gap:6px;align-items:start;}
+.color-preset-grid label{font-size:.62rem;text-align:center;white-space:nowrap;color:var(--text-main);display:flex;flex-direction:column;gap:3px;align-items:center;}
+.color-preset-grid .mini-color{width:30px;height:20px;}
+.ppt-settings-ribbon{height:102px!important;gap:12px!important;overflow-x:auto!important;}
+.ppt-settings-ribbon .tool-group{justify-content:flex-start!important;padding:4px 14px 4px 4px;}
+.ppt-size-group{min-width:210px;}
+.ppt-size-row{display:flex;align-items:center;gap:6px;}
+#slideSizePreset{width:180px;}
+.slide-custom-fields{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:5px;}
+.slide-custom-fields label{font-size:.65rem;display:flex;align-items:center;gap:3px;}
+.slide-custom-fields .r-input{width:78px!important;margin:0!important;}
+.ppt-size-note{font-size:.58rem;color:var(--text-muted);margin-top:3px;}
+.ppt-margin-group{min-width:245px;}
+.margin-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.margin-grid label{font-size:.62rem;display:flex;align-items:center;gap:4px;white-space:nowrap;}
+.margin-grid .r-input{width:55px!important;margin:0!important;}
+.ppt-spacing-group{min-width:170px;}
+.range-label{font-size:.64rem;font-weight:600;display:flex;justify-content:space-between;margin:1px 0;}
+.ppt-spacing-group input[type=range]{width:145px;}
+.ppt-option-group{min-width:170px;}
+.setting-check{font-size:.68rem;display:flex;align-items:center;gap:5px;margin:6px 0;white-space:nowrap;}
+.setting-check input{margin:0;}
+.ppt-thumb-preview{height:auto!important;aspect-ratio:16/9!important;position:relative!important;overflow:hidden!important;padding:0!important;background:var(--slide-bg)!important;}
+.ppt-thumb-preview>.slide-wrapper{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important;}
+.ppt-thumb-preview .slide-card{position:absolute!important;left:0!important;top:0!important;}
+.ppt-thumb-preview .slide-content{padding:var(--slide-pt) var(--slide-pr) var(--slide-pb) var(--slide-pl)!important;}
+.ppt-thumb-item{touch-action:none;}
+.ppt-main-stage{padding-top:8px!important;}
+.ppt-main-stage .slide-wrapper{max-width:1200px!important;}
+.slide-card{overflow:visible!important;}
+.el-block.positioned-element{touch-action:none;}
+.el-block.positioned-element .p-image-wrap img{max-width:100%;max-height:100%;object-fit:contain;}
+
+</style>
+
+<style id="v4-final-touch-fixes">
+.ppt-thumb-rail{flex:0 0 180px!important;}
+.ppt-thumb-preview{width:100%!important;height:auto!important;min-height:0!important;}
+.ppt-thumb-preview .slide-wrapper{width:100%!important;height:100%!important;}
+.ppt-thumb-preview .slide-card{width:1300px!important;max-width:none!important;}
+.ppt-main-stage{overflow:auto!important;}
+.ppt-main-stage .slide-wrapper{margin:0 auto!important;}
+.el-block.positioned-element{box-sizing:border-box!important;}
+.el-block.positioned-element.active-edit{outline:2px solid var(--word-blue)!important;outline-offset:1px;}
+.el-block.positioned-element.active-edit .el-move-handle,
+.el-block.positioned-element:hover .el-move-handle{opacity:1!important;}
+@media(max-width:800px){
+  .ppt-thumb-rail{flex-basis:110px!important;width:110px!important;min-width:110px!important;}
+  .ppt-main-stage{padding-left:5px!important;padding-right:5px!important;}
+}
 </style>
 </head>
 <body onclick="closeAllMenus(event)">
@@ -376,6 +727,7 @@
                     <label style="font-size: 0.7rem; color: var(--text-muted); margin-right: 5px;">Bold Hilite:</label>
                     <input type="color" id="boldColor" value="#d13438" class="mini-color" onchange="saveState()">
                 </div>
+                <div style="font-size:0.58rem;color:var(--word-blue);margin-top:2px;white-space:nowrap;">Select text → Bold/Color</div>
                 <div class="tool-group-label">FONT & LANGUAGE</div>
             </div>
 
@@ -461,13 +813,15 @@
                 <div class="tool-group-label">THEMES</div>
             </div>
             
-            <div class="tool-group" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding-right: 15px;">
-                <div style="text-align: center;"><label style="font-size:0.65rem; margin:0;">H1</label><input type="color" id="defH1" value="#2b579a" class="mini-color" onchange="triggerPreviewSave()"></div>
-                <div style="text-align: center;"><label style="font-size:0.65rem; margin:0;">H2</label><input type="color" id="defH2" value="#1e395b" class="mini-color" onchange="triggerPreviewSave()"></div>
-                <div style="text-align: center;"><label style="font-size:0.65rem; margin:0;">Text</label><input type="color" id="defP" value="#201f1e" class="mini-color" onchange="triggerPreviewSave()"></div>
-                <div style="text-align: center;"><label style="font-size:0.65rem; margin:0;">MCQ(Q)</label><input type="color" id="defMQ" value="#2b579a" class="mini-color" onchange="triggerPreviewSave()"></div>
-                <div style="text-align: center;"><label style="font-size:0.65rem; margin:0;">MCQ(O)</label><input type="color" id="defMO" value="#201f1e" class="mini-color" onchange="triggerPreviewSave()"></div>
-                <div class="tool-group-label" style="grid-column: span 3; margin-top: 5px;">SLIDE COLORS</div>
+            <div class="tool-group color-preset-group">
+                <div class="color-preset-title">Text Colors</div>
+                <div class="color-preset-grid">
+                    <label>H1<input type="color" id="defH1" value="#2b579a" class="mini-color" onchange="triggerPreviewSave()"></label>
+                    <label>H2<input type="color" id="defH2" value="#1e395b" class="mini-color" onchange="triggerPreviewSave()"></label>
+                    <label>Text<input type="color" id="defP" value="#201f1e" class="mini-color" onchange="triggerPreviewSave()"></label>
+                    <label>MCQ Q<input type="color" id="defMQ" value="#2b579a" class="mini-color" onchange="triggerPreviewSave()"></label>
+                    <label>MCQ O<input type="color" id="defMO" value="#201f1e" class="mini-color" onchange="triggerPreviewSave()"></label>
+                </div>
             </div>
             
             <div class="tool-group" style="flex-direction: row; gap: 4px;">
@@ -497,31 +851,47 @@
         </div>
 
         <!-- 🔴 NEW: PPT SETTINGS TAB 🔴 -->
-        <div class="ribbon-tools" id="tab-pptsettings" style="display:none;">
-            <div class="tool-group">
-                <div style="font-weight:bold; font-size:0.8rem; margin-bottom:5px; color:var(--word-blue);">Adjust Slide Margins (px)</div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                    <div style="display:flex; align-items:center; gap:5px;"><span style="font-size:0.7rem; width:45px;">Top:</span> <input type="number" id="topM" value="40" class="r-input" style="width:60px; margin:0;" onchange="updateCustomMargins()"></div>
-                    <div style="display:flex; align-items:center; gap:5px;"><span style="font-size:0.7rem; width:45px;">Bottom:</span> <input type="number" id="bottomM" value="40" class="r-input" style="width:60px; margin:0;" onchange="updateCustomMargins()"></div>
-                    <div style="display:flex; align-items:center; gap:5px;"><span style="font-size:0.7rem; width:45px;">Left:</span> <input type="number" id="leftM" value="50" class="r-input" style="width:60px; margin:0;" onchange="updateCustomMargins()"></div>
-                    <div style="display:flex; align-items:center; gap:5px;"><span style="font-size:0.7rem; width:45px;">Right:</span> <input type="number" id="rightM" value="50" class="r-input" style="width:60px; margin:0;" onchange="updateCustomMargins()"></div>
+        <div class="ribbon-tools ppt-settings-ribbon" id="tab-pptsettings" style="display:none;">
+            <div class="tool-group ppt-size-group">
+                <div class="ppt-setting-title">Slide Size</div>
+                <div class="ppt-size-row">
+                    <select id="slideSizePreset" class="r-select" onchange="setSlideSizePreset(this.value)">
+                        <option value="16:9">16:9 Widescreen</option>
+                        <option value="4:3">4:3 Standard</option>
+                        <option value="16:10">16:10</option>
+                        <option value="1:1">1:1 Square</option>
+                        <option value="custom">Custom Size</option>
+                    </select>
                 </div>
-                <div class="tool-group-label" style="position: absolute; bottom: 0; left: 0;">MARGIN CONTROL</div>
-            </div>
-            
-            <div class="tool-group">
-                <label style="font-size: 0.8rem; font-weight:600;">Line Height: <span id="lhVal">1</span></label>
-                <input type="range" id="lineHeightMult" min="0.8" max="1.6" step="0.1" value="1" style="width:120px;" oninput="updateLayoutVars()">
-                
-                <label style="font-size: 0.8rem; font-weight:600; margin-top:5px;">Letter Spacing</label>
-                <input type="range" id="letterSpacingGlobal" min="0" max="8" step="0.5" value="0" style="width:120px;" oninput="updateLayoutVars()">
-                <div class="tool-group-label" style="position: absolute; bottom: 0; left: 0;">SPACING</div>
+                <div id="slideCustomFields" class="slide-custom-fields">
+                    <label>W <input type="number" id="slideCustomW" class="r-input" min="400" value="1300" onchange="updateCustomSlideSize()"></label>
+                    <label>H <input type="number" id="slideCustomH" class="r-input" min="300" value="731" onchange="updateCustomSlideSize()"></label>
+                </div>
+                <div class="ppt-size-note">PowerPoint ratio</div>
             </div>
 
-            <div class="tool-group" style="flex-direction: row; gap: 4px;">
-                <label class="toggle-switch"><input type="checkbox" id="tableCompactToggle" onchange="triggerPreviewSave()"><span>Compact Tables</span></label>
-                <label class="toggle-switch" style="margin-left: 10px;"><input type="checkbox" id="rtlToggle" onchange="updateLayoutVars()"><span>RTL Mode</span></label>
-                <div class="tool-group-label" style="position: absolute; bottom: 0; left: 0;">EXTRA OPTIONS</div>
+            <div class="tool-group ppt-margin-group">
+                <div class="ppt-setting-title">Margins</div>
+                <div class="margin-grid">
+                    <label>Top<input type="number" id="topM" value="40" class="r-input" onchange="updateCustomMargins()"></label>
+                    <label>Bottom<input type="number" id="bottomM" value="40" class="r-input" onchange="updateCustomMargins()"></label>
+                    <label>Left<input type="number" id="leftM" value="50" class="r-input" onchange="updateCustomMargins()"></label>
+                    <label>Right<input type="number" id="rightM" value="50" class="r-input" onchange="updateCustomMargins()"></label>
+                </div>
+            </div>
+
+            <div class="tool-group ppt-spacing-group">
+                <div class="ppt-setting-title">Text Spacing</div>
+                <label class="range-label">Line Height <span id="lhVal">1</span></label>
+                <input type="range" id="lineHeightMult" min="0.8" max="1.6" step="0.1" value="1" oninput="updateLayoutVars()">
+                <label class="range-label">Letter Spacing <span>px</span></label>
+                <input type="range" id="letterSpacingGlobal" min="0" max="8" step="0.5" value="0" oninput="updateLayoutVars()">
+            </div>
+
+            <div class="tool-group ppt-option-group">
+                <div class="ppt-setting-title">Options</div>
+                <label class="setting-check"><input type="checkbox" id="tableCompactToggle" onchange="triggerPreviewSave()"><span>Compact Tables</span></label>
+                <label class="setting-check"><input type="checkbox" id="rtlToggle" onchange="updateLayoutVars()"><span>RTL Mode</span></label>
             </div>
         </div>
 
@@ -653,8 +1023,55 @@ const SETTINGS = {
     lineHeightMult:1, letterSpacing:0,
     overlayOpacity:0.5, bgGrayscale:false, zoom:100,
     tableCompact:false,
-    margins: { t: 40, b: 40, l: 50, r: 50 } // ✅ Default proper margins
+    margins: { t: 40, b: 40, l: 50, r: 50 },
+    slideSize: { preset: '16:9', width: 1300, height: 731 } // PowerPoint Widescreen default
 };
+
+function getSlideRatio(){
+    const s=SETTINGS.slideSize || {preset:'16:9',width:1300,height:731};
+    const w=parseFloat(s.width)||1300, h=parseFloat(s.height)||731;
+    return w/h;
+}
+function getSlideHeightForBaseWidth(width=1300){
+    return width/getSlideRatio();
+}
+function applySlideSizeUI(){
+    const s=SETTINGS.slideSize || {};
+    if($('slideSizePreset')) $('slideSizePreset').value=s.preset||'16:9';
+    if($('slideCustomW')) $('slideCustomW').value=s.width||1300;
+    if($('slideCustomH')) $('slideCustomH').value=s.height||731;
+    const custom=(s.preset==='custom');
+    if($('slideCustomFields')) $('slideCustomFields').style.display=custom?'grid':'none';
+}
+function setSlideSizePreset(preset){
+    const sizes={
+        '16:9':[1300,731],
+        '4:3':[1300,975],
+        '16:10':[1300,812],
+        '1:1':[1000,1000]
+    };
+    if(preset==='custom'){
+        SETTINGS.slideSize={preset:'custom',
+            width:Math.max(400,parseInt($('slideCustomW')?.value)||1300),
+            height:Math.max(300,parseInt($('slideCustomH')?.value)||731)};
+    }else{
+        const [w,h]=sizes[preset]||sizes['16:9'];
+        SETTINGS.slideSize={preset,width:w,height:h};
+    }
+    applySlideSizeUI();
+    renderPreview();
+    saveState();
+}
+function updateCustomSlideSize(){
+    SETTINGS.slideSize={
+        preset:'custom',
+        width:Math.max(400,parseInt($('slideCustomW')?.value)||1300),
+        height:Math.max(300,parseInt($('slideCustomH')?.value)||731)
+    };
+    applySlideSizeUI();
+    renderPreview();
+    saveState();
+}
 
 function uid(){ return 'id_'+(Date.now().toString(36))+(Math.random().toString(36).slice(2,6)); }
 function newSlide(els){ return { id: uid(), els: els||[], bgColor:null, notes:'', transition:'None', duration:3, locked:false, selected:false }; }
@@ -991,14 +1408,11 @@ function runFindReplace() {
 // SLIDE & ELEMENT MANAGEMENT
 // ==========================================
 function setActiveSlide(idx, event) {
-    if(event) { event.stopPropagation(); }
-    activeSlideIdx = idx;
-    if(activeSlideIdx >= DATA.length) activeSlideIdx = Math.max(0, DATA.length - 1);
-    
-    document.querySelectorAll('.slide-wrapper').forEach((w, i) => {
-        if(i === activeSlideIdx) w.classList.add('active-slide-ring');
-        else w.classList.remove('active-slide-ring');
-    });
+    if(event) event.stopPropagation();
+    idx=parseInt(idx,10);
+    if(!Number.isInteger(idx) || idx<0 || idx>=DATA.length) return;
+    activeSlideIdx=idx;
+    renderPreview();
 }
 
 function clearAllSlides() { if(confirm("Clear ALL Slides?")) { snapshot(); DATA = []; activeSlideIdx=0; renderPreview(); saveState(); } }
@@ -1027,20 +1441,163 @@ function deleteSelectedSlides() {
     snapshot(); DATA = DATA.filter(s=>!s.selected); activeSlideIdx = 0; renderPreview(); saveState();
 }
 
-function attachDrag(wrap, idx){
-    wrap.draggable = true;
-    wrap.ondragstart = () => { dragSrcIndex = idx; wrap.classList.add('dragging'); };
-    wrap.ondragend = () => wrap.classList.remove('dragging');
-    wrap.ondragover = (e) => e.preventDefault();
-    wrap.ondrop = (e) => {
-        e.preventDefault();
-        if(dragSrcIndex===null || dragSrcIndex===idx) return;
+
+// ==========================================================
+// POWERPOINT-LIKE ELEMENT MOVE + RESIZE
+// ==========================================================
+function ensureElementBox(elBlock, el, card){
+    const cr=card.getBoundingClientRect();
+    const r=elBlock.getBoundingClientRect();
+    const scaleX=cr.width/1300, scaleY=cr.height/710;
+    if(!el.positioned){
+        el.x=Math.max(0,(r.left-cr.left)/scaleX);
+        el.y=Math.max(0,(r.top-cr.top)/scaleY);
+        el.w=Math.max(40,r.width/scaleX);
+        el.h=Math.max(28,r.height/scaleY);
+        el.positioned=true;
+    }
+    elBlock.classList.add('positioned-element');
+    elBlock.style.left=((el.x||0)/1300*100)+'%';
+    elBlock.style.top=((el.y||0)/710*100)+'%';
+    elBlock.style.width=(Math.max(40,el.w||100)/1300*100)+'%';
+    elBlock.style.height=(Math.max(28,el.h||40)/710*100)+'%';
+}
+
+function addResizeUI(elBlock,sIdx,eIdx,el,card){
+    if(el.locked) return;
+    if(elBlock.querySelector('.resize-handles')) return;
+
+    const move=document.createElement('div');
+    move.className='el-move-handle';
+    move.innerHTML='<i class="fas fa-arrows-alt"></i>';
+    move.title='Drag to move';
+    elBlock.appendChild(move);
+
+    const hs=document.createElement('div');
+    hs.className='resize-handles';
+    ['nw','n','ne','e','se','s','sw','w'].forEach(pos=>{
+        const h=document.createElement('div');
+        h.className='resize-handle rh-'+pos;
+        h.dataset.dir=pos;
+        hs.appendChild(h);
+        h.addEventListener('pointerdown',ev=>{
+            ev.preventDefault(); ev.stopPropagation();
+            ensureElementBox(elBlock,el,card);
+            snapshot();
+            const cr=card.getBoundingClientRect();
+            const scale=cr.width/1300;
+            const sx=ev.clientX, sy=ev.clientY;
+            const ox=el.x, oy=el.y, ow=el.w, oh=el.h;
+            const keepRatio=el.type==='image' && (pos==='nw'||pos==='ne'||pos==='se'||pos==='sw');
+            const ratio=oh?ow/oh:1;
+
+            const moveResize=mv=>{
+                mv.preventDefault();
+                let dx=(mv.clientX-sx)/scale, dy=(mv.clientY-sy)/scale;
+                let x=ox,y=oy,w=ow,h=oh;
+                if(pos.includes('e')) w=Math.max(40,ow+dx);
+                if(pos.includes('s')) h=Math.max(28,oh+dy);
+                if(pos.includes('w')){w=Math.max(40,ow-dx);x=ox+(ow-w);}
+                if(pos.includes('n')){h=Math.max(28,oh-dy);y=oy+(oh-h);}
+                if(keepRatio){
+                    if(Math.abs(dx)>=Math.abs(dy)) h=Math.max(28,w/ratio);
+                    else w=Math.max(40,h*ratio);
+                    if(pos.includes('w')) x=ox+(ow-w);
+                    if(pos.includes('n')) y=oy+(oh-h);
+                }
+                const maxW=1300,maxH=710;
+                w=Math.min(w,maxW-x); h=Math.min(h,maxH-y);
+                Object.assign(el,{x,y,w,h});
+                elBlock.style.left=x+'px';elBlock.style.top=y+'px';
+                elBlock.style.width=w+'px';elBlock.style.height=h+'px';
+            };
+            const endResize=()=>{
+                window.removeEventListener('pointermove',moveResize);
+                window.removeEventListener('pointerup',endResize);
+                saveState();
+            };
+            window.addEventListener('pointermove',moveResize);
+            window.addEventListener('pointerup',endResize,{once:true});
+        });
+    });
+    elBlock.appendChild(hs);
+
+    move.addEventListener('pointerdown',ev=>{
+        ev.preventDefault();ev.stopPropagation();
+        ensureElementBox(elBlock,el,card);
         snapshot();
-        const moved = DATA.splice(dragSrcIndex,1)[0];
-        DATA.splice(idx,0,moved);
-        dragSrcIndex = null; activeSlideIdx = idx;
-        renderPreview(); saveState();
-    };
+        const cr=card.getBoundingClientRect(), scale=cr.width/1300;
+        const sx=ev.clientX,sy=ev.clientY,ox=el.x,oy=el.y;
+        const moveEl=mv=>{
+            mv.preventDefault();
+            el.x=Math.max(0,Math.min(1300-el.w,ox+(mv.clientX-sx)/scale));
+            el.y=Math.max(0,Math.min(710-el.h,oy+(mv.clientY-sy)/scale));
+            elBlock.style.left=(el.x/1300*100)+'%';elBlock.style.top=(el.y/710*100)+'%';
+        };
+        const end=()=>{window.removeEventListener('pointermove',moveEl);saveState();};
+        window.addEventListener('pointermove',moveEl);
+        window.addEventListener('pointerup',end,{once:true});
+    });
+}
+
+function makeElementPositioned(sIdx,eIdx,elBlock,el,card){
+    if(el.locked) return;
+    addResizeUI(elBlock,sIdx,eIdx,el,card);
+
+    // Double-click keeps the familiar "enter text editing" behavior.
+    elBlock.addEventListener('dblclick',ev=>{
+        if(ev.target.closest('.el-toolbar') || ev.target.closest('.resize-handle') || ev.target.closest('.el-move-handle')) return;
+        ensureElementBox(elBlock,el,card);
+        const edit=elBlock.querySelector('[contenteditable="true"]');
+        if(edit) edit.focus();
+        saveState();
+    });
+
+    // Drag the object from its border/empty area like PowerPoint.
+    elBlock.addEventListener('pointerdown',ev=>{
+        if(ev.button!==undefined && ev.button!==0) return;
+        document.querySelectorAll('.el-block.active-edit').forEach(b=>b.classList.remove('active-edit'));
+        elBlock.classList.add('active-edit');
+        if(ev.target.closest('.el-toolbar,.resize-handle,.el-move-handle,button,input,select,textarea')) return;
+
+        const editable=ev.target.closest('[contenteditable="true"]');
+        // Text itself is for editing/selection. The border/padding is for moving.
+        if(editable && ev.target!==elBlock) return;
+
+        ev.preventDefault();
+        ev.stopPropagation();
+        ensureElementBox(elBlock,el,card);
+        snapshot();
+
+        const cr=card.getBoundingClientRect();
+        const scale=cr.width/1300;
+        const sx=ev.clientX, sy=ev.clientY;
+        const ox=el.x||0, oy=el.y||0;
+
+        const moveObject=mv=>{
+            mv.preventDefault();
+            el.x=Math.max(0,Math.min(1300-(el.w||40),ox+(mv.clientX-sx)/scale));
+            el.y=Math.max(0,Math.min(710-(el.h||28),oy+(mv.clientY-sy)/scale));
+            elBlock.style.left=el.x+'px';
+            elBlock.style.top=el.y+'px';
+        };
+        const endObject=()=>{
+            window.removeEventListener('pointermove',moveObject);
+            window.removeEventListener('pointerup',endObject);
+            saveState();
+        };
+        window.addEventListener('pointermove',moveObject,{passive:false});
+        window.addEventListener('pointerup',endObject,{once:true});
+    });
+}
+
+function attachDrag(wrap, idx){
+    // Slide reordering is now handled by the dedicated thumbnail grip.
+    wrap.draggable = false;
+    wrap.ondragstart = null;
+    wrap.ondragend = null;
+    wrap.ondragover = null;
+    wrap.ondrop = null;
 }
 
 // 🔴 THE NEW RIBBON-BASED ELEMENT INSERTER 🔴
@@ -1131,6 +1688,126 @@ function getDefaultColor(type) {
     return $('defP').value;
 }
 
+
+// ==========================================================
+// INLINE CHARACTER FORMATTING — SELECTION SAFE
+// ==========================================================
+let savedTextSelection = null;
+
+function getEditableAncestor(node){
+    if(!node) return null;
+    const el = node.nodeType === 1 ? node : node.parentElement;
+    return el ? el.closest('[contenteditable="true"]') : null;
+}
+
+function rememberTextSelection(){
+    const sel = window.getSelection();
+    if(!sel || !sel.rangeCount || sel.isCollapsed) return;
+    const range = sel.getRangeAt(0);
+    const editable = getEditableAncestor(range.commonAncestorContainer);
+    if(editable) savedTextSelection = range.cloneRange();
+}
+document.addEventListener('selectionchange', rememberTextSelection);
+
+function restoreTextSelection(){
+    if(!savedTextSelection) return false;
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(savedTextSelection);
+    return true;
+}
+
+function cleanInlineHtml(html){
+    const holder = document.createElement('div');
+    holder.innerHTML = html || '';
+    holder.querySelectorAll('script,style').forEach(n=>n.remove());
+    holder.querySelectorAll('*').forEach(n=>{
+        [...n.attributes].forEach(a=>{
+            if(a.name.toLowerCase().startsWith('on') || a.name.toLowerCase()==='id' || a.name.toLowerCase()==='class'){
+                n.removeAttribute(a.name);
+            }
+        });
+    });
+    return holder.innerHTML;
+}
+
+function saveEditableHtml(sIdx,eIdx,node,isList=false,itemIdx=-1){
+    let html = cleanInlineHtml(node.innerHTML);
+    if(isList) {
+        html = html.replace(/^((?:•|\d+\.)\s*)/,'');
+        DATA[sIdx].els[eIdx].items[itemIdx] = html;
+    } else {
+        DATA[sIdx].els[eIdx].text = html;
+    }
+    saveState();
+}
+
+function getCurrentEditable(sIdx,eIdx){
+    const blocks = document.querySelectorAll('.el-block');
+    const el = DATA[sIdx] && DATA[sIdx].els[eIdx];
+    if(!el) return null;
+    for(const block of blocks){
+        const toolbar = block.querySelector('.el-toolbar');
+        if(toolbar && toolbar.querySelector(`[onclick*="${sIdx}"][onclick*="${eIdx}"]`)){
+            return block.querySelector('[contenteditable="true"]');
+        }
+    }
+    return document.activeElement && document.activeElement.isContentEditable
+        ? document.activeElement : null;
+}
+
+function applyInlineCommand(sIdx,eIdx,command,value=null){
+    let target = document.activeElement && document.activeElement.isContentEditable
+        ? document.activeElement : getCurrentEditable(sIdx,eIdx);
+    if(!target) return;
+
+    if(savedTextSelection && target.contains(savedTextSelection.commonAncestorContainer)){
+        restoreTextSelection();
+    }
+
+    const sel = window.getSelection();
+    const hasRange = sel && sel.rangeCount && !sel.isCollapsed &&
+        target.contains(sel.getRangeAt(0).commonAncestorContainer);
+
+    snapshot();
+
+    if(hasRange){
+        try { document.execCommand(command,false,value); }
+        catch(err){ console.warn('Inline formatting failed',err); }
+
+        savedTextSelection = sel.getRangeAt(0).cloneRange();
+
+        const html = cleanInlineHtml(target.innerHTML);
+        if(target.dataset.listItem === 'true'){
+            const itemIdx = parseInt(target.dataset.itemIndex,10);
+            DATA[sIdx].els[eIdx].items[itemIdx] = html.replace(/^((?:•|\d+\.)\s*)/,'');
+        }else{
+            DATA[sIdx].els[eIdx].text = html;
+        }
+        saveState();
+        updateCounts();
+    }else{
+        // No selection: whole text element behavior remains available.
+        if(command === 'foreColor'){
+            target.style.color = value;
+            DATA[sIdx].els[eIdx].color = value;
+        }else if(command === 'bold'){
+            const next = target.style.fontWeight !== '700';
+            target.style.fontWeight = next ? '700' : '';
+            DATA[sIdx].els[eIdx].bold = next;
+        }
+        saveState();
+    }
+}
+
+window.inlineBold = (sIdx,eIdx) => applyInlineCommand(sIdx,eIdx,'bold');
+window.inlineColor = (sIdx,eIdx,color) => applyInlineCommand(sIdx,eIdx,'foreColor',color);
+
+function rememberBeforeToolbar(e){
+    if(e && e.preventDefault) e.preventDefault();
+    rememberTextSelection();
+}
+
 // Inline formatting tools
 window.deleteEl = (sIdx, eIdx) => { snapshot(); DATA[sIdx].els.splice(eIdx, 1); renderPreview(); saveState(); };
 window.duplicateEl = (sIdx, eIdx) => { snapshot(); const copy = JSON.parse(JSON.stringify(DATA[sIdx].els[eIdx])); copy.id = uid(); DATA[sIdx].els.splice(eIdx+1,0,copy); renderPreview(); saveState(); };
@@ -1180,14 +1857,18 @@ function transformCase(str, mode){
     if(mode==='title') return str.replace(/\w\S*/g, t=>t[0].toUpperCase()+t.slice(1).toLowerCase());
     return str;
 }
-function formatText(text) { if(!text) return ""; return text.replace(/<b>(.*?)<\/b>/g, `<strong style="color:var(--bold-color);">$1</strong>`); }
+function formatText(text) {
+    if(!text) return "";
+    if(/<\s*(b|strong|span|i|em|u|s|strike|br)\b/i.test(text)) return cleanInlineHtml(text);
+    return text.replace(/<b>(.*?)<\/b>/gi, `<strong style="color:var(--bold-color);">$1</strong>`);
+}
 
 // 🔴 UPDATED TOOLBAR WITH PROPER FONT AWESOME ICONS 🔴
 function buildTextToolbar(sIdx, eIdx, el){
 
     const textColor = `
         <input type="color" class="toolbar-color text-color" value="${el.color || getDefaultColor(el.type)}"
-            onchange="updateElColor(${sIdx},${eIdx},this.value)" title="Text Color">
+            onmousedown="rememberBeforeToolbar(event)" onchange="inlineColor(${sIdx},${eIdx},this.value)" title="Text Color — selected text only">
     `;
 
     const fontSize = `
@@ -1209,16 +1890,16 @@ function buildTextToolbar(sIdx, eIdx, el){
         ${textColor}
 
         <!-- BOLD -->
-        <button class="toolbar-btn ${el.bold?'active':''}" onclick="toggleBoldEl(${sIdx},${eIdx})" title="Bold"><i class="fas fa-bold"></i></button>
+        <button class="toolbar-btn ${el.bold?'active':''}" onmousedown="rememberBeforeToolbar(event)" onclick="inlineBold(${sIdx},${eIdx})" title="Bold — selected text only"><i class="fas fa-bold"></i></button>
 
         <!-- ITALIC -->
-        <button class="toolbar-btn ${el.italic?'active':''}" onclick="toggleItalicEl(${sIdx},${eIdx})" title="Italic"><i class="fas fa-italic"></i></button>
+        <button class="toolbar-btn ${el.italic?'active':''}" onmousedown="rememberBeforeToolbar(event)" onclick="applyInlineCommand(${sIdx},${eIdx},'italic')" title="Italic — selected text only"><i class="fas fa-italic"></i></button>
 
         <!-- UNDERLINE -->
-        <button class="toolbar-btn ${el.underline?'active':''}" onclick="toggleUnderlineEl(${sIdx},${eIdx})" title="Underline"><i class="fas fa-underline"></i></button>
+        <button class="toolbar-btn ${el.underline?'active':''}" onmousedown="rememberBeforeToolbar(event)" onclick="applyInlineCommand(${sIdx},${eIdx},'underline')" title="Underline — selected text only"><i class="fas fa-underline"></i></button>
 
         <!-- STRIKE -->
-        <button class="toolbar-btn ${el.strike?'active':''}" onclick="toggleStrikeEl(${sIdx},${eIdx})" title="Strikethrough"><i class="fas fa-strikethrough"></i></button>
+        <button class="toolbar-btn ${el.strike?'active':''}" onmousedown="rememberBeforeToolbar(event)" onclick="applyInlineCommand(${sIdx},${eIdx},'strikeThrough')" title="Strikethrough — selected text only"><i class="fas fa-strikethrough"></i></button>
 
         <!-- ALIGNMENT -->
         <button class="toolbar-btn" onclick="cycleAlignEl(${sIdx},${eIdx})" title="Alignment">
@@ -1321,6 +2002,8 @@ function renderPreview() {
         wrap.appendChild(metaRow);
 
         const div = document.createElement("div"); div.className = "slide-card" + (SETTINGS.bgGrayscale ? ' grayscale' : '');
+        div.style.aspectRatio = getSlideRatio();
+        div.style.height = 'auto';
         if(slide.bgColor) div.style.backgroundColor = slide.bgColor;
         else if(bgUrl) div.style.background = `url('${bgUrl}') center/cover no-repeat`;
         else div.style.backgroundColor = !isDarkMode ? "#ffffff" : "#000000";
@@ -1354,7 +2037,7 @@ function renderPreview() {
                     node.spellcheck = SETTINGS.spellcheck;
                     node.dir = SETTINGS.rtl ? 'rtl':'ltr';
                     node.innerHTML = formatText(el.text);
-                    node.onblur = e => { DATA[sIdx].els[eIdx].text = e.target.innerText; saveState(); };
+                    node.onblur = e => { saveEditableHtml(sIdx,eIdx,e.target,false,-1); };
                 }
                 else if (el.type === 'ul' || el.type==='ol') {
                     elBlock.innerHTML = `<div class="el-toolbar" onclick="event.stopPropagation()">${el.locked?`<button onclick="toggleLockEl(${sIdx},${eIdx})" title="Unlock"><i class="fas fa-lock"></i></button><button onclick="deleteEl(${sIdx},${eIdx})" title="Delete"><i class="fas fa-times"></i></button>`:buildTextToolbar(sIdx,eIdx,el)}</div>`;
@@ -1371,7 +2054,7 @@ function renderPreview() {
                         liNode.spellcheck = SETTINGS.spellcheck;
                         const prefix = el.type==='ol' ? (iIdx+1)+". " : "• ";
                         liNode.innerHTML = prefix + formatText(itemText);
-                        liNode.onblur = e => { DATA[sIdx].els[eIdx].items[iIdx] = e.target.innerText.replace(/^(\d+\.|•)\s*/, ""); saveState(); };
+                        liNode.onblur = e => { saveEditableHtml(sIdx,eIdx,e.target,true,iIdx); };
                         node.appendChild(liNode);
                     });
                 }
@@ -1423,7 +2106,7 @@ function renderPreview() {
                     </div>`;
                     node = document.createElement('div'); node.className='p-image-wrap';
                     node.style.justifyContent = el.align==='center'?'center':el.align==='right'?'flex-end':'flex-start';
-                    const img = document.createElement('img'); img.src = el.src; img.style.width = widthMap[el.width]||'50%';
+                    const img = document.createElement('img'); img.src = el.src; img.style.width = widthMap[el.width]||'50%'; img.style.pointerEvents='none'; img.draggable=false;
                     node.appendChild(img);
                 }
                 else if (el.type === 'shape-rect' || el.type === 'shape-circle') {
@@ -1448,6 +2131,15 @@ function renderPreview() {
                 }
 
                 if(node) elBlock.appendChild(node);
+                // Existing elements keep their original flow. Once the user moves/resizes
+                // an element, its x/y/w/h are stored and the element becomes a real PPT-like box.
+                if(el.positioned){
+                    elBlock.classList.add('positioned-element');
+                    elBlock.style.left=((el.x||0)/1300*100)+'%';
+                    elBlock.style.top=((el.y||0)/710*100)+'%';
+                    elBlock.style.width=(Math.max(40,el.w||100)/1300*100)+'%';
+                    elBlock.style.height=(Math.max(28,el.h||40)/710*100)+'%';
+                }
                 content.appendChild(elBlock);
             });
         } else {
@@ -1463,9 +2155,140 @@ function renderPreview() {
         if(SETTINGS.showDate) { const d=document.createElement('div'); d.className='hud-text'; d.style.bottom='6px'; d.style.left='10px'; d.style.color= !isDarkMode?'#000':'#fff'; d.innerText=todayStr; div.appendChild(d); }
         if(SETTINGS.showWatermark && SETTINGS.watermarkText) { const w=document.createElement('div'); w.className='hud-text'; w.style.top='50%'; w.style.left='50%'; w.style.transform='translate(-50%,-50%) rotate(-25deg)'; w.style.fontSize='2.5em'; w.style.opacity='0.15'; w.style.color= !isDarkMode?'#000':'#fff'; w.innerText=SETTINGS.watermarkText; div.appendChild(w); }
 
-        div.appendChild(content); wrap.appendChild(div); box.appendChild(wrap);
+        div.appendChild(content);
+        wrap.appendChild(div);
+        box.appendChild(wrap);
+
+        // Add PowerPoint-like move/resize controls to editable elements.
+        if(!slide.locked){
+            slide.els.forEach((el,eIdx)=>{
+                const blocks=[...content.querySelectorAll('.el-block')];
+                const block=blocks[eIdx];
+                if(block) makeElementPositioned(sIdx,eIdx,block,el,div);
+            });
+        }
         attachDrag(wrap, sIdx);
     });
+
+    // ==========================================================
+    // POWERPOINT LAYOUT:
+    // Left = thumbnail of EVERY slide
+    // Right = ONE editable active slide
+    // ==========================================================
+    const allSlides=[...box.querySelectorAll('.slide-wrapper')];
+    box.innerHTML='';
+
+    const rail=document.createElement('div');
+    rail.className='ppt-thumb-rail';
+    rail.setAttribute('aria-label','Slide thumbnails');
+
+    const stage=document.createElement('div');
+    stage.className='ppt-main-stage';
+
+    const label=document.createElement('div');
+    label.className='ppt-stage-label';
+    label.textContent='Slide '+(activeSlideIdx+1)+'  •  Editor';
+    stage.appendChild(label);
+
+    // Active slide remains the real editable object.
+    const activeWrap=allSlides[activeSlideIdx];
+    if(activeWrap) stage.appendChild(activeWrap);
+
+    // Build independent thumbnail copies so every slide can be selected
+    // while the active slide remains large on the right.
+    allSlides.forEach((original,i)=>{
+        const item=document.createElement('div');
+        item.className='ppt-thumb-item'+(i===activeSlideIdx?' active':'');
+        item.dataset.slideIndex=i;
+
+        const head=document.createElement('div');
+        head.className='ppt-thumb-number';
+        head.innerHTML=`
+            <span class="ppt-thumb-grip" title="Drag to reorder">⠿</span>
+            <span>${i+1}</span>
+        `;
+        item.appendChild(head);
+
+        const prev=document.createElement('div');
+        prev.className='ppt-thumb-preview';
+        const clone=original.cloneNode(true);
+        clone.classList.remove('active-slide-ring','dragging');
+        clone.querySelectorAll('.slide-toolbar,.slide-meta-row,.el-toolbar,.resize-handles,.el-move-handle,.table-controls').forEach(n=>n.remove());
+        clone.querySelectorAll('[contenteditable]').forEach(n=>n.removeAttribute('contenteditable'));
+
+        const thumbCard=clone.querySelector('.slide-card');
+        if(thumbCard){
+            const ratio=getSlideRatio();
+            const logicalH=1300/ratio;
+            thumbCard.style.width='1300px';
+            thumbCard.style.height=logicalH+'px';
+            thumbCard.style.aspectRatio='auto';
+            thumbCard.style.transform='scale('+(160/1300)+')';
+            thumbCard.style.transformOrigin='top left';
+            thumbCard.style.margin='0';
+            thumbCard.style.boxShadow='none';
+            thumbCard.style.border='0';
+        }
+        prev.appendChild(clone);
+        item.appendChild(prev);
+
+        item.addEventListener('click',ev=>{
+            if(ev.target.closest('.ppt-thumb-grip')) return;
+            setActiveSlide(i,ev);
+        });
+
+        // Pointer-based drag handle: works with mouse and touch.
+        const grip=head.querySelector('.ppt-thumb-grip');
+        grip.addEventListener('pointerdown',ev=>{
+            ev.preventDefault();
+            ev.stopPropagation();
+            const from=i;
+            const startY=ev.clientY;
+            let moved=false;
+            const railRect=()=>rail.getBoundingClientRect();
+
+            const moveThumb=mv=>{
+                mv.preventDefault();
+                if(Math.abs(mv.clientY-startY)>4) moved=true;
+                if(!moved) return;
+
+                const items=[...rail.querySelectorAll('.ppt-thumb-item')];
+                const target=items.find(it=>{
+                    const r=it.getBoundingClientRect();
+                    return mv.clientY>=r.top && mv.clientY<=r.bottom;
+                });
+                if(!target || target===item) return;
+
+                const to=parseInt(target.dataset.slideIndex,10);
+                if(!Number.isInteger(to) || to===from) return;
+
+                const [moving]=DATA.splice(from,1);
+                DATA.splice(to,0,moving);
+
+                if(activeSlideIdx===from) activeSlideIdx=to;
+                else if(from<activeSlideIdx && to>=activeSlideIdx) activeSlideIdx--;
+                else if(from>activeSlideIdx && to<=activeSlideIdx) activeSlideIdx++;
+
+                saveState();
+                renderPreview();
+                cleanup();
+            };
+
+            const cleanup=()=>{
+                window.removeEventListener('pointermove',moveThumb);
+                window.removeEventListener('pointerup',cleanup);
+                window.removeEventListener('pointercancel',cleanup);
+            };
+            window.addEventListener('pointermove',moveThumb,{passive:false});
+            window.addEventListener('pointerup',cleanup,{once:true});
+            window.addEventListener('pointercancel',cleanup,{once:true});
+        });
+
+        rail.appendChild(item);
+    });
+
+    box.appendChild(rail);
+    box.appendChild(stage);
 
     updateCounts();
     flagOverflowingSlides();
@@ -1584,7 +2407,7 @@ function openPresentMode(startIdx){
     overlay.id = 'presentOverlay';
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(32,31,30,0.95);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;';
     overlay.innerHTML = `
-      <div id="presentStage" style="width:92vw;max-width:1300px;aspect-ratio:16/9;position:relative;overflow:hidden;border:1px solid #444;box-shadow:0 15px 40px rgba(0,0,0,0.5);"></div>
+      <div id="presentStage" style="width:92vw;max-width:1300px;aspect-ratio:${getSlideRatio()};position:relative;overflow:hidden;border:1px solid #444;box-shadow:0 15px 40px rgba(0,0,0,0.5);"></div>
       <div style="margin-top:20px;display:flex;gap:15px;align-items:center;color:#fff;font-family:'Inter',sans-serif;font-weight:600;">
         <button id="presPrev" class="btn btn-gray" style="width:auto;padding:8px 16px;"><i class="fas fa-chevron-left"></i> Prev</button>
         <span id="presCounter"></span>
@@ -1638,7 +2461,7 @@ async function generatePPTX() {
     btns.forEach(b => { if(b) { b.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Generating..."; b.disabled = true; }});
 
     setTimeout(async () => {
-        const pxW = 1300, pxH = 710;
+        const pxW = 1300, pxH = Math.round(1300/getSlideRatio());
         const m = { top:parseInt($('topM')?$('topM').value:40), bottom:parseInt($('bottomM')?$('bottomM').value:40), left:parseInt($('leftM')?$('leftM').value:50), right:parseInt($('rightM')?$('rightM').value:50) };
         const ppt = new PptxGenJS(); ppt.defineLayout({ name:"S", width:pxW/96, height:pxH/96 }); ppt.layout = "S";
         if(SETTINGS.title) ppt.title = SETTINGS.title;
@@ -1721,46 +2544,78 @@ async function generatePPTX() {
             const drawSmartText = (text, size, isBoldDefault, normalCol, lineH, opts = {}) => {
                 if(!text) return;
                 const { leftIndent = 0, align='left', italic=false, underline=false, strike=false, highlight=null, caseMode='none' } = opts;
-                const styleStr = italic ? 'italic ' : '';
-                const normalFont = `${styleStr}${size}px ${fam}`;
-                const boldFont = `${styleStr}bold ${size}px ${fam}`;
-                const paras = text.split("\n");
-                paras.forEach(para => {
-                    if(!para.trim()) { y += lineH/2; return; }
-                    let parts = para.split(/(<b>.*?<\/b>)/g); let words = [];
-                    parts.forEach(part => {
-                        if(part.startsWith('<b>') && part.endsWith('</b>')) part.slice(3, -4).split(' ').forEach(w => { if(w) words.push({t: transformCase(w,caseMode), b: true}); });
-                        else part.split(' ').forEach(w => { if(w) words.push({t: transformCase(w,caseMode), b: isBoldDefault}); });
-                    });
 
-                    ctx.font = normalFont;
-                    const spaceW = ctx.measureText(' ').width;
-                    let lines = []; let cur = []; let curW = 0;
-                    words.forEach(w=>{
-                        ctx.font = w.b? boldFont : normalFont;
-                        let ww = ctx.measureText(w.t).width;
-                        if(curW + ww > (maxW-leftIndent) && cur.length>0){ lines.push({words:cur, width:curW-spaceW}); cur=[]; curW=0; }
-                        cur.push(w); curW += ww + spaceW;
-                    });
-                    if(cur.length) lines.push({words:cur, width:curW-spaceW});
+                const holder = document.createElement('div');
+                holder.innerHTML = formatText(text);
+                const styledWords = [];
 
-                    lines.forEach(line=>{
-                        if (y + lineH > bottomLimit && y > m.top) triggerPagination();
-                        let startX = m.left+leftIndent;
-                        if(align==='center') startX = m.left+leftIndent + Math.max(0,(maxW-leftIndent-line.width)/2);
-                        else if(align==='right') startX = m.left+leftIndent + Math.max(0,(maxW-leftIndent-line.width));
-                        if(highlight){ ctx.fillStyle = highlight; ctx.fillRect(startX-4, y-2, line.width+8, lineH-4); }
-                        let cx = startX;
-                        line.words.forEach(w=>{
-                            ctx.font = w.b? boldFont: normalFont; ctx.fillStyle = w.b? bHex : normalCol;
-                            ctx.fillText(w.t, cx, y);
-                            let ww = ctx.measureText(w.t).width;
-                            if(underline){ ctx.strokeStyle=normalCol; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(cx, y+lineH*0.8); ctx.lineTo(cx+ww, y+lineH*0.8); ctx.stroke(); }
-                            if(strike){ ctx.strokeStyle=normalCol; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(cx, y+lineH*0.5); ctx.lineTo(cx+ww, y+lineH*0.5); ctx.stroke(); }
-                            cx += ww + spaceW;
+                const walk = (node, inherited={}) => {
+                    if(node.nodeType === Node.TEXT_NODE){
+                        (node.nodeValue||'').split(/(\s+)/).forEach(token=>{
+                            if(!token) return;
+                            if(/^\s+$/.test(token)) styledWords.push({space:true});
+                            else styledWords.push({
+                                t: transformCase(token,caseMode),
+                                b: inherited.bold ?? isBoldDefault,
+                                col: inherited.color || normalCol,
+                                i: inherited.italic ?? italic,
+                                u: inherited.underline ?? underline,
+                                s: inherited.strike ?? strike
+                            });
                         });
-                        y += lineH;
+                        return;
+                    }
+                    if(node.nodeType !== Node.ELEMENT_NODE) return;
+                    const cs = getComputedStyle(node);
+                    const next = {
+                        bold: inherited.bold || /^(b|strong)$/i.test(node.tagName) || parseInt(cs.fontWeight)>=700,
+                        color: node.style.color || inherited.color,
+                        italic: inherited.italic || /^(i|em)$/i.test(node.tagName) || cs.fontStyle==='italic',
+                        underline: inherited.underline || node.tagName==='U' || cs.textDecorationLine.includes('underline'),
+                        strike: inherited.strike || /^(s|strike)$/i.test(node.tagName) || cs.textDecorationLine.includes('line-through')
+                    };
+                    node.childNodes.forEach(ch=>walk(ch,next));
+                };
+                holder.childNodes.forEach(n=>walk(n,{}));
+
+                const words = styledWords.filter((w,i)=>!w.space || (i>0 && i<styledWords.length-1));
+                const normalFont = `${italic?'italic ':''}${size}px ${fam}`;
+                const makeFont = w => `${w.i?'italic ':''}${w.b?'bold ':''}${size}px ${fam}`;
+                ctx.font = normalFont;
+                const spaceW = ctx.measureText(' ').width;
+
+                let lines=[], cur=[], curW=0;
+                words.forEach(w=>{
+                    if(w.space) return;
+                    ctx.font=makeFont(w);
+                    const ww=ctx.measureText(w.t).width;
+                    if(cur.length && curW+ww>(maxW-leftIndent)){
+                        lines.push({words:cur,width:curW-spaceW});
+                        cur=[]; curW=0;
+                    }
+                    cur.push(w); curW+=ww+spaceW;
+                });
+                if(cur.length) lines.push({words:cur,width:curW-spaceW});
+
+                lines.forEach(line=>{
+                    if(y+lineH>bottomLimit && y>m.top) triggerPagination();
+                    let startX=m.left+leftIndent;
+                    if(align==='center') startX=m.left+leftIndent+Math.max(0,(maxW-leftIndent-line.width)/2);
+                    else if(align==='right') startX=m.left+leftIndent+Math.max(0,(maxW-leftIndent-line.width));
+
+                    if(highlight){ ctx.fillStyle=highlight; ctx.fillRect(startX-4,y-2,line.width+8,lineH-4); }
+
+                    let cx=startX;
+                    line.words.forEach(w=>{
+                        ctx.font=makeFont(w);
+                        ctx.fillStyle=w.col||normalCol;
+                        ctx.fillText(w.t,cx,y);
+                        const ww=ctx.measureText(w.t).width;
+                        if(w.u){ctx.strokeStyle=w.col||normalCol;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(cx,y+lineH*.8);ctx.lineTo(cx+ww,y+lineH*.8);ctx.stroke();}
+                        if(w.s){ctx.strokeStyle=w.col||normalCol;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(cx,y+lineH*.5);ctx.lineTo(cx+ww,y+lineH*.5);ctx.stroke();}
+                        cx+=ww+spaceW;
                     });
+                    y+=lineH;
                 });
             };
 
@@ -1864,8 +2719,12 @@ function loadState() {
         try{
             const s = JSON.parse(saved);
             DATA = (s.data||[]).map(sl => sl.els ? sl : newSlide(Array.isArray(sl)?sl:[]));
-            if($('topM')) $('topM').value = s.margins.t; if($('bottomM')) $('bottomM').value = s.margins.b; 
-            if($('leftM')) $('leftM').value = s.margins.l; if($('rightM')) $('rightM').value = s.margins.r;
+            if(s.margins){
+                if($('topM')) $('topM').value = s.margins.t ?? 40;
+                if($('bottomM')) $('bottomM').value = s.margins.b ?? 40;
+                if($('leftM')) $('leftM').value = s.margins.l ?? 50;
+                if($('rightM')) $('rightM').value = s.margins.r ?? 50;
+            }
             if(s.colors) { 
                 if($('defH1')) $('defH1').value=s.colors.h1; if($('defH2')) $('defH2').value=s.colors.h2; 
                 if($('defP')) $('defP').value=s.colors.p; if($('defMQ')) $('defMQ').value=s.colors.mq; 
@@ -1880,6 +2739,7 @@ function loadState() {
             if(isDarkMode) { document.body.classList.add('dark-mode'); }
             
             if(s.settings) Object.assign(SETTINGS, s.settings);
+            if(!SETTINGS.slideSize) SETTINGS.slideSize={preset:'16:9',width:1300,height:731};
         }catch(e){ console.warn('Load failed', e); }
     }
     
@@ -1908,6 +2768,7 @@ function loadState() {
     if($('overlayOpacity')) $('overlayOpacity').value = SETTINGS.overlayOpacity!=null?SETTINGS.overlayOpacity:0.5;
     if($('bgGrayscaleToggle')) $('bgGrayscaleToggle').checked = !!SETTINGS.bgGrayscale;
     
+    applySlideSizeUI();
     if($('zoomRange')) $('zoomRange').value = SETTINGS.zoom||100; 
     if($('zoomVal')) $('zoomVal').innerText = (SETTINGS.zoom||100) + '%'; 
     if($('preview')) $('preview').style.zoom = (SETTINGS.zoom||100)/100;
