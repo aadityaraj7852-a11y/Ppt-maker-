@@ -624,7 +624,97 @@
   .ppt-main-stage{padding-left:5px!important;padding-right:5px!important;}
 }
 </style>
-</head>
+
+<style id="v5-editor-fixes">
+/* V5: clean PowerPoint-style object controls */
+.el-block:hover{border-color:transparent;background:transparent;}
+.el-block.active-edit{border:1px solid var(--word-blue)!important;background:rgba(43,87,154,.025);}
+.el-toolbar{top:-46px!important;left:0!important;right:auto!important;flex-wrap:nowrap!important;max-width:min(94vw,760px)!important;overflow-x:auto!important;overflow-y:hidden!important;white-space:nowrap!important;}
+.resize-handles{opacity:0;transition:opacity .12s;pointer-events:none;}
+.el-block.active-edit .resize-handles,.el-block:hover .resize-handles{opacity:1;pointer-events:none;}
+.resize-handle{pointer-events:auto!important;}
+.el-block:not(.active-edit) .el-move-handle{opacity:0;}
+.el-block.active-edit .el-move-handle{opacity:1;}
+.advanced-html-object{width:100%;height:100%;overflow:hidden;background:transparent;}
+.advanced-html-object .html-code-root{width:100%;height:100%;overflow:hidden;}
+.advanced-html-object img,.advanced-html-object svg{max-width:100%;max-height:100%;}
+.advanced-html-panel{display:flex;flex-direction:column;gap:10px;}
+.advanced-html-help{padding:10px 12px;background:var(--input-bg);border:1px solid var(--border);border-radius:7px;line-height:1.45;font-size:.82rem;}
+.advanced-html-presets{display:flex;gap:7px;flex-wrap:wrap;}
+.advanced-html-code{width:100%;height:360px;resize:vertical;box-sizing:border-box;padding:12px;border:1px solid var(--border);background:#111;color:#e8f1ff;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;line-height:1.45;}
+.advanced-html-options{display:flex;gap:18px;flex-wrap:wrap;font-size:.82rem;}
+@media(max-width:700px){
+  .el-toolbar{top:-42px!important;left:0!important;max-width:calc(100vw - 130px)!important;}
+  .advanced-html-code{height:300px;}
+}
+</style>
+<style id="v5-editor-fixes-final">
+.el-toolbar{top:-46px!important;left:0!important;right:auto!important;flex-wrap:nowrap!important;max-width:min(94vw,760px)!important;overflow-x:auto!important;overflow-y:hidden!important;white-space:nowrap!important;}
+.el-block:hover{border-color:transparent!important;background:transparent!important;}
+.el-block.active-edit{border:1px solid var(--word-blue)!important;background:rgba(43,87,154,.025)!important;}
+.resize-handles{opacity:0;pointer-events:none;}
+.el-block.active-edit .resize-handles{opacity:1;}
+.el-block.active-edit .resize-handle{pointer-events:auto;}
+@media(max-width:700px){.el-toolbar{top:-42px!important;max-width:calc(100vw - 125px)!important;}}
+</style><style id="v5-slide-scroll-shape-fix">
+/* ==========================================================
+   V5 LEFT SLIDE SCROLLER + SHAPE FIX
+   ========================================================== */
+.ppt-thumb-rail{
+    overflow-y:scroll!important;
+    overflow-x:hidden!important;
+    scrollbar-width:auto;
+    scrollbar-gutter:stable;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+    touch-action:pan-y;
+}
+.ppt-thumb-rail::-webkit-scrollbar{width:10px;}
+.ppt-thumb-rail::-webkit-scrollbar-thumb{
+    background:#9aa7b8;
+    border-radius:10px;
+    border:2px solid transparent;
+    background-clip:padding-box;
+}
+.ppt-thumb-rail::-webkit-scrollbar-track{background:rgba(0,0,0,.06);}
+
+.ppt-thumb-item{
+    flex:0 0 auto!important;
+    min-height:0!important;
+}
+.ppt-thumb-preview{
+    flex:0 0 auto!important;
+    display:block!important;
+    width:100%!important;
+    aspect-ratio:16/9!important;
+    overflow:hidden!important;
+}
+.ppt-thumb-preview .slide-wrapper{
+    position:absolute!important;
+    inset:0!important;
+    width:100%!important;
+    height:100%!important;
+}
+.ppt-thumb-preview .slide-card{
+    position:absolute!important;
+    left:0!important;
+    top:0!important;
+    width:1300px!important;
+    max-width:none!important;
+    height:auto!important;
+    min-height:0!important;
+    transform-origin:top left!important;
+}
+.ppt-thumb-preview .slide-content{
+    min-height:0!important;
+}
+.ppt-thumb-preview .positioned-element{
+    pointer-events:none!important;
+}
+.ppt-thumb-preview .p-image-wrap img{
+    max-width:100%!important;
+}
+</style></head>
 <body onclick="closeAllMenus(event)">
 
 <!-- HEADER -->
@@ -759,7 +849,8 @@
 
             <div class="tool-group" style="flex-direction: row; gap: 2px;">
                 <button class="r-btn r-btn-large" onclick="addElToActive('table')"><div class="icon-wrapper"><i class="fas fa-table"></i></div><span class="btn-text">Table</span></button>
-                <button class="r-btn r-btn-large" onclick="addElToActive('image')"><div class="icon-wrapper"><i class="fas fa-image"></i></div><span class="btn-text">Image</span></button>
+                <button class="r-btn r-btn-large" onclick="addElToActive('image')"><div class="icon-wrapper"><i class="fas fa-images"></i></div><span class="btn-text">Images<br><small>(Multi)</small></span></button>
+                <button class="r-btn r-btn-large" onclick="openAdvancedHtmlModal()"><div class="icon-wrapper"><i class="fas fa-code"></i></div><span class="btn-text">HTML<br>Mind Map</span></button>
                 <button class="r-btn r-btn-large" onclick="addElToActive('hr')"><div class="icon-wrapper"><i class="fas fa-minus"></i></div><span class="btn-text">Line</span></button>
                 <div class="ribbon-dropdown-container">
                     <button class="r-btn r-btn-large" onclick="toggleMenu(event, 'menu-shapes')">
@@ -767,8 +858,9 @@
                         <span class="btn-text">Shapes <i class="fas fa-caret-down"></i></span>
                     </button>
                     <div class="ribbon-menu" id="menu-shapes">
-                        <button class="r-btn" style="width: 100%; justify-content: flex-start;" onclick="addElToActive('shape-rect')"><i class="fas fa-square" style="width:20px;"></i> Rectangle</button>
-                        <button class="r-btn" style="width: 100%; justify-content: flex-start;" onclick="addElToActive('shape-circle')"><i class="fas fa-circle" style="width:20px;"></i> Circle</button>
+                        <button class="r-btn" style="width:100%;justify-content:flex-start;" onclick="addElToActive('shape-rect')"><i class="fas fa-square" style="width:20px;"></i> Rectangle</button>
+                        <button class="r-btn" style="width:100%;justify-content:flex-start;" onclick="addElToActive('shape-circle')"><i class="fas fa-circle" style="width:20px;"></i> Circle / Oval</button>
+                        <button class="r-btn" style="width:100%;justify-content:flex-start;" onclick="addElToActive('shape-rect');setTimeout(()=>{const s=DATA[activeSlideIdx];const e=s.els[s.els.length-1];e.w=320;e.h=90;e.radius=18;renderPreview();saveState();},0)"><i class="fas fa-square" style="width:20px;"></i> Rounded Box</button>
                     </div>
                 </div>
                 <div class="tool-group-label" style="position: absolute; bottom: 0; left: 0;">MEDIA & SHAPES</div>
@@ -985,6 +1077,30 @@
             <button class="btn btn-green" onclick="importData('json')"><i class="fas fa-list-ol"></i> Load JSON</button>
         </div>
     </div>
+</template>
+
+<!-- ADVANCED HTML / SVG / MIND MAP MODAL -->
+<template id="advancedHtmlTpl">
+  <div class="advanced-html-panel">
+    <div class="advanced-html-help">
+      <b>HTML / SVG / Mind Map</b><br>
+      पूरा HTML/CSS या SVG code paste करो। <code>&lt;div&gt;</code>, <code>&lt;style&gt;</code>, arrows, cards, SVG mind maps आदि सीधे slide पर एक editable/resizable object की तरह आएंगे।
+    </div>
+    <div class="advanced-html-presets">
+      <button class="btn btn-gray" onclick="fillMindMapDemo()">Mind Map Demo</button>
+      <button class="btn btn-gray" onclick="fillSvgDemo()">SVG Demo</button>
+      <button class="btn btn-gray" onclick="fillHtmlDemo()">HTML Cards Demo</button>
+    </div>
+    <textarea id="advancedHtmlArea" class="advanced-html-code" spellcheck="false" placeholder="Paste HTML + CSS + SVG here..."> </textarea>
+    <div class="advanced-html-options">
+      <label><input type="checkbox" id="htmlAutoFit" checked> Auto fit</label>
+      <label><input type="checkbox" id="htmlAllowEdit"> HTML object editable</label>
+    </div>
+    <div class="grid-2" style="margin-top:14px;">
+      <button class="btn btn-purple" onclick="insertAdvancedHtml()"><i class="fas fa-plus"></i> Add to Current Slide</button>
+      <button class="btn btn-green" onclick="replaceSlideWithAdvancedHtml()"><i class="fas fa-layer-group"></i> New Slide + HTML</button>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -1488,7 +1604,7 @@ function addResizeUI(elBlock,sIdx,eIdx,el,card){
             const scale=cr.width/1300;
             const sx=ev.clientX, sy=ev.clientY;
             const ox=el.x, oy=el.y, ow=el.w, oh=el.h;
-            const keepRatio=el.type==='image' && (pos==='nw'||pos==='ne'||pos==='se'||pos==='sw');
+            const keepRatio=(el.type==='image'||el.type==='shape-circle') && (pos==='nw'||pos==='ne'||pos==='se'||pos==='sw');
             const ratio=oh?ow/oh:1;
 
             const moveResize=mv=>{
@@ -1502,6 +1618,7 @@ function addResizeUI(elBlock,sIdx,eIdx,el,card){
                 if(keepRatio){
                     if(Math.abs(dx)>=Math.abs(dy)) h=Math.max(28,w/ratio);
                     else w=Math.max(40,h*ratio);
+                    if(el.type==='shape-circle'){ h=w; }
                     if(pos.includes('w')) x=ox+(ow-w);
                     if(pos.includes('n')) y=oy+(oh-h);
                 }
@@ -1600,7 +1717,43 @@ function attachDrag(wrap, idx){
     wrap.ondrop = null;
 }
 
-// 🔴 THE NEW RIBBON-BASED ELEMENT INSERTER 🔴
+// ==========================================================
+// ADVANCED HTML / SVG / MIND-MAP OBJECTS
+// ==========================================================
+function sanitizeAdvancedHtml(raw){
+    const parser=new DOMParser();
+    const doc=parser.parseFromString(raw||'','text/html');
+    doc.querySelectorAll('script,iframe,object,embed,form').forEach(n=>n.remove());
+    doc.querySelectorAll('*').forEach(n=>{
+        [...n.attributes].forEach(attr=>{
+            if(/^on/i.test(attr.name) || attr.name.toLowerCase()==='srcdoc') n.removeAttribute(attr.name);
+        });
+    });
+    return doc.body.innerHTML.trim();
+}
+function openAdvancedHtmlModal(){
+    showModal('<i class="fas fa-code"></i> Advanced HTML / SVG / Mind Map', $('advancedHtmlTpl').innerHTML);
+}
+function fillHtmlDemo(){
+    const a=$('advancedHtmlArea'); if(!a)return;
+    a.value=`<style>.card{font-family:Arial,sans-serif;padding:22px;border-radius:24px;background:#dff4ff;border:4px solid #2b579a;box-shadow:8px 8px 0 #1e395b;text-align:center}h2{margin:0 0 12px;color:#17365d}p{margin:0;font-size:18px}</style><div class="card"><h2>HTML Card</h2><p>यह पूरा HTML object slide पर move/resize होगा।</p></div>`;
+}
+function fillSvgDemo(){
+    const a=$('advancedHtmlArea'); if(!a)return;
+    a.value=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520"><defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#2b579a"/></marker></defs><rect x="330" y="190" width="240" height="110" rx="25" fill="#ffcf4a" stroke="#222" stroke-width="5"/><text x="450" y="255" text-anchor="middle" font-size="30" font-family="Arial" font-weight="700">MAIN TOPIC</text><path d="M330 220 C210 140 150 110 80 90" stroke="#2b579a" stroke-width="8" fill="none" marker-end="url(#a)"/><path d="M570 220 C690 140 750 110 820 90" stroke="#2b579a" stroke-width="8" fill="none" marker-end="url(#a)"/><path d="M330 280 C210 360 150 390 80 430" stroke="#2b579a" stroke-width="8" fill="none" marker-end="url(#a)"/><path d="M570 280 C690 360 750 390 820 430" stroke="#2b579a" stroke-width="8" fill="none" marker-end="url(#a)"/><circle cx="80" cy="90" r="55" fill="#9be7ff" stroke="#222" stroke-width="4"/><circle cx="820" cy="90" r="55" fill="#b8ef8a" stroke="#222" stroke-width="4"/><circle cx="80" cy="430" r="55" fill="#ff9db5" stroke="#222" stroke-width="4"/><circle cx="820" cy="430" r="55" fill="#c7a7ff" stroke="#222" stroke-width="4"/><g font-family="Arial" font-size="22" font-weight="700" text-anchor="middle"><text x="80" y="98">IDEA 1</text><text x="820" y="98">IDEA 2</text><text x="80" y="438">IDEA 3</text><text x="820" y="438">IDEA 4</text></g></svg>`;
+}
+function fillMindMapDemo(){ fillSvgDemo(); }
+function addAdvancedHtmlObject(raw,newSlide=false){
+    const clean=sanitizeAdvancedHtml(raw);
+    if(!clean) return alert('HTML/SVG code खाली है।');
+    if(newSlide) addNewSlide(DATA.length);
+    const s=Math.max(0,Math.min(activeSlideIdx,DATA.length-1));
+    DATA[s].els.push({id:uid(),type:'html',html:clean,x:110,y:90,w:1080,h:530,positioned:true,locked:false,allowEdit:!!($('htmlAllowEdit')&&$('htmlAllowEdit').checked)});
+    renderPreview(); saveState();
+}
+function insertAdvancedHtml(){ const raw=$('advancedHtmlArea')?.value||''; snapshot(); addAdvancedHtmlObject(raw,false); $('modalRoot').innerHTML=''; }
+function replaceSlideWithAdvancedHtml(){ const raw=$('advancedHtmlArea')?.value||''; snapshot(); addAdvancedHtmlObject(raw,true); $('modalRoot').innerHTML=''; }
+
 window.addElToActive = (type) => {
     if(DATA.length === 0) {
         addNewSlide(0);
@@ -1616,37 +1769,50 @@ window.addElToActive = (type) => {
     if(type === 'quote') el.text = 'Quote text here...';
     if(type === 'link') { el.text = 'Click here'; el.url = 'https://example.com'; }
     if(type === 'hr') el = { id: uid(), type:'hr', color: '#c8c6c4', locked:false };
-    if(type === 'shape-rect' || type === 'shape-circle') el = { id: uid(), type:type, color: getDefaultColor('h2'), w:200, h:100, align:'center', locked:false };
+    if(type === 'shape-rect' || type === 'shape-circle') el = {
+        id: uid(), type:type, color: getDefaultColor('h2'),
+        w:220, h:120, x:540, y:290, align:'center',
+        positioned:true, locked:false
+    };
     if(type === 'image') {
-        const inp = document.createElement('input'); inp.type='file'; inp.accept='image/*';
-        inp.onchange = (e)=>{
-            const file = e.target.files[0]; if(!file) return;
-            const reader = new FileReader();
-            reader.onload = (ev)=>{
-                const img = new Image();
-                img.onload = ()=>{
-                    const c = document.createElement('canvas'); const maxW=900;
-                    const scale = Math.min(1, maxW/img.width);
-                    c.width = img.width*scale; c.height = img.height*scale;
-                    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-                    el.src = c.toDataURL('image/jpeg',0.8); el.width='medium'; el.align='center';
-                    DATA[activeSlideIdx].els.push(el);
-                    renderPreview(); saveState();
-                };
-                img.src = ev.target.result;
-            };
-            reader.readAsDataURL(file);
+        const inp = document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.multiple=true;
+        inp.onchange = async (e)=>{
+            const files=[...e.target.files].slice(0,15);
+            if(!files.length) return;
+            snapshot();
+            let added=0;
+            for(const file of files){
+                await new Promise(resolve=>{
+                    const reader=new FileReader();
+                    reader.onload=(ev)=>{
+                        const img=new Image();
+                        img.onload=()=>{
+                            const c=document.createElement('canvas'); const maxW=900;
+                            const scale=Math.min(1,maxW/img.width); c.width=Math.max(1,img.width*scale); c.height=Math.max(1,img.height*scale);
+                            c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+                            const imEl={
+                                id:uid(),type:'image',src:c.toDataURL('image/jpeg',0.88),
+                                width:'medium',align:'center',locked:false,
+                                positioned:true,x:180+(added%3)*300,y:120+Math.floor(added/3)*150,
+                                w:260,h:150
+                            };
+                            DATA[activeSlideIdx].els.push(imEl); added++; resolve();
+                        };
+                        img.src=ev.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+            renderPreview(); saveState();
+            alert(`${added} image${added===1?'':'s'} added. अब हर image को अलग move/resize कर सकते हो।`);
         };
         inp.click();
         return;
     }
-    
+    if(type === 'html') { openAdvancedHtmlModal(); return; }
+
     DATA[activeSlideIdx].els.push(el);
     renderPreview(); saveState();
-    
-    // Auto scroll to active slide
-    const target = document.querySelectorAll('.slide-wrapper')[activeSlideIdx];
-    if(target) target.scrollIntoView({behavior:'smooth', block:'center'});
 };
 
 window.insertTemplate = (name) => {
@@ -1955,9 +2121,24 @@ function updateCounts(){
     $('statsBarContent').innerHTML = `<span>Slides: <b>${DATA.length}</b></span> &nbsp;|&nbsp; <span>Words: <b>${words}</b></span> &nbsp;|&nbsp; <span>Chars: <b>${chars}</b></span>`;
 }
 
-// ==========================================
-// RENDER & AUTO SPLIT
-// ==========================================
+function openHtmlEditor(sIdx,eIdx){
+    const el=DATA[sIdx]?.els[eIdx];
+    if(!el || el.type!=='html') return;
+    showModal('<i class="fas fa-code"></i> Edit HTML / Mind Map', `<div class="advanced-html-panel">
+      <div class="advanced-html-help">HTML/SVG code edit करो और <b>Update Object</b> दबाओ।</div>
+      <textarea id="advancedHtmlArea" class="advanced-html-code" spellcheck="false"></textarea>
+      <div class="grid-2"><button class="btn btn-purple" onclick="updateAdvancedHtml(${sIdx},${eIdx})">Update Object</button><button class="btn btn-gray" onclick="$('modalRoot').innerHTML=''">Cancel</button></div>
+    </div>`);
+    $('advancedHtmlArea').value=el.html||'';
+}
+function updateAdvancedHtml(sIdx,eIdx){
+    const el=DATA[sIdx]?.els[eIdx];
+    if(!el || el.type!=='html') return;
+    el.html=sanitizeAdvancedHtml($('advancedHtmlArea')?.value||'');
+    saveState(); renderPreview(); $('modalRoot').innerHTML='';
+}
+
+// ==========================================\n// RENDER & AUTO SPLIT\n// ==========================================
 function renderPreview() {
     const box = $("preview"); box.innerHTML = "";
     if(DATA.length === 0) { box.innerHTML = "<div style='text-align:center; color:var(--text-muted); margin-top:50px;'><i class='fas fa-folder-open' style='font-size:3em; margin-bottom:10px;'></i><br>No Slides. Import data or Add a New Slide!</div>"; updateCounts(); return; }
@@ -2058,6 +2239,19 @@ function renderPreview() {
                         node.appendChild(liNode);
                     });
                 }
+                else if (el.type === 'html') {
+                    elBlock.innerHTML = `<div class="el-toolbar" onclick="event.stopPropagation()">
+                        <button onclick="openHtmlEditor(${sIdx},${eIdx})" title="Edit HTML"><i class="fas fa-code"></i></button>
+                        <button onclick="duplicateEl(${sIdx},${eIdx})" title="Duplicate"><i class="fas fa-clone"></i></button>
+                        <button onclick="moveEl(${sIdx},${eIdx},'up')" title="Move Up"><i class="fas fa-caret-up"></i></button>
+                        <button onclick="moveEl(${sIdx},${eIdx},'down')" title="Move Down"><i class="fas fa-caret-down"></i></button>
+                        <button onclick="deleteEl(${sIdx},${eIdx})" style="color:var(--red-accent)" title="Delete"><i class="fas fa-times"></i></button>
+                    </div>`;
+                    node=document.createElement('div'); node.className='advanced-html-object';
+                    const root=document.createElement('div'); root.className='html-code-root'; root.innerHTML=el.html||'';
+                    node.appendChild(root);
+                    if(el.allowEdit){ node.contentEditable='true'; node.spellcheck=false; node.onblur=()=>{el.html=sanitizeAdvancedHtml(root.innerHTML);saveState();}; }
+                }
                 else if (el.type === 'table') {
                     elBlock.innerHTML = `<div class="el-toolbar" onclick="event.stopPropagation()">
                         <input type="color" value="#${el.headerColor||'2b579a'}" onchange="setTableHeaderColor(${sIdx},${eIdx},this.value)" title="Header Color">
@@ -2123,10 +2317,10 @@ function renderPreview() {
                         <button onclick="deleteEl(${sIdx}, ${eIdx})" style="color:var(--red-accent);"><i class="fas fa-times"></i></button>
                     </div>`;
                     node = document.createElement('div'); node.className='p-shape';
-                    node.style.display='flex'; node.style.justifyContent = el.align==='center'?'center':el.align==='right'?'flex-end':'flex-start';
+                    node.style.cssText='width:100%;height:100%;display:block;position:relative;';
                     const shapeDiv = document.createElement('div');
-                    shapeDiv.style.width = el.w+'px'; shapeDiv.style.height = el.h+'px'; shapeDiv.style.background = el.color;
-                    if(el.type==='shape-circle') shapeDiv.style.borderRadius = '50%';
+                    shapeDiv.style.cssText='width:100%;height:100%;background:'+el.color+';box-sizing:border-box;border:2px solid rgba(0,0,0,.18);';
+                    if(el.type==='shape-circle') shapeDiv.style.borderRadius='50%';
                     node.appendChild(shapeDiv);
                 }
 
@@ -2235,6 +2429,7 @@ function renderPreview() {
         item.addEventListener('click',ev=>{
             if(ev.target.closest('.ppt-thumb-grip')) return;
             setActiveSlide(i,ev);
+            requestAnimationFrame(()=>item.scrollIntoView({block:'nearest',behavior:'smooth'}));
         });
 
         // Pointer-based drag handle: works with mouse and touch.
@@ -2663,6 +2858,14 @@ async function generatePPTX() {
                     if(el.align==='center') sx = m.left + (maxW-dw)/2; else if(el.align==='right') sx = m.left+(maxW-dw);
                     ctx.drawImage(imgEl, sx, y, dw, dh);
                     y += dh + 15;
+                }
+                else if(el.type==='html'){
+                    if(y+300>bottomLimit && y>m.top) triggerPagination();
+                    const ew=maxW, eh=360;
+                    const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${ew}" height="${eh}"><foreignObject width="100%" height="100%"><div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;overflow:hidden;background:white;">${el.html||''}</div></foreignObject></svg>`;
+                    const svgUrl='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(svg)));
+                    try{ pptxSlide.addImage({data:svgUrl,x:pxX(m.left),y:pxY(y),w:pxW(ew),h:pxH(eh)}); }catch(err){ console.warn('HTML export fallback',err); }
+                    y+=eh+15;
                 }
                 else if(el.type==='table'){
                     let estH = (el.rows.length * 55) + 30;
