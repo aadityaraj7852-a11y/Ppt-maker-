@@ -6,7 +6,29 @@
 <title>Ultimate PPT Maker Pro (Mockrise Ribbon Edition)</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Noto+Sans+Devanagari:wght@400;500;700;900&family=Noto+Serif+Devanagari:wght@400;700&family=Hind:wght@400;600;700&family=Mukta:wght@400;600;700&family=Baloo+2:wght@400;600;700&family=Tiro+Devanagari+Hindi:ital@0;1&family=Laila:wght@400;600;700&family=Poppins:wght@400;600;700&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js">
+function fitActiveSlideToViewport(){
+    const stage=document.querySelector('.ppt-main-stage');
+    const wrap=stage?.querySelector(':scope > .slide-wrapper');
+    if(!stage || !wrap) return;
+    const ratio=getSlideRatio();
+    const sw=Math.max(100, stage.clientWidth-18);
+    const sh=Math.max(100, stage.clientHeight-18);
+    const widthByHeight=sh*ratio;
+    const w=Math.min(sw,widthByHeight);
+    wrap.style.width=Math.floor(w)+'px';
+    wrap.style.maxWidth='none';
+    wrap.style.height='auto';
+    wrap.style.flex='0 0 auto';
+    const card=wrap.querySelector('.slide-card');
+    if(card){
+        card.style.width='100%';
+        card.style.height='auto';
+        card.style.aspectRatio=ratio;
+    }
+}
+window.addEventListener('resize',()=>requestAnimationFrame(fitActiveSlideToViewport));
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@indic-transliteration/sanscript@1.2.0/sanscript.min.js"></script>
 
 <style>
@@ -905,6 +927,257 @@ body.dark-mode .ppt-grid-cell.striped{background:rgba(255,255,255,.055);}
     font-family:var(--live-font,"Noto Sans Devanagari","Nirmala UI",Mangal,Hind,sans-serif);
 }
 </style>
+
+<style id="v10-layering-fix">
+/* Text can sit ON TOP of images, shapes, tables and HTML/SVG objects. */
+.el-block.positioned-element{overflow:visible!important;}
+.el-block.positioned-element .ppt-text-editor,
+.el-block.positioned-element [contenteditable="true"]{
+    position:relative!important;
+    z-index:30!important;
+    background:transparent!important;
+}
+.layer-tools{
+    position:absolute!important;
+    right:4px!important;
+    top:4px!important;
+    display:flex!important;
+    gap:2px!important;
+    z-index:100000!important;
+    background:#fff!important;
+    border:1px solid var(--border)!important;
+    padding:2px!important;
+    box-shadow:0 2px 7px rgba(0,0,0,.15)!important;
+}
+.layer-tools button{
+    min-width:26px!important;
+    height:25px!important;
+    border:0!important;
+    background:transparent!important;
+    color:var(--text-main)!important;
+    cursor:pointer!important;
+}
+.layer-tools button:hover{background:var(--hover-bg)!important;color:var(--word-blue)!important;}
+.el-block.positioned-element.is-text-layer{z-index:100!important;}
+.el-block.positioned-element.is-image-layer{z-index:10!important;}
+.el-block.positioned-element.is-shape-layer{z-index:20!important;}
+.el-block.positioned-element.is-html-layer{z-index:30!important;}
+.el-block.positioned-element.is-table-layer{z-index:15!important;}
+
+/* If Font Awesome is blocked, keep the UI controls visible and clickable. */
+i.fas,i.far,i.fab{font-style:normal!important;display:inline-block!important;min-width:1em;text-align:center;}
+</style>
+
+<style id="v11-layout-overhaul">
+/* =========================================================
+   V11 WORKSPACE
+   Left vertical ribbon + thumbnails + one complete slide
+   ========================================================= */
+html,body{width:100%;height:100%;overflow:hidden!important;}
+body{min-width:0!important;}
+
+header{
+    height:42px!important;
+    min-height:42px!important;
+    flex:0 0 42px!important;
+    position:relative!important;
+    z-index:200000!important;
+}
+
+/* Ribbon becomes a permanent left tool panel. */
+.ribbon-wrapper{
+    position:fixed!important;
+    left:0!important;
+    top:42px!important;
+    bottom:0!important;
+    width:245px!important;
+    height:auto!important;
+    display:flex!important;
+    flex-direction:column!important;
+    overflow:hidden!important;
+    background:var(--ribbon-bg)!important;
+    border-right:1px solid var(--border)!important;
+    z-index:100000!important;
+    box-shadow:2px 0 10px rgba(0,0,0,.08)!important;
+}
+.ribbon-tabs{
+    flex:0 0 auto!important;
+    width:100%!important;
+    display:flex!important;
+    flex-direction:column!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    white-space:normal!important;
+    padding:4px!important;
+    gap:2px!important;
+    border-bottom:1px solid var(--border)!important;
+}
+.r-tab{
+    width:100%!important;
+    min-height:38px!important;
+    flex:0 0 auto!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-start!important;
+    padding:8px 12px!important;
+    white-space:normal!important;
+    text-align:left!important;
+    border-left:4px solid transparent!important;
+}
+.r-tab.active{
+    border-left-color:var(--word-blue)!important;
+    background:var(--hover-bg)!important;
+}
+.ribbon-tools-container{
+    flex:1 1 auto!important;
+    min-height:0!important;
+    width:100%!important;
+    overflow:hidden!important;
+}
+.ribbon-tools{
+    width:100%!important;
+    height:100%!important;
+    max-height:none!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    padding:8px!important;
+    gap:8px!important;
+}
+.tool-group{
+    width:100%!important;
+    min-width:0!important;
+    flex:0 0 auto!important;
+    border-bottom:1px solid var(--border)!important;
+    padding-bottom:8px!important;
+}
+.tool-group-label{
+    position:static!important;
+    display:block!important;
+    margin-top:4px!important;
+    font-size:.62rem!important;
+}
+.r-btn,.r-btn-large{
+    max-width:100%!important;
+    white-space:normal!important;
+}
+.r-btn-large{
+    min-width:0!important;
+}
+.r-select{max-width:100%!important;}
+
+/* Main workspace occupies everything to the right of the ribbon. */
+.workspace-area{
+    position:fixed!important;
+    left:245px!important;
+    right:0!important;
+    top:42px!important;
+    bottom:0!important;
+    width:auto!important;
+    height:auto!important;
+    min-width:0!important;
+    min-height:0!important;
+    padding:0!important;
+    display:flex!important;
+    flex-direction:column!important;
+    overflow:hidden!important;
+}
+.workspace-area .stats-bar{
+    flex:0 0 34px!important;
+    min-height:34px!important;
+    height:34px!important;
+    padding:4px 10px!important;
+    margin:0!important;
+}
+#preview{
+    flex:1 1 auto!important;
+    min-height:0!important;
+    width:100%!important;
+    height:auto!important;
+    overflow:hidden!important;
+    display:flex!important;
+    flex-direction:row!important;
+    align-items:center!important;
+    justify-content:center!important;
+    padding:8px!important;
+    margin:0!important;
+    zoom:1!important;
+}
+
+/* Hide the old "all slides stacked" presentation; renderPreview already
+   builds the thumbnail rail + one active stage. */
+#preview>.ppt-thumb-rail{
+    flex:0 0 155px!important;
+    width:155px!important;
+    height:100%!important;
+    max-height:100%!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+}
+#preview>.ppt-main-stage{
+    flex:1 1 auto!important;
+    width:auto!important;
+    height:100%!important;
+    min-width:0!important;
+    min-height:0!important;
+    overflow:hidden!important;
+    padding:8px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    position:relative!important;
+}
+.ppt-main-stage>.slide-wrapper{
+    flex:0 0 auto!important;
+    width:auto!important;
+    max-width:100%!important;
+    max-height:100%!important;
+    margin:0 auto!important;
+}
+
+/* The active slide is fit-to-window by JS. */
+.ppt-main-stage>.slide-wrapper>.slide-card{
+    width:100%!important;
+    height:auto!important;
+    max-width:none!important;
+    max-height:none!important;
+}
+
+/* Never put a translucent white veil over the uploaded background. */
+.slide-overlay{
+    background:transparent!important;
+    opacity:0!important;
+    pointer-events:none!important;
+}
+
+/* Keep uploaded image backgrounds sharp. */
+.slide-card[style*="background"]{
+    background-repeat:no-repeat!important;
+    background-position:center center!important;
+    background-size:cover!important;
+}
+
+/* On desktop, object toolbars stay inside the available editor area. */
+.el-toolbar{
+    max-width:calc(100vw - 280px)!important;
+}
+
+/* Small screens: ribbon remains left, narrower, and slide still fits. */
+@media(max-width:900px){
+    .ribbon-wrapper{width:205px!important;}
+    .workspace-area{left:205px!important;}
+    #preview>.ppt-thumb-rail{flex-basis:105px!important;width:105px!important;}
+    .ppt-main-stage{padding:4px!important;}
+}
+@media(max-width:650px){
+    .ribbon-wrapper{width:170px!important;}
+    .workspace-area{left:170px!important;}
+    #preview>.ppt-thumb-rail{display:none!important;}
+    .r-tab{font-size:.72rem!important;padding:7px 8px!important;}
+}
+</style>
 </head>
 <body onclick="closeAllMenus(event)">
 
@@ -978,40 +1251,20 @@ body.dark-mode .ppt-grid-cell.striped{background:rgba(255,255,255,.055);}
 
             <div class="tool-group">
                 <div class="tool-row" style="margin-bottom: 4px;">
-                    <select class="r-select" style="width: 160px; font-weight: bold;" id="fontFamilySel" onchange="changeGlobalFont(this.value)">
-                        <optgroup label="English / Latin">
-                            <option value="Inter">Inter (Default)</option>
+                    <select class="r-select" style="width: 190px; font-weight: bold;" id="fontFamilySel" onchange="changeGlobalFont(this.value)" title="Font">
+                        <optgroup label="English">
+                            <option value="Inter">Inter</option>
                             <option value="Poppins">Poppins</option>
                             <option value="Arial">Arial</option>
                             <option value="Georgia">Georgia</option>
-                            <option value="Times New Roman">Times New Roman</option>
                         </optgroup>
                         <optgroup label="हिंदी / देवनागरी">
-                            <option value="Kalam">Kalam (हस्तलिखित)</option>
                             <option value="Noto Sans Devanagari">Noto Sans Devanagari</option>
                             <option value="Hind">Hind</option>
-                            <option value="Baloo 2">Baloo 2</option>
-                            <option value="Rozha One">Rozha One</option>
-                            <option value="Noto Serif Devanagari">Noto Serif Devanagari</option>
-                            <option value="Mukta">Mukta</option>
-                            <option value="Tiro Devanagari Hindi">Tiro Devanagari Hindi</option>
-                            <option value="Yatra One">Yatra One</option>
+                            <option value="Kalam">Kalam</option>
                         </optgroup>
                     </select>
                 </div>
-                
-                <!-- HINDI TYPING TOGGLE -->
-                <div class="tool-row" style="margin-bottom: 4px;">
-                    <select class="r-select" style="width: 160px; border-color: var(--success);" id="typingLangSel" onchange="setTypingLanguage(this.value)" title="Type Hinglish and it converts to Hindi while you type">
-                        <option value="en">🅰️ English Typing</option>
-                        <option value="hi">अ Hindi Phonetic (Live)</option>
-                    </select>
-                </div>
-
-                <div id="hindiTypingHelp" style="font-size:.58rem;color:var(--success);margin:1px 0 4px;white-space:nowrap;">
-                    Hindi: h→ह · namaste→नमस्ते · mera→मेरा
-                </div>
-
                 <div class="tool-row">
                     <label style="font-size: 0.7rem; color: var(--text-muted); margin-right: 5px;">Bold Hilite:</label>
                     <input type="color" id="boldColor" value="#d13438" class="mini-color" onchange="saveState()">
@@ -1132,7 +1385,7 @@ body.dark-mode .ppt-grid-cell.striped{background:rgba(255,255,255,.055);}
                         <label class="toggle-switch"><input type="checkbox" id="bgGrayscaleToggle" onchange="triggerPreviewSave()"><span>Grayscale Filter</span></label>
                         
                         <label style="margin-top: 10px;">Overlay Darkness</label>
-                        <input type="range" id="overlayOpacity" min="0" max="0.9" step="0.05" value="0.5" style="width: 100%;" oninput="triggerPreviewSave()">
+                        <input type="range" id="overlayOpacity" min="0" max="0.9" step="0.05" value="0" style="width: 100%;" oninput="triggerPreviewSave()">
                     </div>
                 </div>
                 <div class="tool-group-label" style="position: absolute; bottom: 0; left: 0;">PAGE BACKDROP</div>
@@ -1336,7 +1589,7 @@ const SETTINGS = {
     watermarkText:'', showWatermark:false,
     rtl:false, spellcheck:false,
     lineHeightMult:1, letterSpacing:0,
-    overlayOpacity:0.5, bgGrayscale:false, zoom:100,
+    overlayOpacity:0, bgGrayscale:false, zoom:100,
     tableCompact:false,
     margins: { t: 40, b: 40, l: 50, r: 50 },
     slideSize: { preset: '16:9', width: 1300, height: 731 } // PowerPoint Widescreen default
@@ -1583,7 +1836,7 @@ $('bgImgUpload').onchange = (e) => {
 
 function triggerPreviewSave() {
     SETTINGS.bgGrayscale = $('bgGrayscaleToggle') ? $('bgGrayscaleToggle').checked : false;
-    SETTINGS.overlayOpacity = $('overlayOpacity') ? parseFloat($('overlayOpacity').value) : 0.5;
+    SETTINGS.overlayOpacity = $('overlayOpacity') ? parseFloat($('overlayOpacity').value) : 0;
     SETTINGS.tableCompact = $('tableCompactToggle') ? $('tableCompactToggle').checked : false;
     renderPreview(); saveState();
 }
@@ -1901,8 +2154,60 @@ function addResizeUI(elBlock,sIdx,eIdx,el,card){
     });
 }
 
+
+function getLayerClass(type){
+    if(['h1','h2','h3','p','ul','ol','quote','link','icon','mcq-q','mcq-opt','mcq-ans','mcq-sol'].includes(type)) return 'is-text-layer';
+    if(type==='image') return 'is-image-layer';
+    if(type==='shape-rect'||type==='shape-circle') return 'is-shape-layer';
+    if(type==='html'||type==='svg') return 'is-html-layer';
+    if(type==='table') return 'is-table-layer';
+    return '';
+}
+function applyLayerStyle(elBlock,el){
+    const cls=getLayerClass(el.type);
+    if(cls) elBlock.classList.add(cls);
+    if(el.zIndex==null){
+        if(cls==='is-text-layer') el.zIndex=100;
+        else if(cls==='is-shape-layer') el.zIndex=20;
+        else if(cls==='is-html-layer') el.zIndex=30;
+        else if(cls==='is-table-layer') el.zIndex=15;
+        else el.zIndex=10;
+    }
+    elBlock.style.zIndex=String(el.zIndex);
+}
+function bringToFront(sIdx,eIdx){
+    const el=DATA[sIdx]?.els[eIdx]; if(!el)return;
+    snapshot();
+    el.zIndex=1000;
+    renderPreview(); saveState();
+}
+function bringTextToFront(sIdx,eIdx){
+    const el=DATA[sIdx]?.els[eIdx]; if(!el)return;
+    snapshot();
+    el.zIndex=1000;
+    renderPreview(); saveState();
+}
+function sendToBack(sIdx,eIdx){
+    const el=DATA[sIdx]?.els[eIdx]; if(!el)return;
+    snapshot();
+    el.zIndex=5;
+    renderPreview(); saveState();
+}
+function addLayerTools(elBlock,sIdx,eIdx,el){
+    if(elBlock.querySelector('.layer-tools')) return;
+    const tools=document.createElement('div');
+    tools.className='layer-tools';
+    tools.innerHTML=`
+      <button type="button" title="Bring to front" onclick="event.stopPropagation();bringToFront(${sIdx},${eIdx})">↑</button>
+      <button type="button" title="Send to back" onclick="event.stopPropagation();sendToBack(${sIdx},${eIdx})">↓</button>
+    `;
+    elBlock.appendChild(tools);
+}
+
 function makeElementPositioned(sIdx,eIdx,elBlock,el,card){
     if(el.locked) return;
+    applyLayerStyle(elBlock,el);
+    addLayerTools(elBlock,sIdx,eIdx,el);
     addResizeUI(elBlock,sIdx,eIdx,el,card);
 
     // Double-click keeps the familiar "enter text editing" behavior.
@@ -2046,6 +2351,9 @@ window.addElToActive = (type) => {
     
     snapshot();
     let el = { id: uid(), type: type, text: 'New ' + type, color: getDefaultColor(type), bold:false, italic:false, underline:false, strike:false, align:'left', case:'none', fontSize:null, highlight:null, locked:false };
+    if(['h1','h2','h3','p','ul','ol','quote','link','icon','mcq-q','mcq-opt','mcq-ans','mcq-sol'].includes(type)){
+        el.positioned=true; el.x=120; el.y=120; el.w=650; el.h=90; el.zIndex=100;
+    }
     
     if(type === 'ul' || type==='ol') el = { id: uid(), type: type, items: ['Item 1', 'Item 2'], color: getDefaultColor('p'), bold:false, italic:false, underline:false, strike:false, align:'left', case:'none', fontSize:null, highlight:null, locked:false };
     if(type === 'table') el = { id: uid(), type: 'table', rows: [['H1', 'H2'], ['D1', 'D2']], headerColor:'2b579a', borderColor: 'c8c6c4', striped:false, color: getDefaultColor('p') };
@@ -2802,6 +3110,7 @@ function renderPreview() {
 
     box.appendChild(rail);
     box.appendChild(stage);
+    requestAnimationFrame(fitActiveSlideToViewport);
 
     updateCounts();
     flagOverflowingSlides();
@@ -3286,7 +3595,7 @@ function loadState() {
     if($('lineHeightMult')) $('lineHeightMult').value = SETTINGS.lineHeightMult||1; 
     if($('lhVal')) $('lhVal').innerText = SETTINGS.lineHeightMult||1;
     if($('letterSpacingGlobal')) $('letterSpacingGlobal').value = SETTINGS.letterSpacing||0;
-    if($('overlayOpacity')) $('overlayOpacity').value = SETTINGS.overlayOpacity!=null?SETTINGS.overlayOpacity:0.5;
+    if($('overlayOpacity')) $('overlayOpacity').value = SETTINGS.overlayOpacity!=null?SETTINGS.overlayOpacity:0;
     if($('bgGrayscaleToggle')) $('bgGrayscaleToggle').checked = !!SETTINGS.bgGrayscale;
     
     applySlideSizeUI();
@@ -3297,6 +3606,7 @@ function loadState() {
     
     buildThemePresets();
     updateCustomMargins(); // ✅ Ensure margins are applied correctly on reload
+    if(SETTINGS.overlayOpacity===0.5) SETTINGS.overlayOpacity=0;
     renderPreview();
 }
 
@@ -3429,157 +3739,8 @@ function saveCurrentEditable(el){
   el.dispatchEvent(new Event('blur',{bubbles:true}));
 }
 
-// ═══════════════════════════════════════════════════════
-// LIVE HINDI PHONETIC TYPING
-// h → ह, ha → हा, namaste → नमस्ते, mera → मेरा
-// Works while typing, not only after pressing Space.
-// ═══════════════════════════════════════════════════════
-const hindiTypingState = new WeakMap();
+// Hindi typing is native keyboard input. No global key interception.
 
-function getCaretTextInfo(el){
-  const sel=window.getSelection();
-  if(!sel || !sel.rangeCount || !sel.isCollapsed || !el.contains(sel.anchorNode)) return null;
-  const node=sel.anchorNode;
-  const offset=sel.anchorOffset;
-  if(node.nodeType!==3) return null;
-  return {node,offset};
-}
-
-function replaceCurrentHindiToken(info, oldText, newText){
-  const r=document.createRange();
-  const start=Math.max(0,info.offset-oldText.length);
-  r.setStart(info.node,start);
-  r.setEnd(info.node,info.offset);
-  r.deleteContents();
-  const tn=document.createTextNode(newText);
-  r.insertNode(tn);
-  r.collapse(false);
-  const sel=window.getSelection();
-  sel.removeAllRanges();
-  sel.addRange(r);
-  return {node:tn,offset:newText.length};
-}
-
-function resetHindiTyping(el){
-  if(el) hindiTypingState.delete(el);
-}
-
-document.addEventListener('keydown',function(ev){
-  const target=getEditableTarget();
-
-  // Keyboard shortcuts.
-  if(ev.altKey && !ev.ctrlKey && !ev.metaKey){
-    const k=ev.key.toLowerCase();
-    if(k==='h'){
-      ev.preventDefault();
-      typingLanguage='hi';
-      if($('typingLangSel')) $('typingLangSel').value='hi';
-      return;
-    }
-    if(k==='e'){
-      ev.preventDefault();
-      typingLanguage='en';
-      if($('typingLangSel')) $('typingLangSel').value='en';
-      resetHindiTyping(target);
-      return;
-    }
-    if(target && ['b','i','u'].includes(k)){
-      ev.preventDefault();
-      try{document.execCommand({b:'bold',i:'italic',u:'underline'}[k],false,null);}catch(_){}
-      return;
-    }
-  }
-
-  if(!target || typingLanguage!=='hi') return;
-
-  const info=getCaretTextInfo(target);
-  if(!info) return;
-
-  let state=hindiTypingState.get(target);
-  if(!state || state.node!==info.node || state.offset!==info.offset){
-    state={node:info.node,offset:info.offset,buffer:'',rendered:''};
-  }
-
-  // English alphabet key: convert immediately.
-  if(!ev.ctrlKey && !ev.metaKey && !ev.altKey && /^[a-zA-Z]$/.test(ev.key)){
-    ev.preventDefault();
-
-    // If the current state has no active word, start at the caret.
-    if(state.offset!==info.offset) state={node:info.node,offset:info.offset,buffer:'',rendered:''};
-
-    const nextBuffer=state.buffer+ev.key;
-    const nextHindi=transliterateWord(nextBuffer);
-
-    const r=document.createRange();
-    const start=info.offset-state.rendered.length;
-    r.setStart(info.node,Math.max(0,start));
-    r.setEnd(info.node,info.offset);
-    r.deleteContents();
-
-    const tn=document.createTextNode(nextHindi);
-    r.insertNode(tn);
-    r.collapse(false);
-
-    const sel=window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(r);
-
-    state={node:tn,offset:nextHindi.length,buffer:nextBuffer,rendered:nextHindi};
-    hindiTypingState.set(target,state);
-    saveCurrentEditable(target);
-    return;
-  }
-
-  // Backspace edits the active Roman buffer.
-  if(ev.key==='Backspace' && state.buffer){
-    ev.preventDefault();
-
-    const nextBuffer=state.buffer.slice(0,-1);
-    const nextHindi=transliterateWord(nextBuffer);
-
-    const r=document.createRange();
-    r.setStart(info.node,Math.max(0,info.offset-state.rendered.length));
-    r.setEnd(info.node,info.offset);
-    r.deleteContents();
-
-    if(nextHindi){
-      const tn=document.createTextNode(nextHindi);
-      r.insertNode(tn);
-      r.collapse(false);
-      state={node:tn,offset:nextHindi.length,buffer:nextBuffer,rendered:nextHindi};
-    }else{
-      r.collapse(true);
-      state={node:info.node,offset:r.startOffset,buffer:'',rendered:''};
-    }
-
-    const sel=window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(r);
-    hindiTypingState.set(target,state);
-    saveCurrentEditable(target);
-    return;
-  }
-
-  // Space / punctuation finishes the current word.
-  if(ev.key===' ' || ev.key==='Enter' || /^[.,!?;:'"()\[\]{}\/\\\-]$/.test(ev.key)){
-    resetHindiTyping(target);
-  }
-});
-
-// Any mouse/touch cursor reposition resets the Roman buffer safely.
-document.addEventListener('selectionchange',function(){
-  const target=getEditableTarget();
-  if(!target) return;
-  const st=hindiTypingState.get(target);
-  if(!st) return;
-  const info=getCaretTextInfo(target);
-  if(!info || info.node!==st.node || info.offset!==st.offset){
-    resetHindiTyping(target);
-  }
-});
-
-
-window.transliterateHindiWord=transliterateWord;
 })();
 </script>
 </body>
