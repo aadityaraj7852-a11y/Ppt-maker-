@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Noto+Sans+Devanagari:wght@400;500;700;900&family=Noto+Serif+Devanagari:wght@400;700&family=Hind:wght@400;600;700&family=Mukta:wght@400;600;700&family=Baloo+2:wght@400;600;700&family=Tiro+Devanagari+Hindi:ital@0;1&family=Laila:wght@400;600;700&family=Poppins:wght@400;600;700&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@indic-transliteration/sanscript@1.2.0/sanscript.min.js"></script>
 
 <style>
     /* 🔴 MOCKRISE MS WORD THEME VARIABLES 🔴 */
@@ -714,7 +715,197 @@
 .ppt-thumb-preview .p-image-wrap img{
     max-width:100%!important;
 }
-</style></head>
+</style>
+<style id="v6-shape-table-fix">
+/* Shape dropdown */
+.ribbon-dropdown-container{position:relative!important;}
+.shape-menu-fixed{
+  position:absolute!important;
+  top:calc(100% + 2px)!important;
+  left:0!important;
+  display:none!important;
+  min-width:210px!important;
+  max-width:280px!important;
+  padding:8px!important;
+  z-index:100000!important;
+  background:var(--card-bg)!important;
+  border:1px solid var(--border)!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.22)!important;
+  pointer-events:auto!important;
+}
+.shape-menu-fixed.show{display:block!important;}
+.shape-menu-fixed .r-btn{
+  display:flex!important;
+  align-items:center!important;
+  gap:9px!important;
+  width:100%!important;
+  min-height:38px!important;
+  white-space:nowrap!important;
+  text-align:left!important;
+  cursor:pointer!important;
+}
+
+/* Table: hard force a true HTML table layout. */
+.preview-table-wrap{
+  width:100%!important;
+  display:block!important;
+  overflow-x:auto!important;
+}
+.preview-table{
+  width:100%!important;
+  min-width:420px!important;
+  display:table!important;
+  table-layout:fixed!important;
+  border-collapse:collapse!important;
+}
+.preview-table tbody,
+.preview-table thead{display:table-row-group!important;}
+.preview-table tr{
+  display:table-row!important;
+  width:100%!important;
+}
+.preview-table th,
+.preview-table td{
+  display:table-cell!important;
+  position:static!important;
+  float:none!important;
+  width:auto!important;
+  min-width:0!important;
+  white-space:normal!important;
+  vertical-align:middle!important;
+}
+.preview-table tr > th:first-child,
+.preview-table tr > td:first-child{
+  width:50%!important;
+}
+.preview-table tr > th:nth-child(2),
+.preview-table tr > td:nth-child(2){
+  width:50%!important;
+}
+
+/* Never allow generic responsive CSS to stack table cells vertically. */
+@media(max-width:800px){
+  .preview-table{min-width:360px!important;}
+  .preview-table tr{display:table-row!important;}
+  .preview-table th,.preview-table td{display:table-cell!important;}
+}
+</style>
+
+<style id="v7-ribbon-dialog-fix">
+.ribbon-tools-container,
+.ribbon-tools,
+.tool-group,
+.ribbon-dropdown-container{overflow:visible!important;}
+.ribbon-tools-container{position:relative!important;z-index:5000!important;}
+.tool-group{position:relative!important;z-index:5001!important;}
+.ribbon-menu{
+    z-index:999999!important;
+    max-height:70vh!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+}
+.shape-menu-fixed{z-index:1000000!important;}
+</style>
+
+<style id="v7-table-grid-fix">
+.preview-table-wrap{
+    width:100%!important;
+    display:block!important;
+    overflow-x:auto!important;
+}
+.ppt-grid-table{
+    display:grid!important;
+    grid-template-columns:repeat(var(--cols),minmax(0,1fr))!important;
+    width:100%!important;
+    min-width:360px!important;
+    border-left:1px solid var(--border)!important;
+    border-top:1px solid var(--border)!important;
+    background:var(--card-bg)!important;
+}
+.ppt-grid-cell{
+    display:block!important;
+    min-width:0!important;
+    min-height:42px!important;
+    padding:10px 12px!important;
+    box-sizing:border-box!important;
+    border-right:1px solid var(--border)!important;
+    border-bottom:1px solid var(--border)!important;
+    overflow-wrap:anywhere!important;
+    word-break:break-word!important;
+    white-space:normal!important;
+    outline:none!important;
+}
+.ppt-grid-head{
+    background:var(--word-blue);
+    color:#fff;
+    font-weight:700;
+}
+.ppt-grid-cell.striped{background:rgba(0,0,0,.045);}
+body.dark-mode .ppt-grid-cell.striped{background:rgba(255,255,255,.055);}
+.ppt-grid-cell:focus{
+    box-shadow:inset 0 0 0 2px var(--word-blue);
+    background:var(--input-bg);
+}
+@media(max-width:800px){
+    .ppt-grid-table{min-width:320px!important;}
+    .ppt-grid-cell{padding:8px!important;min-height:38px!important;}
+}
+</style>
+
+<style id="v7-resize-edit-fix">
+.el-block.positioned-element{touch-action:none;}
+.el-block.positioned-element .el-move-handle{touch-action:none;}
+.el-block.positioned-element [contenteditable="true"]{
+    position:relative;
+    z-index:20;
+    cursor:text!important;
+    user-select:text!important;
+    -webkit-user-select:text!important;
+    touch-action:text;
+}
+.el-block.positioned-element.active-edit .resize-handles{
+    opacity:1!important;
+}
+.el-block.positioned-element.active-edit .resize-handle{
+    pointer-events:auto!important;
+}
+.el-block.positioned-element.active-edit{
+    outline:1px solid var(--word-blue)!important;
+    outline-offset:0;
+}
+</style>
+
+<style id="v8-editor-hindi-fix">
+.ppt-text-editor{
+    position:relative!important;
+    z-index:30!important;
+    cursor:text!important;
+    user-select:text!important;
+    -webkit-user-select:text!important;
+    -webkit-touch-callout:text!important;
+    touch-action:text!important;
+    pointer-events:auto!important;
+}
+.ppt-text-editor:focus{outline:none!important;}
+.el-toolbar{z-index:100000!important;}
+.ribbon-menu{
+    z-index:1000000!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    box-sizing:border-box!important;
+}
+.html-code-root,.advanced-html-object{cursor:text!important;}
+.hindi-font-preview{
+    font-family:"Noto Sans Devanagari","Nirmala UI",Mangal,Hind,sans-serif!important;
+}
+</style>
+
+<style id="v8-hindi-font-fallback">
+:lang(hi), [dir="rtl"], .ppt-text-editor{
+    font-family:var(--live-font,"Noto Sans Devanagari","Nirmala UI",Mangal,Hind,sans-serif);
+}
+</style>
+</head>
 <body onclick="closeAllMenus(event)">
 
 <!-- HEADER -->
@@ -801,16 +992,24 @@
                             <option value="Hind">Hind</option>
                             <option value="Baloo 2">Baloo 2</option>
                             <option value="Rozha One">Rozha One</option>
+                            <option value="Noto Serif Devanagari">Noto Serif Devanagari</option>
+                            <option value="Mukta">Mukta</option>
+                            <option value="Tiro Devanagari Hindi">Tiro Devanagari Hindi</option>
+                            <option value="Yatra One">Yatra One</option>
                         </optgroup>
                     </select>
                 </div>
                 
                 <!-- HINDI TYPING TOGGLE -->
                 <div class="tool-row" style="margin-bottom: 4px;">
-                    <select class="r-select" style="width: 160px; border-color: var(--success);" id="typingLangSel" onchange="setTypingLanguage(this.value)" title="Press Space to convert Hinglish to Hindi">
+                    <select class="r-select" style="width: 160px; border-color: var(--success);" id="typingLangSel" onchange="setTypingLanguage(this.value)" title="Type Hinglish and it converts to Hindi while you type">
                         <option value="en">🅰️ English Typing</option>
-                        <option value="hi">अ Hindi (Hinglish+Space)</option>
+                        <option value="hi">अ Hindi Phonetic (Live)</option>
                     </select>
+                </div>
+
+                <div id="hindiTypingHelp" style="font-size:.58rem;color:var(--success);margin:1px 0 4px;white-space:nowrap;">
+                    Hindi: h→ह · namaste→नमस्ते · mera→मेरा
                 </div>
 
                 <div class="tool-row">
@@ -853,14 +1052,14 @@
                 <button class="r-btn r-btn-large" onclick="openAdvancedHtmlModal()"><div class="icon-wrapper"><i class="fas fa-code"></i></div><span class="btn-text">HTML<br>Mind Map</span></button>
                 <button class="r-btn r-btn-large" onclick="addElToActive('hr')"><div class="icon-wrapper"><i class="fas fa-minus"></i></div><span class="btn-text">Line</span></button>
                 <div class="ribbon-dropdown-container">
-                    <button class="r-btn r-btn-large" onclick="toggleMenu(event, 'menu-shapes')">
+                    <button type="button" class="r-btn r-btn-large" onclick="toggleMenu(event, 'menu-shapes')">
                         <div class="icon-wrapper"><i class="fas fa-shapes"></i></div>
                         <span class="btn-text">Shapes <i class="fas fa-caret-down"></i></span>
                     </button>
-                    <div class="ribbon-menu" id="menu-shapes">
-                        <button class="r-btn" style="width:100%;justify-content:flex-start;" onclick="addElToActive('shape-rect')"><i class="fas fa-square" style="width:20px;"></i> Rectangle</button>
-                        <button class="r-btn" style="width:100%;justify-content:flex-start;" onclick="addElToActive('shape-circle')"><i class="fas fa-circle" style="width:20px;"></i> Circle / Oval</button>
-                        <button class="r-btn" style="width:100%;justify-content:flex-start;" onclick="addElToActive('shape-rect');setTimeout(()=>{const s=DATA[activeSlideIdx];const e=s.els[s.els.length-1];e.w=320;e.h=90;e.radius=18;renderPreview();saveState();},0)"><i class="fas fa-square" style="width:20px;"></i> Rounded Box</button>
+                    <div class="ribbon-menu shape-menu-fixed" id="menu-shapes" onclick="event.stopPropagation()" onpointerdown="event.stopPropagation()">
+                        <button class="r-btn" style="width:100%;justify-content:flex-start;" onclick="insertShapeFixed('shape-rect');"><i class="fas fa-square" style="width:20px;"></i> Rectangle</button>
+                        <button class="r-btn" style="width:100%;justify-content:flex-start;" onclick="insertShapeFixed('shape-circle');"><i class="fas fa-circle" style="width:20px;"></i> Circle / Oval</button>
+                        <button class="r-btn" style="width:100%;justify-content:flex-start;" onclick="insertShapeFixed('shape-round');"><i class="fas fa-square" style="width:20px;"></i> Rounded Box</button>
                     </div>
                 </div>
                 <div class="tool-group-label" style="position: absolute; bottom: 0; left: 0;">MEDIA & SHAPES</div>
@@ -1211,11 +1410,48 @@ function closeAllMenus(e) {
 }
 
 function toggleMenu(e, id) {
-    e.stopPropagation(); 
-    let targetMenu = document.getElementById(id);
-    let isShowing = targetMenu.classList.contains('show');
-    document.querySelectorAll('.ribbon-menu').forEach(m => m.classList.remove('show'));
-    if(!isShowing) targetMenu.classList.add('show');
+    if(e){ e.preventDefault(); e.stopPropagation(); }
+    const target=document.getElementById(id);
+    if(!target) return;
+
+    const wasOpen=target.classList.contains('show');
+    document.querySelectorAll('.ribbon-menu').forEach(menu=>{
+        menu.classList.remove('show');
+        menu.style.position='';
+        menu.style.top='';
+        menu.style.left='';
+        menu.style.right='';
+        menu.style.maxWidth='';
+    });
+
+    if(wasOpen) return;
+
+    target.classList.add('show');
+    // Position the popup against the viewport so it can never be clipped by
+    // the ribbon/workspace containers on mobile or desktop.
+    target.style.position='fixed';
+    target.style.maxWidth='calc(100vw - 16px)';
+    target.style.maxHeight='min(70vh,520px)';
+
+    const anchor=e.currentTarget || e.target;
+    const r=anchor.getBoundingClientRect();
+    const gap=4;
+    const margin=8;
+
+    // Force layout before measuring.
+    const mr=target.getBoundingClientRect();
+    let left=r.left;
+    if(left+mr.width>window.innerWidth-margin) left=window.innerWidth-margin-mr.width;
+    if(left<margin) left=margin;
+
+    let top=r.bottom+gap;
+    if(top+mr.height>window.innerHeight-margin){
+        top=Math.max(margin,r.top-mr.height-gap);
+    }
+
+    target.style.left=Math.round(left)+'px';
+    target.style.top=Math.round(top)+'px';
+    target.style.right='auto';
 }
 
 function toggleFullScreen() { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(err=>console.log(err)); }
@@ -1315,6 +1551,14 @@ function changeGlobalFont(val) {
 
 function setTypingLanguage(val) {
     typingLanguage = val;
+    if(val==='hi'){
+        const preferred=$('fontFamilySel');
+        const hindiFonts=['Noto Sans Devanagari','Hind','Mukta','Kalam'];
+        if(preferred && (!preferred.value || preferred.value==='Inter')){
+            preferred.value='Noto Sans Devanagari';
+            changeGlobalFont(preferred.value);
+        }
+    }
 }
 
 function handleBgChange(val) {
@@ -1666,7 +1910,17 @@ function makeElementPositioned(sIdx,eIdx,elBlock,el,card){
         if(ev.target.closest('.el-toolbar') || ev.target.closest('.resize-handle') || ev.target.closest('.el-move-handle')) return;
         ensureElementBox(elBlock,el,card);
         const edit=elBlock.querySelector('[contenteditable="true"]');
-        if(edit) edit.focus();
+        if(edit){
+            edit.focus();
+            try{
+                const range=document.createRange();
+                range.selectNodeContents(edit);
+                range.collapse(false);
+                const sel=window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }catch(_){}
+        }
         saveState();
     });
 
@@ -1678,8 +1932,9 @@ function makeElementPositioned(sIdx,eIdx,elBlock,el,card){
         if(ev.target.closest('.el-toolbar,.resize-handle,.el-move-handle,button,input,select,textarea')) return;
 
         const editable=ev.target.closest('[contenteditable="true"]');
-        // Text itself is for editing/selection. The border/padding is for moving.
-        if(editable && ev.target!==elBlock) return;
+        // Inside an editable text area, NEVER start object dragging.
+        // This is what allows normal typing, cursor placement and text selection.
+        if(editable) return;
 
         ev.preventDefault();
         ev.stopPropagation();
@@ -1753,6 +2008,35 @@ function addAdvancedHtmlObject(raw,newSlide=false){
 }
 function insertAdvancedHtml(){ const raw=$('advancedHtmlArea')?.value||''; snapshot(); addAdvancedHtmlObject(raw,false); $('modalRoot').innerHTML=''; }
 function replaceSlideWithAdvancedHtml(){ const raw=$('advancedHtmlArea')?.value||''; snapshot(); addAdvancedHtmlObject(raw,true); $('modalRoot').innerHTML=''; }
+
+
+function insertShapeFixed(type){
+    if(DATA.length===0) addNewSlide(0);
+    if(activeSlideIdx>=DATA.length) activeSlideIdx=DATA.length-1;
+
+    snapshot();
+    const s=DATA[activeSlideIdx];
+    const n=s.els.length;
+    const round=type==='shape-round';
+    const circle=type==='shape-circle';
+
+    const el={
+        id:uid(),
+        type:circle?'shape-circle':'shape-rect',
+        color:getDefaultColor('h2'),
+        w:circle?180:(round?320:240),
+        h:circle?180:(round?110:140),
+        x:Math.max(30,120+(n%3)*290),
+        y:Math.max(30,100+(Math.floor(n/3)%4)*150),
+        align:'center',
+        positioned:true,
+        locked:false,
+        radius:round?22:0
+    };
+    s.els.push(el);
+    renderPreview();
+    saveState();
+}
 
 window.addElToActive = (type) => {
     if(DATA.length === 0) {
@@ -2215,7 +2499,13 @@ function renderPreview() {
                     node.style.letterSpacing = SETTINGS.letterSpacing+'px';
                     node.style.lineHeight = (1.4*SETTINGS.lineHeightMult);
                     node.contentEditable = !el.locked ? "true" : "false";
+                    node.classList.add('ppt-text-editor');
                     node.spellcheck = SETTINGS.spellcheck;
+                    // Text editing owns pointer events. Never let the parent
+                    // object-drag handler steal a tap/selection from the text.
+                    node.addEventListener('pointerdown', ev=>ev.stopPropagation());
+                    node.addEventListener('click', ev=>{ ev.stopPropagation(); node.focus(); });
+                    node.addEventListener('dblclick', ev=>{ ev.stopPropagation(); node.focus(); });
                     node.dir = SETTINGS.rtl ? 'rtl':'ltr';
                     node.innerHTML = formatText(el.text);
                     node.onblur = e => { saveEditableHtml(sIdx,eIdx,e.target,false,-1); };
@@ -2224,7 +2514,7 @@ function renderPreview() {
                     elBlock.innerHTML = `<div class="el-toolbar" onclick="event.stopPropagation()">${el.locked?`<button onclick="toggleLockEl(${sIdx},${eIdx})" title="Unlock"><i class="fas fa-lock"></i></button><button onclick="deleteEl(${sIdx},${eIdx})" title="Delete"><i class="fas fa-times"></i></button>`:buildTextToolbar(sIdx,eIdx,el)}</div>`;
                     node = document.createElement("div");
                     el.items.forEach((itemText, iIdx) => {
-                        const liNode = document.createElement("div"); liNode.className = "p-li";
+                        const liNode = document.createElement("div"); liNode.className = "p-li ppt-text-editor";
                         liNode.style.color = el.color || getDefaultColor('p');
                         liNode.style.fontWeight = el.bold?'700':''; liNode.style.fontStyle = el.italic?'italic':'';
                         liNode.style.textDecoration = [el.underline?'underline':'', el.strike?'line-through':''].filter(Boolean).join(' ');
@@ -2260,24 +2550,52 @@ function renderPreview() {
                         <button onclick="duplicateEl(${sIdx},${eIdx})" title="Duplicate"><i class="fas fa-clone"></i></button>
                         <button onclick="moveEl(${sIdx}, ${eIdx}, 'up')" title="Move Up"><i class="fas fa-caret-up"></i></button>
                         <button onclick="moveEl(${sIdx}, ${eIdx}, 'down')" title="Move Down"><i class="fas fa-caret-down"></i></button>
-                        <button onclick="deleteEl(${sIdx}, ${eIdx})" style="color:var(--red-accent);" title="Delete"><i class="fas fa-times"></i></button>
+                        <button onclick="deleteEl(${sIdx},${eIdx})" style="color:var(--red-accent);" title="Delete"><i class="fas fa-times"></i></button>
                     </div>`;
-                    node = document.createElement("div"); node.className = "preview-table-wrap";
-                    const table = document.createElement("table"); table.className = "preview-table" + (SETTINGS.tableCompact ? ' compact' : '');
-                    el.rows.forEach((row, rIdx) => {
-                        const tr = document.createElement("tr");
-                        if(el.striped && rIdx>0 && rIdx%2===0) tr.classList.add('striped');
-                        row.forEach((cell, cIdx) => {
-                            const td = document.createElement(rIdx === 0 ? "th" : "td");
-                            td.style.borderColor = '#'+(el.borderColor||'c8c6c4');
-                            if(rIdx === 0) td.style.background = '#'+(el.headerColor||'2b579a');
-                            if(rIdx!==0) td.style.color = el.color || getDefaultColor('p');
-                            td.contentEditable = "true"; td.innerHTML = formatText(cell);
-                            td.onblur = e => { DATA[sIdx].els[eIdx].rows[rIdx][cIdx] = e.target.innerText; saveState(); }; tr.appendChild(td);
-                        }); table.appendChild(tr);
-                    }); node.appendChild(table);
-                    const tc = document.createElement('div'); tc.className='table-controls';
-                    tc.innerHTML = `<button onclick="addTableRow(${sIdx},${eIdx}); event.stopPropagation();">+ Row</button><button onclick="removeTableRow(${sIdx},${eIdx}); event.stopPropagation();">- Row</button><button onclick="addTableCol(${sIdx},${eIdx}); event.stopPropagation();">+ Col</button><button onclick="removeTableCol(${sIdx},${eIdx}); event.stopPropagation();">- Col</button>`;
+
+                    node=document.createElement('div');
+                    node.className='preview-table-wrap';
+                    node.style.width='100%';
+
+                    const grid=document.createElement('div');
+                    grid.className='ppt-grid-table';
+                    const cols=Math.max(1,(el.rows[0]||[]).length);
+                    grid.style.setProperty('--cols',cols);
+
+                    el.rows.forEach((row,rIdx)=>{
+                        row.forEach((cell,cIdx)=>{
+                            const cellNode=document.createElement('div');
+                            cellNode.className='ppt-grid-cell '+(rIdx===0?'ppt-grid-head':'ppt-grid-body');
+                            if(el.striped && rIdx>0 && rIdx%2===0) cellNode.classList.add('striped');
+                            cellNode.style.borderColor='#'+(el.borderColor||'c8c6c4');
+                            if(rIdx===0){
+                                cellNode.style.background='#'+(el.headerColor||'2b579a');
+                                cellNode.style.color='#fff';
+                                cellNode.style.fontWeight='700';
+                            }else{
+                                cellNode.style.color=el.color||getDefaultColor('p');
+                            }
+                            cellNode.contentEditable='true';
+                            cellNode.spellcheck=SETTINGS.spellcheck;
+                            cellNode.innerHTML=formatText(cell);
+                            cellNode.addEventListener('blur',()=>{
+                                DATA[sIdx].els[eIdx].rows[rIdx][cIdx]=cellNode.innerText;
+                                saveState();
+                            });
+                            // Prevent the object-drag handler from receiving text editing gestures.
+                            cellNode.addEventListener('pointerdown',ev=>ev.stopPropagation());
+                            grid.appendChild(cellNode);
+                        });
+                    });
+
+                    node.appendChild(grid);
+
+                    const tc=document.createElement('div');
+                    tc.className='table-controls';
+                    tc.innerHTML=`<button onclick="addTableRow(${sIdx},${eIdx});event.stopPropagation();">+ Row</button>
+                        <button onclick="removeTableRow(${sIdx},${eIdx});event.stopPropagation();">- Row</button>
+                        <button onclick="addTableCol(${sIdx},${eIdx});event.stopPropagation();">+ Col</button>
+                        <button onclick="removeTableCol(${sIdx},${eIdx});event.stopPropagation();">- Col</button>`;
                     node.appendChild(tc);
                 }
                 else if (el.type === 'hr') {
@@ -2983,6 +3301,286 @@ function loadState() {
 }
 
 window.onload = () => loadState();
+</script>
+<script>
+document.addEventListener('click',function(ev){
+  if(ev.target.closest('.ribbon-dropdown-container')) return;
+  document.querySelectorAll('.ribbon-menu.show').forEach(m=>m.classList.remove('show'));
+});
+</script>
+<script id="v8-hindi-typing">
+/* =========================================================
+   HINDI PHONETIC TYPING
+   - Select "Hindi (Hinglish + Space)"
+   - Type: mera bharat / rajasthan / ramdevji
+   - Press Space -> मेरा भारत / राजस्थान / रामदेवजी
+   - Alt+H = Hindi mode, Alt+E = English mode
+   - Alt+B/I/U = bold/italic/underline on selected text
+   ========================================================= */
+(function(){
+const WORDS={
+  "ram":"राम","ramdev":"रामदेव","ramdevji":"रामदेवजी","rajasthan":"राजस्थान",
+  "bharat":"भारत","india":"भारत","hindi":"हिंदी","hind":"हिंद","dev":"देव",
+  "ji":"जी","hai":"है","hain":"हैं","ka":"का","ki":"की","ke":"के","ko":"को",
+  "me":"में","mein":"में","se":"से","par":"पर","aur":"और","ya":"या","ye":"ये",
+  "yah":"यह","vo":"वो","vah":"वह","kya":"क्या","kyu":"क्यों","kyon":"क्यों",
+  "nahi":"नहीं","nahin":"नहीं","acha":"अच्छा","accha":"अच्छा","bahut":"बहुत",
+  "mujhe":"मुझे","mera":"मेरा","meri":"मेरी","mere":"मेरे","aap":"आप",
+  "apka":"आपका","unka":"उनका","ham":"हम","hum":"हम","main":"मैं","mai":"मैं",
+  "hai":"है","tha":"था","thi":"थी","the":"थे","ho":"हो","hoga":"होगा",
+  "kar":"कर","karo":"करो","kr":"कर","krna":"करना","karna":"करना",
+  "likh":"लिख","likhna":"लिखना","padho":"पढ़ो","padhna":"पढ़ना",
+  "padh":"पढ़","batao":"बताओ","bata":"बता","chahiye":"चाहिए",
+  "school":"स्कूल","teacher":"टीचर","exam":"परीक्षा","reet":"रीट",
+  "gk":"जीके","history":"इतिहास","culture":"संस्कृति","gaon":"गाँव",
+  "gaav":"गाँव","desh":"देश","rajya":"राज्य","raja":"राजा",
+  "devta":"देवता","lokdevta":"लोकदेवता","lok":"लोक","mata":"माता",
+  "mandir":"मंदिर","janm":"जन्म","jivan":"जीवन","kahani":"कहानी",
+  "prem":"प्रेम","samay":"समय","aaj":"आज","kal":"कल","ab":"अब",
+  "ek":"एक","do":"दो","teen":"तीन","char":"चार","paanch":"पाँच",
+  "mera":"मेरा","naam":"नाम","kahan":"कहाँ","kab":"कब","kaise":"कैसे"
+};
+
+const C={
+ "ksh":"क्ष","gy":"ज्ञ","tr":"त्र","shr":"श्र","chh":"छ","tth":"ट्ठ","ddh":"ढ्ढ",
+ "dh":"ध","bh":"भ","kh":"ख","gh":"घ","jh":"झ","th":"थ","dh":"ध","ph":"फ",
+ "ch":"च","sh":"श","ng":"ङ","ny":"ञ","ṭh":"ठ","ḍh":"ढ"
+};
+const CONS={
+ "k":"क","kh":"ख","g":"ग","gh":"घ","ng":"ङ","ch":"च","chh":"छ","j":"ज","jh":"झ","n":"न",
+ "t":"त","th":"थ","d":"द","dh":"ध","p":"प","ph":"फ","b":"ब","bh":"भ","m":"म",
+ "y":"य","r":"र","l":"ल","v":"व","w":"व","s":"स","sh":"श","h":"ह","f":"फ",
+ "q":"क़","z":"ज़","x":"क्स","c":"क"
+};
+const VOWEL={
+ "aa":"आ","a":"अ","ii":"ई","ee":"ई","i":"इ","uu":"ऊ","oo":"ऊ","u":"उ",
+ "e":"ए","ai":"ऐ","o":"ओ","au":"औ","ri":"ऋ"
+};
+const MATRA={
+ "aa":"ा","a":"","ii":"ी","ee":"ी","i":"ि","uu":"ू","oo":"ू","u":"ु",
+ "e":"े","ai":"ै","o":"ो","au":"ौ","ri":"ृ"
+};
+
+function transliterateWord(raw){
+  const low=raw.toLowerCase();
+  if(WORDS[low]) return WORDS[low];
+
+  // Proper phonetic Hindi typing: namaste -> नमस्ते, mera -> मेरा,
+  // ramdevji -> रामदेवजी, bharat -> भारत, etc.
+  try{
+    if(window.Sanscript && /^[a-zA-Z]+$/.test(raw)){
+      const out=window.Sanscript.t(raw,'itrans','devanagari');
+      if(out && out!==raw) return out;
+    }
+  }catch(e){}
+
+  if(!/^[a-zA-Z]+$/.test(raw)) return raw;
+
+  // Offline fallback.
+  let s=low, out="", i=0, consonantOpen=false;
+  const longest=(obj)=>{
+    for(const k of Object.keys(obj).sort((a,b)=>b.length-a.length)){
+      if(s.startsWith(k,i)) return k;
+    }
+    return null;
+  };
+  while(i<s.length){
+    let ck=longest(CONS);
+    if(ck){ out+=CONS[ck]; i+=ck.length; consonantOpen=true; continue; }
+    let vk=longest(VOWEL);
+    if(vk){
+      if(consonantOpen) out+=MATRA[vk]; else out+=VOWEL[vk];
+      consonantOpen=false; i+=vk.length; continue;
+    }
+    out+=s[i]; consonantOpen=false; i++;
+  }
+  return out;
+}
+
+function getEditableTarget(){
+  const a=document.activeElement;
+  if(a && (a.isContentEditable || a.closest('[contenteditable="true"]'))) {
+    return a.isContentEditable ? a : a.closest('[contenteditable="true"]');
+  }
+  return null;
+}
+function getWordBeforeCaret(el){
+  const sel=window.getSelection();
+  if(!sel || !sel.rangeCount || !sel.isCollapsed || !el.contains(sel.anchorNode)) return null;
+  const range=sel.getRangeAt(0);
+  let node=range.startContainer, offset=range.startOffset;
+  if(node.nodeType!==3) return null;
+  const txt=node.nodeValue||"";
+  const left=txt.slice(0,offset);
+  const m=left.match(/([A-Za-z]+)$/);
+  if(!m) return null;
+  return {node, start:offset-m[1].length, end:offset, word:m[1]};
+}
+function replaceWord(info, hindi){
+  const r=document.createRange();
+  r.setStart(info.node,info.start); r.setEnd(info.node,info.end);
+  r.deleteContents();
+  r.insertNode(document.createTextNode(hindi));
+  r.collapse(false);
+  const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+}
+function saveCurrentEditable(el){
+  el.dispatchEvent(new Event('input',{bubbles:true}));
+  el.dispatchEvent(new Event('blur',{bubbles:true}));
+}
+
+// ═══════════════════════════════════════════════════════
+// LIVE HINDI PHONETIC TYPING
+// h → ह, ha → हा, namaste → नमस्ते, mera → मेरा
+// Works while typing, not only after pressing Space.
+// ═══════════════════════════════════════════════════════
+const hindiTypingState = new WeakMap();
+
+function getCaretTextInfo(el){
+  const sel=window.getSelection();
+  if(!sel || !sel.rangeCount || !sel.isCollapsed || !el.contains(sel.anchorNode)) return null;
+  const node=sel.anchorNode;
+  const offset=sel.anchorOffset;
+  if(node.nodeType!==3) return null;
+  return {node,offset};
+}
+
+function replaceCurrentHindiToken(info, oldText, newText){
+  const r=document.createRange();
+  const start=Math.max(0,info.offset-oldText.length);
+  r.setStart(info.node,start);
+  r.setEnd(info.node,info.offset);
+  r.deleteContents();
+  const tn=document.createTextNode(newText);
+  r.insertNode(tn);
+  r.collapse(false);
+  const sel=window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(r);
+  return {node:tn,offset:newText.length};
+}
+
+function resetHindiTyping(el){
+  if(el) hindiTypingState.delete(el);
+}
+
+document.addEventListener('keydown',function(ev){
+  const target=getEditableTarget();
+
+  // Keyboard shortcuts.
+  if(ev.altKey && !ev.ctrlKey && !ev.metaKey){
+    const k=ev.key.toLowerCase();
+    if(k==='h'){
+      ev.preventDefault();
+      typingLanguage='hi';
+      if($('typingLangSel')) $('typingLangSel').value='hi';
+      return;
+    }
+    if(k==='e'){
+      ev.preventDefault();
+      typingLanguage='en';
+      if($('typingLangSel')) $('typingLangSel').value='en';
+      resetHindiTyping(target);
+      return;
+    }
+    if(target && ['b','i','u'].includes(k)){
+      ev.preventDefault();
+      try{document.execCommand({b:'bold',i:'italic',u:'underline'}[k],false,null);}catch(_){}
+      return;
+    }
+  }
+
+  if(!target || typingLanguage!=='hi') return;
+
+  const info=getCaretTextInfo(target);
+  if(!info) return;
+
+  let state=hindiTypingState.get(target);
+  if(!state || state.node!==info.node || state.offset!==info.offset){
+    state={node:info.node,offset:info.offset,buffer:'',rendered:''};
+  }
+
+  // English alphabet key: convert immediately.
+  if(!ev.ctrlKey && !ev.metaKey && !ev.altKey && /^[a-zA-Z]$/.test(ev.key)){
+    ev.preventDefault();
+
+    // If the current state has no active word, start at the caret.
+    if(state.offset!==info.offset) state={node:info.node,offset:info.offset,buffer:'',rendered:''};
+
+    const nextBuffer=state.buffer+ev.key;
+    const nextHindi=transliterateWord(nextBuffer);
+
+    const r=document.createRange();
+    const start=info.offset-state.rendered.length;
+    r.setStart(info.node,Math.max(0,start));
+    r.setEnd(info.node,info.offset);
+    r.deleteContents();
+
+    const tn=document.createTextNode(nextHindi);
+    r.insertNode(tn);
+    r.collapse(false);
+
+    const sel=window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(r);
+
+    state={node:tn,offset:nextHindi.length,buffer:nextBuffer,rendered:nextHindi};
+    hindiTypingState.set(target,state);
+    saveCurrentEditable(target);
+    return;
+  }
+
+  // Backspace edits the active Roman buffer.
+  if(ev.key==='Backspace' && state.buffer){
+    ev.preventDefault();
+
+    const nextBuffer=state.buffer.slice(0,-1);
+    const nextHindi=transliterateWord(nextBuffer);
+
+    const r=document.createRange();
+    r.setStart(info.node,Math.max(0,info.offset-state.rendered.length));
+    r.setEnd(info.node,info.offset);
+    r.deleteContents();
+
+    if(nextHindi){
+      const tn=document.createTextNode(nextHindi);
+      r.insertNode(tn);
+      r.collapse(false);
+      state={node:tn,offset:nextHindi.length,buffer:nextBuffer,rendered:nextHindi};
+    }else{
+      r.collapse(true);
+      state={node:info.node,offset:r.startOffset,buffer:'',rendered:''};
+    }
+
+    const sel=window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(r);
+    hindiTypingState.set(target,state);
+    saveCurrentEditable(target);
+    return;
+  }
+
+  // Space / punctuation finishes the current word.
+  if(ev.key===' ' || ev.key==='Enter' || /^[.,!?;:'"()\[\]{}\/\\\-]$/.test(ev.key)){
+    resetHindiTyping(target);
+  }
+});
+
+// Any mouse/touch cursor reposition resets the Roman buffer safely.
+document.addEventListener('selectionchange',function(){
+  const target=getEditableTarget();
+  if(!target) return;
+  const st=hindiTypingState.get(target);
+  if(!st) return;
+  const info=getCaretTextInfo(target);
+  if(!info || info.node!==st.node || info.offset!==st.offset){
+    resetHindiTyping(target);
+  }
+});
+
+
+window.transliterateHindiWord=transliterateWord;
+})();
 </script>
 </body>
 </html>
