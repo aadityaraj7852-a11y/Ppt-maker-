@@ -130,7 +130,7 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
         </select>
         <input type="file" id="bgImgUpload" accept="image/*" style="display:none;">
 
-        <button id="generateBtn" class="btn btn-generate">💾 Generate Editable PPTX</button>
+        <button id="generateBtn" class="btn btn-generate">💾 Generate PPTX File</button>
     </div>
 
     <div class="right-panel">
@@ -213,6 +213,7 @@ $('importBtn').onclick = () => {
     let rawHtml = $('htmlArea').value.trim();
     if(!rawHtml) return alert("Please paste HTML code or text!");
 
+    // If text does not contain HTML tags, treat paragraphs / lines as separate sections
     if(!/<[a-z][\s\S]*>/i.test(rawHtml)) {
         let lines = rawHtml.split('\n').filter(l => l.trim() !== '');
         let slidesData = [];
@@ -308,10 +309,12 @@ $('importJsonBtn').onclick = () => {
                 });
             }
 
+            // Optional solution / explanation pagination check
             if(item.solution || item.explanation) {
                 let expText = item.solution || item.explanation;
-                slidesData.push(currentSlide); 
+                slidesData.push(currentSlide); // Push question slide
                 
+                // Create explanation slide automatically
                 let expSlide = [
                     { type: 'h3', text: `Q${index + 1}. Explanation / Answer` },
                     { type: 'p', text: `Correct Answer: ${item.answer || 'N/A'}` },
@@ -333,29 +336,29 @@ $('importJsonBtn').onclick = () => {
     }
 };
 
-$('clearBtn').onclick = () => { if(confirm("Clear all data?")) { DATA = []; $('htmlArea').value = ""; localStorage.removeItem('htmlPptStateFinalX4'); renderPreview(); } };
+$('clearBtn').onclick = () => { if(confirm("Clear all data?")) { DATA = []; $('htmlArea').value = ""; localStorage.removeItem('htmlPptStateFinalX3'); renderPreview(); } };
 
 function saveState() {
     const state = {
-        data: DATA, margins: { t: $('topM').value, b:$('bottomM').value, l: $('leftM').value, r:$('rightM').value },
+        data: DATA, margins: { t: $('topM').value, b: $('bottomM').value, l: $('leftM').value, r: $('rightM').value },
         colors: { 
-            h1: $('h1Color').value, h2: $('h2Color').value, h3:$('h3Color').value, 
-            bold: $('boldColor').value, opt:$('optColor').value, 
-            mcqQ: $('mcqQColor').value, mcqOpt:$('mcqOptColor').value 
+            h1: $('h1Color').value, h2: $('h2Color').value, h3: $('h3Color').value, 
+            bold: $('boldColor').value, opt: $('optColor').value, 
+            mcqQ: $('mcqQColor').value, mcqOpt: $('mcqOptColor').value 
         },
-        bg: $('bgSelect').value, theme: isLightMode, customBg: customBgDataUrl, htmlBox:$('htmlArea').value
+        bg: $('bgSelect').value, theme: isLightMode, customBg: customBgDataUrl, htmlBox: $('htmlArea').value
     };
-    localStorage.setItem('htmlPptStateFinalX4', JSON.stringify(state));
+    localStorage.setItem('htmlPptStateFinalX3', JSON.stringify(state));
 }
 
 function loadState() {
-    const saved = localStorage.getItem('htmlPptStateFinalX4');
+    const saved = localStorage.getItem('htmlPptStateFinalX3');
     if(saved) {
         const state = JSON.parse(saved); DATA = state.data || [];
         $('htmlArea').value = state.htmlBox || "";
         $('topM').value = state.margins.t; $('bottomM').value = state.margins.b; $('leftM').value = state.margins.l; $('rightM').value = state.margins.r;
         $('h1Color').value = state.colors.h1; $('h2Color').value = state.colors.h2; 
-        if(state.colors.h3) $('h3Color').value = state.colors.h3; if(state.colors.bold)$('boldColor').value = state.colors.bold;
+        if(state.colors.h3) $('h3Color').value = state.colors.h3; if(state.colors.bold) $('boldColor').value = state.colors.bold;
         $('optColor').value = state.colors.opt; 
         if(state.colors.mcqQ) $('mcqQColor').value = state.colors.mcqQ;
         if(state.colors.mcqOpt) $('mcqOptColor').value = state.colors.mcqOpt;
@@ -379,14 +382,15 @@ function renderPreview() {
 
     if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted); padding:20px; text-align:center;'>No slides. Import HTML/JSON or click 'Add Slide'.</p>"; return; }
 
-    const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c =$('h3Color').value, bc = $('boldColor').value, oc =$('optColor').value;
-    const mcqQc = $('mcqQColor').value, mcqOc =$('mcqOptColor').value;
+    const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
+    const mcqQc = $('mcqQColor').value, mcqOc = $('mcqOptColor').value;
     const bgUrl = getBgUrl();
 
     DATA.forEach((slideElements, sIdx) => {
         const div = document.createElement("div"); div.className = "slide-card";
         if(bgUrl) div.style.background = `url('${bgUrl}') center/cover no-repeat`; else div.style.backgroundColor = isLightMode ? "#ffffff" : "#000000";
         
+        // Header Bar for individual slide control (Delete / Move)
         const headerBar = document.createElement("div"); headerBar.className = "slide-header-bar";
         headerBar.innerHTML = `<span>Slide #${sIdx + 1}</span> <button class="btn btn-red" style="width:auto; padding:2px 8px; font-size:0.8em;" onclick="deleteSlide(${sIdx})"><i class="fa fa-trash"></i> Delete</button>`;
         div.appendChild(headerBar);
@@ -446,176 +450,125 @@ window.deleteSlide = (index) => {
     renderPreview(); saveState();
 };
 
-
 // ==============================================
-// ADVANCED TRUE NATIVE PPTX GENERATOR 
-// (Full text editing, spacing, highlight, native bullets)
+// ADVANCED GENERATOR WITH AUTO-PAGINATION
 // ==============================================
 $('generateBtn').onclick = async () => {
     if (DATA.length === 0) return alert("No Data! Please import HTML or JSON first.");
-    const btn = $('generateBtn'); btn.innerHTML = "⏳ Generating Editable PPTX..."; btn.disabled = true;
+    const btn = $('generateBtn'); btn.innerHTML = "⏳ Generating PPTX..."; btn.disabled = true;
 
     setTimeout(async () => {
         const pxW = 1300, pxH = 710;
         const m = { top:parseInt($('topM').value), bottom:parseInt($('bottomM').value), left:parseInt($('leftM').value), right:parseInt($('rightM').value) };
         const ppt = new PptxGenJS(); ppt.defineLayout({ name:"S", width:pxW/96, height:pxH/96 }); ppt.layout = "S";
-        
+
         let bgUrl = getBgUrl();
-        const maxW = pxW - m.left - m.right;
-        const bottomLimit = pxH - m.bottom;
+        await document.fonts.load("30px Kalam"); await document.fonts.load("bold 30px Kalam"); 
+        await document.fonts.load("bold 34px Kalam"); await document.fonts.load("bold 44px Kalam");
+        await document.fonts.load("bold 40px Kalam"); await document.fonts.load("34px Kalam");
 
-        // Hidden Canvas is ONLY used for height estimation now! It never draws anything to the slide.
-        await document.fonts.load("bold 30px Kalam"); 
-        let c = document.createElement("canvas"); let ctx = c.getContext("2d");
-
-        const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c =$('h3Color').value, bc = $('boldColor').value, oc =$('optColor').value;
-        const mcqQc = $('mcqQColor').value, mcqOc =$('mcqOptColor').value;
-
-        // Helper: Estimate Height
-        function getEstHeight(text, fontSize, isBullet = false) {
-            if(!text) return 0;
-            ctx.font = `bold ${fontSize}px Kalam`;
-            let lines = 1;
-            let curX = isBullet ? 40 : 0;
-            let words = text.replace(/<[^>]+>/g, '').split(' ');
-            for(let w of words) {
-                 let wW = ctx.measureText(w + " ").width;
-                 if(curX + wW > maxW) { lines++; curX = wW; }
-                 else { curX += wW; }
-            }
-            return lines * (fontSize * 1.3);
-        }
-
-        // Helper: Parse Bold to PptxGenJS Rich Text Array
-        function parseToRuns(htmlText, normColor, boldColor, fontSz, isBullet = false) {
-            let parts = htmlText.split(/(<b>.*?<\/b>)/g);
-            let runs = [];
-            parts.forEach((p, idx) => {
-                if(!p) return;
-                let isBold = p.startsWith('<b>') && p.endsWith('</b>');
-                let txt = isBold ? p.slice(3, -4) : p;
-                
-                let opt = {
-                    color: isBold ? boldColor.replace('#','') : normColor.replace('#',''),
-                    bold: isBold,
-                    fontFace: 'Kalam',
-                    fontSize: fontSz
-                };
-                
-                // For Native Bullets - attach to first run
-                if(isBullet && idx === 0) opt.bullet = true;
-                
-                runs.push({ text: txt, options: opt });
-            });
-            return runs;
-        }
+        const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
+        const mcqQc = $('mcqQColor').value, mcqOc = $('mcqOptColor').value;
 
         for (const slideElements of DATA) {
             
             let s = ppt.addSlide();
             if (bgUrl) s.background = { data: bgUrl }; else s.background = { color: isLightMode ? "FFFFFF" : "000000" };
+
+            let c = document.createElement("canvas"); c.width = pxW; c.height = pxH; 
+            let ctx = c.getContext("2d"); ctx.textBaseline = "top"; 
             
-            let y = m.top;
+            let y = m.top; const maxW = pxW - m.left - m.right;
+            const bottomLimit = pxH - m.bottom;
 
             const triggerPagination = () => {
+                s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
                 s = ppt.addSlide();
                 if (bgUrl) s.background = { data: bgUrl }; else s.background = { color: isLightMode ? "FFFFFF" : "000000" };
+                c = document.createElement("canvas"); c.width = pxW; c.height = pxH;
+                ctx = c.getContext("2d"); ctx.textBaseline = "top";
                 y = m.top;
             };
 
-            // ONE Shape Per Element for Maximum Editability
+            const drawSmartText = (text, normalFont, boldFont, normalCol, boldCol, lineH, leftIndent = 0) => {
+                if(!text) return;
+                const paras = text.split("\n");
+                paras.forEach(para => {
+                    if(!para.trim()) { y += lineH/2; return; }
+                    let parts = para.split(/(<b>.*?<\/b>)/g); let words = [];
+                    parts.forEach(part => {
+                        if(part.startsWith('<b>') && part.endsWith('</b>')) part.slice(3, -4).split(' ').forEach(w => { if(w) words.push({t: w, b: true}); });
+                        else part.split(' ').forEach(w => { if(w) words.push({t: w, b: false}); });
+                    });
+                    
+                    let currentX = m.left + leftIndent; let endX = pxW - m.right;
+
+                    if (y + lineH > bottomLimit && y > m.top) triggerPagination();
+
+                    for(let i=0; i<words.length; i++) {
+                        let w = words[i]; ctx.font = w.b ? boldFont : normalFont; ctx.fillStyle = w.b ? boldCol : normalCol;
+                        let metric = ctx.measureText(w.t + " ");
+                        
+                        if (currentX + metric.width > endX && currentX !== m.left + leftIndent) { 
+                            y += lineH; currentX = m.left + leftIndent; 
+                            if (y + lineH > bottomLimit && y > m.top) triggerPagination();
+                        }
+                        ctx.fillText(w.t + " ", currentX, y); currentX += metric.width;
+                    }
+                    y += lineH;
+                });
+            };
+
+            // Process each element
             slideElements.forEach((el) => {
-                // Force title to new slide if no space
                 if ((el.type === 'h1' || el.type === 'h2') && y > m.top) triggerPagination();
 
-                let estH = 0;
-
-                // Handle Text Blocks
-                if (['h1', 'h2', 'h3', 'p', 'mcq-q', 'mcq-opt'].includes(el.type)) {
-                    
-                    let fz = el.type === 'h1' ? 44 : el.type === 'h2' ? 34 : el.type === 'h3' ? 28 : el.type === 'mcq-q' ? 40 : el.type === 'mcq-opt' ? 34 : 30;
-                    let cl = el.type === 'h1' ? h1c : el.type === 'h2' ? h2c : el.type === 'h3' ? h3c : el.type === 'mcq-q' ? mcqQc : el.type === 'mcq-opt' ? mcqOc : oc;
-
-                    estH = getEstHeight(el.text, fz);
-                    if(y + estH > bottomLimit && y > m.top) triggerPagination();
-
-                    let runs = parseToRuns(el.text, cl, bc, fz);
-                    if(el.type === 'mcq-opt') runs[0].text = "   " + runs[0].text; // Add slight indent for options
-
-                    // Add ONE Native Shape (The user can press Enter inside this shape normally!)
-                    s.addText(runs, {
-                        x: m.left/96,
-                        y: y/96,
-                        w: maxW/96,
-                        autoFit: true,  // Automatically lets PPT manage size
-                        margin: 0,
-                        valign: 'top',
-                        wrap: true
-                    });
-                    
-                    y += estH + 15; // 15px natural spacing
+                if(el.type === 'h1'){ drawSmartText(el.text, "bold 44px Kalam", "bold 44px Kalam", h1c, h1c, 56); y+=10; }
+                else if(el.type === 'h2'){ drawSmartText(el.text, "bold 34px Kalam", "bold 34px Kalam", h2c, h2c, 46); y+=10; }
+                else if(el.type === 'h3'){ 
+                    if (y + 50 > bottomLimit && y > m.top) triggerPagination();
+                    drawSmartText(el.text, "bold 28px Kalam", "bold 28px Kalam", h3c, h3c, 38); y+=5; 
                 }
-                
-                // Handle NATIVE Bullet Lists
-                else if (el.type === 'ul') {
-                    let runs = [];
-                    el.items.forEach((li, index) => {
-                        let liEst = getEstHeight(li, 30, true);
-                        estH += liEst + 5;
-                        
-                        let liRuns = parseToRuns(li, oc, bc, 30, true); // true = add native bullet
-                        if (index < el.items.length - 1) {
-                             liRuns[liRuns.length-1].options.breakLine = true; // Tell PPT this is a new bullet line
-                        }
-                        runs.push(...liRuns);
-                    });
-                    
-                    if(y + estH > bottomLimit && y > m.top) triggerPagination();
-                    
-                    s.addText(runs, {
-                        x: m.left/96,
-                        y: y/96,
-                        w: maxW/96,
-                        autoFit: true,
-                        margin: 0,
-                        valign: 'top',
-                        wrap: true
-                    });
-                    
-                    y += estH + 20;
+                else if(el.type === 'p'){ drawSmartText(el.text, "30px Kalam", "bold 30px Kalam", oc, bc, 42); y+=8; }
+                else if(el.type === 'ul'){ 
+                    el.items.forEach(li => { drawSmartText("• " + li, "30px Kalam", "bold 30px Kalam", oc, bc, 42, 20); y+=5; });
+                    y+=5; 
                 }
-                
-                // Handle Tables
-                else if (el.type === 'table') {
-                    estH = (el.rows.length * 55);
-                    if(y + estH > bottomLimit && y > m.top) triggerPagination();
+                // --- MCQ Elements ---
+                else if(el.type === 'mcq-q'){ 
+                    drawSmartText(el.text, "bold 40px Kalam", "bold 40px Kalam", mcqQc, mcqQc, 52); y+=20; 
+                }
+                else if(el.type === 'mcq-opt'){ 
+                    drawSmartText(el.text, "34px Kalam", "bold 34px Kalam", mcqOc, mcqOc, 46, 30); y+=10; 
+                }
+                else if(el.type === 'table'){
+                    let estTableHeight = (el.rows.length * 55) + 30;
+                    if (y + estTableHeight > bottomLimit && y > m.top) triggerPagination();
 
-                    let pptRows = el.rows.map((rArr, rIdx) => {
-                        return rArr.map(cHtml => {
+                    let pptRows = el.rows.map((rowArr, rIdx) => {
+                        return rowArr.map(cellHtml => {
                             let isHead = (rIdx === 0);
                             return {
-                                text: cHtml.replace(/<b>|<\/b>/g, ''),
-                                options: {
-                                    color: isHead ? 'FFFFFF' : (isLightMode ? '000000' : 'FFFFFF'),
-                                    bold: isHead || cHtml.includes('<b>'),
-                                    fontFace: 'Kalam', fontSize: 22,
-                                    fill: isHead ? '2563EB' : (isLightMode ? 'F8FAFC' : '1A2234'),
-                                    align: 'center', valign: 'middle', margin: [8, 8, 8, 8]
+                                text: cellHtml.replace(/<b>|<\/b>/g, ''), 
+                                options: { 
+                                    color: isHead ? 'FFFFFF' : (isLightMode ? '000000' : 'FFFFFF'), 
+                                    bold: isHead || cellHtml.includes('<b>'),
+                                    fontFace: 'Kalam', fontSize: 22, 
+                                    fill: isHead ? '2563EB' : (isLightMode ? 'F8FAFC' : '1A2234'), 
+                                    align: 'center', valign: 'middle', margin: [8, 8, 8, 8] 
                                 }
                             };
                         });
                     });
                     s.addTable(pptRows, { x: m.left/96, y: y/96, w: maxW/96, border: { pt: 1.5, color: isLightMode ? 'CBD5E1' : '334155' } });
-                    y += estH + 30;
+                    y += estTableHeight + 20; 
                 }
             });
+
+            s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
         }
         
-        ppt.writeFile({ fileName: "Study_Notes_Perfectly_Editable.pptx" }).then(() => { 
-            btn.innerHTML = "✅ Download Successful!"; 
-            setTimeout(()=>btn.innerHTML="💾 Generate Editable PPTX", 3000); 
-            btn.disabled = false; 
-        });
+        ppt.writeFile({ fileName: "Study_Notes_AutoPage.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
     }, 100);
 };
 
@@ -623,3 +576,6 @@ window.onload = () => loadState();
 </script>
 </body>
 </html>
+
+
+Isme html kesa hoga
