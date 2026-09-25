@@ -39,7 +39,7 @@ textarea, input[type="number"], select { width: 100%; padding: 10px; border-radi
 textarea:focus, input:focus, select:focus { outline: none; border-color: var(--accent); }
 input[type="color"] { width: 100%; height: 40px; padding: 2px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; background: var(--input-bg); }
 
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
 .grid-5 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 5px; }
 
@@ -85,10 +85,9 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
         <label>Data Input (HTML & Text Only)</label>
         <textarea id="htmlArea" rows="7" placeholder='Paste HTML Notes, MCQs, and Tables here. <h2> starts a new slide!'></textarea>
         
-        <div class="grid-4" style="margin-top: 10px;">
+        <div class="grid-3" style="margin-top: 10px;">
             <button id="importBtn" class="btn btn-blue">📥 Import HTML</button>
             <button id="demoBtn" class="btn btn-orange"><i class="fa fa-code"></i> Demo Code</button>
-            <button id="paginateBtn" class="btn btn-purple"><i class="fa fa-scissors"></i> Sync Slides</button>
             <button id="clearBtn" class="btn btn-red"><i class="fa fa-trash"></i> Clear</button>
         </div>
 
@@ -146,7 +145,7 @@ $('themeToggle').onclick = () => {
     renderPreview(); saveState();
 };
 
-$('bgSelect').onchange = (e) => { $('bgImgUpload').style.display = e.target.value === 'custom' ? 'block' : 'none'; renderPreview(); saveState(); };
+$('bgSelect').onchange = (e) => {$('bgImgUpload').style.display = e.target.value === 'custom' ? 'block' : 'none'; renderPreview(); saveState(); };
 
 $('bgImgUpload').onchange = (e) => {
     const file = e.target.files[0]; if (!file) return;
@@ -211,66 +210,10 @@ $('demoBtn').onclick = () => {
     saveState();
 };
 
-async function applyAutoPagination() {
-    try { await document.fonts.load("30px Kalam"); await document.fonts.load("bold 30px Kalam"); } catch(e){}
-    
-    const pxW = 1300, pxH = 710;
-    const m = { top:parseInt($('topM').value), bottom:parseInt($('bottomM').value), left:parseInt($('leftM').value), right:parseInt($('rightM').value) };
-    const maxW = pxW - m.left - m.right;
-    const bottomLimit = pxH - m.bottom;
-    
-    let c = document.createElement("canvas"); 
-    let ctx = c.getContext("2d"); ctx.textBaseline = "top";
-    
-    const measureH = (text, font, lineH, maxWidth) => {
-        if(!text) return 0; 
-        ctx.font = font; let h = 0;
-        text.split("\n").forEach(p => {
-            if(!p.trim()){ h += lineH/2; return; }
-            let currentX = 0;
-            let words = p.replace(/<\/?b>/g, '').split(' ');
-            words.forEach(w => {
-                let mw = ctx.measureText(w + " ").width;
-                if(currentX + mw > maxWidth && currentX !== 0) { h += lineH; currentX = 0; }
-                currentX += mw;
-            });
-            h += lineH;
-        });
-        return h;
-    };
-
-    let newData = [];
-    DATA.forEach(slideEls => {
-        let currentSlide = []; let y = m.top;
-        
-        slideEls.forEach(el => {
-            let h = 0;
-            if(el.type === 'h1') h = measureH(el.text, "bold 44px Kalam", 56, maxW) + 10;
-            else if(el.type === 'h2') h = measureH(el.text, "bold 40px Kalam", 52, maxW) + 15; // Increased H2 size for Questions
-            else if(el.type === 'h3') h = measureH(el.text, "bold 32px Kalam", 42, maxW) + 10;
-            else if(el.type === 'p') h = measureH(el.text, "bold 30px Kalam", 42, maxW) + 8;
-            else if(el.type === 'ul') { h = 5; el.items.forEach(li => { h += measureH("• " + li, "bold 30px Kalam", 42, maxW - 20) + 5; }); h += 5; }
-            else if(el.type === 'table') h = (el.rows.length * 55) + 30 + 20;
-
-            if(y + h > bottomLimit && y > m.top) { newData.push(currentSlide); currentSlide = []; y = m.top; }
-            currentSlide.push(el); y += h;
-        });
-        if(currentSlide.length > 0) newData.push(currentSlide);
-    });
-    DATA = newData;
-}
-
-$('paginateBtn').onclick = async () => {
-    const btn = $('paginateBtn'); btn.innerText = "⏳ Syncing...";
-    await applyAutoPagination();
-    renderPreview(); saveState();
-    btn.innerHTML = `<i class="fa fa-scissors"></i> Sync Slides`;
-};
-
 // ==============================================
-// SMART HTML PARSER 
+// SMART HTML PARSER (H2 splits slide)
 // ==============================================
-$('importBtn').onclick = async () => { 
+$('importBtn').onclick = () => { 
     let rawHtml = $('htmlArea').value.trim();
     if(!rawHtml) return alert("Please paste HTML code or text!");
 
@@ -326,11 +269,10 @@ $('importBtn').onclick = async () => {
         else DATA.push(...slidesData);
     }
     
-    await applyAutoPagination(); 
     renderPreview(); saveState();
 };
 
-$('clearBtn').onclick = () => { if(confirm("Clear all data?")) { DATA = []; $('htmlArea').value = ""; localStorage.removeItem('htmlPptStateFinalX5'); renderPreview(); } };
+$('clearBtn').onclick = () => { if(confirm("Clear all data?")) { DATA = []; $('htmlArea').value = ""; localStorage.removeItem('htmlPptStateFinalX6'); renderPreview(); } };
 
 function saveState() {
     const state = {
@@ -341,11 +283,11 @@ function saveState() {
         },
         bg: $('bgSelect').value, theme: isLightMode, customBg: customBgDataUrl, htmlBox:$('htmlArea').value
     };
-    localStorage.setItem('htmlPptStateFinalX5', JSON.stringify(state));
+    localStorage.setItem('htmlPptStateFinalX6', JSON.stringify(state));
 }
 
 function loadState() {
-    const saved = localStorage.getItem('htmlPptStateFinalX5');
+    const saved = localStorage.getItem('htmlPptStateFinalX6');
     if(saved) {
         const state = JSON.parse(saved); DATA = state.data || [];
         $('htmlArea').value = state.htmlBox || "";
@@ -429,7 +371,7 @@ function renderPreview() {
 }
 
 // ==============================================
-// ADVANCED GENERATOR WITH AUTO-PAGINATION
+// ADVANCED GENERATOR (PPT EXPORT)
 // ==============================================
 $('generateBtn').onclick = async () => {
     if (DATA.length === 0) return alert("No Data! Please import HTML first.");
@@ -542,7 +484,7 @@ $('generateBtn').onclick = async () => {
             s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
         }
         
-        ppt.writeFile({ fileName: "Study_Notes_AutoPage.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
+        ppt.writeFile({ fileName: "Study_Notes.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
     }, 100);
 };
 
