@@ -130,7 +130,7 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
         </select>
         <input type="file" id="bgImgUpload" accept="image/*" style="display:none;">
 
-        <button id="generateBtn" class="btn btn-generate">💾 Generate PPTX File</button>
+        <button id="generateBtn" class="btn btn-generate">💾 Generate Editable PPTX</button>
     </div>
 
     <div class="right-panel">
@@ -333,7 +333,7 @@ $('importJsonBtn').onclick = () => {
     }
 };
 
-$('clearBtn').onclick = () => { if(confirm("Clear all data?")) { DATA = []; $('htmlArea').value = ""; localStorage.removeItem('htmlPptStateFinalX3'); renderPreview(); } };
+$('clearBtn').onclick = () => { if(confirm("Clear all data?")) { DATA = []; $('htmlArea').value = ""; localStorage.removeItem('htmlPptStateFinalX4'); renderPreview(); } };
 
 function saveState() {
     const state = {
@@ -345,11 +345,11 @@ function saveState() {
         },
         bg: $('bgSelect').value, theme: isLightMode, customBg: customBgDataUrl, htmlBox:$('htmlArea').value
     };
-    localStorage.setItem('htmlPptStateFinalX3', JSON.stringify(state));
+    localStorage.setItem('htmlPptStateFinalX4', JSON.stringify(state));
 }
 
 function loadState() {
-    const saved = localStorage.getItem('htmlPptStateFinalX3');
+    const saved = localStorage.getItem('htmlPptStateFinalX4');
     if(saved) {
         const state = JSON.parse(saved); DATA = state.data || [];
         $('htmlArea').value = state.htmlBox || "";
@@ -446,37 +446,76 @@ window.deleteSlide = (index) => {
     renderPreview(); saveState();
 };
 
+
 // ==============================================
-// ADVANCED GENERATOR WITH NATIVE EDITABLE TEXT
+// ADVANCED TRUE NATIVE PPTX GENERATOR 
+// (Full text editing, spacing, highlight, native bullets)
 // ==============================================
 $('generateBtn').onclick = async () => {
     if (DATA.length === 0) return alert("No Data! Please import HTML or JSON first.");
-    const btn = $('generateBtn'); btn.innerHTML = "⏳ Generating PPTX..."; btn.disabled = true;
+    const btn = $('generateBtn'); btn.innerHTML = "⏳ Generating Editable PPTX..."; btn.disabled = true;
 
     setTimeout(async () => {
         const pxW = 1300, pxH = 710;
         const m = { top:parseInt($('topM').value), bottom:parseInt($('bottomM').value), left:parseInt($('leftM').value), right:parseInt($('rightM').value) };
         const ppt = new PptxGenJS(); ppt.defineLayout({ name:"S", width:pxW/96, height:pxH/96 }); ppt.layout = "S";
-
+        
         let bgUrl = getBgUrl();
-        await document.fonts.load("30px Kalam"); await document.fonts.load("bold 30px Kalam"); 
-        await document.fonts.load("bold 34px Kalam"); await document.fonts.load("bold 44px Kalam");
-        await document.fonts.load("bold 40px Kalam"); await document.fonts.load("34px Kalam");
+        const maxW = pxW - m.left - m.right;
+        const bottomLimit = pxH - m.bottom;
+
+        // Hidden Canvas is ONLY used for height estimation now! It never draws anything to the slide.
+        await document.fonts.load("bold 30px Kalam"); 
+        let c = document.createElement("canvas"); let ctx = c.getContext("2d");
 
         const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c =$('h3Color').value, bc = $('boldColor').value, oc =$('optColor').value;
         const mcqQc = $('mcqQColor').value, mcqOc =$('mcqOptColor').value;
+
+        // Helper: Estimate Height
+        function getEstHeight(text, fontSize, isBullet = false) {
+            if(!text) return 0;
+            ctx.font = `bold ${fontSize}px Kalam`;
+            let lines = 1;
+            let curX = isBullet ? 40 : 0;
+            let words = text.replace(/<[^>]+>/g, '').split(' ');
+            for(let w of words) {
+                 let wW = ctx.measureText(w + " ").width;
+                 if(curX + wW > maxW) { lines++; curX = wW; }
+                 else { curX += wW; }
+            }
+            return lines * (fontSize * 1.3);
+        }
+
+        // Helper: Parse Bold to PptxGenJS Rich Text Array
+        function parseToRuns(htmlText, normColor, boldColor, fontSz, isBullet = false) {
+            let parts = htmlText.split(/(<b>.*?<\/b>)/g);
+            let runs = [];
+            parts.forEach((p, idx) => {
+                if(!p) return;
+                let isBold = p.startsWith('<b>') && p.endsWith('</b>');
+                let txt = isBold ? p.slice(3, -4) : p;
+                
+                let opt = {
+                    color: isBold ? boldColor.replace('#','') : normColor.replace('#',''),
+                    bold: isBold,
+                    fontFace: 'Kalam',
+                    fontSize: fontSz
+                };
+                
+                // For Native Bullets - attach to first run
+                if(isBullet && idx === 0) opt.bullet = true;
+                
+                runs.push({ text: txt, options: opt });
+            });
+            return runs;
+        }
 
         for (const slideElements of DATA) {
             
             let s = ppt.addSlide();
             if (bgUrl) s.background = { data: bgUrl }; else s.background = { color: isLightMode ? "FFFFFF" : "000000" };
-
-            // Canvas is ONLY used to measure text height for Auto-Pagination now
-            let c = document.createElement("canvas"); c.width = pxW; c.height = pxH; 
-            let ctx = c.getContext("2d"); ctx.textBaseline = "top"; 
             
-            let y = m.top; const maxW = pxW - m.left - m.right;
-            const bottomLimit = pxH - m.bottom;
+            let y = m.top;
 
             const triggerPagination = () => {
                 s = ppt.addSlide();
@@ -484,119 +523,97 @@ $('generateBtn').onclick = async () => {
                 y = m.top;
             };
 
-            // NEW FUNCTION: Outputs NATIVE PowerPoint Text instead of drawing image
-            const drawEditableText = (text, fontSize, normalCol, boldCol, lineH, leftIndent = 0) => {
-                if(!text) return;
-                const paras = text.split("\n");
-                
-                paras.forEach(para => {
-                    if(!para.trim()) { y += lineH/2; return; }
-                    
-                    let textElements = [];
-                    let parts = para.split(/(<b>.*?<\/b>)/g);
-                    let words = [];
-                    
-                    // Setup text format for pptxgenjs
-                    parts.forEach(part => {
-                        if (part.startsWith('<b>') && part.endsWith('</b>')) {
-                            let cleanText = part.slice(3, -4);
-                            textElements.push({ text: cleanText, options: { bold: true, color: boldCol.replace('#','') } });
-                            cleanText.split(' ').forEach(w => { if(w) words.push({t: w, b: true}); });
-                        } else {
-                            if (part) {
-                                textElements.push({ text: part, options: { bold: false, color: normalCol.replace('#','') } });
-                                part.split(' ').forEach(w => { if(w) words.push({t: w, b: false}); });
-                            }
-                        }
-                    });
-
-                    // Measure paragraph height for Auto-Pagination logic
-                    let currentX = m.left + leftIndent; 
-                    let endX = pxW - m.right;
-                    let startY = y;
-                    let textHeight = lineH;
-
-                    for(let i=0; i<words.length; i++) {
-                        let w = words[i]; 
-                        ctx.font = w.b ? `bold ${fontSize}px Kalam` : `${fontSize}px Kalam`; 
-                        let metric = ctx.measureText(w.t + " ");
-                        if (currentX + metric.width > endX && currentX !== m.left + leftIndent) { 
-                            textHeight += lineH; currentX = m.left + leftIndent; 
-                        }
-                        currentX += metric.width;
-                    }
-
-                    // Check Pagination
-                    if (startY + textHeight > bottomLimit && startY > m.top) {
-                        triggerPagination();
-                        startY = y; 
-                    }
-
-                    // ADD EDITABLE TEXT TO SLIDE
-                    let textW = maxW - leftIndent;
-                    s.addText(textElements, {
-                        x: (m.left + leftIndent) / 96,
-                        y: startY / 96,
-                        w: textW / 96,
-                        h: textHeight / 96,
-                        fontSize: fontSize,
-                        fontFace: 'Kalam',
-                        valign: 'top',
-                        margin: 0,
-                        wrap: true
-                    });
-
-                    y = startY + textHeight; 
-                });
-            };
-
-            // Process each element
+            // ONE Shape Per Element for Maximum Editability
             slideElements.forEach((el) => {
+                // Force title to new slide if no space
                 if ((el.type === 'h1' || el.type === 'h2') && y > m.top) triggerPagination();
 
-                if(el.type === 'h1'){ drawEditableText(el.text, 44, h1c, h1c, 56); y+=10; }
-                else if(el.type === 'h2'){ drawEditableText(el.text, 34, h2c, h2c, 46); y+=10; }
-                else if(el.type === 'h3'){ 
-                    if (y + 50 > bottomLimit && y > m.top) triggerPagination();
-                    drawEditableText(el.text, 28, h3c, h3c, 38); y+=5; 
-                }
-                else if(el.type === 'p'){ drawEditableText(el.text, 30, oc, bc, 42); y+=8; }
-                else if(el.type === 'ul'){ 
-                    el.items.forEach(li => { drawEditableText("• " + li, 30, oc, bc, 42, 20); y+=5; });
-                    y+=5; 
-                }
-                else if(el.type === 'mcq-q'){ drawEditableText(el.text, 40, mcqQc, mcqQc, 52); y+=20; }
-                else if(el.type === 'mcq-opt'){ drawEditableText(el.text, 34, mcqOc, mcqOc, 46, 30); y+=10; }
-                else if(el.type === 'table'){
-                    let estTableHeight = (el.rows.length * 55) + 30;
-                    if (y + estTableHeight > bottomLimit && y > m.top) triggerPagination();
+                let estH = 0;
 
-                    let pptRows = el.rows.map((rowArr, rIdx) => {
-                        return rowArr.map(cellHtml => {
+                // Handle Text Blocks
+                if (['h1', 'h2', 'h3', 'p', 'mcq-q', 'mcq-opt'].includes(el.type)) {
+                    
+                    let fz = el.type === 'h1' ? 44 : el.type === 'h2' ? 34 : el.type === 'h3' ? 28 : el.type === 'mcq-q' ? 40 : el.type === 'mcq-opt' ? 34 : 30;
+                    let cl = el.type === 'h1' ? h1c : el.type === 'h2' ? h2c : el.type === 'h3' ? h3c : el.type === 'mcq-q' ? mcqQc : el.type === 'mcq-opt' ? mcqOc : oc;
+
+                    estH = getEstHeight(el.text, fz);
+                    if(y + estH > bottomLimit && y > m.top) triggerPagination();
+
+                    let runs = parseToRuns(el.text, cl, bc, fz);
+                    if(el.type === 'mcq-opt') runs[0].text = "   " + runs[0].text; // Add slight indent for options
+
+                    // Add ONE Native Shape (The user can press Enter inside this shape normally!)
+                    s.addText(runs, {
+                        x: m.left/96,
+                        y: y/96,
+                        w: maxW/96,
+                        autoFit: true,  // Automatically lets PPT manage size
+                        margin: 0,
+                        valign: 'top',
+                        wrap: true
+                    });
+                    
+                    y += estH + 15; // 15px natural spacing
+                }
+                
+                // Handle NATIVE Bullet Lists
+                else if (el.type === 'ul') {
+                    let runs = [];
+                    el.items.forEach((li, index) => {
+                        let liEst = getEstHeight(li, 30, true);
+                        estH += liEst + 5;
+                        
+                        let liRuns = parseToRuns(li, oc, bc, 30, true); // true = add native bullet
+                        if (index < el.items.length - 1) {
+                             liRuns[liRuns.length-1].options.breakLine = true; // Tell PPT this is a new bullet line
+                        }
+                        runs.push(...liRuns);
+                    });
+                    
+                    if(y + estH > bottomLimit && y > m.top) triggerPagination();
+                    
+                    s.addText(runs, {
+                        x: m.left/96,
+                        y: y/96,
+                        w: maxW/96,
+                        autoFit: true,
+                        margin: 0,
+                        valign: 'top',
+                        wrap: true
+                    });
+                    
+                    y += estH + 20;
+                }
+                
+                // Handle Tables
+                else if (el.type === 'table') {
+                    estH = (el.rows.length * 55);
+                    if(y + estH > bottomLimit && y > m.top) triggerPagination();
+
+                    let pptRows = el.rows.map((rArr, rIdx) => {
+                        return rArr.map(cHtml => {
                             let isHead = (rIdx === 0);
                             return {
-                                text: cellHtml.replace(/<b>|<\/b>/g, ''), 
-                                options: { 
-                                    color: isHead ? 'FFFFFF' : (isLightMode ? '000000' : 'FFFFFF'), 
-                                    bold: isHead || cellHtml.includes('<b>'),
-                                    fontFace: 'Kalam', fontSize: 22, 
-                                    fill: isHead ? '2563EB' : (isLightMode ? 'F8FAFC' : '1A2234'), 
-                                    align: 'center', valign: 'middle', margin: [8, 8, 8, 8] 
+                                text: cHtml.replace(/<b>|<\/b>/g, ''),
+                                options: {
+                                    color: isHead ? 'FFFFFF' : (isLightMode ? '000000' : 'FFFFFF'),
+                                    bold: isHead || cHtml.includes('<b>'),
+                                    fontFace: 'Kalam', fontSize: 22,
+                                    fill: isHead ? '2563EB' : (isLightMode ? 'F8FAFC' : '1A2234'),
+                                    align: 'center', valign: 'middle', margin: [8, 8, 8, 8]
                                 }
                             };
                         });
                     });
                     s.addTable(pptRows, { x: m.left/96, y: y/96, w: maxW/96, border: { pt: 1.5, color: isLightMode ? 'CBD5E1' : '334155' } });
-                    y += estTableHeight + 20; 
+                    y += estH + 30;
                 }
             });
-            
-            // NOTE: Removed s.addImage() canvas so background doesn't get blocked
         }
         
-        ppt.writeFile({ fileName: "Study_Notes_AutoPage_Editable.pptx" }).then(() => { 
+        ppt.writeFile({ fileName: "Study_Notes_Perfectly_Editable.pptx" }).then(() => { 
             btn.innerHTML = "✅ Download Successful!"; 
-            setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); 
+            setTimeout(()=>btn.innerHTML="💾 Generate Editable PPTX", 3000); 
             btn.disabled = false; 
         });
     }, 100);
