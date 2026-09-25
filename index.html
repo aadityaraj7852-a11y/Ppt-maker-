@@ -55,6 +55,7 @@ input[type="color"] { width: 100%; height: 40px; padding: 2px; border-radius: 8p
 .slide-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 0; }
 body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
 
+/* Changed overflow to let users see exact cutoff */
 .slide-content { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
 .slide-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px; font-size: 0.9em; color: var(--text-muted); }
 
@@ -95,8 +96,9 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
             <button id="importJsonBtn" class="btn btn-purple">🧩 Import JSON</button>
             <button id="addSlideBtn" class="btn btn-green"><i class="fa fa-plus"></i> Add Slide</button>
         </div>
-        <div class="grid-2" style="margin-top: 8px;">
-            <button id="copyCodeBtn" class="btn btn-purple"><i class="fa fa-copy"></i> Copy JSON/Data</button>
+        <div class="grid-3" style="margin-top: 8px;">
+            <button id="copyCodeBtn" class="btn btn-purple"><i class="fa fa-copy"></i> Copy Data</button>
+            <button id="paginateBtn" class="btn btn-blue"><i class="fa fa-scissors"></i> Sync Slides</button>
             <button id="clearBtn" class="btn btn-red"><i class="fa fa-trash"></i> Clear All</button>
         </div>
 
@@ -141,7 +143,7 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
 
 <script>
 const $ = id => document.getElementById(id);
-let DATA = [];
+let DATA = []; 
 let isLightMode = false;
 let customBgDataUrl = null;
 
@@ -198,7 +200,6 @@ $('addSlideBtn').onclick = () => {
     renderPreview(); saveState();
 };
 
-// Copy JSON / Content Code
 $('copyCodeBtn').onclick = () => {
     if(DATA.length === 0) return alert("कोई डेटा उपलब्ध नहीं है!");
     navigator.clipboard.writeText(JSON.stringify(DATA, null, 2)).then(() => {
@@ -207,16 +208,88 @@ $('copyCodeBtn').onclick = () => {
 };
 
 // ==============================================
-// SMART HTML & AUTO-SPLIT PARSER 
+// 🚀 NEW: AUTO-PAGINATION SYNC (DASHBOARD = PPT)
 // ==============================================
-$('importBtn').onclick = () => { 
+async function applyAutoPagination() {
+    try { await document.fonts.load("30px Kalam"); await document.fonts.load("bold 30px Kalam"); } catch(e){}
+    
+    const pxW = 1300, pxH = 710;
+    const m = { top:parseInt($('topM').value), bottom:parseInt($('bottomM').value), left:parseInt($('leftM').value), right:parseInt($('rightM').value) };
+    const maxW = pxW - m.left - m.right;
+    const bottomLimit = pxH - m.bottom;
+    
+    let c = document.createElement("canvas"); 
+    let ctx = c.getContext("2d"); 
+    ctx.textBaseline = "top";
+    
+    const measureH = (text, font, lineH, maxWidth) => {
+        if(!text) return 0; 
+        ctx.font = font; 
+        let h = 0;
+        text.split("\n").forEach(p => {
+            if(!p.trim()){ h += lineH/2; return; }
+            let currentX = 0;
+            // Strip bold tags just for measuring width
+            let words = p.replace(/<\/?b>/g, '').split(' ');
+            words.forEach(w => {
+                let mw = ctx.measureText(w + " ").width;
+                if(currentX + mw > maxWidth && currentX !== 0) { h += lineH; currentX = 0; }
+                currentX += mw;
+            });
+            h += lineH;
+        });
+        return h;
+    };
+
+    let newData = [];
+    DATA.forEach(slideEls => {
+        let currentSlide = []; 
+        let y = m.top;
+        
+        slideEls.forEach(el => {
+            let h = 0;
+            if(el.type === 'h1') h = measureH(el.text, "bold 44px Kalam", 56, maxW) + 10;
+            else if(el.type === 'h2') h = measureH(el.text, "bold 34px Kalam", 46, maxW) + 10;
+            else if(el.type === 'h3') h = measureH(el.text, "bold 28px Kalam", 38, maxW) + 5;
+            else if(el.type === 'p') h = measureH(el.text, "bold 30px Kalam", 42, maxW) + 8;
+            else if(el.type === 'ul') { h = 5; el.items.forEach(li => { h += measureH("• " + li, "bold 30px Kalam", 42, maxW - 20) + 5; }); h += 5; }
+            else if(el.type === 'mcq-q') h = measureH(el.text, "bold 40px Kalam", 52, maxW) + 20;
+            else if(el.type === 'mcq-opt') h = measureH(el.text, "bold 34px Kalam", 46, maxW - 30) + 10;
+            else if(el.type === 'table') h = (el.rows.length * 55) + 30 + 20;
+
+            // If the element exceeds the slide height limit, push current slide and start fresh
+            if(y + h > bottomLimit && y > m.top) {
+                newData.push(currentSlide);
+                currentSlide = [];
+                y = m.top;
+            }
+            
+            currentSlide.push(el);
+            y += h;
+        });
+        if(currentSlide.length > 0) newData.push(currentSlide);
+    });
+    
+    DATA = newData;
+}
+
+$('paginateBtn').onclick = async () => {
+    const btn = $('paginateBtn'); btn.innerText = "⏳ Syncing...";
+    await applyAutoPagination();
+    renderPreview(); saveState();
+    btn.innerHTML = `<i class="fa fa-scissors"></i> Sync Slides`;
+};
+
+// ==============================================
+// SMART HTML PARSER 
+// ==============================================
+$('importBtn').onclick = async () => { 
     let rawHtml = $('htmlArea').value.trim();
     if(!rawHtml) return alert("Please paste HTML code or text!");
 
-    // If text does not contain HTML tags, treat paragraphs / lines as separate sections
+    let slidesData = [];
     if(!/<[a-z][\s\S]*>/i.test(rawHtml)) {
         let lines = rawHtml.split('\n').filter(l => l.trim() !== '');
-        let slidesData = [];
         let currentSlide = [];
         lines.forEach((line, idx) => {
             if(idx % 4 === 0) {
@@ -227,59 +300,53 @@ $('importBtn').onclick = () => {
             }
         });
         if(currentSlide.length > 0) slidesData.push(currentSlide);
-        DATA = slidesData;
-        renderPreview(); saveState();
-        return;
-    }
-
-    let slidesData = [];
-    let currentSlide = [];
-
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(rawHtml, 'text/html');
-
-    Array.from(doc.body.children).forEach(el => {
-        if (el.tagName === 'H1' || el.tagName === 'H2') {
-            if (currentSlide.length > 0) slidesData.push(currentSlide);
-            currentSlide = [];
-            currentSlide.push({ type: el.tagName.toLowerCase(), text: cleanHtmlForCanvas(el.innerHTML) });
-        } 
-        else if (el.tagName === 'H3') {
-            currentSlide.push({ type: 'h3', text: cleanHtmlForCanvas(el.innerHTML) });
-        } 
-        else if (el.tagName === 'P') {
-            let text = cleanHtmlForCanvas(el.innerHTML);
-            if(text) currentSlide.push({ type: 'p', text: text });
-        } 
-        else if (el.tagName === 'UL' || el.tagName === 'OL') {
-            let items = [];
-            Array.from(el.children).forEach(li => { if (li.tagName === 'LI') items.push(cleanHtmlForCanvas(li.innerHTML)); });
-            if(items.length > 0) currentSlide.push({ type: 'ul', items: items });
-        } 
-        else if (el.tagName === 'TABLE') {
-            let rows = [];
-            Array.from(el.querySelectorAll('tr')).forEach(tr => {
-                let cells = [];
-                Array.from(tr.querySelectorAll('th, td')).forEach(td => cells.push(cleanHtmlForCanvas(td.innerHTML)));
-                if(cells.length > 0) rows.push(cells);
-            });
-            if(rows.length > 0) currentSlide.push({ type: 'table', rows: rows });
-        }
-    });
-
-    if (currentSlide.length > 0) slidesData.push(currentSlide);
-    if (slidesData.length === 0) {
-        DATA = [[{ type: 'p', text: cleanHtmlForCanvas(rawHtml) }]];
+        DATA.push(...slidesData);
     } else {
-        DATA = slidesData;
+        let currentSlide = [];
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(rawHtml, 'text/html');
+
+        Array.from(doc.body.children).forEach(el => {
+            if (el.tagName === 'H1' || el.tagName === 'H2') {
+                if (currentSlide.length > 0) slidesData.push(currentSlide);
+                currentSlide = [];
+                currentSlide.push({ type: el.tagName.toLowerCase(), text: cleanHtmlForCanvas(el.innerHTML) });
+            } 
+            else if (el.tagName === 'H3') { currentSlide.push({ type: 'h3', text: cleanHtmlForCanvas(el.innerHTML) }); } 
+            else if (el.tagName === 'P') {
+                let text = cleanHtmlForCanvas(el.innerHTML);
+                if(text) currentSlide.push({ type: 'p', text: text });
+            } 
+            else if (el.tagName === 'UL' || el.tagName === 'OL') {
+                let items = [];
+                Array.from(el.children).forEach(li => { if (li.tagName === 'LI') items.push(cleanHtmlForCanvas(li.innerHTML)); });
+                if(items.length > 0) currentSlide.push({ type: 'ul', items: items });
+            } 
+            else if (el.tagName === 'TABLE') {
+                let rows = [];
+                Array.from(el.querySelectorAll('tr')).forEach(tr => {
+                    let cells = [];
+                    Array.from(tr.querySelectorAll('th, td')).forEach(td => cells.push(cleanHtmlForCanvas(td.innerHTML)));
+                    if(cells.length > 0) rows.push(cells);
+                });
+                if(rows.length > 0) currentSlide.push({ type: 'table', rows: rows });
+            }
+        });
+        if (currentSlide.length > 0) slidesData.push(currentSlide);
+        
+        if (slidesData.length === 0) DATA.push([{ type: 'p', text: cleanHtmlForCanvas(rawHtml) }]);
+        else DATA.push(...slidesData);
     }
+    
+    // Auto sync dashboard to match exactly what PPT export will do!
+    await applyAutoPagination(); 
     renderPreview(); saveState();
 };
 
 // ==============================================
 // SMART JSON MCQ PARSER 
 // ==============================================
-$('importJsonBtn').onclick = () => {
+$('importJsonBtn').onclick = async () => {
     let rawJson = $('htmlArea').value.trim();
     if(!rawJson) return alert("Please paste MCQ JSON data!");
 
@@ -294,12 +361,8 @@ $('importJsonBtn').onclick = () => {
             if(!item.question && !item.module) return; 
             
             let currentSlide = [];
-            if(item.module) {
-                currentSlide.push({ type: 'h3', text: `[${item.module}]` });
-            }
-            if(item.question) {
-                currentSlide.push({ type: 'mcq-q', text: `Q${index + 1}. ` + item.question });
-            }
+            if(item.module) currentSlide.push({ type: 'h3', text: `[${item.module}]` });
+            if(item.question) currentSlide.push({ type: 'mcq-q', text: `Q${index + 1}. ` + item.question });
             
             let opts = item.option || item.options || [];
             if(Array.isArray(opts)) {
@@ -309,12 +372,9 @@ $('importJsonBtn').onclick = () => {
                 });
             }
 
-            // Optional solution / explanation pagination check
             if(item.solution || item.explanation) {
                 let expText = item.solution || item.explanation;
-                slidesData.push(currentSlide); // Push question slide
-                
-                // Create explanation slide automatically
+                slidesData.push(currentSlide); 
                 let expSlide = [
                     { type: 'h3', text: `Q${index + 1}. Explanation / Answer` },
                     { type: 'p', text: `Correct Answer: ${item.answer || 'N/A'}` },
@@ -328,25 +388,25 @@ $('importJsonBtn').onclick = () => {
 
         if (slidesData.length === 0) return alert("No valid questions found in JSON!");
         
-        DATA = slidesData;
+        DATA.push(...slidesData); 
+        // Auto sync dashboard to match PPT export!
+        await applyAutoPagination();
         renderPreview(); saveState();
 
-    } catch (e) {
-        alert("Invalid JSON format! Error: " + e.message);
-    }
+    } catch (e) { alert("Invalid JSON format! Error: " + e.message); }
 };
 
 $('clearBtn').onclick = () => { if(confirm("Clear all data?")) { DATA = []; $('htmlArea').value = ""; localStorage.removeItem('htmlPptStateFinalX3'); renderPreview(); } };
 
 function saveState() {
     const state = {
-        data: DATA, margins: { t: $('topM').value, b: $('bottomM').value, l: $('leftM').value, r: $('rightM').value },
+        data: DATA, margins: { t: $('topM').value, b:$('bottomM').value, l: $('leftM').value, r:$('rightM').value },
         colors: { 
-            h1: $('h1Color').value, h2: $('h2Color').value, h3: $('h3Color').value, 
-            bold: $('boldColor').value, opt: $('optColor').value, 
-            mcqQ: $('mcqQColor').value, mcqOpt: $('mcqOptColor').value 
+            h1: $('h1Color').value, h2: $('h2Color').value, h3:$('h3Color').value, 
+            bold: $('boldColor').value, opt:$('optColor').value, 
+            mcqQ: $('mcqQColor').value, mcqOpt:$('mcqOptColor').value 
         },
-        bg: $('bgSelect').value, theme: isLightMode, customBg: customBgDataUrl, htmlBox: $('htmlArea').value
+        bg: $('bgSelect').value, theme: isLightMode, customBg: customBgDataUrl, htmlBox:$('htmlArea').value
     };
     localStorage.setItem('htmlPptStateFinalX3', JSON.stringify(state));
 }
@@ -358,7 +418,7 @@ function loadState() {
         $('htmlArea').value = state.htmlBox || "";
         $('topM').value = state.margins.t; $('bottomM').value = state.margins.b; $('leftM').value = state.margins.l; $('rightM').value = state.margins.r;
         $('h1Color').value = state.colors.h1; $('h2Color').value = state.colors.h2; 
-        if(state.colors.h3) $('h3Color').value = state.colors.h3; if(state.colors.bold) $('boldColor').value = state.colors.bold;
+        if(state.colors.h3) $('h3Color').value = state.colors.h3; if(state.colors.bold)$('boldColor').value = state.colors.bold;
         $('optColor').value = state.colors.opt; 
         if(state.colors.mcqQ) $('mcqQColor').value = state.colors.mcqQ;
         if(state.colors.mcqOpt) $('mcqOptColor').value = state.colors.mcqOpt;
@@ -382,18 +442,21 @@ function renderPreview() {
 
     if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted); padding:20px; text-align:center;'>No slides. Import HTML/JSON or click 'Add Slide'.</p>"; return; }
 
-    const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
-    const mcqQc = $('mcqQColor').value, mcqOc = $('mcqOptColor').value;
+    const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c =$('h3Color').value, bc = $('boldColor').value, oc =$('optColor').value;
+    const mcqQc = $('mcqQColor').value, mcqOc =$('mcqOptColor').value;
     const bgUrl = getBgUrl();
 
     DATA.forEach((slideElements, sIdx) => {
         const div = document.createElement("div"); div.className = "slide-card";
         if(bgUrl) div.style.background = `url('${bgUrl}') center/cover no-repeat`; else div.style.backgroundColor = isLightMode ? "#ffffff" : "#000000";
         
-        // Header Bar for individual slide control (Delete / Move)
         const headerBar = document.createElement("div"); headerBar.className = "slide-header-bar";
-        headerBar.innerHTML = `<span>Slide #${sIdx + 1}</span> <button class="btn btn-red" style="width:auto; padding:2px 8px; font-size:0.8em;" onclick="deleteSlide(${sIdx})"><i class="fa fa-trash"></i> Delete</button>`;
-        div.appendChild(headerBar);
+        const titleSpan = document.createElement("span"); titleSpan.innerText = `Slide #${sIdx + 1}`;
+        const deleteBtn = document.createElement("button"); deleteBtn.className = "btn btn-red";
+        deleteBtn.style.cssText = "width:auto; padding:2px 8px; font-size:0.8em;";
+        deleteBtn.innerHTML = `<i class="fa fa-trash"></i> Delete`;
+        deleteBtn.onclick = () => { DATA.splice(sIdx, 1); renderPreview(); saveState(); };
+        headerBar.appendChild(titleSpan); headerBar.appendChild(deleteBtn); div.appendChild(headerBar);
 
         const contentWrap = document.createElement("div"); contentWrap.className = "slide-content";
 
@@ -445,11 +508,6 @@ function renderPreview() {
     });
 }
 
-window.deleteSlide = (index) => {
-    DATA.splice(index, 1);
-    renderPreview(); saveState();
-};
-
 // ==============================================
 // ADVANCED GENERATOR WITH AUTO-PAGINATION
 // ==============================================
@@ -467,8 +525,8 @@ $('generateBtn').onclick = async () => {
         await document.fonts.load("bold 34px Kalam"); await document.fonts.load("bold 44px Kalam");
         await document.fonts.load("bold 40px Kalam"); await document.fonts.load("34px Kalam");
 
-        const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
-        const mcqQc = $('mcqQColor').value, mcqOc = $('mcqOptColor').value;
+        const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c =$('h3Color').value, bc = $('boldColor').value, oc =$('optColor').value;
+        const mcqQc = $('mcqQColor').value, mcqOc =$('mcqOptColor').value;
 
         for (const slideElements of DATA) {
             
@@ -519,7 +577,6 @@ $('generateBtn').onclick = async () => {
                 });
             };
 
-            // Process each element
             slideElements.forEach((el) => {
                 if ((el.type === 'h1' || el.type === 'h2') && y > m.top) triggerPagination();
 
@@ -534,13 +591,8 @@ $('generateBtn').onclick = async () => {
                     el.items.forEach(li => { drawSmartText("• " + li, "30px Kalam", "bold 30px Kalam", oc, bc, 42, 20); y+=5; });
                     y+=5; 
                 }
-                // --- MCQ Elements ---
-                else if(el.type === 'mcq-q'){ 
-                    drawSmartText(el.text, "bold 40px Kalam", "bold 40px Kalam", mcqQc, mcqQc, 52); y+=20; 
-                }
-                else if(el.type === 'mcq-opt'){ 
-                    drawSmartText(el.text, "34px Kalam", "bold 34px Kalam", mcqOc, mcqOc, 46, 30); y+=10; 
-                }
+                else if(el.type === 'mcq-q'){ drawSmartText(el.text, "bold 40px Kalam", "bold 40px Kalam", mcqQc, mcqQc, 52); y+=20; }
+                else if(el.type === 'mcq-opt'){ drawSmartText(el.text, "34px Kalam", "bold 34px Kalam", mcqOc, mcqOc, 46, 30); y+=10; }
                 else if(el.type === 'table'){
                     let estTableHeight = (el.rows.length * 55) + 30;
                     if (y + estTableHeight > bottomLimit && y > m.top) triggerPagination();
