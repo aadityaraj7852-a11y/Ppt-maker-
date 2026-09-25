@@ -46,7 +46,7 @@ input[type="color"] { width: 100%; height: 40px; padding: 2px; border-radius: 8p
 
 .btn { width: 100%; padding: 10px 5px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Kalam', cursive; font-weight: 700; font-size: 1em; transition: 0.2s; color: #fff; text-align: center; }
 .btn:hover { opacity: 0.9; transform: translateY(-2px); }
-.btn-blue { background: #2563eb; } .btn-purple { background: #8b5cf6; } .btn-red { background: #e11d48; } .btn-green { background: #10b981; }
+.btn-blue { background: #2563eb; } .btn-purple { background: #8b5cf6; } .btn-red { background: #e11d48; } .btn-green { background: #10b981; } .btn-orange { background: #f97316; }
 .btn-generate { background: linear-gradient(135deg, #10b981, #059669); font-size: 1.3em; padding: 15px; margin-top: 20px; width: 100%; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
 
 /* --- Preview Styles --- */
@@ -55,7 +55,6 @@ input[type="color"] { width: 100%; height: 40px; padding: 2px; border-radius: 8p
 .slide-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 0; }
 body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
 
-/* Changed overflow to let users see exact cutoff */
 .slide-content { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
 .slide-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px; font-size: 0.9em; color: var(--text-muted); }
 
@@ -96,10 +95,11 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
             <button id="importJsonBtn" class="btn btn-purple">🧩 Import JSON</button>
             <button id="addSlideBtn" class="btn btn-green"><i class="fa fa-plus"></i> Add Slide</button>
         </div>
-        <div class="grid-3" style="margin-top: 8px;">
+        <div class="grid-4" style="margin-top: 8px;">
+            <button id="demoBtn" class="btn btn-orange"><i class="fa fa-code"></i> Demo Code</button>
             <button id="copyCodeBtn" class="btn btn-purple"><i class="fa fa-copy"></i> Copy Data</button>
             <button id="paginateBtn" class="btn btn-blue"><i class="fa fa-scissors"></i> Sync Slides</button>
-            <button id="clearBtn" class="btn btn-red"><i class="fa fa-trash"></i> Clear All</button>
+            <button id="clearBtn" class="btn btn-red"><i class="fa fa-trash"></i> Clear</button>
         </div>
 
         <label>Slide Margins (px)</label>
@@ -191,7 +191,79 @@ function cleanHtmlForCanvas(htmlStr) {
     return txt.value.trim();
 }
 
-// Add Blank Slide Manually
+// ==============================================
+// 🌟 NEW: GET DEMO CODE BUTTON
+// ==============================================
+$('demoBtn').onclick = () => {
+    const demoText = `<!-- ============================================== -->
+<!-- 📝 HTML DEMO CODE (Copy & Click 'Import HTML') -->
+<!-- ============================================== -->
+<h2>राजस्थान का भूगोल (HTML Demo)</h2>
+<h3>सामान्य परिचय</h3>
+<p>राजस्थान भारत का <b>सबसे बड़ा</b> राज्य है।</p>
+<ul>
+    <li>यह भारत के उत्तर-पश्चिम में स्थित है।</li>
+    <li>इसकी आकृति विषमकोणीय चतुर्भुज है।</li>
+</ul>
+<table>
+    <tr><th>विवरण</th><th>संख्या</th></tr>
+    <tr><td>कुल जिले</td><td>50</td></tr>
+    <tr><td>कुल संभाग</td><td>10</td></tr>
+</table>
+
+<!-- ============================================== -->
+<!-- 🧩 MCQ JSON DEMO (Copy & Click 'Import JSON') -->
+<!-- Includes all 6 types of formatted Questions -->
+<!-- ============================================== -->
+[
+  {
+    "module": "Type 1: वस्तुनिष्ठ (Objective)",
+    "question": "निम्न में से कौन-सा कथन राजस्थान के बारे में सत्य नहीं है?",
+    "option": ["यह भारत का सबसे बड़ा राज्य है।", "इसकी आकृति विषमकोणीय चतुर्भुज है।", "<b>यहाँ देश की सर्वाधिक वर्षा होती है।</b>", "अरावली पर्वतमाला इसे दो भागों में बांटती है।"],
+    "answer": "यहाँ देश की सर्वाधिक वर्षा होती है।",
+    "solution": "राजस्थान में देश की सर्वाधिक वर्षा नहीं होती है, बल्कि यहाँ का बड़ा हिस्सा शुष्क मरुस्थल है।"
+  },
+  {
+    "module": "Type 2: कथन-कारण",
+    "question": "<b>कथन (A):</b> अरावली पर्वतमाला राजस्थान को जलवायु की दृष्टि से दो भागों में बांटती है।<br><b>कारण (R):</b> यह मानसूनी हवाओं के समानांतर स्थित है, जिससे पश्चिमी राजस्थान में वर्षा कम होती है।",
+    "option": ["(A) A और R दोनों सही हैं तथा R, A की सही व्याख्या करता है", "(B) A और R दोनों सही हैं, पर R, A की सही व्याख्या नहीं करता", "(C) A सही है, R गलत है", "(D) A गलत है, R सही है"],
+    "answer": "(A) A और R दोनों सही हैं तथा R, A की सही व्याख्या करता है",
+    "solution": "अरावली मानसूनी हवाओं के समानांतर है, इसलिए यह वर्षा कराने में सहायक नहीं है और राजस्थान को दो जलवायु कटिबंधों में बांटती है।"
+  },
+  {
+    "module": "Type 3: दो कथन आधारित",
+    "question": "निम्न कथनों पर विचार करें:<br><b>कथन-I:</b> चम्बल नदी राजस्थान की बारहमासी नदी है।<br><b>कथन-II:</b> इसका उद्गम विंध्याचल पर्वत (मध्य प्रदेश) से होता है।",
+    "option": ["(A) कथन-I सही, कथन-II गलत", "(B) कथन-I गलत, कथन-II सही", "(C) दोनों कथन सही", "(D) दोनों कथन गलत"],
+    "answer": "(C) दोनों कथन सही",
+    "solution": "चम्बल नदी राजस्थान की एकमात्र नित्यवाही नदी है और यह म.प्र. के जनापाव पहाड़ी (विंध्याचल) से निकलती है।"
+  },
+  {
+    "module": "Type 4: मिलान आधारित",
+    "question": "सूची-I को सूची-II से सुमेलित कीजिए:<br><table><tr><th>सूची-I (दुर्ग)</th><th>सूची-II (स्थान)</th></tr><tr><td>1. मेहरानगढ़</td><td>a. जयपुर</td></tr><tr><td>2. आमेर</td><td>b. जोधपुर</td></tr><tr><td>3. कुम्भलगढ़</td><td>c. बीकानेर</td></tr><tr><td>4. जूनागढ़</td><td>d. राजसमंद</td></tr></table>",
+    "option": ["1-b, 2-a, 3-d, 4-c", "1-a, 2-b, 3-c, 4-d", "1-b, 2-c, 3-a, 4-d", "1-d, 2-a, 3-b, 4-c"],
+    "answer": "1-b, 2-a, 3-d, 4-c",
+    "solution": "मेहरानगढ़ (जोधपुर), आमेर (जयपुर), कुम्भलगढ़ (राजसमंद), और जूनागढ़ (बीकानेर) में स्थित है।"
+  },
+  {
+    "module": "Type 5: गलत विकल्प पहचानना",
+    "question": "निम्न में से कौन-सा युग्म <b>असंगत (गलत)</b> है?",
+    "option": ["गुरुशिखर - 1722 मीटर", "तारागढ़ - 1380 मीटर", "सेर - 1597 मीटर", "अचलगढ़ - 1380 मीटर"],
+    "answer": "तारागढ़ - 1380 मीटर",
+    "solution": "तारागढ़ (अजमेर) की ऊंचाई 873 मीटर है, जबकि अचलगढ़ की 1380 मीटर है। अतः विकल्प B असंगत है।"
+  },
+  {
+    "module": "Type 6: कूट (Code) आधारित",
+    "question": "राजस्थान के इन जिलों को पूर्व से पश्चिम की ओर सही क्रम में व्यवस्थित करें:<br>1. जैसलमेर<br>2. जयपुर<br>3. भरतपुर<br>4. जोधपुर<br><br><b>सही कूट का चयन करें:</b>",
+    "option": ["3, 2, 4, 1", "1, 4, 2, 3", "3, 4, 2, 1", "2, 3, 1, 4"],
+    "answer": "3, 2, 4, 1",
+    "solution": "पूर्व से पश्चिम की ओर सही क्रम: भरतपुर (सबसे पूर्व) -> जयपुर -> जोधपुर -> जैसलमेर (सबसे पश्चिम)।"
+  }
+]`;
+    $('htmlArea').value = demoText;
+    alert("✅ डेमो कोड इनपुट बॉक्स में भर दिया गया है!\n\nइसमें HTML और 6 प्रकार के MCQ JSON शामिल हैं। आप इन्हें अलग-अलग कॉपी करके 'Import HTML' या 'Import JSON' बटन से टेस्ट कर सकते हैं।");
+    saveState();
+};
+
 $('addSlideBtn').onclick = () => {
     DATA.push([
         { type: 'h2', text: `Slide ${DATA.length + 1} Title` },
@@ -207,9 +279,6 @@ $('copyCodeBtn').onclick = () => {
     });
 };
 
-// ==============================================
-// 🚀 NEW: AUTO-PAGINATION SYNC (DASHBOARD = PPT)
-// ==============================================
 async function applyAutoPagination() {
     try { await document.fonts.load("30px Kalam"); await document.fonts.load("bold 30px Kalam"); } catch(e){}
     
@@ -219,17 +288,14 @@ async function applyAutoPagination() {
     const bottomLimit = pxH - m.bottom;
     
     let c = document.createElement("canvas"); 
-    let ctx = c.getContext("2d"); 
-    ctx.textBaseline = "top";
+    let ctx = c.getContext("2d"); ctx.textBaseline = "top";
     
     const measureH = (text, font, lineH, maxWidth) => {
         if(!text) return 0; 
-        ctx.font = font; 
-        let h = 0;
+        ctx.font = font; let h = 0;
         text.split("\n").forEach(p => {
             if(!p.trim()){ h += lineH/2; return; }
             let currentX = 0;
-            // Strip bold tags just for measuring width
             let words = p.replace(/<\/?b>/g, '').split(' ');
             words.forEach(w => {
                 let mw = ctx.measureText(w + " ").width;
@@ -243,8 +309,7 @@ async function applyAutoPagination() {
 
     let newData = [];
     DATA.forEach(slideEls => {
-        let currentSlide = []; 
-        let y = m.top;
+        let currentSlide = []; let y = m.top;
         
         slideEls.forEach(el => {
             let h = 0;
@@ -257,19 +322,11 @@ async function applyAutoPagination() {
             else if(el.type === 'mcq-opt') h = measureH(el.text, "bold 34px Kalam", 46, maxW - 30) + 10;
             else if(el.type === 'table') h = (el.rows.length * 55) + 30 + 20;
 
-            // If the element exceeds the slide height limit, push current slide and start fresh
-            if(y + h > bottomLimit && y > m.top) {
-                newData.push(currentSlide);
-                currentSlide = [];
-                y = m.top;
-            }
-            
-            currentSlide.push(el);
-            y += h;
+            if(y + h > bottomLimit && y > m.top) { newData.push(currentSlide); currentSlide = []; y = m.top; }
+            currentSlide.push(el); y += h;
         });
         if(currentSlide.length > 0) newData.push(currentSlide);
     });
-    
     DATA = newData;
 }
 
@@ -295,9 +352,7 @@ $('importBtn').onclick = async () => {
             if(idx % 4 === 0) {
                 if(currentSlide.length > 0) slidesData.push(currentSlide);
                 currentSlide = [{ type: 'h2', text: line }];
-            } else {
-                currentSlide.push({ type: 'p', text: line });
-            }
+            } else { currentSlide.push({ type: 'p', text: line }); }
         });
         if(currentSlide.length > 0) slidesData.push(currentSlide);
         DATA.push(...slidesData);
@@ -338,13 +393,12 @@ $('importBtn').onclick = async () => {
         else DATA.push(...slidesData);
     }
     
-    // Auto sync dashboard to match exactly what PPT export will do!
     await applyAutoPagination(); 
     renderPreview(); saveState();
 };
 
 // ==============================================
-// SMART JSON MCQ PARSER 
+// ADVANCED JSON MCQ PARSER (Table & <br> Support added)
 // ==============================================
 $('importJsonBtn').onclick = async () => {
     let rawJson = $('htmlArea').value.trim();
@@ -362,13 +416,42 @@ $('importJsonBtn').onclick = async () => {
             
             let currentSlide = [];
             if(item.module) currentSlide.push({ type: 'h3', text: `[${item.module}]` });
-            if(item.question) currentSlide.push({ type: 'mcq-q', text: `Q${index + 1}. ` + item.question });
+            
+            // MAGIC: Check if Question has an HTML Table inside it (For matching questions)
+            if(item.question) {
+                let qText = item.question;
+                let tableHtml = "";
+                
+                if (qText.includes('<table')) {
+                    tableHtml = '<table' + qText.split('<table')[1];
+                    qText = qText.split('<table')[0]; // Text before table
+                }
+
+                // Replace <br> tags with \n for correct rendering
+                currentSlide.push({ type: 'mcq-q', text: `Q${index + 1}. ` + qText.replace(/<br\s*[\/]?>/gi, '\n') });
+                
+                // If a table was found in the question, parse it into a real PPT Table
+                if (tableHtml) {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = tableHtml;
+                    const tbl = tempDiv.querySelector('table');
+                    if (tbl) {
+                        let rows = [];
+                        Array.from(tbl.querySelectorAll('tr')).forEach(tr => {
+                            let cells = [];
+                            Array.from(tr.querySelectorAll('th, td')).forEach(td => cells.push(cleanHtmlForCanvas(td.innerHTML)));
+                            if(cells.length > 0) rows.push(cells);
+                        });
+                        if(rows.length > 0) currentSlide.push({ type: 'table', rows: rows });
+                    }
+                }
+            }
             
             let opts = item.option || item.options || [];
             if(Array.isArray(opts)) {
                 opts.forEach((optText, i) => {
                     let label = alphabet[i] ? alphabet[i] + ") " : "";
-                    currentSlide.push({ type: 'mcq-opt', text: label + optText });
+                    currentSlide.push({ type: 'mcq-opt', text: label + optText.replace(/<br\s*[\/]?>/gi, '\n') });
                 });
             }
 
@@ -378,7 +461,7 @@ $('importJsonBtn').onclick = async () => {
                 let expSlide = [
                     { type: 'h3', text: `Q${index + 1}. Explanation / Answer` },
                     { type: 'p', text: `Correct Answer: ${item.answer || 'N/A'}` },
-                    { type: 'p', text: expText }
+                    { type: 'p', text: expText.replace(/<br\s*[\/]?>/gi, '\n') }
                 ];
                 slidesData.push(expSlide);
             } else {
@@ -389,7 +472,6 @@ $('importJsonBtn').onclick = async () => {
         if (slidesData.length === 0) return alert("No valid questions found in JSON!");
         
         DATA.push(...slidesData); 
-        // Auto sync dashboard to match PPT export!
         await applyAutoPagination();
         renderPreview(); saveState();
 
@@ -434,13 +516,13 @@ function loadState() {
 
 ['topM', 'bottomM', 'leftM', 'rightM', 'h1Color', 'h2Color', 'h3Color', 'boldColor', 'optColor', 'mcqQColor', 'mcqOptColor'].forEach(id => { $(id).addEventListener('change', () => { renderPreview(); saveState(); }); });
 
-function formatPreviewText(text, boldHex) { if(!text) return ""; return text.replace(/<b>(.*?)<\/b>/g, `<span style="color:${boldHex}; font-weight:bold;">$1</span>`); }
+function formatPreviewText(text, boldHex) { if(!text) return ""; return text.replace(/<b>(.*?)<\/b>/g, `<span style="color:${boldHex}; font-weight:bold;">$1</span>`).replace(/\n/g, '<br>'); }
 
 function renderPreview() {
     const box = $("preview"); box.innerHTML = "";
     $('slideCountBadge').innerText = `${DATA.length} Slides`;
 
-    if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted); padding:20px; text-align:center;'>No slides. Import HTML/JSON or click 'Add Slide'.</p>"; return; }
+    if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted); padding:20px; text-align:center;'>No slides. Click 'Demo Code' to get started!</p>"; return; }
 
     const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c =$('h3Color').value, bc = $('boldColor').value, oc =$('optColor').value;
     const mcqQc = $('mcqQColor').value, mcqOc =$('mcqOptColor').value;
