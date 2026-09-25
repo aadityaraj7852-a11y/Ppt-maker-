@@ -213,7 +213,6 @@ $('importBtn').onclick = () => {
     let rawHtml = $('htmlArea').value.trim();
     if(!rawHtml) return alert("Please paste HTML code or text!");
 
-    // If text does not contain HTML tags, treat paragraphs / lines as separate sections
     if(!/<[a-z][\s\S]*>/i.test(rawHtml)) {
         let lines = rawHtml.split('\n').filter(l => l.trim() !== '');
         let slidesData = [];
@@ -309,12 +308,10 @@ $('importJsonBtn').onclick = () => {
                 });
             }
 
-            // Optional solution / explanation pagination check
             if(item.solution || item.explanation) {
                 let expText = item.solution || item.explanation;
-                slidesData.push(currentSlide); // Push question slide
+                slidesData.push(currentSlide); 
                 
-                // Create explanation slide automatically
                 let expSlide = [
                     { type: 'h3', text: `Q${index + 1}. Explanation / Answer` },
                     { type: 'p', text: `Correct Answer: ${item.answer || 'N/A'}` },
@@ -340,13 +337,13 @@ $('clearBtn').onclick = () => { if(confirm("Clear all data?")) { DATA = []; $('h
 
 function saveState() {
     const state = {
-        data: DATA, margins: { t: $('topM').value, b: $('bottomM').value, l: $('leftM').value, r: $('rightM').value },
+        data: DATA, margins: { t: $('topM').value, b:$('bottomM').value, l: $('leftM').value, r:$('rightM').value },
         colors: { 
-            h1: $('h1Color').value, h2: $('h2Color').value, h3: $('h3Color').value, 
-            bold: $('boldColor').value, opt: $('optColor').value, 
-            mcqQ: $('mcqQColor').value, mcqOpt: $('mcqOptColor').value 
+            h1: $('h1Color').value, h2: $('h2Color').value, h3:$('h3Color').value, 
+            bold: $('boldColor').value, opt:$('optColor').value, 
+            mcqQ: $('mcqQColor').value, mcqOpt:$('mcqOptColor').value 
         },
-        bg: $('bgSelect').value, theme: isLightMode, customBg: customBgDataUrl, htmlBox: $('htmlArea').value
+        bg: $('bgSelect').value, theme: isLightMode, customBg: customBgDataUrl, htmlBox:$('htmlArea').value
     };
     localStorage.setItem('htmlPptStateFinalX3', JSON.stringify(state));
 }
@@ -358,7 +355,7 @@ function loadState() {
         $('htmlArea').value = state.htmlBox || "";
         $('topM').value = state.margins.t; $('bottomM').value = state.margins.b; $('leftM').value = state.margins.l; $('rightM').value = state.margins.r;
         $('h1Color').value = state.colors.h1; $('h2Color').value = state.colors.h2; 
-        if(state.colors.h3) $('h3Color').value = state.colors.h3; if(state.colors.bold) $('boldColor').value = state.colors.bold;
+        if(state.colors.h3) $('h3Color').value = state.colors.h3; if(state.colors.bold)$('boldColor').value = state.colors.bold;
         $('optColor').value = state.colors.opt; 
         if(state.colors.mcqQ) $('mcqQColor').value = state.colors.mcqQ;
         if(state.colors.mcqOpt) $('mcqOptColor').value = state.colors.mcqOpt;
@@ -382,15 +379,14 @@ function renderPreview() {
 
     if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted); padding:20px; text-align:center;'>No slides. Import HTML/JSON or click 'Add Slide'.</p>"; return; }
 
-    const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
-    const mcqQc = $('mcqQColor').value, mcqOc = $('mcqOptColor').value;
+    const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c =$('h3Color').value, bc = $('boldColor').value, oc =$('optColor').value;
+    const mcqQc = $('mcqQColor').value, mcqOc =$('mcqOptColor').value;
     const bgUrl = getBgUrl();
 
     DATA.forEach((slideElements, sIdx) => {
         const div = document.createElement("div"); div.className = "slide-card";
         if(bgUrl) div.style.background = `url('${bgUrl}') center/cover no-repeat`; else div.style.backgroundColor = isLightMode ? "#ffffff" : "#000000";
         
-        // Header Bar for individual slide control (Delete / Move)
         const headerBar = document.createElement("div"); headerBar.className = "slide-header-bar";
         headerBar.innerHTML = `<span>Slide #${sIdx + 1}</span> <button class="btn btn-red" style="width:auto; padding:2px 8px; font-size:0.8em;" onclick="deleteSlide(${sIdx})"><i class="fa fa-trash"></i> Delete</button>`;
         div.appendChild(headerBar);
@@ -451,7 +447,7 @@ window.deleteSlide = (index) => {
 };
 
 // ==============================================
-// ADVANCED GENERATOR WITH AUTO-PAGINATION
+// ADVANCED GENERATOR WITH NATIVE EDITABLE TEXT
 // ==============================================
 $('generateBtn').onclick = async () => {
     if (DATA.length === 0) return alert("No Data! Please import HTML or JSON first.");
@@ -467,14 +463,15 @@ $('generateBtn').onclick = async () => {
         await document.fonts.load("bold 34px Kalam"); await document.fonts.load("bold 44px Kalam");
         await document.fonts.load("bold 40px Kalam"); await document.fonts.load("34px Kalam");
 
-        const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
-        const mcqQc = $('mcqQColor').value, mcqOc = $('mcqOptColor').value;
+        const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c =$('h3Color').value, bc = $('boldColor').value, oc =$('optColor').value;
+        const mcqQc = $('mcqQColor').value, mcqOc =$('mcqOptColor').value;
 
         for (const slideElements of DATA) {
             
             let s = ppt.addSlide();
             if (bgUrl) s.background = { data: bgUrl }; else s.background = { color: isLightMode ? "FFFFFF" : "000000" };
 
+            // Canvas is ONLY used to measure text height for Auto-Pagination now
             let c = document.createElement("canvas"); c.width = pxW; c.height = pxH; 
             let ctx = c.getContext("2d"); ctx.textBaseline = "top"; 
             
@@ -482,40 +479,74 @@ $('generateBtn').onclick = async () => {
             const bottomLimit = pxH - m.bottom;
 
             const triggerPagination = () => {
-                s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
                 s = ppt.addSlide();
                 if (bgUrl) s.background = { data: bgUrl }; else s.background = { color: isLightMode ? "FFFFFF" : "000000" };
-                c = document.createElement("canvas"); c.width = pxW; c.height = pxH;
-                ctx = c.getContext("2d"); ctx.textBaseline = "top";
                 y = m.top;
             };
 
-            const drawSmartText = (text, normalFont, boldFont, normalCol, boldCol, lineH, leftIndent = 0) => {
+            // NEW FUNCTION: Outputs NATIVE PowerPoint Text instead of drawing image
+            const drawEditableText = (text, fontSize, normalCol, boldCol, lineH, leftIndent = 0) => {
                 if(!text) return;
                 const paras = text.split("\n");
+                
                 paras.forEach(para => {
                     if(!para.trim()) { y += lineH/2; return; }
-                    let parts = para.split(/(<b>.*?<\/b>)/g); let words = [];
-                    parts.forEach(part => {
-                        if(part.startsWith('<b>') && part.endsWith('</b>')) part.slice(3, -4).split(' ').forEach(w => { if(w) words.push({t: w, b: true}); });
-                        else part.split(' ').forEach(w => { if(w) words.push({t: w, b: false}); });
-                    });
                     
-                    let currentX = m.left + leftIndent; let endX = pxW - m.right;
+                    let textElements = [];
+                    let parts = para.split(/(<b>.*?<\/b>)/g);
+                    let words = [];
+                    
+                    // Setup text format for pptxgenjs
+                    parts.forEach(part => {
+                        if (part.startsWith('<b>') && part.endsWith('</b>')) {
+                            let cleanText = part.slice(3, -4);
+                            textElements.push({ text: cleanText, options: { bold: true, color: boldCol.replace('#','') } });
+                            cleanText.split(' ').forEach(w => { if(w) words.push({t: w, b: true}); });
+                        } else {
+                            if (part) {
+                                textElements.push({ text: part, options: { bold: false, color: normalCol.replace('#','') } });
+                                part.split(' ').forEach(w => { if(w) words.push({t: w, b: false}); });
+                            }
+                        }
+                    });
 
-                    if (y + lineH > bottomLimit && y > m.top) triggerPagination();
+                    // Measure paragraph height for Auto-Pagination logic
+                    let currentX = m.left + leftIndent; 
+                    let endX = pxW - m.right;
+                    let startY = y;
+                    let textHeight = lineH;
 
                     for(let i=0; i<words.length; i++) {
-                        let w = words[i]; ctx.font = w.b ? boldFont : normalFont; ctx.fillStyle = w.b ? boldCol : normalCol;
+                        let w = words[i]; 
+                        ctx.font = w.b ? `bold ${fontSize}px Kalam` : `${fontSize}px Kalam`; 
                         let metric = ctx.measureText(w.t + " ");
-                        
                         if (currentX + metric.width > endX && currentX !== m.left + leftIndent) { 
-                            y += lineH; currentX = m.left + leftIndent; 
-                            if (y + lineH > bottomLimit && y > m.top) triggerPagination();
+                            textHeight += lineH; currentX = m.left + leftIndent; 
                         }
-                        ctx.fillText(w.t + " ", currentX, y); currentX += metric.width;
+                        currentX += metric.width;
                     }
-                    y += lineH;
+
+                    // Check Pagination
+                    if (startY + textHeight > bottomLimit && startY > m.top) {
+                        triggerPagination();
+                        startY = y; 
+                    }
+
+                    // ADD EDITABLE TEXT TO SLIDE
+                    let textW = maxW - leftIndent;
+                    s.addText(textElements, {
+                        x: (m.left + leftIndent) / 96,
+                        y: startY / 96,
+                        w: textW / 96,
+                        h: textHeight / 96,
+                        fontSize: fontSize,
+                        fontFace: 'Kalam',
+                        valign: 'top',
+                        margin: 0,
+                        wrap: true
+                    });
+
+                    y = startY + textHeight; 
                 });
             };
 
@@ -523,24 +554,19 @@ $('generateBtn').onclick = async () => {
             slideElements.forEach((el) => {
                 if ((el.type === 'h1' || el.type === 'h2') && y > m.top) triggerPagination();
 
-                if(el.type === 'h1'){ drawSmartText(el.text, "bold 44px Kalam", "bold 44px Kalam", h1c, h1c, 56); y+=10; }
-                else if(el.type === 'h2'){ drawSmartText(el.text, "bold 34px Kalam", "bold 34px Kalam", h2c, h2c, 46); y+=10; }
+                if(el.type === 'h1'){ drawEditableText(el.text, 44, h1c, h1c, 56); y+=10; }
+                else if(el.type === 'h2'){ drawEditableText(el.text, 34, h2c, h2c, 46); y+=10; }
                 else if(el.type === 'h3'){ 
                     if (y + 50 > bottomLimit && y > m.top) triggerPagination();
-                    drawSmartText(el.text, "bold 28px Kalam", "bold 28px Kalam", h3c, h3c, 38); y+=5; 
+                    drawEditableText(el.text, 28, h3c, h3c, 38); y+=5; 
                 }
-                else if(el.type === 'p'){ drawSmartText(el.text, "30px Kalam", "bold 30px Kalam", oc, bc, 42); y+=8; }
+                else if(el.type === 'p'){ drawEditableText(el.text, 30, oc, bc, 42); y+=8; }
                 else if(el.type === 'ul'){ 
-                    el.items.forEach(li => { drawSmartText("• " + li, "30px Kalam", "bold 30px Kalam", oc, bc, 42, 20); y+=5; });
+                    el.items.forEach(li => { drawEditableText("• " + li, 30, oc, bc, 42, 20); y+=5; });
                     y+=5; 
                 }
-                // --- MCQ Elements ---
-                else if(el.type === 'mcq-q'){ 
-                    drawSmartText(el.text, "bold 40px Kalam", "bold 40px Kalam", mcqQc, mcqQc, 52); y+=20; 
-                }
-                else if(el.type === 'mcq-opt'){ 
-                    drawSmartText(el.text, "34px Kalam", "bold 34px Kalam", mcqOc, mcqOc, 46, 30); y+=10; 
-                }
+                else if(el.type === 'mcq-q'){ drawEditableText(el.text, 40, mcqQc, mcqQc, 52); y+=20; }
+                else if(el.type === 'mcq-opt'){ drawEditableText(el.text, 34, mcqOc, mcqOc, 46, 30); y+=10; }
                 else if(el.type === 'table'){
                     let estTableHeight = (el.rows.length * 55) + 30;
                     if (y + estTableHeight > bottomLimit && y > m.top) triggerPagination();
@@ -564,11 +590,15 @@ $('generateBtn').onclick = async () => {
                     y += estTableHeight + 20; 
                 }
             });
-
-            s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
+            
+            // NOTE: Removed s.addImage() canvas so background doesn't get blocked
         }
         
-        ppt.writeFile({ fileName: "Study_Notes_AutoPage.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
+        ppt.writeFile({ fileName: "Study_Notes_AutoPage_Editable.pptx" }).then(() => { 
+            btn.innerHTML = "✅ Download Successful!"; 
+            setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); 
+            btn.disabled = false; 
+        });
     }, 100);
 };
 
@@ -576,6 +606,3 @@ window.onload = () => loadState();
 </script>
 </body>
 </html>
-
-
-Isme html kesa hoga
