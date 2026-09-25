@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Ultimate PPT Maker - Pure HTML Edition</title>
+<title>Ultimate PPT Maker - Auto Pagination & MCQ Pro</title>
 <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
@@ -39,13 +39,14 @@ textarea, input[type="number"], select { width: 100%; padding: 10px; border-radi
 textarea:focus, input:focus, select:focus { outline: none; border-color: var(--accent); }
 input[type="color"] { width: 100%; height: 40px; padding: 2px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; background: var(--input-bg); }
 
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
 .grid-5 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 5px; }
 
 .btn { width: 100%; padding: 10px 5px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Kalam', cursive; font-weight: 700; font-size: 1em; transition: 0.2s; color: #fff; text-align: center; }
 .btn:hover { opacity: 0.9; transform: translateY(-2px); }
-.btn-blue { background: #2563eb; } .btn-purple { background: #8b5cf6; } .btn-red { background: #e11d48; } .btn-green { background: #10b981; } .btn-orange { background: #f97316; }
+.btn-blue { background: #2563eb; } .btn-purple { background: #8b5cf6; } .btn-red { background: #e11d48; } .btn-green { background: #10b981; }
 .btn-generate { background: linear-gradient(135deg, #10b981, #059669); font-size: 1.3em; padding: 15px; margin-top: 20px; width: 100%; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
 
 /* --- Preview Styles --- */
@@ -65,6 +66,10 @@ body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
 .p-h3 { font-size: 1.4em; font-weight: bold; margin-bottom: 8px; margin-top: 5px; }
 .p-text, .p-li { font-size: 1.3em; margin-bottom: 8px; line-height: 1.5; white-space: pre-wrap; }
 
+/* MCQ specific preview classes */
+.p-mcq-q { font-size: 1.8em; font-weight: bold; margin-bottom: 20px; line-height: 1.4; white-space: pre-wrap; }
+.p-mcq-opt { font-size: 1.5em; margin-bottom: 12px; line-height: 1.4; white-space: pre-wrap; padding-left: 20px; }
+
 /* Attractive HTML Table Preview */
 .preview-table-wrap { width: 100%; margin: 15px 0; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
 .preview-table { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.4); color: var(--text-main); font-size: 1.1em; }
@@ -78,17 +83,21 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
 <div class="main-wrapper">
     <div class="left-panel">
         <div class="header-row">
-            <h2>🎓 HTML PPT Studio</h2>
+            <h2>🎓 PPT & MCQ Studio</h2>
             <button id="themeToggle" class="theme-btn">🌙 Dark Mode</button>
         </div>
 
-        <label>Data Input (HTML & Text Only)</label>
-        <textarea id="htmlArea" rows="7" placeholder='Paste HTML Notes, MCQs, and Tables here. <h2> starts a new slide!'></textarea>
+        <label>Data Input (HTML / Auto-Split / JSON)</label>
+        <textarea id="htmlArea" rows="6" placeholder='Paste HTML Notes, MCQ JSON, or normal text. Headings (H1, H2, H3) will auto-split slides!'></textarea>
         
         <div class="grid-3" style="margin-top: 10px;">
             <button id="importBtn" class="btn btn-blue">📥 Import HTML</button>
-            <button id="demoBtn" class="btn btn-orange"><i class="fa fa-code"></i> Demo Code</button>
-            <button id="clearBtn" class="btn btn-red"><i class="fa fa-trash"></i> Clear</button>
+            <button id="importJsonBtn" class="btn btn-purple">🧩 Import JSON</button>
+            <button id="addSlideBtn" class="btn btn-green"><i class="fa fa-plus"></i> Add Slide</button>
+        </div>
+        <div class="grid-2" style="margin-top: 8px;">
+            <button id="copyCodeBtn" class="btn btn-purple"><i class="fa fa-copy"></i> Copy JSON/Data</button>
+            <button id="clearBtn" class="btn btn-red"><i class="fa fa-trash"></i> Clear All</button>
         </div>
 
         <label>Slide Margins (px)</label>
@@ -99,13 +108,19 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
             <div><label style="margin-top:5px; font-size:0.9em;">Right</label><input type="number" id="rightM" value="90"></div>
         </div>
 
-        <label>Text Colors</label>
+        <label>Text Customization & Colors</label>
         <div class="grid-5">
             <div><label style="margin-top:5px; font-size:0.8em;">H1</label><input type="color" id="h1Color" value="#ffeb3b"></div>
-            <div><label style="margin-top:5px; font-size:0.8em;">H2 (Questions)</label><input type="color" id="h2Color" value="#00e676"></div>
+            <div><label style="margin-top:5px; font-size:0.8em;">H2</label><input type="color" id="h2Color" value="#00e676"></div>
             <div><label style="margin-top:5px; font-size:0.8em;">H3</label><input type="color" id="h3Color" value="#00bcd4"></div>
             <div><label style="margin-top:5px; font-size:0.8em;"><b>Bold</b></label><input type="color" id="boldColor" value="#ff9800"></div>
-            <div><label style="margin-top:5px; font-size:0.8em;">Normal (Options)</label><input type="color" id="optColor" value="#ffffff"></div>
+            <div><label style="margin-top:5px; font-size:0.8em;">Normal</label><input type="color" id="optColor" value="#ffffff"></div>
+        </div>
+
+        <label>MCQ Colors</label>
+        <div class="grid-2">
+            <div><label style="margin-top:5px; font-size:0.8em;">Question Color</label><input type="color" id="mcqQColor" value="#ffeb3b"></div>
+            <div><label style="margin-top:5px; font-size:0.8em;">Option Color</label><input type="color" id="mcqOptColor" value="#ffffff"></div>
         </div>
 
         <label>Master Background Setup</label>
@@ -126,7 +141,7 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
 
 <script>
 const $ = id => document.getElementById(id);
-let DATA = []; 
+let DATA = [];
 let isLightMode = false;
 let customBgDataUrl = null;
 
@@ -139,13 +154,15 @@ $('themeToggle').onclick = () => {
     
     if(isLightMode) {
         if($('optColor').value === "#ffffff") $('optColor').value = "#000000";
+        if($('mcqOptColor').value === "#ffffff") $('mcqOptColor').value = "#000000";
     } else {
         if($('optColor').value === "#000000") $('optColor').value = "#ffffff";
+        if($('mcqOptColor').value === "#000000") $('mcqOptColor').value = "#ffffff";
     }
     renderPreview(); saveState();
 };
 
-$('bgSelect').onchange = (e) => {$('bgImgUpload').style.display = e.target.value === 'custom' ? 'block' : 'none'; renderPreview(); saveState(); };
+$('bgSelect').onchange = (e) => { $('bgImgUpload').style.display = e.target.value === 'custom' ? 'block' : 'none'; renderPreview(); saveState(); };
 
 $('bgImgUpload').onchange = (e) => {
     const file = e.target.files[0]; if (!file) return;
@@ -163,6 +180,7 @@ $('bgImgUpload').onchange = (e) => {
     reader.readAsDataURL(file);
 };
 
+// Clean HTML for parsing
 function cleanHtmlForCanvas(htmlStr) {
     let str = htmlStr.replace(/<strong[^>]*>/gi, '<b>').replace(/<\/strong>/gi, '</b>')
                      .replace(/<b\s[^>]*>/gi, '<b>').replace(/<br\s*[\/]?>/gi, '\n');
@@ -171,130 +189,179 @@ function cleanHtmlForCanvas(htmlStr) {
     return txt.value.trim();
 }
 
-// ==============================================
-// 🌟 HTML DEMO CODE (THEORY + MCQ + MATCHING)
-// ==============================================
-$('demoBtn').onclick = () => {
-    const demoText = `<h2>राजस्थान का भूगोल (Theory)</h2>
-<p>यहाँ आप अपनी थ्योरी और नोट्स लिख सकते हैं।</p>
-<table>
-    <tr><th>संभाग</th><th>जिले</th></tr>
-    <tr><td>जयपुर</td><td>7</td></tr>
-    <tr><td>जोधपुर</td><td>6</td></tr>
-</table>
+// Add Blank Slide Manually
+$('addSlideBtn').onclick = () => {
+    DATA.push([
+        { type: 'h2', text: `Slide ${DATA.length + 1} Title` },
+        { type: 'p', text: 'यहाँ अपनी जानकारी या टेक्स्ट टाइप करें...' }
+    ]);
+    renderPreview(); saveState();
+};
 
-<h2>Q1. अरावली पर्वतमाला की सबसे ऊँची चोटी कौन-सी है?</h2>
-<ul>
-    <li>A) तारागढ़</li>
-    <li>B) गुरुशिखर</li>
-    <li>C) सेर</li>
-    <li>D) अचलगढ़</li>
-</ul>
-
-<h2>Q1. उत्तर एवं व्याख्या</h2>
-<p><b>सही उत्तर: B) गुरुशिखर</b></p>
-<p>गुरुशिखर सिरोही जिले में माउंट आबू में स्थित है। इसकी ऊँचाई 1722 मीटर है। (नोट: उत्तर देना ऐच्छिक है)</p>
-
-<h2>Q2. सूची-I को सूची-II से सुमेलित कीजिए:</h2>
-<p>1. मेहरानगढ़ &nbsp;&nbsp;&nbsp;&nbsp; --- &nbsp;&nbsp;&nbsp;&nbsp; a. जयपुर</p>
-<p>2. आमेर &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --- &nbsp;&nbsp;&nbsp;&nbsp; b. जोधपुर</p>
-<p>3. कुम्भलगढ़ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --- &nbsp;&nbsp;&nbsp;&nbsp; c. राजसमंद</p>
-<p><br><b>विकल्प:</b></p>
-<ul>
-    <li>A) 1-b, 2-a, 3-c</li>
-    <li>B) 1-a, 2-b, 3-c</li>
-    <li>C) 1-c, 2-a, 3-b</li>
-</ul>`;
-    $('htmlArea').value = demoText;
-    alert("✅ डेमो कोड भर दिया गया है!\nइसमें Theory Table और बिना Table वाला शानदार मिलान (Matching) MCQ दिया गया है।");
-    saveState();
+// Copy JSON / Content Code
+$('copyCodeBtn').onclick = () => {
+    if(DATA.length === 0) return alert("कोई डेटा उपलब्ध नहीं है!");
+    navigator.clipboard.writeText(JSON.stringify(DATA, null, 2)).then(() => {
+        alert("✅ सारा डेटा/JSON कोड क्लिपबोर्ड पर कॉपी हो गया!");
+    });
 };
 
 // ==============================================
-// SMART HTML PARSER (H2 splits slide)
+// SMART HTML & AUTO-SPLIT PARSER 
 // ==============================================
 $('importBtn').onclick = () => { 
     let rawHtml = $('htmlArea').value.trim();
     if(!rawHtml) return alert("Please paste HTML code or text!");
 
-    let slidesData = [];
+    // If text does not contain HTML tags, treat paragraphs / lines as separate sections
     if(!/<[a-z][\s\S]*>/i.test(rawHtml)) {
         let lines = rawHtml.split('\n').filter(l => l.trim() !== '');
+        let slidesData = [];
         let currentSlide = [];
         lines.forEach((line, idx) => {
             if(idx % 4 === 0) {
                 if(currentSlide.length > 0) slidesData.push(currentSlide);
                 currentSlide = [{ type: 'h2', text: line }];
-            } else { currentSlide.push({ type: 'p', text: line }); }
-        });
-        if(currentSlide.length > 0) slidesData.push(currentSlide);
-        DATA.push(...slidesData);
-    } else {
-        let currentSlide = [];
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(rawHtml, 'text/html');
-
-        Array.from(doc.body.children).forEach(el => {
-            if (el.tagName === 'H1' || el.tagName === 'H2') {
-                if (currentSlide.length > 0) slidesData.push(currentSlide);
-                currentSlide = [];
-                currentSlide.push({ type: el.tagName.toLowerCase(), text: cleanHtmlForCanvas(el.innerHTML) });
-            } 
-            else if (el.tagName === 'H3') { currentSlide.push({ type: 'h3', text: cleanHtmlForCanvas(el.innerHTML) }); } 
-            else if (el.tagName === 'P') {
-                // Keep &nbsp; for spacing in matching questions
-                let text = el.innerHTML.replace(/<strong[^>]*>/gi, '<b>').replace(/<\/strong>/gi, '</b>').replace(/<b\s[^>]*>/gi, '<b>').replace(/<br\s*[\/]?>/gi, '\n');
-                text = text.replace(/<\/?(?!(b)\b)[a-z](?:[^>"']|"[^"]*"|'[^']*')*>/gi, '');
-                const txt = document.createElement("textarea"); txt.innerHTML = text;
-                if(txt.value.trim()) currentSlide.push({ type: 'p', text: txt.value.trim() });
-            } 
-            else if (el.tagName === 'UL' || el.tagName === 'OL') {
-                let items = [];
-                Array.from(el.children).forEach(li => { if (li.tagName === 'LI') items.push(cleanHtmlForCanvas(li.innerHTML)); });
-                if(items.length > 0) currentSlide.push({ type: 'ul', items: items });
-            } 
-            else if (el.tagName === 'TABLE') {
-                let rows = [];
-                Array.from(el.querySelectorAll('tr')).forEach(tr => {
-                    let cells = [];
-                    Array.from(tr.querySelectorAll('th, td')).forEach(td => cells.push(cleanHtmlForCanvas(td.innerHTML)));
-                    if(cells.length > 0) rows.push(cells);
-                });
-                if(rows.length > 0) currentSlide.push({ type: 'table', rows: rows });
+            } else {
+                currentSlide.push({ type: 'p', text: line });
             }
         });
-        if (currentSlide.length > 0) slidesData.push(currentSlide);
-        
-        if (slidesData.length === 0) DATA.push([{ type: 'p', text: cleanHtmlForCanvas(rawHtml) }]);
-        else DATA.push(...slidesData);
+        if(currentSlide.length > 0) slidesData.push(currentSlide);
+        DATA = slidesData;
+        renderPreview(); saveState();
+        return;
     }
-    
+
+    let slidesData = [];
+    let currentSlide = [];
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(rawHtml, 'text/html');
+
+    Array.from(doc.body.children).forEach(el => {
+        if (el.tagName === 'H1' || el.tagName === 'H2') {
+            if (currentSlide.length > 0) slidesData.push(currentSlide);
+            currentSlide = [];
+            currentSlide.push({ type: el.tagName.toLowerCase(), text: cleanHtmlForCanvas(el.innerHTML) });
+        } 
+        else if (el.tagName === 'H3') {
+            currentSlide.push({ type: 'h3', text: cleanHtmlForCanvas(el.innerHTML) });
+        } 
+        else if (el.tagName === 'P') {
+            let text = cleanHtmlForCanvas(el.innerHTML);
+            if(text) currentSlide.push({ type: 'p', text: text });
+        } 
+        else if (el.tagName === 'UL' || el.tagName === 'OL') {
+            let items = [];
+            Array.from(el.children).forEach(li => { if (li.tagName === 'LI') items.push(cleanHtmlForCanvas(li.innerHTML)); });
+            if(items.length > 0) currentSlide.push({ type: 'ul', items: items });
+        } 
+        else if (el.tagName === 'TABLE') {
+            let rows = [];
+            Array.from(el.querySelectorAll('tr')).forEach(tr => {
+                let cells = [];
+                Array.from(tr.querySelectorAll('th, td')).forEach(td => cells.push(cleanHtmlForCanvas(td.innerHTML)));
+                if(cells.length > 0) rows.push(cells);
+            });
+            if(rows.length > 0) currentSlide.push({ type: 'table', rows: rows });
+        }
+    });
+
+    if (currentSlide.length > 0) slidesData.push(currentSlide);
+    if (slidesData.length === 0) {
+        DATA = [[{ type: 'p', text: cleanHtmlForCanvas(rawHtml) }]];
+    } else {
+        DATA = slidesData;
+    }
     renderPreview(); saveState();
 };
 
-$('clearBtn').onclick = () => { if(confirm("Clear all data?")) { DATA = []; $('htmlArea').value = ""; localStorage.removeItem('htmlPptStateFinalX6'); renderPreview(); } };
+// ==============================================
+// SMART JSON MCQ PARSER 
+// ==============================================
+$('importJsonBtn').onclick = () => {
+    let rawJson = $('htmlArea').value.trim();
+    if(!rawJson) return alert("Please paste MCQ JSON data!");
+
+    try {
+        let jsonArr = JSON.parse(rawJson);
+        if(!Array.isArray(jsonArr)) return alert("JSON should be an Array starting with [");
+        
+        let slidesData = [];
+        const alphabet = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+        jsonArr.forEach((item, index) => {
+            if(!item.question && !item.module) return; 
+            
+            let currentSlide = [];
+            if(item.module) {
+                currentSlide.push({ type: 'h3', text: `[${item.module}]` });
+            }
+            if(item.question) {
+                currentSlide.push({ type: 'mcq-q', text: `Q${index + 1}. ` + item.question });
+            }
+            
+            let opts = item.option || item.options || [];
+            if(Array.isArray(opts)) {
+                opts.forEach((optText, i) => {
+                    let label = alphabet[i] ? alphabet[i] + ") " : "";
+                    currentSlide.push({ type: 'mcq-opt', text: label + optText });
+                });
+            }
+
+            // Optional solution / explanation pagination check
+            if(item.solution || item.explanation) {
+                let expText = item.solution || item.explanation;
+                slidesData.push(currentSlide); // Push question slide
+                
+                // Create explanation slide automatically
+                let expSlide = [
+                    { type: 'h3', text: `Q${index + 1}. Explanation / Answer` },
+                    { type: 'p', text: `Correct Answer: ${item.answer || 'N/A'}` },
+                    { type: 'p', text: expText }
+                ];
+                slidesData.push(expSlide);
+            } else {
+                slidesData.push(currentSlide);
+            }
+        });
+
+        if (slidesData.length === 0) return alert("No valid questions found in JSON!");
+        
+        DATA = slidesData;
+        renderPreview(); saveState();
+
+    } catch (e) {
+        alert("Invalid JSON format! Error: " + e.message);
+    }
+};
+
+$('clearBtn').onclick = () => { if(confirm("Clear all data?")) { DATA = []; $('htmlArea').value = ""; localStorage.removeItem('htmlPptStateFinalX3'); renderPreview(); } };
 
 function saveState() {
     const state = {
-        data: DATA, margins: { t: $('topM').value, b:$('bottomM').value, l: $('leftM').value, r:$('rightM').value },
+        data: DATA, margins: { t: $('topM').value, b: $('bottomM').value, l: $('leftM').value, r: $('rightM').value },
         colors: { 
-            h1: $('h1Color').value, h2: $('h2Color').value, h3:$('h3Color').value, 
-            bold: $('boldColor').value, opt:$('optColor').value
+            h1: $('h1Color').value, h2: $('h2Color').value, h3: $('h3Color').value, 
+            bold: $('boldColor').value, opt: $('optColor').value, 
+            mcqQ: $('mcqQColor').value, mcqOpt: $('mcqOptColor').value 
         },
-        bg: $('bgSelect').value, theme: isLightMode, customBg: customBgDataUrl, htmlBox:$('htmlArea').value
+        bg: $('bgSelect').value, theme: isLightMode, customBg: customBgDataUrl, htmlBox: $('htmlArea').value
     };
-    localStorage.setItem('htmlPptStateFinalX6', JSON.stringify(state));
+    localStorage.setItem('htmlPptStateFinalX3', JSON.stringify(state));
 }
 
 function loadState() {
-    const saved = localStorage.getItem('htmlPptStateFinalX6');
+    const saved = localStorage.getItem('htmlPptStateFinalX3');
     if(saved) {
         const state = JSON.parse(saved); DATA = state.data || [];
         $('htmlArea').value = state.htmlBox || "";
         $('topM').value = state.margins.t; $('bottomM').value = state.margins.b; $('leftM').value = state.margins.l; $('rightM').value = state.margins.r;
         $('h1Color').value = state.colors.h1; $('h2Color').value = state.colors.h2; 
-        if(state.colors.h3) $('h3Color').value = state.colors.h3; if(state.colors.bold)$('boldColor').value = state.colors.bold;
+        if(state.colors.h3) $('h3Color').value = state.colors.h3; if(state.colors.bold) $('boldColor').value = state.colors.bold;
         $('optColor').value = state.colors.opt; 
+        if(state.colors.mcqQ) $('mcqQColor').value = state.colors.mcqQ;
+        if(state.colors.mcqOpt) $('mcqOptColor').value = state.colors.mcqOpt;
         
         $('bgSelect').value = state.bg;
         customBgDataUrl = state.customBg || null;
@@ -305,30 +372,28 @@ function loadState() {
     renderPreview();
 }
 
-['topM', 'bottomM', 'leftM', 'rightM', 'h1Color', 'h2Color', 'h3Color', 'boldColor', 'optColor'].forEach(id => { $(id).addEventListener('change', () => { renderPreview(); saveState(); }); });
+['topM', 'bottomM', 'leftM', 'rightM', 'h1Color', 'h2Color', 'h3Color', 'boldColor', 'optColor', 'mcqQColor', 'mcqOptColor'].forEach(id => { $(id).addEventListener('change', () => { renderPreview(); saveState(); }); });
 
-function formatPreviewText(text, boldHex) { if(!text) return ""; return text.replace(/<b>(.*?)<\/b>/g, `<span style="color:${boldHex}; font-weight:bold;">$1</span>`).replace(/\n/g, '<br>').replace(/ /g, '&nbsp;'); }
+function formatPreviewText(text, boldHex) { if(!text) return ""; return text.replace(/<b>(.*?)<\/b>/g, `<span style="color:${boldHex}; font-weight:bold;">$1</span>`); }
 
 function renderPreview() {
     const box = $("preview"); box.innerHTML = "";
     $('slideCountBadge').innerText = `${DATA.length} Slides`;
 
-    if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted); padding:20px; text-align:center;'>No slides. Click 'Demo Code' to get started!</p>"; return; }
+    if(DATA.length === 0) { box.innerHTML = "<p style='color:var(--text-muted); padding:20px; text-align:center;'>No slides. Import HTML/JSON or click 'Add Slide'.</p>"; return; }
 
-    const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c =$('h3Color').value, bc = $('boldColor').value, oc =$('optColor').value;
+    const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
+    const mcqQc = $('mcqQColor').value, mcqOc = $('mcqOptColor').value;
     const bgUrl = getBgUrl();
 
     DATA.forEach((slideElements, sIdx) => {
         const div = document.createElement("div"); div.className = "slide-card";
         if(bgUrl) div.style.background = `url('${bgUrl}') center/cover no-repeat`; else div.style.backgroundColor = isLightMode ? "#ffffff" : "#000000";
         
+        // Header Bar for individual slide control (Delete / Move)
         const headerBar = document.createElement("div"); headerBar.className = "slide-header-bar";
-        const titleSpan = document.createElement("span"); titleSpan.innerText = `Slide #${sIdx + 1}`;
-        const deleteBtn = document.createElement("button"); deleteBtn.className = "btn btn-red";
-        deleteBtn.style.cssText = "width:auto; padding:2px 8px; font-size:0.8em;";
-        deleteBtn.innerHTML = `<i class="fa fa-trash"></i> Delete`;
-        deleteBtn.onclick = () => { DATA.splice(sIdx, 1); renderPreview(); saveState(); };
-        headerBar.appendChild(titleSpan); headerBar.appendChild(deleteBtn); div.appendChild(headerBar);
+        headerBar.innerHTML = `<span>Slide #${sIdx + 1}</span> <button class="btn btn-red" style="width:auto; padding:2px 8px; font-size:0.8em;" onclick="deleteSlide(${sIdx})"><i class="fa fa-trash"></i> Delete</button>`;
+        div.appendChild(headerBar);
 
         const contentWrap = document.createElement("div"); contentWrap.className = "slide-content";
 
@@ -352,6 +417,16 @@ function renderPreview() {
                     contentWrap.appendChild(liNode);
                 });
             }
+            else if (el.type === 'mcq-q') {
+                const node = document.createElement("div"); node.className = "p-mcq-q"; node.style.color = mcqQc;
+                node.contentEditable = "true"; node.innerHTML = formatPreviewText(el.text, bc);
+                node.onblur = e => { DATA[sIdx][eIdx].text = e.target.innerText; saveState(); }; contentWrap.appendChild(node);
+            }
+            else if (el.type === 'mcq-opt') {
+                const node = document.createElement("div"); node.className = "p-mcq-opt"; node.style.color = mcqOc;
+                node.contentEditable = "true"; node.innerHTML = formatPreviewText(el.text, bc);
+                node.onblur = e => { DATA[sIdx][eIdx].text = e.target.innerText; saveState(); }; contentWrap.appendChild(node);
+            }
             else if (el.type === 'table') {
                 const tableWrap = document.createElement("div"); tableWrap.className = "preview-table-wrap";
                 const table = document.createElement("table"); table.className = "preview-table";
@@ -370,11 +445,16 @@ function renderPreview() {
     });
 }
 
+window.deleteSlide = (index) => {
+    DATA.splice(index, 1);
+    renderPreview(); saveState();
+};
+
 // ==============================================
-// ADVANCED GENERATOR (PPT EXPORT)
+// ADVANCED GENERATOR WITH AUTO-PAGINATION
 // ==============================================
 $('generateBtn').onclick = async () => {
-    if (DATA.length === 0) return alert("No Data! Please import HTML first.");
+    if (DATA.length === 0) return alert("No Data! Please import HTML or JSON first.");
     const btn = $('generateBtn'); btn.innerHTML = "⏳ Generating PPTX..."; btn.disabled = true;
 
     setTimeout(async () => {
@@ -384,10 +464,11 @@ $('generateBtn').onclick = async () => {
 
         let bgUrl = getBgUrl();
         await document.fonts.load("30px Kalam"); await document.fonts.load("bold 30px Kalam"); 
-        await document.fonts.load("bold 40px Kalam"); await document.fonts.load("bold 44px Kalam");
-        await document.fonts.load("bold 32px Kalam");
+        await document.fonts.load("bold 34px Kalam"); await document.fonts.load("bold 44px Kalam");
+        await document.fonts.load("bold 40px Kalam"); await document.fonts.load("34px Kalam");
 
-        const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c =$('h3Color').value, bc = $('boldColor').value, oc =$('optColor').value;
+        const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c = $('h3Color').value, bc = $('boldColor').value, oc = $('optColor').value;
+        const mcqQc = $('mcqQColor').value, mcqOc = $('mcqOptColor').value;
 
         for (const slideElements of DATA) {
             
@@ -416,11 +497,8 @@ $('generateBtn').onclick = async () => {
                     if(!para.trim()) { y += lineH/2; return; }
                     let parts = para.split(/(<b>.*?<\/b>)/g); let words = [];
                     parts.forEach(part => {
-                        if(part.startsWith('<b>') && part.endsWith('</b>')) {
-                            part.slice(3, -4).split(/( )/).forEach(w => { if(w) words.push({t: w, b: true}); });
-                        } else {
-                            part.split(/( )/).forEach(w => { if(w) words.push({t: w, b: false}); });
-                        }
+                        if(part.startsWith('<b>') && part.endsWith('</b>')) part.slice(3, -4).split(' ').forEach(w => { if(w) words.push({t: w, b: true}); });
+                        else part.split(' ').forEach(w => { if(w) words.push({t: w, b: false}); });
                     });
                     
                     let currentX = m.left + leftIndent; let endX = pxW - m.right;
@@ -429,33 +507,39 @@ $('generateBtn').onclick = async () => {
 
                     for(let i=0; i<words.length; i++) {
                         let w = words[i]; ctx.font = w.b ? boldFont : normalFont; ctx.fillStyle = w.b ? boldCol : normalCol;
-                        // Replace multiple spaces correctly for rendering
-                        let textToDraw = w.t === ' ' ? ' ' : w.t;
-                        let metric = ctx.measureText(textToDraw);
+                        let metric = ctx.measureText(w.t + " ");
                         
-                        if (currentX + metric.width > endX && currentX !== m.left + leftIndent && w.t !== ' ') { 
+                        if (currentX + metric.width > endX && currentX !== m.left + leftIndent) { 
                             y += lineH; currentX = m.left + leftIndent; 
                             if (y + lineH > bottomLimit && y > m.top) triggerPagination();
                         }
-                        ctx.fillText(textToDraw, currentX, y); currentX += metric.width;
+                        ctx.fillText(w.t + " ", currentX, y); currentX += metric.width;
                     }
                     y += lineH;
                 });
             };
 
+            // Process each element
             slideElements.forEach((el) => {
                 if ((el.type === 'h1' || el.type === 'h2') && y > m.top) triggerPagination();
 
                 if(el.type === 'h1'){ drawSmartText(el.text, "bold 44px Kalam", "bold 44px Kalam", h1c, h1c, 56); y+=10; }
-                else if(el.type === 'h2'){ drawSmartText(el.text, "bold 40px Kalam", "bold 40px Kalam", h2c, h2c, 52); y+=15; }
+                else if(el.type === 'h2'){ drawSmartText(el.text, "bold 34px Kalam", "bold 34px Kalam", h2c, h2c, 46); y+=10; }
                 else if(el.type === 'h3'){ 
                     if (y + 50 > bottomLimit && y > m.top) triggerPagination();
-                    drawSmartText(el.text, "bold 32px Kalam", "bold 32px Kalam", h3c, h3c, 42); y+=10; 
+                    drawSmartText(el.text, "bold 28px Kalam", "bold 28px Kalam", h3c, h3c, 38); y+=5; 
                 }
                 else if(el.type === 'p'){ drawSmartText(el.text, "30px Kalam", "bold 30px Kalam", oc, bc, 42); y+=8; }
                 else if(el.type === 'ul'){ 
                     el.items.forEach(li => { drawSmartText("• " + li, "30px Kalam", "bold 30px Kalam", oc, bc, 42, 20); y+=5; });
                     y+=5; 
+                }
+                // --- MCQ Elements ---
+                else if(el.type === 'mcq-q'){ 
+                    drawSmartText(el.text, "bold 40px Kalam", "bold 40px Kalam", mcqQc, mcqQc, 52); y+=20; 
+                }
+                else if(el.type === 'mcq-opt'){ 
+                    drawSmartText(el.text, "34px Kalam", "bold 34px Kalam", mcqOc, mcqOc, 46, 30); y+=10; 
                 }
                 else if(el.type === 'table'){
                     let estTableHeight = (el.rows.length * 55) + 30;
@@ -484,7 +568,7 @@ $('generateBtn').onclick = async () => {
             s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
         }
         
-        ppt.writeFile({ fileName: "Study_Notes.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
+        ppt.writeFile({ fileName: "Study_Notes_AutoPage.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
     }, 100);
 };
 
@@ -492,3 +576,6 @@ window.onload = () => loadState();
 </script>
 </body>
 </html>
+
+
+Isme html kesa hoga
