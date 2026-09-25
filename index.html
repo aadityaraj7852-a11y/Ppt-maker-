@@ -103,10 +103,10 @@ body.light-mode .preview-table { background: rgba(255,255,255,0.8); }
         <label>Text Colors</label>
         <div class="grid-5">
             <div><label style="margin-top:5px; font-size:0.8em;">H1</label><input type="color" id="h1Color" value="#ffeb3b"></div>
-            <div><label style="margin-top:5px; font-size:0.8em;">H2</label><input type="color" id="h2Color" value="#00e676"></div>
+            <div><label style="margin-top:5px; font-size:0.8em;">H2 (Questions)</label><input type="color" id="h2Color" value="#00e676"></div>
             <div><label style="margin-top:5px; font-size:0.8em;">H3</label><input type="color" id="h3Color" value="#00bcd4"></div>
             <div><label style="margin-top:5px; font-size:0.8em;"><b>Bold</b></label><input type="color" id="boldColor" value="#ff9800"></div>
-            <div><label style="margin-top:5px; font-size:0.8em;">Normal</label><input type="color" id="optColor" value="#ffffff"></div>
+            <div><label style="margin-top:5px; font-size:0.8em;">Normal (Options)</label><input type="color" id="optColor" value="#ffffff"></div>
         </div>
 
         <label>Master Background Setup</label>
@@ -164,7 +164,6 @@ $('bgImgUpload').onchange = (e) => {
     reader.readAsDataURL(file);
 };
 
-// Clean HTML for parsing
 function cleanHtmlForCanvas(htmlStr) {
     let str = htmlStr.replace(/<strong[^>]*>/gi, '<b>').replace(/<\/strong>/gi, '</b>')
                      .replace(/<b\s[^>]*>/gi, '<b>').replace(/<br\s*[\/]?>/gi, '\n');
@@ -174,45 +173,41 @@ function cleanHtmlForCanvas(htmlStr) {
 }
 
 // ==============================================
-// 🌟 HTML DEMO CODE (THEORY + MCQ + TABLE)
+// 🌟 HTML DEMO CODE (THEORY + MCQ + MATCHING)
 // ==============================================
 $('demoBtn').onclick = () => {
     const demoText = `<h2>राजस्थान का भूगोल (Theory)</h2>
-<h3>सामान्य परिचय</h3>
-<p>राजस्थान भारत का <b>सबसे बड़ा</b> राज्य है।</p>
-<ul>
-    <li>यह भारत के उत्तर-पश्चिम में स्थित है।</li>
-    <li>इसकी आकृति विषमकोणीय चतुर्भुज है।</li>
-</ul>
+<p>यहाँ आप अपनी थ्योरी और नोट्स लिख सकते हैं।</p>
+<table>
+    <tr><th>संभाग</th><th>जिले</th></tr>
+    <tr><td>जयपुर</td><td>7</td></tr>
+    <tr><td>जोधपुर</td><td>6</td></tr>
+</table>
 
-<h2>MCQ: वस्तुनिष्ठ प्रश्न</h2>
-<h3>Q1. अरावली पर्वतमाला की सबसे ऊँची चोटी कौन-सी है?</h3>
+<h2>Q1. अरावली पर्वतमाला की सबसे ऊँची चोटी कौन-सी है?</h2>
 <ul>
     <li>A) तारागढ़</li>
-    <li>B) <b>गुरुशिखर</b></li>
+    <li>B) गुरुशिखर</li>
     <li>C) सेर</li>
     <li>D) अचलगढ़</li>
 </ul>
 
 <h2>Q1. उत्तर एवं व्याख्या</h2>
-<p><b>सही उत्तर:</b> B) गुरुशिखर</p>
-<p>गुरुशिखर सिरोही जिले में माउंट आबू में स्थित है। इसकी ऊँचाई <b>1722 मीटर</b> है।</p>
+<p><b>सही उत्तर: B) गुरुशिखर</b></p>
+<p>गुरुशिखर सिरोही जिले में माउंट आबू में स्थित है। इसकी ऊँचाई 1722 मीटर है। (नोट: उत्तर देना ऐच्छिक है)</p>
 
-<h2>MCQ: मिलान आधारित प्रश्न</h2>
-<h3>Q2. सूची-I को सूची-II से सुमेलित कीजिए:</h3>
-<table>
-    <tr><th>दुर्ग</th><th>स्थान</th></tr>
-    <tr><td>1. मेहरानगढ़</td><td>a. जयपुर</td></tr>
-    <tr><td>2. आमेर</td><td>b. जोधपुर</td></tr>
-    <tr><td>3. कुम्भलगढ़</td><td>c. राजसमंद</td></tr>
-</table>
+<h2>Q2. सूची-I को सूची-II से सुमेलित कीजिए:</h2>
+<p>1. मेहरानगढ़ &nbsp;&nbsp;&nbsp;&nbsp; --- &nbsp;&nbsp;&nbsp;&nbsp; a. जयपुर</p>
+<p>2. आमेर &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --- &nbsp;&nbsp;&nbsp;&nbsp; b. जोधपुर</p>
+<p>3. कुम्भलगढ़ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --- &nbsp;&nbsp;&nbsp;&nbsp; c. राजसमंद</p>
 <p><br><b>विकल्प:</b></p>
 <ul>
     <li>A) 1-b, 2-a, 3-c</li>
     <li>B) 1-a, 2-b, 3-c</li>
+    <li>C) 1-c, 2-a, 3-b</li>
 </ul>`;
     $('htmlArea').value = demoText;
-    alert("✅ डेमो कोड भर दिया गया है!\nइसमें Theory, MCQ और Table सब कुछ सिर्फ HTML से बना है। इसे देखने के लिए 'Import HTML' पर क्लिक करें।");
+    alert("✅ डेमो कोड भर दिया गया है!\nइसमें Theory Table और बिना Table वाला शानदार मिलान (Matching) MCQ दिया गया है।");
     saveState();
 };
 
@@ -251,7 +246,7 @@ async function applyAutoPagination() {
         slideEls.forEach(el => {
             let h = 0;
             if(el.type === 'h1') h = measureH(el.text, "bold 44px Kalam", 56, maxW) + 10;
-            else if(el.type === 'h2') h = measureH(el.text, "bold 34px Kalam", 46, maxW) + 10;
+            else if(el.type === 'h2') h = measureH(el.text, "bold 40px Kalam", 52, maxW) + 15; // Increased H2 size for Questions
             else if(el.type === 'h3') h = measureH(el.text, "bold 32px Kalam", 42, maxW) + 10;
             else if(el.type === 'p') h = measureH(el.text, "bold 30px Kalam", 42, maxW) + 8;
             else if(el.type === 'ul') { h = 5; el.items.forEach(li => { h += measureH("• " + li, "bold 30px Kalam", 42, maxW - 20) + 5; }); h += 5; }
@@ -304,8 +299,11 @@ $('importBtn').onclick = async () => {
             } 
             else if (el.tagName === 'H3') { currentSlide.push({ type: 'h3', text: cleanHtmlForCanvas(el.innerHTML) }); } 
             else if (el.tagName === 'P') {
-                let text = cleanHtmlForCanvas(el.innerHTML);
-                if(text) currentSlide.push({ type: 'p', text: text });
+                // Keep &nbsp; for spacing in matching questions
+                let text = el.innerHTML.replace(/<strong[^>]*>/gi, '<b>').replace(/<\/strong>/gi, '</b>').replace(/<b\s[^>]*>/gi, '<b>').replace(/<br\s*[\/]?>/gi, '\n');
+                text = text.replace(/<\/?(?!(b)\b)[a-z](?:[^>"']|"[^"]*"|'[^']*')*>/gi, '');
+                const txt = document.createElement("textarea"); txt.innerHTML = text;
+                if(txt.value.trim()) currentSlide.push({ type: 'p', text: txt.value.trim() });
             } 
             else if (el.tagName === 'UL' || el.tagName === 'OL') {
                 let items = [];
@@ -332,7 +330,7 @@ $('importBtn').onclick = async () => {
     renderPreview(); saveState();
 };
 
-$('clearBtn').onclick = () => { if(confirm("Clear all data?")) { DATA = []; $('htmlArea').value = ""; localStorage.removeItem('htmlPptStateFinalX4'); renderPreview(); } };
+$('clearBtn').onclick = () => { if(confirm("Clear all data?")) { DATA = []; $('htmlArea').value = ""; localStorage.removeItem('htmlPptStateFinalX5'); renderPreview(); } };
 
 function saveState() {
     const state = {
@@ -343,11 +341,11 @@ function saveState() {
         },
         bg: $('bgSelect').value, theme: isLightMode, customBg: customBgDataUrl, htmlBox:$('htmlArea').value
     };
-    localStorage.setItem('htmlPptStateFinalX4', JSON.stringify(state));
+    localStorage.setItem('htmlPptStateFinalX5', JSON.stringify(state));
 }
 
 function loadState() {
-    const saved = localStorage.getItem('htmlPptStateFinalX4');
+    const saved = localStorage.getItem('htmlPptStateFinalX5');
     if(saved) {
         const state = JSON.parse(saved); DATA = state.data || [];
         $('htmlArea').value = state.htmlBox || "";
@@ -367,7 +365,7 @@ function loadState() {
 
 ['topM', 'bottomM', 'leftM', 'rightM', 'h1Color', 'h2Color', 'h3Color', 'boldColor', 'optColor'].forEach(id => { $(id).addEventListener('change', () => { renderPreview(); saveState(); }); });
 
-function formatPreviewText(text, boldHex) { if(!text) return ""; return text.replace(/<b>(.*?)<\/b>/g, `<span style="color:${boldHex}; font-weight:bold;">$1</span>`).replace(/\n/g, '<br>'); }
+function formatPreviewText(text, boldHex) { if(!text) return ""; return text.replace(/<b>(.*?)<\/b>/g, `<span style="color:${boldHex}; font-weight:bold;">$1</span>`).replace(/\n/g, '<br>').replace(/ /g, '&nbsp;'); }
 
 function renderPreview() {
     const box = $("preview"); box.innerHTML = "";
@@ -444,7 +442,7 @@ $('generateBtn').onclick = async () => {
 
         let bgUrl = getBgUrl();
         await document.fonts.load("30px Kalam"); await document.fonts.load("bold 30px Kalam"); 
-        await document.fonts.load("bold 34px Kalam"); await document.fonts.load("bold 44px Kalam");
+        await document.fonts.load("bold 40px Kalam"); await document.fonts.load("bold 44px Kalam");
         await document.fonts.load("bold 32px Kalam");
 
         const h1c = $('h1Color').value, h2c = $('h2Color').value, h3c =$('h3Color').value, bc = $('boldColor').value, oc =$('optColor').value;
@@ -476,8 +474,11 @@ $('generateBtn').onclick = async () => {
                     if(!para.trim()) { y += lineH/2; return; }
                     let parts = para.split(/(<b>.*?<\/b>)/g); let words = [];
                     parts.forEach(part => {
-                        if(part.startsWith('<b>') && part.endsWith('</b>')) part.slice(3, -4).split(' ').forEach(w => { if(w) words.push({t: w, b: true}); });
-                        else part.split(' ').forEach(w => { if(w) words.push({t: w, b: false}); });
+                        if(part.startsWith('<b>') && part.endsWith('</b>')) {
+                            part.slice(3, -4).split(/( )/).forEach(w => { if(w) words.push({t: w, b: true}); });
+                        } else {
+                            part.split(/( )/).forEach(w => { if(w) words.push({t: w, b: false}); });
+                        }
                     });
                     
                     let currentX = m.left + leftIndent; let endX = pxW - m.right;
@@ -486,13 +487,15 @@ $('generateBtn').onclick = async () => {
 
                     for(let i=0; i<words.length; i++) {
                         let w = words[i]; ctx.font = w.b ? boldFont : normalFont; ctx.fillStyle = w.b ? boldCol : normalCol;
-                        let metric = ctx.measureText(w.t + " ");
+                        // Replace multiple spaces correctly for rendering
+                        let textToDraw = w.t === ' ' ? ' ' : w.t;
+                        let metric = ctx.measureText(textToDraw);
                         
-                        if (currentX + metric.width > endX && currentX !== m.left + leftIndent) { 
+                        if (currentX + metric.width > endX && currentX !== m.left + leftIndent && w.t !== ' ') { 
                             y += lineH; currentX = m.left + leftIndent; 
                             if (y + lineH > bottomLimit && y > m.top) triggerPagination();
                         }
-                        ctx.fillText(w.t + " ", currentX, y); currentX += metric.width;
+                        ctx.fillText(textToDraw, currentX, y); currentX += metric.width;
                     }
                     y += lineH;
                 });
@@ -502,7 +505,7 @@ $('generateBtn').onclick = async () => {
                 if ((el.type === 'h1' || el.type === 'h2') && y > m.top) triggerPagination();
 
                 if(el.type === 'h1'){ drawSmartText(el.text, "bold 44px Kalam", "bold 44px Kalam", h1c, h1c, 56); y+=10; }
-                else if(el.type === 'h2'){ drawSmartText(el.text, "bold 34px Kalam", "bold 34px Kalam", h2c, h2c, 46); y+=10; }
+                else if(el.type === 'h2'){ drawSmartText(el.text, "bold 40px Kalam", "bold 40px Kalam", h2c, h2c, 52); y+=15; }
                 else if(el.type === 'h3'){ 
                     if (y + 50 > bottomLimit && y > m.top) triggerPagination();
                     drawSmartText(el.text, "bold 32px Kalam", "bold 32px Kalam", h3c, h3c, 42); y+=10; 
