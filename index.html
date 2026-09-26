@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Ultimate PPT Maker - No Table Matching (V5.2)</title>
-<!-- Google Fonts -->
+<title>Ultimate PPT Maker - Perfect JSON & Font Update (V5)</title>
+<!-- Google Fonts (Handwriting & Professional Fonts) -->
 <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Mukta:wght@400;700&family=Hind:wght@400;700&family=Amita:wght@400;700&family=Tillana:wght@400;700&family=Yatra+One&family=Sura:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.9.0/dist/pptxgen.bundle.min.js"></script>
@@ -15,12 +15,14 @@
     --accent: #ffeb3b; --sub-accent: #00e676; --h3-accent: #00bcd4; --bold-color: #ff9800; --btn-blue: #2563eb; 
     --bg-main: #0f172a; --card-bg: #1e293b; --text-main: #f8fafc; --text-muted: #94a3b8;
     --border: #334155; --input-bg: #0b1220; --slide-bg: #000000;
+    --table-border: #94a3b8;
 }
 
 body.light-mode {
     --accent: #d97706; --sub-accent: #16a34a; --h3-accent: #0284c7; --bold-color: #dc2626; --btn-blue: #1d4ed8;
     --bg-main: #f1f5f9; --card-bg: #ffffff; --text-main: #0f172a; --text-muted: #475569;
     --border: #cbd5e1; --input-bg: #f8fafc; --slide-bg: #ffffff;
+    --table-border: #94a3b8;
 }
 
 body { font-family: 'Mukta', sans-serif; background: var(--bg-main); color: var(--text-main); margin: 0; padding: 20px; transition: 0.3s; }
@@ -53,6 +55,7 @@ input[type="color"] { width: 100%; height: 35px; padding: 2px; border-radius: 8p
 .demo-btn-group { display: flex; gap: 10px; margin-top: 5px; margin-bottom: 5px;}
 .demo-btn-group button { padding: 5px 10px; font-size: 0.9em; width: auto; flex: 1;}
 
+/* Toggle switch */
 .switch-row { display:flex; align-items:center; justify-content:space-between; background:var(--input-bg); border:1px solid var(--border); border-radius:8px; padding:10px 12px; margin-top:15px; }
 .switch-row span { font-weight:700; color:var(--text-main); font-size:0.95em; }
 .switch { position: relative; display: inline-block; width: 46px; height: 24px; flex-shrink:0; }
@@ -72,7 +75,7 @@ body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
 .slide-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; font-size: 1em; color: var(--text-muted); position: relative; z-index: 2; }
 
 /* Reordering & Control Box */
-.el-row { position: relative; margin-bottom: 3px; padding: 3px; border-radius: 8px; border: 1px solid transparent; transition: 0.2s; }
+.el-row { position: relative; margin-bottom: 5px; padding: 5px; border-radius: 8px; border: 1px solid transparent; transition: 0.2s; }
 .el-row:hover { border-color: rgba(150,150,150,0.3); background: rgba(128,128,128,0.15); }
 .el-ctrl { display: none; position: absolute; right: 5px; top: -10px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; padding: 4px; z-index: 10; flex-direction: row; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); align-items: center; }
 .el-row:hover .el-ctrl { display: flex; }
@@ -82,7 +85,7 @@ body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
 .margin-ctrl-grp { display: flex; align-items: center; gap: 3px; border-left: 1px solid var(--border); padding-left: 6px; margin-left: 2px;}
 .margin-ctrl-grp input { width: 36px; padding: 2px 4px; height: 24px; font-size: 0.85em; text-align: center; border-radius: 4px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text-main); margin:0;}
 
-/* Typography Fixes */
+/* Typography */
 [contenteditable="true"] { outline: none; border: 1px dashed transparent; transition: 0.2s; display: block; font-family: inherit; }
 [contenteditable="true"]:hover { border-color: rgba(150,150,150,0.5); background: rgba(128,128,128,0.1); }
 .p-h1 { font-size: 2.1em; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid rgba(150,150,150,0.3); padding-bottom: 5px; clear: both; }
@@ -90,17 +93,24 @@ body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
 .p-h3 { font-size: 1.3em; font-weight: bold; margin-bottom: 8px; margin-top: 5px; }
 .p-text, .p-li { font-size: 1.1em; margin-bottom: 6px; white-space: pre-wrap; }
 .p-li-sub { font-size: 1.05em; margin-bottom: 6px; white-space: pre-wrap; margin-left: 28px; }
+.p-mcq-q { font-size: 1.4em; font-weight: bold; margin-bottom: 12px; white-space: pre-wrap; }
+.p-mcq-opt { font-size: 1.1em; margin-bottom: 6px; white-space: pre-wrap; padding-left: 20px; }
 
-/* Reduced Gaps */
-.p-mcq-q { font-size: 1.3em; font-weight: bold; margin-bottom: 4px; white-space: pre-wrap; }
-.p-mcq-opt { font-size: 1.1em; margin-bottom: 2px; white-space: pre-wrap; padding-left: 20px; }
+/* FIX: Table Strict Light Theme & Square Corners */
+th[contenteditable="true"], td[contenteditable="true"] { display: table-cell; } 
+.preview-table-wrap { width: 100%; margin: 25px 0 15px 0; border-radius: 0px; overflow: hidden; }
+.preview-table { width: 100%; border-collapse: collapse; font-size: 1.05em; background-color: #ffffff; font-family: inherit; }
+.preview-table th, .preview-table td { padding: 10px 15px; text-align: left; border: none; border-bottom: 1px solid var(--table-border); color: #000000; font-family: inherit; } 
+.preview-table th { font-weight: bold; border-bottom: 2px solid var(--table-border); }
+.preview-table tr:last-child td { border-bottom: none; }
+.preview-table tr:nth-child(even) td { background-color: #f1f5f9; color: #000000 !important; }
+.preview-table tr:nth-child(odd) td { background-color: #ffffff; color: #000000 !important; }
 
-/* Clean Matching (No Table) Styles for Preview */
-.match-wrap { margin: 10px 0; padding-left: 15px; }
-.match-row { display: flex; width: 90%; margin-bottom: 6px; font-size: 1.05em; gap: 30px; align-items: flex-start; }
-.match-cell { flex: 1; word-wrap: break-word; }
-.match-cell:first-child { flex: 0.8; }
+/* Ensure Light Theme Body for Table inside Dark UI */
+body:not(.light-mode) .preview-table tr:nth-child(even) td { background-color: #f1f5f9; color: #000000 !important; }
+body:not(.light-mode) .preview-table tr:nth-child(odd) td { background-color: #ffffff; color: #000000 !important; }
 
+/* Image Style inside Slide */
 .preview-img { max-width: 100%; border-radius: 8px; border: 2px solid var(--border); object-fit: contain; }
 .clearfix::after { content: ""; clear: both; display: table; }
 </style>
@@ -110,7 +120,7 @@ body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
 <div class="main-wrapper">
     <div class="left-panel">
         <div class="header-row">
-            <h2>🎓 PPT Studio Pro (V5.2)</h2>
+            <h2>🎓 PPT Studio Pro (V5)</h2>
             <button id="themeToggle" class="theme-btn">🌙 Dark Mode</button>
         </div>
 
@@ -132,14 +142,14 @@ body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
         </div>
 
         <div class="switch-row">
-            <span>✅ उत्तर स्लाइड डाउनलोड में शामिल करें</span>
+            <span>✅ उत्तर स्लाइड डाउनलोड में शामिल करें (Show Answer Slides)</span>
             <label class="switch">
                 <input type="checkbox" id="includeAnswerToggle" checked>
                 <span class="slider-round"></span>
             </label>
         </div>
 
-        <label>Typography & Spacing</label>
+        <label>Typography & Spacing (Custom Fonts)</label>
         <div class="grid-3">
             <div>
                 <label style="margin-top:5px; font-size:0.9em;">Font Style</label>
@@ -155,6 +165,7 @@ body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
             </div>
             <div>
                 <label style="margin-top:5px; font-size:0.9em;">Base Size</label>
+                <!-- INCREASED BASE FONT SIZE TO 28 -->
                 <input type="number" id="baseFontSize" value="28">
             </div>
             <div>
@@ -170,6 +181,12 @@ body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
             <div><label style="margin-top:5px; font-size:0.8em;">H3</label><input type="color" id="h3Color" value="#00bcd4"></div>
             <div><label style="margin-top:5px; font-size:0.8em;"><b>Bold</b></label><input type="color" id="boldColor" value="#ff9800"></div>
             <div><label style="margin-top:5px; font-size:0.8em;">Normal</label><input type="color" id="optColor" value="#ffffff"></div>
+        </div>
+        
+        <label>Table Theme</label>
+        <div class="grid-2">
+            <div><label style="margin-top:0px; font-size:0.85em;">Header Background (Dark)</label><input type="color" id="thBgColor" value="#2c3e50"></div>
+            <div><label style="margin-top:0px; font-size:0.85em;">Header Text (Yellow)</label><input type="color" id="thTextColor" value="#ffeb3b"></div>
         </div>
 
         <label>Slide Margins (px)</label>
@@ -192,7 +209,7 @@ body.light-mode .slide-card::before { background: rgba(255, 255, 255, 0.85); }
 
     <div class="right-panel">
         <h3 style="margin-top:0; color:var(--text-main); font-size:1.6em; border-bottom:1px solid var(--border); padding-bottom:10px;">👁️ Live Slide Previews (<span id="slideCountBadge">0 Slides</span>)</h3>
-        <p style="font-size: 0.9em; color: var(--text-muted); margin-bottom: 15px;">💡 <b>Update (No-Table Mode):</b> मिलान वाले सवालों में अब टेबल/बॉक्स नहीं बनेंगे, वे सीधे एकदम साफ Left-Right कॉलम में सेट हो जाएंगे!</p>
+        <p style="font-size: 0.9em; color: var(--text-muted); margin-bottom: 15px;">💡 <b>Tip:</b> Matching/मिलान (Milan) type सवालों के लिए हमेशा असली <code>&lt;table&gt;</code> टैग इस्तेमाल करें (question या solution के अंदर भी चलेगा) — तभी left-right कॉलम सही बनेंगे। बुलेट पॉइंट्स में ➭ मुख्य बिंदु, ➛ उप-बिंदु और <code>!</code> से शुरू करने पर ☞ महत्वपूर्ण बिंदु का आइकॉन अपने-आप लगेगा। Options में अगर (A)(B)(C)(D) पहले से लिखे हों तो दोबारा लेबल नहीं जुड़ेगा। ऊपर "Copy Demo HTML" / "Copy Demo JSON" दबाकर पूरा उदाहरण देख सकते हैं।</p>
         <div id="preview" class="preview-list"></div>
     </div>
 </div>
@@ -209,7 +226,8 @@ $('fontFamily').addEventListener('change', (e) => {
 });
 
 $('lineSpacing').addEventListener('input', () => { renderPreview(); saveState(); });
-$('baseFontSize').addEventListener('input', () => { renderPreview(); saveState(); });$('includeAnswerToggle').addEventListener('change', () => { saveState(); });
+$('baseFontSize').addEventListener('input', () => { renderPreview(); saveState(); });
+$('includeAnswerToggle').addEventListener('change', () => { saveState(); });
 
 function getBgUrl() { let val = $('bgSelect').value; return val === 'custom' ? customBgDataUrl : null; }
 
@@ -226,7 +244,7 @@ $('themeToggle').onclick = () => {
     renderPreview(); saveState();
 };
 
-$('bgSelect').onchange = (e) => {$('bgImgUpload').style.display = e.target.value === 'custom' ? 'block' : 'none'; renderPreview(); saveState(); };
+$('bgSelect').onchange = (e) => { $('bgImgUpload').style.display = e.target.value === 'custom' ? 'block' : 'none'; renderPreview(); saveState(); };
 
 $('bgImgUpload').onchange = (e) => {
     const file = e.target.files[0]; if (!file) return;
@@ -244,23 +262,95 @@ $('bgImgUpload').onchange = (e) => {
     reader.readAsDataURL(file);
 };
 
-$('demoHtmlBtn').onclick = () => { /* unchanged */ };$('demoJsonBtn').onclick = () => { /* unchanged */ };
+$('demoHtmlBtn').onclick = () => {
+    const demoHtml = `<h1>PPT Studio Pro — सम्पूर्ण डेमो (H1 शीर्षक)</h1>
+<p>यह एक <b>H1</b> के बाद वाला सामान्य पैराग्राफ है। <b>बोल्ड टेक्स्ट</b> ऐसे दिखेगा। हर <code>&lt;h1&gt;</code> या <code>&lt;h2&gt;</code> टैग से नई स्लाइड शुरू हो जाती है, जबकि <code>&lt;h3&gt;</code>, पैराग्राफ, लिस्ट, टेबल आदि उसी स्लाइड में जुड़ते चले जाते हैं।</p>
 
-function decodeHtml(html) {
-    if (!html) return '';
-    const txt = document.createElement("textarea");
-    txt.innerHTML = html;
-    return txt.value;
-}
+<h2>H2 — नई स्लाइड यहाँ से शुरू होती है</h2>
+<h3>H3 — छोटा उप-शीर्षक (उसी स्लाइड में)</h3>
+<p>नीचे बुलेट पॉइंट का पूरा डेमो है:</p>
+<ul>
+  <li>यह एक सामान्य मुख्य बिंदु है — इसके आगे ➭ आइकॉन अपने-आप लगेगा।</li>
+  <li>यह दूसरा मुख्य बिंदु है, जिसके नीचे उप-बिंदु (sub-point) हैं
+    <ul>
+      <li>उप-बिंदु A — इसके आगे ➛ आइकॉन आता है</li>
+      <li>उप-बिंदु B</li>
+    </ul>
+  </li>
+  <li>!यह एक ज़्यादा महत्वपूर्ण मुख्य बिंदु है — टेक्स्ट के शुरू में सिर्फ़ <b>!</b> (bang) लगाने से ➭ की जगह ☞ आइकॉन लग जाता है।</li>
+</ul>
 
+<h2>टेबल / मिलान (Matching) प्रकार का डेमो</h2>
+<p>Milan wale (matching) सवालों के लिए हमेशा असली <code>&lt;table&gt;</code> टैग का उपयोग करें, तभी नीचे जैसे साफ़ left-right कॉलम बनेंगे (भारी बॉर्डर लाइन के बिना, सिर्फ हल्की row-divider लाइन के साथ):</p>
+<table>
+    <tr><th>सूची-I (लोक देवता)</th><th>सूची-II (मुख्य स्थल)</th></tr>
+    <tr><td>(i) पाबूजी</td><td>(a) कोलू (फलोदी)</td></tr>
+    <tr><td>(ii) गोगाजी</td><td>(b) गोगामेड़ी</td></tr>
+    <tr><td>(iii) रामदेवजी</td><td>(c) रुणेचा</td></tr>
+    <tr><td>(iv) तेजाजी</td><td>(d) परबतसर</td></tr>
+</table>
+<p>टेबल के बाद भी टेक्स्ट/बुलेट जोड़े जा सकते हैं — यह उसी स्लाइड में नीचे जुड़ जाएगा।</p>`;
+    navigator.clipboard.writeText(demoHtml).then(() => { $('htmlArea').value = demoHtml; alert("Demo HTML pasted! (Clipboard पर भी copy हो गया)"); });
+};
+$('demoJsonBtn').onclick = () => {
+    const demoJson = `[
+  {
+    "module": "इतिहास (module सिर्फ़ आपकी अपनी जानकारी के लिए है, यह किसी भी स्लाइड पर नहीं दिखता)",
+    "question": "हल्दीघाटी का युद्ध कब हुआ था?",
+    "option": [
+      "1576",
+      "1527",
+      "1582",
+      "1303"
+    ],
+    "answer": "A",
+    "solution": "हल्दीघाटी का युद्ध <b>18 जून 1576</b> को महाराणा प्रताप और अकबर की सेना के बीच हुआ था।<br>➭ <b>स्थान:</b> यह युद्ध हल्दीघाटी दर्रे (राजसमंद) में लड़ा गया था।<br>☞ <b>महत्वपूर्ण:</b> इसमें अकबर की सेना का नेतृत्व मानसिंह प्रथम ने किया था।"
+  },
+  {
+    "module": "राजस्थान की कला एवं संस्कृति",
+    "question": "राजस्थान के लोक देवताओं और उनके मुख्य पूजा स्थल का सही मिलान करें:<br><table><tr><th>सूची-I (लोक देवता)</th><th>सूची-II (मुख्य स्थल)</th></tr><tr><td>(i) पाबूजी</td><td>(a) गोगामेड़ी</td></tr><tr><td>(ii) गोगाजी</td><td>(b) रुणेचा</td></tr><tr><td>(iii) रामदेवजी</td><td>(c) कोलू (फलोदी)</td></tr><tr><td>(iv) तेजाजी</td><td>(d) परबतसर</td></tr></table><br>सही कूट का चयन करें:",
+    "option": [
+      "(A) i-c, ii-a, iii-b, iv-d",
+      "(B) i-c, ii-a, iii-d, iv-b",
+      "(C) i-a, ii-c, iii-b, iv-d",
+      "(D) i-d, ii-b, iii-c, iv-a"
+    ],
+    "answer": "A",
+    "solution": "<b>सही मिलान इस प्रकार है:</b><br><table><tr><td>(i) पाबूजी</td><td>(c) कोलू (फलोदी)</td></tr><tr><td>(ii) गोगाजी</td><td>(a) गोगामेड़ी</td></tr><tr><td>(iii) रामदेवजी</td><td>(b) रुणेचा</td></tr><tr><td>(iv) तेजाजी</td><td>(d) परबतसर</td></tr></table><br>➭ <b>पाबूजी:</b> इन्हें ऊंटों का देवता माना जाता है।<br>➛ इनका मुख्य मेला कोलू (फलोदी) में भरता है।<br>☞ <b>ध्यान दें:</b> Options में (A)(B)(C)(D) पहले से लिखे हों तो टूल दोबारा लेबल नहीं जोड़ता — जैसे इस सवाल में हुआ है।"
+  },
+  {
+    "module": "राजस्थान का भूगोल",
+    "question": "कथन (A): पश्चिमी राजस्थान में वर्षा बहुत कम होती है।<br>कारण (R): अरावली पर्वतमाला की स्थिति मानसून की दिशा के समानांतर है।",
+    "option": [
+      "A और R दोनों सही हैं तथा R, A की सही व्याख्या करता है",
+      "A और R दोनों सही हैं, पर R, A की सही व्याख्या नहीं करता",
+      "A सही है, R गलत है",
+      "A गलत है, R सही है"
+    ],
+    "answer": "A",
+    "solution": "<b>विस्तृत व्याख्या:</b><br>➭ <b>कारण का प्रभाव:</b> मानसून अरावली के समानांतर बिना रुकावट आगे बढ़ जाता है।<br>➛ इसी कारण पश्चिमी राजस्थान वृष्टि छाया प्रदेश में आ जाता है।<br>☞ <b>निष्कर्ष:</b> R, A की सही व्याख्या करता है, अतः विकल्प A सही है।"
+  }
+]`;
+    navigator.clipboard.writeText(demoJson).then(() => { $('htmlArea').value = demoJson; alert("Demo JSON pasted! (Clipboard पर भी copy हो गया)"); });
+};
+
+// IMPROVED HTML CLEANER to handle tags properly and not just strip them blindly
 function cleanHtmlForCanvas(htmlStr) {
+    // Replace <br> and <br/> with newline characters
     let str = htmlStr.replace(/<br\s*[\/]?>/gi, '\n');
+    
+    // Create a temporary DOM element to parse lists and paragraphs properly if needed, 
+    // but for simple text, just converting <br> to \n is the main fix needed for the JSON parser.
     str = str.replace(/<strong[^>]*>/gi, '<b>').replace(/<\/strong>/gi, '</b>').replace(/<b\s[^>]*>/gi, '<b>');
+    
+    // Strip other tags except <b>
     str = str.replace(/<\/?(?!(b)\b)[a-z](?:[^>"']|"[^"]*"|'[^']*')*>/gi, '');
+    
     const txt = document.createElement("textarea"); txt.innerHTML = str;
     return txt.value.trim();
 }
 
+// Normalize a ul "item" to {text, sub:[], important:false} — supports legacy plain-string items too
 function normListItem(it) {
     if (typeof it === 'string') it = { text: it, sub: [] };
     if (!it.sub) it.sub = [];
@@ -270,6 +360,8 @@ function normListItem(it) {
     return it;
 }
 
+// Extract <li> items from a <ul>/<ol>, including one level of nested <ul>/<ol> as sub-points,
+// and "!" prefixed lines as important main points (☞).
 function extractListItems(listEl) {
     let items = [];
     Array.from(listEl.children).forEach(li => {
@@ -292,11 +384,14 @@ function extractListItems(listEl) {
     return items;
 }
 
+// Splits a raw HTML string (as used in JSON "question"/"solution" fields) into an ordered
+// list of {type:'p'|'table'|'ul', ...} elements. Embedded <table> and <ul>/<ol> blocks are
+// extracted as real table/list elements (proper left-right columns) instead of being
+// stripped into one long run-on paragraph. Plain icons (➭ ➛ ☞) typed directly in the text
+// pass through untouched since cleanHtmlForCanvas only strips HTML tags, not characters.
 function parseRichContent(raw) {
     let elements = [];
     if (!raw) return elements;
-    raw = decodeHtml(raw);
-    
     const tableRe = /<table[\s\S]*?<\/table>/gi;
     let lastIndex = 0, m, segments = [];
     while ((m = tableRe.exec(raw)) !== null) {
@@ -327,12 +422,12 @@ function parseRichContent(raw) {
                         if (items.length > 0) elements.push({ type: 'ul', items: items });
                     } else {
                         let t = cleanHtmlForCanvas(node.nodeType === 1 ? node.outerHTML : (node.textContent || ''));
-                        if (t && t.trim() !== '') elements.push({ type: 'p', text: t });
+                        if (t) elements.push({ type: 'p', text: t });
                     }
                 });
             } else {
                 let t = cleanHtmlForCanvas(txt);
-                if (t && t.trim() !== '') elements.push({ type: 'p', text: t });
+                if (t) elements.push({ type: 'p', text: t });
             }
         }
     });
@@ -342,46 +437,72 @@ function parseRichContent(raw) {
 $('addSlideBtn').onclick = () => { DATA.push([{ type: 'h2', text: `Slide Title` }, { type: 'p', text: 'टेक्स्ट यहाँ लिखें...' }]); renderPreview(); saveState(); };
 $('copyCodeBtn').onclick = () => navigator.clipboard.writeText(JSON.stringify(DATA, null, 2)).then(() => alert("Copied!"));
 
-$('importBtn').onclick = () => { /* HTML logic unchanged */ };
+// HTML PARSER
+$('importBtn').onclick = () => { 
+    let rawHtml = $('htmlArea').value.trim(); if(!rawHtml) return alert("Paste HTML!");
+    let slidesData = []; let currentSlide = [];
+    const parser = new DOMParser(); const doc = parser.parseFromString(rawHtml, 'text/html');
+    Array.from(doc.body.children).forEach(el => {
+        if (el.tagName === 'H1' || el.tagName === 'H2') {
+            if (currentSlide.length > 0) slidesData.push(currentSlide);
+            currentSlide = [{ type: el.tagName.toLowerCase(), text: cleanHtmlForCanvas(el.innerHTML) }];
+        } 
+        else if (el.tagName === 'H3') currentSlide.push({ type: 'h3', text: cleanHtmlForCanvas(el.innerHTML) });
+        else if (el.tagName === 'P') { let t = cleanHtmlForCanvas(el.innerHTML); if(t) currentSlide.push({ type: 'p', text: t }); } 
+        else if (el.tagName === 'UL' || el.tagName === 'OL') {
+            let items = extractListItems(el);
+            if(items.length > 0) currentSlide.push({ type: 'ul', items: items });
+        }
+        else if (el.tagName === 'TABLE') {
+            let rows = [];
+            Array.from(el.querySelectorAll('tr')).forEach(tr => {
+                let cells = [];
+                Array.from(tr.querySelectorAll('th, td')).forEach(td => cells.push(cleanHtmlForCanvas(td.innerHTML)));
+                if(cells.length > 0) rows.push(cells);
+            });
+            if(rows.length > 0) currentSlide.push({ type: 'table', rows: rows });
+        }
+    });
+    if (currentSlide.length > 0) slidesData.push(currentSlide);
+    DATA = slidesData.length === 0 ? [[{ type: 'p', text: cleanHtmlForCanvas(rawHtml) }]] : slidesData;
+    renderPreview(); saveState();
+};
 
+// IMPROVED JSON PARSER
 $('importJsonBtn').onclick = () => {
     let rawJson = $('htmlArea').value.trim(); if(!rawJson) return alert("Paste JSON!");
     try {
         let jsonArr = JSON.parse(rawJson); let slidesData = []; const alphabet = ['A', 'B', 'C', 'D', 'E'];
         jsonArr.forEach((item, index) => {
             let currentSlide = [];
+            // NOTE: "module" is intentionally NOT rendered on any slide (kept only as metadata in the source JSON).
 
+            // Question: may contain an embedded <table> (matching/Milan questions) and/or <ul> —
+            // parseRichContent splits these out into proper table/list elements instead of one run-on line.
             if (item.question) {
-                let qParts = parseRichContent(item.question); 
-                let textFound = false;
-                
+                let qParts = parseRichContent(item.question); let qPrefixed = false;
                 qParts.forEach(el => {
                     if (el.type === 'p') {
-                        if(!textFound) { el.text = `Q${index + 1}. ` + el.text; textFound = true; }
-                        el.type = 'mcq-q'; 
-                        currentSlide.push(el);
-                    } else { 
-                        if (!textFound && el.type === 'table') {
-                            currentSlide.push({ type: 'mcq-q', text: `Q${index + 1}.` });
-                            textFound = true;
-                        }
-                        currentSlide.push(el); 
-                    }
+                        let text = qPrefixed ? el.text : (`Q${index + 1}. ` + el.text); qPrefixed = true;
+                        currentSlide.push({ type: 'mcq-q', text: text });
+                    } else { currentSlide.push(el); }
                 });
-                if (!textFound) currentSlide.push({ type: 'mcq-q', text: `Q${index + 1}.` });
+                if (!qPrefixed) currentSlide.push({ type: 'mcq-q', text: `Q${index + 1}.` });
             }
 
+            // Optional legacy top-level matching table field (still supported alongside inline <table> in "question")
             if (item.table && item.table.rows && item.table.rows.length > 0) {
                 let rows = item.table.headers && item.table.headers.length > 0 ? [item.table.headers, ...item.table.rows] : item.table.rows;
                 currentSlide.push({ type: 'table', rows: rows });
             }
 
+            // Options: if the option text already carries its own (A)/(B).. label, don't add a second one
             let opts = item.option || item.options || [];
             opts.forEach((optText, i) => {
-                let cleaned = cleanHtmlForCanvas(decodeHtml(optText));
+                let cleaned = cleanHtmlForCanvas(optText);
                 let alreadyLabeled = /^\(?[A-Ea-e][\)\.]/.test(cleaned.trim());
                 let label = (!alreadyLabeled && alphabet[i]) ? alphabet[i] + ") " : "";
-                currentSlide.push({ type: 'mcq-opt', text: label + cleaned }); 
+                currentSlide.push({ type: 'mcq-opt', text: label + cleaned });
             });
             
             if(item.solution || item.explanation) {
@@ -392,6 +513,8 @@ $('importJsonBtn').onclick = () => {
                     { type: 'p', text: `Correct Answer: ${item.answer || 'N/A'}` }
                 ];
                 
+                // Solution/explanation may contain embedded <table> (matching answer-key) and/or <ul> —
+                // parseRichContent splits these into proper table/list/paragraph elements.
                 let expRawHtml = item.solution || item.explanation;
                 let solParts = parseRichContent(expRawHtml);
                 if (solParts.length > 0) solParts.forEach(el => expSlide.push(el));
@@ -411,7 +534,7 @@ function saveState() {
     const state = {
         data: DATA, margins: { t: $('topM').value, b:$('bottomM').value, l: $('leftM').value, r:$('rightM').value },
         fonts: { fam: $('fontFamily').value, size: $('baseFontSize').value, line:$('lineSpacing').value },
-        colors: { h1: $('h1Color').value, h2: $('h2Color').value, h3:$('h3Color').value, bold: $('boldColor').value, opt:$('optColor').value },
+        colors: { h1: $('h1Color').value, h2: $('h2Color').value, h3:$('h3Color').value, bold: $('boldColor').value, opt:$('optColor').value, thBg: $('thBgColor').value, thTxt:$('thTextColor').value },
         bg: $('bgSelect').value, theme: isLightMode, customBg: customBgDataUrl, htmlBox:$('htmlArea').value,
         includeAnswer: $('includeAnswerToggle').checked
     };
@@ -425,20 +548,24 @@ function loadState() {
         $('topM').value = state.margins.t; $('bottomM').value = state.margins.b; $('leftM').value = state.margins.l; $('rightM').value = state.margins.r;
         if(state.fonts) { $('fontFamily').value = state.fonts.fam; $('baseFontSize').value = state.fonts.size; $('lineSpacing').value = state.fonts.line; document.body.style.fontFamily = `'${state.fonts.fam}', sans-serif`; }
         $('h1Color').value = state.colors.h1; $('h2Color').value = state.colors.h2; $('optColor').value = state.colors.opt; $('boldColor').value = state.colors.bold;
+        if(state.colors.thBg) $('thBgColor').value = state.colors.thBg;
+        if(state.colors.thTxt) $('thTextColor').value = state.colors.thTxt;
 
         $('bgSelect').value = state.bg; customBgDataUrl = state.customBg || null;
         if(state.bg === 'custom') $('bgImgUpload').style.display = 'block';
         isLightMode = state.theme || false; if(isLightMode) { document.body.classList.add('light-mode'); $('themeToggle').innerText = "☀️ Light Mode"; }
         $('includeAnswerToggle').checked = state.includeAnswer !== undefined ? state.includeAnswer : true;
+        // Normalize any legacy string-based ul items to the new object format
         DATA.forEach(slide => slide.forEach(el => { if (el.type === 'ul' && el.items) el.items = el.items.map(normListItem); }));
     }
     renderPreview();
 }
 
-['topM', 'bottomM', 'leftM', 'rightM', 'h1Color', 'h2Color', 'h3Color', 'boldColor', 'optColor'].forEach(id => { $(id).addEventListener('change', () => { renderPreview(); saveState(); }); });
+['topM', 'bottomM', 'leftM', 'rightM', 'h1Color', 'h2Color', 'h3Color', 'boldColor', 'optColor', 'thBgColor', 'thTextColor'].forEach(id => { $(id).addEventListener('change', () => { renderPreview(); saveState(); }); });
 
 function formatPreviewText(text, boldHex) { if(!text) return ""; return text.replace(/<b>(.*?)<\/b>/g, `<span style="color:${boldHex}; font-weight:bold;">$1</span>`); }
 
+// --- Global Actions ---
 window.moveEl = (sIdx, eIdx, dir) => {
     if (eIdx + dir < 0 || eIdx + dir >= DATA[sIdx].length) return;
     let temp = DATA[sIdx][eIdx]; DATA[sIdx][eIdx] = DATA[sIdx][eIdx + dir]; DATA[sIdx][eIdx + dir] = temp;
@@ -450,12 +577,35 @@ window.changeAlign = (sIdx, eIdx, val) => { DATA[sIdx][eIdx].align = val; saveSt
 window.updateMargin = (sIdx, eIdx, type, val) => { DATA[sIdx][eIdx][type] = parseInt(val) || 0; saveState(); renderPreview(); };
 window.addTextToSlide = (sIdx) => { DATA[sIdx].push({ type: 'p', text: 'नया टेक्स्ट...' }); saveState(); renderPreview(); };
 
+window.addImageToSlide = (sIdx) => {
+    let input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
+    input.onchange = (e) => {
+        let file = e.target.files[0]; if (!file) return;
+        let reader = new FileReader();
+        reader.onload = (ev) => {
+            let img = new Image();
+            img.onload = () => {
+                let maxDim = 1200; let w = img.width, h = img.height;
+                if (w > maxDim || h > maxDim) { let ratio = Math.min(maxDim/w, maxDim/h); w = Math.round(w * ratio); h = Math.round(h * ratio); }
+                let cvs = document.createElement('canvas'); cvs.width = w; cvs.height = h; cvs.getContext('2d').drawImage(img, 0, 0, w, h);
+                DATA[sIdx].push({ type: 'image', url: cvs.toDataURL('image/jpeg', 0.85), w: w, h: h, align: 'right', mt: 5, mr: 0, mb: 10, ml: 15 });
+                saveState(); renderPreview();
+            };
+            img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+    };
+    input.click();
+};
+
 function renderPreview() {
     const box = $("preview"); box.innerHTML = "";
     $('slideCountBadge').innerText = `${DATA.length} Slides`;
+
     if(DATA.length === 0) { box.innerHTML = "<p style='text-align:center;'>No slides. Import HTML/JSON or click 'Add Slide'.</p>"; return; }
 
     const bc = $('boldColor').value, oc =$('optColor').value, bgUrl = getBgUrl();
+    const thBg = $('thBgColor').value, thTxt =$('thTextColor').value;
     const bSize = parseInt($('baseFontSize').value);
     const lineGap = parseFloat($('lineSpacing').value);
 
@@ -468,7 +618,8 @@ function renderPreview() {
         headerBar.innerHTML = `<span><b>Slide #${sIdx + 1}</b>${isAnsSlide ? ' <i style="color:var(--sub-accent);font-weight:bold;">(Answer Slide)</i>' : ''}</span> 
             <div>
                 <button class="btn btn-green" style="width:auto; padding:4px 10px; font-size:0.85em;" onclick="addTextToSlide(${sIdx})"><i class="fa fa-font"></i> Text</button>
-                <button class="btn btn-blue" style="width:auto; padding:4px 10px; font-size:0.85em;" onclick="deleteSlide(${sIdx})"><i class="fa fa-trash"></i></button>
+                <button class="btn btn-blue" style="width:auto; padding:4px 10px; font-size:0.85em;" onclick="addImageToSlide(${sIdx})"><i class="fa fa-image"></i> Image</button>
+                <button class="btn btn-red" style="width:auto; padding:4px 10px; font-size:0.85em;" onclick="deleteSlide(${sIdx})"><i class="fa fa-trash"></i></button>
             </div>`;
         div.appendChild(headerBar);
 
@@ -477,56 +628,99 @@ function renderPreview() {
         const appendNodeWrapper = (node, eIdx, el) => {
             const row = document.createElement("div"); row.className = "el-row";
             node.style.flex = "1";
+            
+            if (el.type === 'image') {
+                let mt = el.mt !== undefined ? el.mt : 5, mr = el.mr !== undefined ? el.mr : 0, mb = el.mb !== undefined ? el.mb : 10, ml = el.ml !== undefined ? el.ml : 15;
+                if(el.align === 'right') row.style.cssText = `float: right; width: 35%; margin: ${mt}px ${mr}px ${mb}px ${ml}px; clear: right;`;
+                else if(el.align === 'left') row.style.cssText = `float: left; width: 35%; margin: ${mt}px ${mr}px ${mb}px ${ml}px; clear: left;`;
+                else row.style.cssText = `text-align: center; clear: both; margin: ${mt}px auto ${mb}px auto;`;
+            }
+
             const ctrl = document.createElement("div"); ctrl.className = "el-ctrl";
-            ctrl.innerHTML = `<button title="Move Up" onclick="moveEl(${sIdx}, ${eIdx}, -1)"><i class="fa fa-arrow-up"></i></button>
-                              <button title="Move Down" onclick="moveEl(${sIdx}, ${eIdx}, 1)"><i class="fa fa-arrow-down"></i></button>
-                              <button title="Delete" onclick="delEl(${sIdx}, ${eIdx})" style="color:var(--bold-color);"><i class="fa fa-trash"></i></button>`;
+            let ctrlHtml = `<button title="Move Up" onclick="moveEl(${sIdx}, ${eIdx}, -1)"><i class="fa fa-arrow-up"></i></button>
+                            <button title="Move Down" onclick="moveEl(${sIdx}, ${eIdx}, 1)"><i class="fa fa-arrow-down"></i></button>
+                            <button title="Delete" onclick="delEl(${sIdx}, ${eIdx})" style="color:var(--bold-color);"><i class="fa fa-trash"></i></button>`;
+            
+            if(el.type === 'image') {
+                let mt = el.mt !== undefined ? el.mt : 5, mr = el.mr !== undefined ? el.mr : 0, mb = el.mb !== undefined ? el.mb : 10, ml = el.ml !== undefined ? el.ml : 15;
+                ctrlHtml += `<select onchange="changeAlign(${sIdx}, ${eIdx}, this.value)">
+                    <option value="center" ${el.align==='center'?'selected':''}>Center</option>
+                    <option value="left" ${el.align==='left'?'selected':''}>Float Left</option>
+                    <option value="right" ${el.align==='right'?'selected':''}>Float Right</option>
+                </select>
+                <div class="margin-ctrl-grp" title="Margin: Top, Right, Bottom, Left">
+                    <span style="font-size:0.75em;color:var(--text-muted);font-weight:bold;">M:</span>
+                    <input type="number" title="Top" value="${mt}" onchange="updateMargin(${sIdx}, ${eIdx}, 'mt', this.value)">
+                    <input type="number" title="Right" value="${mr}" onchange="updateMargin(${sIdx}, ${eIdx}, 'mr', this.value)">
+                    <input type="number" title="Bottom" value="${mb}" onchange="updateMargin(${sIdx}, ${eIdx}, 'mb', this.value)">
+                    <input type="number" title="Left" value="${ml}" onchange="updateMargin(${sIdx}, ${eIdx}, 'ml', this.value)">
+                </div>`;
+            }
+            ctrl.innerHTML = ctrlHtml;
             row.appendChild(node); row.appendChild(ctrl); contentWrap.appendChild(row);
         };
 
         slideElements.forEach((el, eIdx) => {
-            if (el.type === 'meta') { }
+            if (el.type === 'meta') { /* internal marker only — never rendered */ }
             else if (el.type === 'h1' || el.type === 'h2' || el.type === 'h3') {
                 const node = document.createElement("div"); node.className = "p-" + el.type;
                 node.style.color = $('h' + el.type.replace('h','') + 'Color').value;
+                // Preveiw font size updated based on new base size
                 node.style.fontSize = (el.type==='h1' ? bSize*1.4 : (el.type==='h2' ? bSize*1.2 : bSize*1.1)) + "px";
                 node.contentEditable = "true"; node.innerHTML = formatPreviewText(el.text, bc);
                 node.onblur = e => { DATA[sIdx][eIdx].text = e.target.innerText; saveState(); };
                 appendNodeWrapper(node, eIdx, el);
             } 
             else if (el.type === 'p' || el.type === 'mcq-q' || el.type === 'mcq-opt') {
-                const node = document.createElement("div"); 
-                node.className = (el.type === 'mcq-q') ? "p-mcq-q" : ((el.type === 'mcq-opt') ? "p-mcq-opt" : "p-text");
-                node.style.color = (el.type === 'mcq-q') ? $('h1Color').value : oc;
-                node.style.fontSize = (el.type === 'mcq-q' ? bSize*1.05 : bSize) + "px";
+                const node = document.createElement("div"); node.className = "p-text"; 
+                node.style.color = (el.type === 'p') ? oc : ((el.type === 'mcq-q') ? $('h1Color').value : oc);
+                node.style.fontSize = (el.type === 'mcq-q' ? bSize*1.1 : bSize) + "px";
                 node.style.lineHeight = lineGap;
                 node.contentEditable = "true"; node.innerHTML = formatPreviewText(el.text, bc);
                 node.onblur = e => { DATA[sIdx][eIdx].text = e.target.innerText; saveState(); };
                 appendNodeWrapper(node, eIdx, el);
             }
-            else if (el.type === 'table') {
-                // Completely removed HTML Table, using Flex Rows for clean left/right layout
-                const matchWrap = document.createElement("div"); matchWrap.className = "match-wrap";
-                
-                el.rows.forEach((row, rIdx) => {
-                    const rowDiv = document.createElement("div");
-                    rowDiv.className = "match-row";
-                    
-                    row.forEach((cell, cIdx) => {
-                        const cellDiv = document.createElement("div");
-                        cellDiv.className = "match-cell";
-                        
-                        let isBold = (rIdx === 0 && !cell.includes('<b>')) ? `<b>${cell}</b>` : cell;
-                        cellDiv.style.color = (rIdx === 0) ? $('h1Color').value : oc;
-                        
-                        cellDiv.contentEditable = "true";
-                        cellDiv.innerHTML = formatPreviewText(isBold, bc);
-                        cellDiv.onblur = e => { DATA[sIdx][eIdx].rows[rIdx][cIdx] = e.target.innerText; saveState(); };
-                        rowDiv.appendChild(cellDiv);
+            else if (el.type === 'ul') {
+                const ulWrap = document.createElement("div");
+                el.items.forEach((item, iIdx) => {
+                    item = normListItem(item);
+                    const icon = item.important ? "☞ " : "➭ ";
+                    const liNode = document.createElement("div"); liNode.className = "p-li"; liNode.style.color = oc;
+                    liNode.style.fontSize = bSize + "px"; liNode.style.lineHeight = lineGap;
+                    liNode.contentEditable = "true"; liNode.innerHTML = icon + formatPreviewText(item.text, bc);
+                    liNode.onblur = e => { DATA[sIdx][eIdx].items[iIdx].text = e.target.innerText.replace(/^[☞➭➛•]\s*/, ""); saveState(); };
+                    ulWrap.appendChild(liNode);
+                    (item.sub || []).forEach((subText, subIdx) => {
+                        const subNode = document.createElement("div"); subNode.className = "p-li-sub"; subNode.style.color = oc;
+                        subNode.style.fontSize = (bSize*0.95) + "px"; subNode.style.lineHeight = lineGap;
+                        subNode.contentEditable = "true"; subNode.innerHTML = "➛ " + formatPreviewText(subText, bc);
+                        subNode.onblur = e => { DATA[sIdx][eIdx].items[iIdx].sub[subIdx] = e.target.innerText.replace(/^➛\s*/, ""); saveState(); };
+                        ulWrap.appendChild(subNode);
                     });
-                    matchWrap.appendChild(rowDiv);
                 });
-                appendNodeWrapper(matchWrap, eIdx, el);
+                appendNodeWrapper(ulWrap, eIdx, el);
+            }
+            else if (el.type === 'table') {
+                const tableWrap = document.createElement("div"); tableWrap.className = "preview-table-wrap";
+                const table = document.createElement("table"); table.className = "preview-table";
+                el.rows.forEach((row, rIdx) => {
+                    const tr = document.createElement("tr");
+                    row.forEach((cell, cIdx) => {
+                        const td = document.createElement(rIdx === 0 ? "th" : "td");
+                        if(rIdx === 0) { td.style.backgroundColor = thBg; td.style.color = thTxt; }
+                        td.contentEditable = "true"; td.innerHTML = formatPreviewText(cell, bc);
+                        td.onblur = e => { DATA[sIdx][eIdx].rows[rIdx][cIdx] = e.target.innerText; saveState(); }; tr.appendChild(td);
+                    }); table.appendChild(tr);
+                });
+                tableWrap.appendChild(table); appendNodeWrapper(tableWrap, eIdx, el);
+            }
+            else if (el.type === 'image') {
+                const imgWrap = document.createElement("div");
+                const imgNode = document.createElement("img"); imgNode.src = el.url; imgNode.className = "preview-img";
+                if(el.align === 'right' || el.align === 'left') { imgNode.style.maxHeight = "180px"; } 
+                else { imgNode.style.maxHeight = "250px"; }
+                imgWrap.appendChild(imgNode);
+                appendNodeWrapper(imgWrap, eIdx, el);
             }
         });
         div.appendChild(contentWrap); box.appendChild(div);
@@ -541,6 +735,7 @@ $('generateBtn').onclick = async () => {
 
     const includeAnswer = $('includeAnswerToggle').checked;
     const slidesToRender = DATA.filter(slideElements => includeAnswer || !slideElements.some(el => el.type === 'meta' && el.isAnswer));
+    if (slidesToRender.length === 0) return alert("No slides to export with current 'Show Answer Slides' setting.");
 
     const btn = $('generateBtn'); btn.innerHTML = "⏳ Generating PPTX..."; btn.disabled = true;
 
@@ -558,6 +753,8 @@ $('generateBtn').onclick = async () => {
         await document.fonts.load(`normal ${bSize}px '${fontFam}'`);
 
         const colors = { h1: $('h1Color').value, h2: $('h2Color').value, h3:$('h3Color').value, b: $('boldColor').value, n:$('optColor').value };
+        const thBgHex = $('thBgColor').value.replace('#', '');
+        const thTxtHex = $('thTextColor').value.replace('#', '');
 
         for (const slideElements of slidesToRender) {
             let s = ppt.addSlide();
@@ -567,6 +764,7 @@ $('generateBtn').onclick = async () => {
             let ctx = c.getContext("2d"); ctx.textBaseline = "top"; 
             
             let y = m.top; const bottomLimit = pxH - m.bottom;
+            let floatRegions = []; 
 
             const triggerPagination = () => {
                 s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
@@ -574,10 +772,10 @@ $('generateBtn').onclick = async () => {
                 if (bgUrl) s.background = { data: bgUrl }; else s.background = { color: isLightMode ? "FFFFFF" : "000000" };
                 c = document.createElement("canvas"); c.width = pxW; c.height = pxH;
                 ctx = c.getContext("2d"); ctx.textBaseline = "top";
-                y = m.top;
+                y = m.top; floatRegions = [];
             };
 
-            const drawSmartText = (text, normalFont, boldFont, normalCol, boldCol, fontSize, leftIndent = 0, rightOverride = null) => {
+            const drawSmartText = (text, normalFont, boldFont, normalCol, boldCol, fontSize, leftIndent = 0) => {
                 if(!text) return;
                 const lineH = fontSize * lineMult;
                 const paras = text.split("\n");
@@ -592,8 +790,14 @@ $('generateBtn').onclick = async () => {
                     
                     if (y + lineH > bottomLimit && y > m.top) triggerPagination();
                     
-                    let dynStartX = m.left + leftIndent; 
-                    let dynEndX = rightOverride !== null ? rightOverride : (pxW - m.right);
+                    let dynStartX = m.left + leftIndent; let dynEndX = pxW - m.right;
+                    floatRegions.forEach(r => {
+                        if (y + lineH > r.y && y < r.y + r.h) {
+                            if (r.align === 'right') dynEndX = Math.min(dynEndX, r.x - 15);
+                            if (r.align === 'left') dynStartX = Math.max(dynStartX, r.x + r.w + 15);
+                        }
+                    });
+                    
                     let currentX = dynStartX;
 
                     for(let i=0; i<words.length; i++) {
@@ -603,6 +807,14 @@ $('generateBtn').onclick = async () => {
                         if (currentX + metric.width > dynEndX && currentX !== dynStartX) { 
                             y += lineH; 
                             if (y + lineH > bottomLimit && y > m.top) triggerPagination();
+                            
+                            dynStartX = m.left + leftIndent; dynEndX = pxW - m.right;
+                            floatRegions.forEach(r => {
+                                if (y + lineH > r.y && y < r.y + r.h) {
+                                    if (r.align === 'right') dynEndX = Math.min(dynEndX, r.x - 15);
+                                    if (r.align === 'left') dynStartX = Math.max(dynStartX, r.x + r.w + 15);
+                                }
+                            });
                             currentX = dynStartX;
                         }
                         ctx.fillText(w.t + " ", currentX, y); currentX += metric.width;
@@ -612,69 +824,116 @@ $('generateBtn').onclick = async () => {
             };
 
             slideElements.forEach((el) => {
-                if (el.type === 'meta') { }
+                if (el.type === 'meta') { /* internal marker only — never drawn */ }
+                else if (el.type === 'image') {
+                    let targetW = (pxW - m.left - m.right);
+                    if(el.align === 'left' || el.align === 'right') targetW = targetW * 0.35; 
+                    
+                    let scale = targetW / el.w;
+                    let targetH = el.h * scale;
+                    if (targetH > 350) { targetH = 350; targetW = el.w * (targetH / el.h); }
+                    
+                    let mt = el.mt !== undefined ? el.mt : 5, mr = el.mr !== undefined ? el.mr : 0, mb = el.mb !== undefined ? el.mb : 10, ml = el.ml !== undefined ? el.ml : 15;
+                    let imgY = y + mt;
+                    if (imgY + targetH > bottomLimit && y > m.top) { triggerPagination(); imgY = m.top + mt; }
+
+                    let imgX;
+                    if(el.align === 'right') imgX = pxW - m.right - targetW - mr;
+                    else if(el.align === 'left') imgX = m.left + ml;
+                    else imgX = m.left + ((pxW - m.left - m.right) - targetW) / 2;
+
+                    s.addImage({ data: el.url, x: imgX/96, y: imgY/96, w: targetW/96, h: targetH/96 });
+
+                    if (el.align === 'right' || el.align === 'left') {
+                        floatRegions.push({ x: imgX, y: imgY, w: targetW, h: targetH + mb, align: el.align });
+                    } else { y += targetH + mt + mb; }
+                }
                 else if (el.type === 'h1' || el.type === 'h2' || el.type === 'h3') {
                     let sz = el.type === 'h1' ? bSize*1.5 : (el.type === 'h2' ? bSize*1.2 : bSize*1.1);
                     drawSmartText(el.text, `bold ${sz}px '${fontFam}'`, `bold ${sz}px '${fontFam}'`, colors[el.type], colors[el.type], sz); y+=10;
                 }
                 else if (el.type === 'p' || el.type === 'mcq-q' || el.type === 'mcq-opt') {
-                    let sz = el.type === 'mcq-q' ? bSize*1.05 : bSize; 
+                    // Font sizes slightly increased here matching baseFontSize 28
+                    let sz = el.type === 'mcq-q' ? bSize*1.1 : bSize; 
                     let tc = el.type === 'mcq-q' ? colors.h1 : colors.n;
                     drawSmartText(el.text, `normal ${sz}px '${fontFam}'`, `bold ${sz}px '${fontFam}'`, tc, colors.b, sz);
-                    
-                    if (el.type === 'mcq-q') y += 2; 
-                    else if (el.type === 'mcq-opt') y += 0; 
-                    else y += 4;
+                    y += (el.type === 'mcq-opt') ? 2 : 4;
+                }
+                else if (el.type === 'ul') {
+                    el.items.forEach(item => {
+                        item = normListItem(item);
+                        const icon = item.important ? "☞ " : "➭ ";
+                        drawSmartText(icon + item.text, `normal ${bSize}px '${fontFam}'`, `bold ${bSize}px '${fontFam}'`, colors.n, colors.b, bSize, 20); y+=2;
+                        (item.sub || []).forEach(subText => {
+                            drawSmartText("➛ " + subText, `normal ${bSize*0.9}px '${fontFam}'`, `bold ${bSize*0.9}px '${fontFam}'`, colors.n, colors.b, bSize*0.9, 45); y+=2;
+                        });
+                    });
+                    y+=5;
                 }
                 else if (el.type === 'table') {
-                    // COMPLETELY NEW LOGIC: Renders as Text Left and Right (No AddTable)
-                    y += 8; 
+                    y += 15; 
                     
-                    el.rows.forEach((row, rIdx) => {
-                        // Pre-check for pagination so both columns stay on same slide
+                    let tableHeader = el.rows[0];
+                    let currentRowChunk = [];
+                    let startY = y;
+                    let maxW = pxW - m.left - m.right;
+                    
+                    const renderTableChunk = (chunk, startYPos) => {
+                        let pptRows = chunk.map((rowArr, rIdxChunk) => {
+                            let isHead = (rowArr === tableHeader);
+                            let rowBg = isHead ? thBgHex : (rIdxChunk % 2 === 0 ? 'FFFFFF' : 'F1F5F9');
+                            let isLastRow = rIdxChunk === chunk.length - 1;
+                            // Clean look: no vertical/outer grid lines, only a thin bottom divider between rows
+                            let cellBorder = [
+                                { pt: 0, color: rowBg },
+                                { pt: 0, color: rowBg },
+                                { pt: isLastRow ? 0 : 1, color: 'CBD5E1' },
+                                { pt: 0, color: rowBg }
+                            ];
+
+                            return rowArr.map(cellHtml => {
+                                return {
+                                    text: cellHtml.replace(/<b>|<\/b>/g, ''), 
+                                    options: { 
+                                        color: isHead ? thTxtHex : '000000', 
+                                        bold: isHead || cellHtml.includes('<b>'), fontFace: fontFam, fontSize: bSize * 0.9, 
+                                        fill: rowBg, border: cellBorder,
+                                        align: 'left', valign: 'middle', margin: [8, 10, 8, 10] 
+                                    }
+                                };
+                            });
+                        });
+                        s.addTable(pptRows, { x: m.left/96, y: startYPos/96, w: maxW/96 });
+                    };
+
+                    for (let rIdx = 0; rIdx < el.rows.length; rIdx++) {
                         let maxLines = 1;
-                        row.forEach(c => maxLines = Math.max(maxLines, Math.ceil(c.replace(/<b>|<\/b>/g, '').length / 25)));
-                        let estHeight = maxLines * (bSize * lineMult);
-                        
-                        if (y + estHeight > bottomLimit && y > m.top) {
-                            triggerPagination();
-                        }
-                        
-                        let rowStartY = y;
-                        let maxRowY = y;
-                        
-                        row.forEach((cell, cIdx) => {
-                            y = rowStartY; // Reset Y for every cell in this row so they stay parallel
-                            
-                            // 20px indent for Column 1, start halfway for Column 2
-                            let indent = cIdx === 0 ? 20 : 450; 
-                            // Stop Column 1 at the middle so it doesn't overlap Column 2
-                            let rightOverride = cIdx === 0 ? (m.left + 420) : (pxW - m.right); 
-                            
-                            let text = cell;
-                            let textColor = colors.n;
-                            
-                            // Make Header Row bold and highlight color
-                            if (rIdx === 0) {
-                                textColor = colors.h1;
-                                if (!text.includes('<b>')) text = `<b>${text}</b>`; 
-                            }
-                            
-                            drawSmartText(text, `normal ${bSize*0.95}px '${fontFam}'`, `bold ${bSize*0.95}px '${fontFam}'`, textColor, colors.b, bSize*0.95, indent, rightOverride);
-                            
-                            if (y > maxRowY) maxRowY = y; // Record the tallest column
+                        el.rows[rIdx].forEach(cell => {
+                            let textOnly = cell.replace(/<b>|<\/b>/g, '');
+                            let lines = Math.ceil(textOnly.length / 25);
+                            if (lines > maxLines) maxLines = lines;
                         });
                         
-                        y = maxRowY + 4; // Move below the tallest column with a small gap
-                    });
-                    y += 10; 
+                        let estRowHeight = Math.max(50, (maxLines * (bSize)) + 24); 
+
+                        if (y + estRowHeight > bottomLimit && y > m.top) {
+                            if (currentRowChunk.length > 0) renderTableChunk(currentRowChunk, startY);
+                            triggerPagination();
+                            currentRowChunk = []; startY = m.top;
+                            
+                            if (rIdx > 0 && tableHeader) { currentRowChunk.push(tableHeader); y += 50; }
+                        }
+                        currentRowChunk.push(el.rows[rIdx]); y += estRowHeight;
+                    }
+                    if (currentRowChunk.length > 0) { renderTableChunk(currentRowChunk, startY); }
+                    y += 20;
                 }
             });
 
             s.addImage({ data:c.toDataURL("image/png"), x:0, y:0, w:pxW/96, h:pxH/96 });
         }
         
-        ppt.writeFile({ fileName: "Study_Notes_Pro_V5.2.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
+        ppt.writeFile({ fileName: "Study_Notes_Pro_V5.pptx" }).then(() => { btn.innerHTML = "✅ Download Successful!"; setTimeout(()=>btn.innerHTML="💾 Generate PPTX File", 3000); btn.disabled = false; });
     }, 100);
 };
 
